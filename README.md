@@ -1,2 +1,2 @@
 # workflow
-Workflow is a library to create tasks based workflows. It allows middlewares before and after each task
+Workflow is a python library to create tasks based on named workflows. It allows middlewares before and after each task 
