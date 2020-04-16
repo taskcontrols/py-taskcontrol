@@ -25,6 +25,11 @@ def tasks():
         # check if args and kwargs match to functions
         return {}
 
+    def get_task(task=None):
+        if not isinstance(task, None) and isinstance(task, str):
+            return tasks[task]
+        return tasks
+
     def set_task(fn, fna, fnkwa, wfargs, wfkwargs):
 
         if isinstance(tasks[wfkwargs["name"]], dict):
@@ -75,11 +80,6 @@ def tasks():
             run_task(task)
         elif isinstance(task, list):
             [run_task(t) for t in task.items()]
-
-    def get_task(task=None):
-        if not isinstance(task, None) and isinstance(task, str):
-            return tasks[task]
-        return tasks
 
     def setter():
         return {
