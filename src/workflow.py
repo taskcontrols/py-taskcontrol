@@ -103,7 +103,7 @@ def workflow(*wfargs, **wfkwargs):
         # check after middlewares args and kwargs number and validity
 
         def order_tasks(*fna, **fnkwa):
-
+            # print("order_tasks: Decorator init ", "fn_a: ", fna, "fn_kwa: ", fnkwa)
             global tasks
             t = tasks()["setter"]()
 
