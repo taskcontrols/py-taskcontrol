@@ -36,8 +36,8 @@ def tasks():
         tasks[wfkwargs["name"]][wfkwargs["task_order"]] = {
             "wf_args": wfargs,
             "wf_kwargs": wfkwargs,
-            "fna": fna,
-            "fnkwa": fnkwa,
+            "fn_a": fna,
+            "fn_kwa": fnkwa,
             "function": fn,
             "before": wfkwargs["before"],
             "after": wfkwargs["after"],
