@@ -40,7 +40,6 @@ def tasks():
             "fnca": fnca,
             "fnckwa": fnckwa,
             "function": fn,
-            "function_name": fn.__name__,
             "before": wfkwargs["before"],
             "after": wfkwargs["after"],
             "name": wfkwargs["name"]
