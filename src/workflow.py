@@ -42,14 +42,12 @@ def tasks():
             tasks[wfkwargs["name"]] = {}
 
         tasks[wfkwargs["name"]][wfkwargs["task_order"]] = {
-            "wf_args": wfargs,
-            "wf_kwargs": wfkwargs,
-            "fn_a": fna,
-            "fn_kwa": fnkwa,
-            "function": fn,
+            "name": wfkwargs["name"],
+            "wf_args": wfargs, "wf_kwargs": wfkwargs,
+            "fn_a": fna, "fn_kwa": fnkwa,
             "before": wfkwargs["before"],
             "after": wfkwargs["after"],
-            "name": wfkwargs["name"]
+            "function": fn
         }
         # print("set_task: Task added", kwargs["name"])
         # print("set_task: ", tasks[kwargs["name"]][kwargs["task_order"]])
@@ -115,7 +113,6 @@ def workflow(*wfargs, **wfkwargs):
             global tasks
             t = tasks()["setter"]()
             args_normal = t["clean_args"]( fn, wfargs, wfkwargs, fna, fnkwa )
-
             if not args_normal:
                 raise Exception("Args and KwArgs do not match")
 
