@@ -1,8 +1,8 @@
 from src.workflow import workflow, tasks
 
 
-def test(msg):
-    print(msg)
+def test(k):
+    print(k)
 
 
 @workflow(
