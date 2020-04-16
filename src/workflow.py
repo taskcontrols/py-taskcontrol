@@ -22,9 +22,13 @@ def tasks():
 
     def clean_args(fn, wfargs, wfkwargs, fna, fnkwa):
         tpl = fn.__code__.co_varnames
-        if (len(tpl) == len(fna) + len(fnkwa.keys())):
-            for k in fnkwa.keys():
-                if not tpl.index(k) >= len(fna):
+        l_tpl = len(tpl)
+        l_fna = len(fna)
+        k_fnkwa = fnkwa.keys()
+        l_fnkwa_keys = len(k_fnkwa)
+        if (l_tpl == l_fna + l_fnkwa_keys):
+            for k in k_fnkwa:
+                if not tpl.index(k) >= l_fna:
                     return False
             return True
         return False
