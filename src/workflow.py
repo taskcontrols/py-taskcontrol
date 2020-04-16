@@ -22,10 +22,8 @@ def tasks():
 
     def clean_args(fn, wfargs, wfkwargs, fna, fnkwa):
         tpl = fn.__code__.co_varnames
-        l_tpl = len(tpl)
-        l_fna = len(fna)
         k_fnkwa = fnkwa.keys()
-        l_fnkwa_keys = len(k_fnkwa)
+        l_tpl, l_fna, l_fnkwa_keys = (len(tpl), len(fna), len(k_fnkwa))
         if (l_tpl == l_fna + l_fnkwa_keys):
             for k in k_fnkwa:
                 if not tpl.index(k) >= l_fna:
@@ -117,11 +115,8 @@ def workflow(*wfargs, **wfkwargs):
             global tasks
             t = tasks()["setter"]()
 
-            # TODO: To be implemented
-            # clean_decorator = t.clean_args( fn, wfargs, wfkwargs, fna, fnkwa )
-
-            # if not clean_decorator:
-            #     raise Exception("Args and KwArgs do not match", clean_decorator)
+            if not t["clean_args"]( fn, wfargs, wfkwargs, fna, fnkwa ):
+                raise Exception("Args and KwArgs do not match")
 
             t["set_task"](fn, fna, fnkwa, wfargs, wfkwargs)
 
