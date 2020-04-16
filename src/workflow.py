@@ -20,6 +20,7 @@ def tasks():
                 # next(error_obj["error_next_value"])
                 return error_obj["error_next_value"]
             elif error_obj["error"] == "error_handler":
+                # error_obj["error_handler"](e, error_obj["error_next_value"])
                 return e, error_obj["error_next_value"]
             elif error_obj["error"] == "exit":
                 raise Exception("Error during middleware: ",
