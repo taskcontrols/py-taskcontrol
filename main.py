@@ -1,12 +1,8 @@
 from src.workflow import workflow, tasks
 
 
-def move(msg):
-    print(msg)
-
-
 def test(msg):
-    move(msg)
+    print(msg)
 
 
 @workflow(
@@ -39,6 +35,8 @@ def test(msg):
 )
 def taskone(a, b):
     print(a, b)
+
+
 taskone(3, 4)
 
 
