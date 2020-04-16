@@ -28,6 +28,7 @@ def test(msg):
                 "test": {
                     "args": [], "kwargs": {"k": "Testing message"},
                     # error { str }: [next, exit], error_handler { function }
+                    # "options": {"error": "exit"}
                     "options": {"error": "error_handler", "error_next_value": "", "error_handler": ""}
                 }
             }
