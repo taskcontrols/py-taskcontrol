@@ -15,10 +15,8 @@ def tasks():
     }
 
     def set_task(fn, fnca, fnckwa, wfargs, wfkwargs):
-
         if isinstance(tasks[wfkwargs["name"]], dict):
             tasks[wfkwargs["name"]] = {}
-
         tasks[wfkwargs["name"]][wfkwargs["task_order"]] = {
             "wf_args": wfargs,
             "wf_kwargs": wfkwargs,
@@ -30,6 +28,8 @@ def tasks():
             "after": wfkwargs["after"],
             "name": wfkwargs["name"]
         }
+        # print("set_task: test 3")
+        # print(tasks[kwargs["name"]][kwargs["task_order"]])
 
     def run(task):
 
@@ -65,10 +65,10 @@ def tasks():
 def workflow(*wfargs, **wfkwargs):
 
     def get_decorator(fn):
-        # print("test 1")
-        # print("args ", args)
-        # print("kwargs ", kwargs)
-        # print(fn)
+        # print("get_decorator: test 1")
+        # print("get_decorator: args ", args)
+        # print("get_decorator: kwargs ", kwargs)
+        # print("get_decorator: ", fn)
 
         # check before middlewares args and kwargs number and validity
         # check after middlewares args and kwargs number and validity
@@ -86,8 +86,8 @@ def workflow(*wfargs, **wfkwargs):
             t = tasks()
             t["set_task"](fn, fnca, fnckwa, wfargs, wfkwargs)
 
-            # print("test 3")
-            # print(tasks[kwargs["name"]][kwargs["task_order"]])
+            # print("order_tasks: test 3")
+            # print("order_tasks: ", tasks[kwargs["name"]][kwargs["task_order"]])
 
         return order_tasks
     return get_decorator
