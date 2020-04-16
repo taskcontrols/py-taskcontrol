@@ -74,6 +74,7 @@ def tasks():
     return {
         "run": run,
         "clean_args": clean_args,
+        "run_middleware": run_middleware,
         "set_task": set_task
     }
 
