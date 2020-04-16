@@ -46,30 +46,31 @@ def tasks():
         # print("set_task: test 3")
         # print("set_task: ", tasks[kwargs["name"]][kwargs["task_order"]])
 
-    def run(task):
-
-        # [print(t) for t in tasks.items()]
+    def run_task(task):
         if tasks[task]:
-            print("Workflow found: ", task)
-            print("The workflow object looks like this: ")
-            print(tasks[task])
-            # Put in try except block for clean errors
+                    print("Workflow found: ", task)
+                    print("The workflow object looks like this: ")
+                    print(tasks[task])
+                    # Put in try except block for clean errors
 
-            # TODO: To be implemented
-            # Iterate task through tasks
-            #       Iterate through before for each task
-            #           trigger before functions with next
-            #           else if error based on option:
-            #               trigger error_handler
-            #               trigger next
-            #               trigger exit
-            #       Trigger task
-            #       Iterate through after for each task
-            #           trigger after functions with next
-            #           else if error based on option:
-            #               trigger error_handler
-            #               trigger next
-            #               trigger exit
+                    # TODO: To be implemented
+                    # Iterate task through tasks
+                    #       Iterate through before for each task
+                    #           trigger before functions with next
+                    #           else if error based on option:
+                    #               trigger error_handler
+                    #               trigger next
+                    #               trigger exit
+                    #       Trigger task
+                    #       Iterate through after for each task
+                    #           trigger after functions with next
+                    #           else if error based on option:
+                    #               trigger error_handler
+                    #               trigger next
+                    #               trigger exit
+
+    def run(task_list):
+        [run_task(t) for t in task_list.items()]
 
     def setter():
         return {
