@@ -79,9 +79,14 @@ def tasks():
         elif isinstance(task, list):
             [run_task(t) for t in task.items()]
 
+    def get_task(task=None):
+        if not isinstance(task, None) and isinstance(task, str):
+            return tasks[task]
+        return tasks
+
     def setter():
         return {
-            "tasks": tasks,
+            "get_task": get_task,
             "clean_args": clean_args,
             "run_middleware": run_middleware,
             "set_task": set_task
