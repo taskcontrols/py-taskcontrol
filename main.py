@@ -41,4 +41,4 @@ def taskone(a, b):
 taskone(3, 4)
 
 
-tasks["run"](task="taskname")
+tasks()["run"](task="taskname")

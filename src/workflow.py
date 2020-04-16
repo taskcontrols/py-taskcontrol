@@ -48,32 +48,36 @@ def tasks():
 
     def run_task(task):
         if tasks[task]:
-                    print("Workflow found: ", task)
-                    print("The workflow object looks like this: ")
-                    print(tasks[task])
-                    # Put in try except block for clean errors
+            print("Workflow found: ", task)
+            print("The workflow object looks like this: ")
+            print(tasks[task])
+            # Put in try except block for clean errors
 
-                    # TODO: To be implemented
-                    # Iterate task through tasks
-                    #       Iterate through before for each task
-                    #           trigger before functions with next
-                    #           else if error based on option:
-                    #               trigger error_handler
-                    #               trigger next
-                    #               trigger exit
-                    #       Trigger task
-                    #       Iterate through after for each task
-                    #           trigger after functions with next
-                    #           else if error based on option:
-                    #               trigger error_handler
-                    #               trigger next
-                    #               trigger exit
+            # TODO: To be implemented
+            # Iterate task through tasks
+            #       Iterate through before for each task
+            #           trigger before functions with next
+            #           else if error based on option:
+            #               trigger error_handler
+            #               trigger next
+            #               trigger exit
+            #       Trigger task
+            #       Iterate through after for each task
+            #           trigger after functions with next
+            #           else if error based on option:
+            #               trigger error_handler
+            #               trigger next
+            #               trigger exit
 
-    def run(task_list):
-        [run_task(t) for t in task_list.items()]
+    def run(task):
+        if isinstance(task, str):
+            run_task(task)
+        elif isinstance(task, list):
+            [run_task(t) for t in task.items()]
 
     def setter():
         return {
+            "tasks": tasks,
             "clean_args": clean_args,
             "run_middleware": run_middleware,
             "set_task": set_task
@@ -110,7 +114,7 @@ def workflow(*wfargs, **wfkwargs):
             t["set_task"](fn, fnca, fnckwa, wfargs, wfkwargs)
 
             # print("order_tasks: test 3")
-            # print("order_tasks: ", tasks[kwargs["name"]][kwargs["task_order"]])
+            # print("order_tasks: ", t["tasks"][wfkwargs["name"]][wfkwargs["task_order"]])
 
         return order_tasks
     return get_decorator
