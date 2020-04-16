@@ -22,6 +22,7 @@ def test(msg):
     ],
     after=[
         {
+            # order followed will be of the list sequence
             "functions": [test],
             "flow": {
                 "test": {
