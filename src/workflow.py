@@ -14,14 +14,13 @@ def tasks():
     def run_middleware(fn, error_obj, *args, **kwargs):
         try:
             res = fn(args, kwargs)
-            next(res)
+            return True, res
         except Exception as e:
             if error_obj["error"] == "next":
-                # next(error_obj["error_next_value"])
-                return error_obj["error_next_value"]
+                return 'next', error_obj["error_next_value"]
             elif error_obj["error"] == "error_handler":
-                # error_obj["error_handler"](e, error_obj["error_next_value"])
-                return e, error_obj["error_next_value"]
+                e_res = error_obj["error_handler"](e, error_obj["error_next_value"])
+                return 'error_handler', e_res
             elif error_obj["error"] == "exit":
                 raise Exception("Error during middleware: ",
                                 fn.__name__, str(e))
