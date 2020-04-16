@@ -2,17 +2,16 @@
 # Goal: Manage Workflow and related middlewares
 
 
-def clean_args(fn, wfargs, wfkwargs, fnca, fnckwa):
-    # TODO: To be implemented
-    # check if args and kwargs match to functions
-    return {}
-
-
 def tasks():
 
     tasks = {
         "taskname": {}
     }
+
+    def clean_args(fn, wfargs, wfkwargs, fnca, fnckwa):
+        # TODO: To be implemented
+        # check if args and kwargs match to functions
+        return {}
 
     def set_task(fn, fnca, fnckwa, wfargs, wfkwargs):
         if isinstance(tasks[wfkwargs["name"]], dict):
@@ -58,6 +57,7 @@ def tasks():
 
     return {
         "run": run,
+        "clean_args": clean_args,
         "set_task": set_task
     }
 
@@ -74,16 +74,18 @@ def workflow(*wfargs, **wfkwargs):
         # check after middlewares args and kwargs number and validity
 
         def order_tasks(*fnca, **fnckwa):
+
+            global tasks
+            t = tasks()
+
             # TODO: To be implemented
-            # clean_decorator = clean_args(
+            # clean_decorator = t.clean_args(
             #     fn, wfargs, wfkwargs, fnca, fnckwa)
 
             # if not clean_decorator:
             #     raise Exception("Args and KwArgs do not match",
             #                     clean_decorator)
 
-            global tasks
-            t = tasks()
             t["set_task"](fn, fnca, fnckwa, wfargs, wfkwargs)
 
             # print("order_tasks: test 3")
