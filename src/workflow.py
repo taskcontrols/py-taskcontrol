@@ -70,12 +70,16 @@ def tasks():
             #               trigger error_handler
             #               trigger next
             #               trigger exit
+    def setter():
+        return {
+            "clean_args": clean_args,
+            "run_middleware": run_middleware,
+            "set_task": set_task
+        }
 
     return {
         "run": run,
-        "clean_args": clean_args,
-        "run_middleware": run_middleware,
-        "set_task": set_task
+        "setter": setter
     }
 
 
@@ -93,7 +97,7 @@ def workflow(*wfargs, **wfkwargs):
         def order_tasks(*fnca, **fnckwa):
 
             global tasks
-            t = tasks()
+            t = tasks()["setter"]()
 
             # TODO: To be implemented
             # clean_decorator = t.clean_args( fn, wfargs, wfkwargs, fnca, fnckwa )
