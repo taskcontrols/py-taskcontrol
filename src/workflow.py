@@ -115,8 +115,8 @@ def workflow(*wfargs, **wfkwargs):
 
             t["set_task"](fn, fnca, fnckwa, wfargs, wfkwargs)
 
-            # print("order_tasks: test 3")
-            # print("order_tasks: ", t["tasks"][wfkwargs["name"]][wfkwargs["task_order"]])
+            print("order_tasks - Task added: ", wfkwargs["name"])
+            print("order_tasks: ", t["tasks"][wfkwargs["name"]][wfkwargs["task_order"]])
 
         return order_tasks
     return get_decorator
