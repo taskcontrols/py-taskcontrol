@@ -21,9 +21,13 @@ def tasks():
                                 fn.__name__, str(e))
 
     def clean_args(fn, wfargs, wfkwargs, fna, fnkwa):
-        # TODO: To be implemented
-        # check if args and kwargs match to functions
-        return {}
+        tpl = fn.__code__.co_varnames
+        if (len(tpl) == len(fna) + len(fnkwa.keys())):
+            for k in fnkwa.keys():
+                if not tpl.index(k) >= len(fna):
+                    return False
+            return True
+        return False
 
     def get_task(task=None):
         if not isinstance(task, None) and isinstance(task, str):
