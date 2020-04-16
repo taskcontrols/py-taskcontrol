@@ -24,12 +24,12 @@ def tasks():
                 raise Exception("Error during middleware: ",
                                 fn.__name__, str(e))
 
-    def clean_args(fn, wfargs, wfkwargs, fnca, fnckwa):
+    def clean_args(fn, wfargs, wfkwargs, fna, fnkwa):
         # TODO: To be implemented
         # check if args and kwargs match to functions
         return {}
 
-    def set_task(fn, fnca, fnckwa, wfargs, wfkwargs):
+    def set_task(fn, fna, fnkwa, wfargs, wfkwargs):
 
         if isinstance(tasks[wfkwargs["name"]], dict):
             tasks[wfkwargs["name"]] = {}
@@ -37,8 +37,8 @@ def tasks():
         tasks[wfkwargs["name"]][wfkwargs["task_order"]] = {
             "wf_args": wfargs,
             "wf_kwargs": wfkwargs,
-            "fnca": fnca,
-            "fnckwa": fnckwa,
+            "fna": fna,
+            "fnkwa": fnkwa,
             "function": fn,
             "before": wfkwargs["before"],
             "after": wfkwargs["after"],
@@ -103,18 +103,18 @@ def workflow(*wfargs, **wfkwargs):
         # check before middlewares args and kwargs number and validity
         # check after middlewares args and kwargs number and validity
 
-        def order_tasks(*fnca, **fnckwa):
+        def order_tasks(*fna, **fnkwa):
 
             global tasks
             t = tasks()["setter"]()
 
             # TODO: To be implemented
-            # clean_decorator = t.clean_args( fn, wfargs, wfkwargs, fnca, fnckwa )
+            # clean_decorator = t.clean_args( fn, wfargs, wfkwargs, fna, fnkwa )
 
             # if not clean_decorator:
             #     raise Exception("Args and KwArgs do not match", clean_decorator)
 
-            t["set_task"](fn, fnca, fnckwa, wfargs, wfkwargs)
+            t["set_task"](fn, fna, fnkwa, wfargs, wfkwargs)
 
             print("order_tasks - Task added: ", wfkwargs["name"])
             # print("order_tasks: ", t["tasks"][wfkwargs["name"]][wfkwargs["task_order"]])
