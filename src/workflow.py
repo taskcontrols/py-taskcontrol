@@ -22,7 +22,7 @@ def tasks():
                 e_res = error_obj["error_handler"](e, error_obj["error_next_value"])
                 return 'error_handler', e_res
             elif error_obj["error"] == "exit":
-                raise Exception("Error during middleware: ",
+                raise Exception("Error during middleware: exit: ",
                                 fn.__name__, str(e))
 
     def clean_args(fn, wfargs, wfkwargs, fna, fnkwa):
