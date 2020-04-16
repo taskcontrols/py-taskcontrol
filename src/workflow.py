@@ -28,7 +28,7 @@ def tasks():
             "name": wfkwargs["name"]
         }
         # print("set_task: test 3")
-        # print(tasks[kwargs["name"]][kwargs["task_order"]])
+        # print("set_task: ", tasks[kwargs["name"]][kwargs["task_order"]])
 
     def run(task):
 
@@ -79,12 +79,10 @@ def workflow(*wfargs, **wfkwargs):
             t = tasks()
 
             # TODO: To be implemented
-            # clean_decorator = t.clean_args(
-            #     fn, wfargs, wfkwargs, fnca, fnckwa)
+            # clean_decorator = t.clean_args( fn, wfargs, wfkwargs, fnca, fnckwa )
 
             # if not clean_decorator:
-            #     raise Exception("Args and KwArgs do not match",
-            #                     clean_decorator)
+            #     raise Exception("Args and KwArgs do not match", clean_decorator)
 
             t["set_task"](fn, fnca, fnckwa, wfargs, wfkwargs)
 
