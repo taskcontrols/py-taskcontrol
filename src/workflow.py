@@ -114,8 +114,8 @@ def workflow(*wfargs, **wfkwargs):
             # print("order_tasks: Decorator init ", "fn_a: ", fna, "fn_kwa: ", fnkwa)
             global tasks
             t = tasks()["setter"]()
-
-            if not t["clean_args"]( fn, wfargs, wfkwargs, fna, fnkwa ):
+            args_normal = t["clean_args"]( fn, wfargs, wfkwargs, fna, fnkwa )
+            if not args_normal:
                 raise Exception("Args and KwArgs do not match")
 
             t["set_task"](fn, fna, fnkwa, wfargs, wfkwargs)
