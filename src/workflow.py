@@ -8,6 +8,22 @@ def tasks():
         "taskname": {}
     }
 
+    def next(obj):
+        pass
+
+    def run_middleware(fn, error_Obj, *args, **kwargs):
+        try:
+            res = fn(args, kwargs)
+            next(res)
+        except Exception as e:
+            if error_Obj["error"] == "next":
+                next(error_Obj["error_next_value"])
+            elif error_Obj["error"] == "error_handler":
+                error_Obj["error_handler"]()
+            elif error_Obj["error"] == "exit":
+                raise Exception("Error during middleware: ",
+                                fn.__name__, str(e))
+
     def clean_args(fn, wfargs, wfkwargs, fnca, fnckwa):
         # TODO: To be implemented
         # check if args and kwargs match to functions
