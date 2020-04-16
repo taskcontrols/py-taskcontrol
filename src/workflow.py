@@ -9,27 +9,30 @@ def clean_args_kwargs(fn, wfargs, wfkwargs, fnca, fnckwa):
 
 
 def run(task):
-    # TODO: To be implemented
-    # Iterate task through tasks
-    #       Iterate through before for each task
-    #           trigger before functions with next
-    #           else if error based on option:
-    #               trigger error_handler
-    #               trigger next
-    #               trigger exit
-    #       Trigger task
-    #       Iterate through after for each task
-    #           trigger after functions with next
-    #           else if error based on option:
-    #               trigger error_handler
-    #               trigger next
-    #               trigger exit
-
+    
     # [print(t) for t in tasks["tasks"].items()]
     if tasks["tasks"][task]:
         print("Workflow found: ", task)
         print("The workflow object looks like this: ")
         print(tasks["tasks"][task])
+        # Put in try except block for clean errors
+
+        # TODO: To be implemented
+        # Iterate task through tasks
+        #       Iterate through before for each task
+        #           trigger before functions with next
+        #           else if error based on option:
+        #               trigger error_handler
+        #               trigger next
+        #               trigger exit
+        #       Trigger task
+        #       Iterate through after for each task
+        #           trigger after functions with next
+        #           else if error based on option:
+        #               trigger error_handler
+        #               trigger next
+        #               trigger exit
+
 
 
 tasks = {
