@@ -17,7 +17,7 @@ def test(msg):
             "functions": [test],
             "flow": {
                 "test": {
-                    "args": [], "kwargs": {"msg": "Testing message"},
+                    "args": [], "kwargs": {"k": "Testing message"},
                     # error: next, exit, error_handler
                     "options": {"error": "next", "error_next_value": ""}
                 }
@@ -29,7 +29,7 @@ def test(msg):
             "functions": [test],
             "flow": {
                 "test": {
-                    "args": [], "kwargs": {"msg": "Testing message"},
+                    "args": [], "kwargs": {"k": "Testing message"},
                     # error: next, exit, error_handler
                     "options": {"error": "error_handler", "error_next_value": "", "error_handler": ""}
                 }
