@@ -30,8 +30,10 @@ def tasks():
         return {}
 
     def set_task(fn, fnca, fnckwa, wfargs, wfkwargs):
+
         if isinstance(tasks[wfkwargs["name"]], dict):
             tasks[wfkwargs["name"]] = {}
+
         tasks[wfkwargs["name"]][wfkwargs["task_order"]] = {
             "wf_args": wfargs,
             "wf_kwargs": wfkwargs,
