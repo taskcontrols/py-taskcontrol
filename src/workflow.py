@@ -11,16 +11,16 @@ def tasks():
     def next(obj):
         pass
 
-    def run_middleware(fn, error_Obj, *args, **kwargs):
+    def run_middleware(fn, error_obj, *args, **kwargs):
         try:
             res = fn(args, kwargs)
             next(res)
         except Exception as e:
-            if error_Obj["error"] == "next":
-                next(error_Obj["error_next_value"])
-            elif error_Obj["error"] == "error_handler":
-                error_Obj["error_handler"]()
-            elif error_Obj["error"] == "exit":
+            if error_obj["error"] == "next":
+                next(error_obj["error_next_value"])
+            elif error_obj["error"] == "error_handler":
+                error_obj["error_handler"]()
+            elif error_obj["error"] == "exit":
                 raise Exception("Error during middleware: ",
                                 fn.__name__, str(e))
 
@@ -45,7 +45,7 @@ def tasks():
             "after": wfkwargs["after"],
             "name": wfkwargs["name"]
         }
-        # print("set_task: test 3")
+        # print("set_task: Task added", kwargs["name"])
         # print("set_task: ", tasks[kwargs["name"]][kwargs["task_order"]])
 
     def run_task(task):
@@ -94,9 +94,7 @@ def tasks():
 def workflow(*wfargs, **wfkwargs):
 
     def get_decorator(fn):
-        # print("get_decorator: test 1")
-        # print("get_decorator: args ", args)
-        # print("get_decorator: kwargs ", kwargs)
+        # print("get_decorator: Decorator init ", "args: ", args, "kwargs: ", kwargs)
         # print("get_decorator: ", fn)
 
         # check before middlewares args and kwargs number and validity
