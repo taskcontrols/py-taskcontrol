@@ -51,19 +51,23 @@ def tasks():
     def run_task(task):
         if tasks[task]:
             print("Workflow found: ", task)
-            print("The workflow object looks like this: ")
-            print(tasks[task])
+            print("The workflow object looks like this: ", tasks[task])
+
             # Put in try except block for clean errors
 
             # TODO: To be implemented
+
             # Iterate task through tasks
+
             #       Iterate through before for each task
             #           trigger before functions with next
             #           else if error based on option:
             #               trigger error_handler
             #               trigger next
             #               trigger exit
+
             #       Trigger task
+
             #       Iterate through after for each task
             #           trigger after functions with next
             #           else if error based on option:
