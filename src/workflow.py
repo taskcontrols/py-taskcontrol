@@ -115,6 +115,7 @@ def workflow(*wfargs, **wfkwargs):
             global tasks
             t = tasks()["setter"]()
             args_normal = t["clean_args"]( fn, wfargs, wfkwargs, fna, fnkwa )
+
             if not args_normal:
                 raise Exception("Args and KwArgs do not match")
 
