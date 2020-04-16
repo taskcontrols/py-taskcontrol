@@ -8,9 +8,6 @@ def tasks():
         "taskname": {}
     }
 
-    def next(obj):
-        pass
-
     def run_middleware(fn, error_obj, *args, **kwargs):
         try:
             return True, fn(args, kwargs)
