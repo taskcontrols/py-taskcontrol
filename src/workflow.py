@@ -96,7 +96,7 @@ def tasks():
 def workflow(*wfargs, **wfkwargs):
 
     def get_decorator(fn):
-        # print("get_decorator: Decorator init ", "args: ", args, "kwargs: ", kwargs)
+        # print("get_decorator: Decorator init ", "wf_args: ", wfargs, "wf_kwargs: ", wfkwargs)
         # print("get_decorator: ", fn)
 
         # check before middlewares args and kwargs number and validity
