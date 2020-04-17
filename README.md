@@ -46,7 +46,17 @@ def test(k):
             "flow": {
                 "test": {
                     "args": [], "kwargs": {"k": "Testing message"},
-                    # error { str }: [next, error_handler, exit], error_handler { function }
+                    
+                    # error { str }: [next, error_handler, exit]
+                    # error_handler { function }, error_next_value { object }
+                    #
+                    # Usage:
+                    # "options": {"error": "next", "error_next_value": "value"}
+                    # "options": {"error": "exit"}
+                    # "options": { 
+                    #    "error": "error_handler", error_handler: func, "error_next_value": "value"
+                    #    }
+
                     "options": {"error": "next", "error_next_value": ""}
                 }
             }
@@ -59,8 +69,7 @@ def test(k):
             "flow": {
                 "test": {
                     "args": [], "kwargs": {"k": "Testing message"},
-                    # error { str }: [next, error_handler, exit], error_handler { function }
-                    # "options": {"error": "exit"}
+                    
                     "options": {"error": "error_handler", "error_next_value": "", "error_handler": ""}
                 }
             }
