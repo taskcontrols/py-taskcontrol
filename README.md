@@ -82,7 +82,7 @@ def test(k):
 def taskone(a, b):
     print(a, b)
 
-# Invocation is needed to add the task
+# Invocation is needed to add the task with function arguments
 # Invoke this where needed
 # Example: Within some other function
 taskone(3, 4)
