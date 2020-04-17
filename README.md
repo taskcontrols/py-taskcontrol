@@ -47,16 +47,16 @@ def test(k):
                 "test": {
                     "args": [], "kwargs": {"k": "Testing message"},
                     
-                    # options { error : str,  error_next_value: Object, error_handler: function }
+                    # options { error : <str>,  error_next_value: <Object>, error_handler: <function> }
                     # 
-                    # error { str }: [next, error_handler, exit]
-                    # error_handler { function }
-                    # error_next_value { object }
-                    #
+                    # error { <str> }: [next, error_handler, exit]
+                    # error_handler { <function> }
+                    # error_next_value { <Object> }
+                    # 
                     # Usage:
                     # "options": {"error": "next", "error_next_value": "value"}
                     # "options": {"error": "exit"}
-                    # "options": { 
+                    # "options": {
                     #    "error": "error_handler", error_handler: func, "error_next_value": "value"
                     #    }
 
