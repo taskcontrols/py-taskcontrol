@@ -23,5 +23,5 @@ Though it may support Python version 2.x. It has not been tested in 2.x. The Syn
 
 # Documentation / Wiki
 # Todo
-# License
 # References
+# License
