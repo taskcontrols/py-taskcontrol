@@ -1,6 +1,6 @@
 # # Project Workflow
 # Goal: Manage Workflow and related middlewares
-# TODO: Moving to class based decorator seems more beneficial
+
 
 class Tasks():
 
@@ -108,12 +108,12 @@ def workflow(*wf_args, **wf_kwargs):
         def order_tasks(*fn_a, **fn_kwa):
             # print("order_tasks: Decorator init ", "fn_a: ", fn_a, "fn_kwa: ", fn_kwa)
             global Tasks
-            t = Tasks().setter()
-            args_normal = t["clean_args"](fn, wf_args, wf_kwargs, fn_a, fn_kwa)
+            t = Tasks()
+            args_normal = t.clean_args(fn, wf_args, wf_kwargs, fn_a, fn_kwa)
             if not args_normal:
                 raise Exception("Args and KwArgs do not match")
 
-            t["set_task"](fn, fn_a, fn_kwa, wf_args, wf_kwargs)
+            t.set_task(fn, fn_a, fn_kwa, wf_args, wf_kwargs)
 
             print("order_tasks - Task added: ", wf_kwargs["name"])
             # print("order_tasks: ", t["tasks"][wf_kwargs["name"]][wf_kwargs["task_order"]])
