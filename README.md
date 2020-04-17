@@ -75,8 +75,9 @@ def taskone(a, b):
 # Example: Within some other function
 taskone(3, 4)
 
-<!-- Invoke this where needed -->
+# Invoke this where needed
 tasks()["run"](task="taskname")
+
 ```
 
 ##### Note:
