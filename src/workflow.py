@@ -120,3 +120,5 @@ def workflow(*wf_args, **wf_kwargs):
 
         return order_tasks
     return get_decorator
+
+__all__ = ["Tasks", "workflow"]
