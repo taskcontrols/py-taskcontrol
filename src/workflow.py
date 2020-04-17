@@ -1,14 +1,14 @@
 # # Project Workflow
 # Goal: Manage Workflow and related middlewares
-# TODO: Moving to clas based decorator seems more beneficial
+# TODO: Moving to class based decorator seems more beneficial
 
-def tasks():
+class Tasks():
 
     tasks = {
         "taskname": {}
     }
 
-    def run_middleware(fn, error_obj, *args, **kwargs):
+    def run_middleware(self, fn, error_obj, *args, **kwargs):
         try:
             return True, fn(args, kwargs)
         except Exception as e:
@@ -20,7 +20,7 @@ def tasks():
                 raise Exception("exit: Error during middleware: ",
                                 fn.__name__, str(e))
 
-    def clean_args(fn, wf_args, wf_kwargs, fn_a, fn_kwa):
+    def clean_args(self, fn, wf_args, wf_kwargs, fn_a, fn_kwa):
         tpl = fn.__code__.co_varnames
         k_fn_kwa = fn_kwa.keys()
         l_tpl, l_fn_a, l_k_fn_kwa = (len(tpl), len(fn_a), len(k_fn_kwa))
@@ -31,17 +31,17 @@ def tasks():
             return True
         return False
 
-    def get_task(task=None):
+    def get_task(self, task=None):
         if not isinstance(task, None) and isinstance(task, str):
-            return tasks[task]
-        return tasks
+            return self.tasks[task]
+        return self.tasks
 
-    def set_task(fn, fn_a, fn_kwa, wf_args, wf_kwargs):
+    def set_task(self, fn, fn_a, fn_kwa, wf_args, wf_kwargs):
 
-        if isinstance(tasks[wf_kwargs["name"]], dict):
-            tasks[wf_kwargs["name"]] = {}
+        if isinstance(self.tasks[wf_kwargs["name"]], dict):
+            self.tasks[wf_kwargs["name"]] = {}
 
-        tasks[wf_kwargs["name"]][wf_kwargs["task_order"]] = {
+        self.tasks[wf_kwargs["name"]][wf_kwargs["task_order"]] = {
             "name": wf_kwargs["name"],
             "wf_args": wf_args, "wf_kwargs": wf_kwargs,
             "fn_a": fn_a, "fn_kwa": fn_kwa,
@@ -50,12 +50,12 @@ def tasks():
             "function": fn
         }
         # print("set_task: Task added", kwargs["name"])
-        # print("set_task: ", tasks[kwargs["name"]][kwargs["task_order"]])
+        # print("set_task: ", self.tasks[kwargs["name"]][kwargs["task_order"]])
 
-    def run_task(task):
-        if tasks[task]:
+    def run_task(self, task):
+        if self.tasks[task]:
             print("Workflow found: ", task)
-            print("The workflow object looks like this: ", tasks[task])
+            print("The workflow object looks like this: ", self.tasks[task])
 
             # Put in try except block for clean errors
 
@@ -79,26 +79,21 @@ def tasks():
             #               trigger next
             #               trigger exit
 
-    def run(task):
+    def run(self, task):
         if isinstance(task, str):
-            run_task(task)
+            self.run_task(task)
         elif isinstance(task, list):
-            [run_task(t) for t in task.items()]
+            [self.run_task(t) for t in task.items()]
         else:
             print("No workflow or task available to run")
 
-    def setter():
+    def setter(self):
         return {
-            "get_task": get_task, "set_task": set_task,
-            "run_task": run_task,
-            "clean_args": clean_args,
-            "run_middleware": run_middleware
+            "get_task": self.get_task, "set_task": self.set_task,
+            "run_task": self.run_task,
+            "clean_args": self.clean_args,
+            "run_middleware": self.run_middleware
         }
-
-    return {
-        "run": run,
-        "setter": setter
-    }
 
 
 def workflow(*wf_args, **wf_kwargs):
@@ -112,8 +107,8 @@ def workflow(*wf_args, **wf_kwargs):
 
         def order_tasks(*fn_a, **fn_kwa):
             # print("order_tasks: Decorator init ", "fn_a: ", fn_a, "fn_kwa: ", fn_kwa)
-            global tasks
-            t = tasks()["setter"]()
+            global Tasks
+            t = Tasks().setter()
             args_normal = t["clean_args"](fn, wf_args, wf_kwargs, fn_a, fn_kwa)
             if not args_normal:
                 raise Exception("Args and KwArgs do not match")

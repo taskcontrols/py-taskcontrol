@@ -1,4 +1,4 @@
-from src.workflow import workflow, tasks
+from src.workflow import workflow, Tasks
 
 
 def test(k):
@@ -60,5 +60,5 @@ taskone(3, 4)
 
 # Invoke this where needed
 # Example: Within some other function
-# tasks()["run"](task=["taskname", "tasktwo"])
-tasks()["run"](task="taskname")
+# Tasks()run(task=["taskname", "tasktwo"])
+Tasks().run(task="taskname")
