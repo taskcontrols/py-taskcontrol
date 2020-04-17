@@ -80,7 +80,12 @@ def tasks():
             #               trigger exit
 
     def run(task):
-        run_task(task) if isinstance(task, str) else [run_task(t) for t in task.items()] if isinstance(task, list) else print("Nothing to Run")
+        if isinstance(task, str):
+            run_task(task)
+        elif isinstance(task, list):
+            [run_task(t) for t in task.items()]
+        else:
+            print("No workflow or task available to run")
 
     def setter():
         return {
