@@ -19,7 +19,7 @@ It provides a simple decorator that takes the name, task, before, after argument
 
 ##### Note:
 
-Though it may support Python version 2.x. It has not been tested in 2.x. The Syntax and Features of the library supports Python version 2.x. However, use at your own risk.
+Though it may support Python version 2.x. However, it has not been tested in 2.x. The Syntax and Features of the library supports Python version 2.x. Use at your own risk.
 
 # Documentation / Wiki
 # Todo
