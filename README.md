@@ -7,7 +7,7 @@ It provides a simple decorator that takes the name, task, before, after argument
 # Installation
 
 ##### Command:
-    - pip3 install workflow-name-TBD
+    pip3 install workflow-name-TBD
 
 ##### Package Link:
     
