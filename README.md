@@ -31,8 +31,8 @@ It provides a simple decorator that takes the name, task, before, after argument
 
 ```javascript
 
-// from src.workflow import workflow, tasks
-from workflow-name-TBD import workflow, tasks
+// from src.workflow import workflow, Tasks
+from workflow-name-TBD import workflow, Tasks
 
 
 def test(k):
@@ -49,16 +49,16 @@ def test(k):
                 "test": {
                     "args": [], "kwargs": {"k": "Testing message"},
                     
-                    # options: { error : <str>,  error_next_value: <Object>, error_handler: <function> }
+                    # options { error : str,  error_next_value: Object, error_handler: function }
                     # 
-                    # error { <str> }: [next, error_handler, exit]
-                    # error_handler { <function> }
-                    # error_next_value { <Object> }
-                    # 
+                    # error { str }: [next, error_handler, exit]
+                    # error_handler { function }
+                    # error_next_value { object }
+                    #
                     # Usage:
                     # "options": {"error": "next", "error_next_value": "value"}
                     # "options": {"error": "exit"}
-                    # "options": {
+                    # "options": { 
                     #    "error": "error_handler", error_handler: func, "error_next_value": "value"
                     #    }
 
@@ -87,17 +87,16 @@ def test(k):
 def taskone(a, b):
     print(a, b)
 
-
 # Invocation is needed to add the task with function arguments
 # Invoke this where needed
 # Example: Within some other function
 taskone(3, 4)
 
-
 # Invoke this where needed
 # Example: Within some other function
-# tasks()["run"](task=["taskname", "tasktwo"])
-tasks()["run"](task="taskname")
+# Tasks().run(task=["taskname", "tasktwo"])
+Tasks().run(task="taskname")
+
 
 ```
 
