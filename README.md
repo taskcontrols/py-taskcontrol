@@ -6,12 +6,13 @@ It provides a simple decorator that takes the name, task, before, after argument
 
 # Installation
 
-    - pip3 install workflow
+    - pip3 install workflow-name-TBD
 
 # Features
 # Feature Details
 # Technical Specifications
 
+#### Note:
 Though it may support Python version 2.x. It has not been tested in 2.x. The Syntax and Features of the library supports Python version 2.x. However, use at your own risk.
 
 # Documentation / Wiki
