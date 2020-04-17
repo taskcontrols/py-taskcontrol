@@ -29,7 +29,8 @@ It provides a simple decorator that takes the name, task, before, after argument
 
 ##### Quick Demo:
 
-`from src.workflow import workflow, tasks
+```javascript
+from src.workflow import workflow, tasks
 
 
 def test(k):
@@ -76,7 +77,7 @@ taskone(3, 4)
 
 <!-- Invoke this where needed -->
 tasks()["run"](task="taskname")
-`
+```
 
 ##### Note:
 
