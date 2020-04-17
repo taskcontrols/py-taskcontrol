@@ -60,4 +60,5 @@ taskone(3, 4)
 
 # Invoke this where needed
 # Example: Within some other function
+# tasks()["run"](task=["taskname", "tasktwo"])
 tasks()["run"](task="taskname")
