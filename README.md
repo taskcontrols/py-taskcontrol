@@ -30,8 +30,10 @@ It provides a simple decorator that takes the name, task, before, after argument
 ##### Quick Demo:
 
 ```javascript
+
 // from src.workflow import workflow, tasks
 from workflow-name-TBD import workflow, tasks
+
 
 def test(k):
     print(k)
@@ -85,10 +87,12 @@ def test(k):
 def taskone(a, b):
     print(a, b)
 
+
 # Invocation is needed to add the task with function arguments
 # Invoke this where needed
 # Example: Within some other function
 taskone(3, 4)
+
 
 # Invoke this where needed
 # Example: Within some other function
