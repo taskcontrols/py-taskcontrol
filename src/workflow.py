@@ -23,8 +23,8 @@ def tasks():
     def clean_args(fn, wf_args, wf_kwargs, fn_a, fn_kwa):
         tpl = fn.__code__.co_varnames
         k_fn_kwa = fn_kwa.keys()
-        l_tpl, l_fn_a, l_fn_kwa_keys = (len(tpl), len(fn_a), len(k_fn_kwa))
-        if (l_tpl == l_fn_a + l_fn_kwa_keys):
+        l_tpl, l_fn_a, l_k_fn_kwa = (len(tpl), len(fn_a), len(k_fn_kwa))
+        if (l_tpl == l_fn_a + l_k_fn_kwa):
             for k in k_fn_kwa:
                 if not tpl.index(k) >= l_fn_a:
                     return False
@@ -112,7 +112,7 @@ def workflow(*wf_args, **wf_kwargs):
             # print("order_tasks: Decorator init ", "fn_a: ", fn_a, "fn_kwa: ", fn_kwa)
             global tasks
             t = tasks()["setter"]()
-            args_normal = t["clean_args"]( fn, wf_args, wf_kwargs, fn_a, fn_kwa )
+            args_normal = t["clean_args"](fn, wf_args, wf_kwargs, fn_a, fn_kwa)
             if not args_normal:
                 raise Exception("Args and KwArgs do not match")
 
