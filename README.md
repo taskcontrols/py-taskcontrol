@@ -72,7 +72,7 @@ def test(k):
                     "options": {
                             "error": "error_handler",
                             "error_next_value": "value",
-                            "error_handler": lambda e, value: value
+                            "error_handler": lambda err, value: value
                         }
                 }
             }
