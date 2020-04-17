@@ -17,11 +17,22 @@ It provides a simple decorator that takes the name, task, before, after argument
 # Feature Details
 # Technical Specifications
 
+##### Requirements:
+
+* Python 3.x
+* Any OS supporting Python 3.x
+
+##### Package Dependancies:
+
+* None
+
+
+
 ##### Note:
 
 Though it may support Python version 2.x. However, it has not been tested in 2.x. The Syntax and Features of the library supports Python version 2.x. Use at your own risk.
 
-# Documentation / Wiki
+# Wiki
 # Todo
 # References
 # License
