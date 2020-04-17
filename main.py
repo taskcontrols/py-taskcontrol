@@ -9,7 +9,7 @@ def test(k):
     name="taskname", task_order=1,
     before=[
         {
-            # order followed will be of the list sequence
+            # before middleware order followed will be of the list sequence
             "functions": [test],
             "flow": {
                 "test": {
@@ -22,7 +22,7 @@ def test(k):
     ],
     after=[
         {
-            # order followed will be of the list sequence
+            # after middleware order followed will be of the list sequence
             "functions": [test],
             "flow": {
                 "test": {

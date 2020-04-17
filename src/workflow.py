@@ -80,17 +80,14 @@ def tasks():
             #               trigger exit
 
     def run(task):
-        if isinstance(task, str):
-            run_task(task)
-        elif isinstance(task, list):
-            [run_task(t) for t in task.items()]
+        run_task(task) if isinstance(task, str) else [run_task(t) for t in task.items()] if isinstance(task, list) else print("Nothing to Run")
 
     def setter():
         return {
-            "get_task": get_task,
+            "get_task": get_task, "set_task": set_task,
+            "run_task": run_task,
             "clean_args": clean_args,
-            "run_middleware": run_middleware,
-            "set_task": set_task
+            "run_middleware": run_middleware
         }
 
     return {
