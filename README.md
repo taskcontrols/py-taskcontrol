@@ -30,8 +30,8 @@ It provides a simple decorator that takes the name, task, before, after argument
 ##### Quick Demo:
 
 ```javascript
-from src.workflow import workflow, tasks
-
+// from src.workflow import workflow, tasks
+from workflow-name-TBD import workflow, tasks
 
 def test(k):
     print(k)
