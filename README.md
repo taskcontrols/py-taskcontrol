@@ -69,8 +69,11 @@ def test(k):
             "flow": {
                 "test": {
                     "args": [], "kwargs": {"k": "Testing message"},
-                    
-                    "options": {"error": "error_handler", "error_next_value": "", "error_handler": ""}
+                    "options": {
+                            "error": "error_handler",
+                            "error_next_value": "value",
+                            "error_handler": lambda e, value: value
+                        }
                 }
             }
         }
