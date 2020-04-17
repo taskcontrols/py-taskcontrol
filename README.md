@@ -26,8 +26,6 @@ It provides a simple decorator that takes the name, task, before, after argument
 
 * None
 
-
-
 ##### Note:
 
 Though it may support Python version 2.x. However, it has not been tested in 2.x. The Syntax and Features of the library supports Python version 2.x. Use at your own risk.
