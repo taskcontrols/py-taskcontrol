@@ -22,7 +22,7 @@ It provides a simple decorator that takes the name, task, before, after argument
 * Python 3.x
 * Any OS supporting Python 3.x
 
-##### Package Dependancies:
+##### Package Dependencies:
 
 * None
 
