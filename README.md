@@ -70,9 +70,9 @@ def test(k):
 def taskone(a, b):
     print(a, b)
 
-<!-- Invocation is needed to add the task -->
-<!-- Invocation can also be done where needed -->
-<!-- Example: Within some other function -->
+# Invocation is needed to add the task
+# Invocation can also be done where needed
+# Example: Within some other function
 taskone(3, 4)
 
 <!-- Invoke this where needed -->
