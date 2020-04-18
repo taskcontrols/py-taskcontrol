@@ -40,7 +40,7 @@ class Task():
     def set_task(self, fn, fn_a, fn_kwa, wf_args, wf_kwargs):
         global tasks
         print("tasks.keys()", tasks.keys(), wf_kwargs["name"])
-        
+
         if wf_kwargs["name"] not in tasks.keys():
             tasks[wf_kwargs["name"]] = {}
 
@@ -71,8 +71,6 @@ class Task():
 
             # TODO: To be implemented
 
-            # Iterate task through tasks
-
             #       Iterate through before for each task
             #           trigger before functions with next
             #           else if error based on option:
@@ -91,8 +89,10 @@ class Task():
 
     def run(self, task):
         if isinstance(task, str):
+            # Iterate task through single task
             self.run_task(task)
         elif isinstance(task, list):
+            # Iterate task through tasks
             [self.run_task(t) for t in task]
         else:
             print("No workflow or task available to run")
@@ -120,20 +120,18 @@ def workflow(*wf_args, **wf_kwargs):
             # print("order_tasks: Decorator init ", "fn_a: ", fn_a, "fn_kwa: ", fn_kwa)
             global Task
             global tasks
-            t= Task()
-            args_normal= t.clean_args(fn, wf_args, wf_kwargs, fn_a, fn_kwa)
+            t = Task()
+            args_normal = t.clean_args(fn, wf_args, wf_kwargs, fn_a, fn_kwa)
             if not args_normal:
                 raise Exception("Args and KwArgs do not match")
-            
+
             # print((fn, fn_a, fn_kwa, wf_args, wf_kwargs))
             t.set_task(fn, fn_a, fn_kwa, wf_args, wf_kwargs)
 
             print("order_tasks - Task added: ", wf_kwargs["name"])
-            # print("order_tasks: ", tasks[wf_kwargs["name"]][wf_kwargs["task_order"]])
 
         return order_tasks
     return get_decorator
 
 
-__all__= ["Task", "workflow"]
-
+__all__ = ["Task", "workflow"]
