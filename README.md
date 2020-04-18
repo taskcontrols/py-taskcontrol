@@ -148,6 +148,7 @@ Though it may support Python version 2.x. However, it has not been tested in 2.x
 
 # Todo
 
+* Add Tests
 * Add plugin system
 
 

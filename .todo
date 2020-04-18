@@ -1,6 +1,6 @@
 
 
-* Tests
+* Add Tests
     Add all variations of tests for 
         - decorator args and kwargs
         - function
@@ -8,3 +8,4 @@
         - before and after middlewares
         - run single task
         - run multiple tasks
+
