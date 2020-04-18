@@ -9,11 +9,12 @@ It provides a simple decorator that takes the name, task, before, after argument
 
 ##### Command:
 
-    pip3 install workflow-name-TBD
+    pip3 install taskcontrol
 
 ##### Package Link:
     
     https://github.com/ganeshkbhat/workflow
+    https://pypi.org/project/taskcontrol/
 
 # Features
 
