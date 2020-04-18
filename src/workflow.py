@@ -63,11 +63,12 @@ class WorkflowBase():
 
         if actions and isinstance(actions, list):
             for action in actions:
-                f = action.get("function")
-                err_obj, log, a, kwa = get_md_args(f, action, log)
-                self.run_middleware(f, err_obj, log, *a, **kwa)
+                fn = action.get("function")
+                err_obj, log, a, kwa = get_md_args(fn, action, log)
+                self.run_middleware(fn, err_obj, log, *a, **kwa)
         elif actions and isinstance(actions, dict):
             err_obj, log, a, kwa = get_md_args(actions.get("function"), actions, log)
+            self.run_middleware(actions.get("function"), err_obj, log, *a, **kwa)
 
     def clean_args(self, fn, wf_args, wf_kwargs, fn_a, fn_kwa):
         tpl = fn.__code__.co_varnames

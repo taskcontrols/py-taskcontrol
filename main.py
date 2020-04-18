@@ -72,7 +72,10 @@ taskone(3, 4)
 
 
 # Example two for decorator usage
-@workflow(name="tasktwo", task_order=2, before=[], after=[])
+@workflow(name="tasktwo", task_order=2, before={
+            "function": test, "args": [1, 2], "kwargs": {"d": "Testing message"},
+            "options": {"error": "next", "error_next_value": ""}
+        }, after=[])
 def tasktwo(a, b):
     print("Running my task: tasktwo", a, b)
 
