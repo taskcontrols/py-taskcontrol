@@ -1,6 +1,6 @@
 # # Project Workflow
 # Goal: Manage Workflow and related middlewares
-# TODO: Change all object attribute fetches to .get(attr) method
+# TODO: Make unusable WorkflowBase methods private
 
 tasks = {
     "taskname": {}
