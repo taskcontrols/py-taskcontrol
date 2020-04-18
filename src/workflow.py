@@ -42,7 +42,6 @@ class WorkflowBase():
 
         actions = tsk.get("wf_kwargs").get(md_action)
         if actions and isinstance(actions, list):
-
             for action in actions:
                 fns_list = action.get("functions")
                 f_dt = action.get("flow").get(f.__name__)
