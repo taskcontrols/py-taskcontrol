@@ -130,10 +130,10 @@ tasktwo(5, 6)
 # Example: Within some other function
 
 # Multiple Workflow Tasks run
-Task().run(task=["taskname", "tasktwo"])
+Task().run(tasks=["taskname", "tasktwo"])
 
 # Single Workflow Tasks run
-# Task().run(task="taskname")
+# Task().run(tasks="taskname")
 
 
 ```

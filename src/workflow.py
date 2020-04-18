@@ -148,15 +148,15 @@ class WorkflowBase():
 
 
 class Task(WorkflowBase):
-    def run(self, task):
-        if isinstance(task, str):
+    def run(self, tasks):
+        if isinstance(tasks, str):
             # Iterate task through single task
             print("Workflow task provided instantiated.")
-            self.run_task(task)
-        elif isinstance(task, list):
+            self.run_task(tasks)
+        elif isinstance(tasks, list):
             # Iterate task through tasks
             print("Workflow task list provided instantiated.")
-            [self.run_task(t) for t in task]
+            [self.run_task(t) for t in tasks]
         else:
             print("No workflow or task available to run")
 

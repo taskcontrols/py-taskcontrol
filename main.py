@@ -86,5 +86,9 @@ tasktwo(5, 6)
 
 # Invoke this where needed
 # Example: Within some other function
-Task().run(task=["taskname", "tasktwo"])
-# Task().run(task="taskname")
+
+# Multiple Workflow Tasks run
+Task().run(tasks=["taskname", "tasktwo"])
+
+# Single Workflow Tasks run
+# Task().run(tasks="taskname")
