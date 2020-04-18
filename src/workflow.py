@@ -15,19 +15,24 @@ class WorkflowBase():
                 print("Workflow run middleware function: ", fn.__name__)
             return True, fn(*args, **kwargs)
         except Exception as e:
-            print("Running error for middleware")
+            if log:
+                print("Running error for middleware")
+            
             if not hasattr(error_obj, "error"):
                 error_obj["error"] = "next"
+            
+            ero = error_obj.get("error")
+            erno = error_obj.get("error_next_value")
 
-            if error_obj["error"] == "next":
-                return 'next', (e, error_obj["error_next_value"])
-            elif error_obj["error"] == "error_handler":
+            if ero == "next":
+                return 'next', (e, erno)
+            elif ero == "error_handler":
                 if not hasattr(error_obj, "error_handler"):
                     if hasattr(error_obj, "error_next_value"):
-                        return "error_handler", (e, error_obj["error_next_value"])
+                        return "error_handler", (e, erno)
                     return "error_handler", (e, None)
-                return 'error_handler', error_obj["error_handler"](e, error_obj["error_next_value"])
-            elif error_obj["error"] == "exit":
+                return 'error_handler', error_obj.get("error_handler")(e, erno)
+            elif ero == "exit":
                 raise Exception("error_obj['error'] exit: Error during middleware: ",
                                 fn.__name__, str(e))
             else:
@@ -36,7 +41,7 @@ class WorkflowBase():
 
     def setup_run_middleware(self, task, md_action, log):
         
-        def get_middleware_args(f, action, log):
+        def get_md_args(f, action, log):
                     f_dt = action.get("flow").get(f.__name__)
 
                     if f_dt and isinstance(f_dt, dict):
@@ -64,10 +69,10 @@ class WorkflowBase():
                 
                 if fns_list and isinstance(fns_list, list):
                     for f in fns_list:
-                        err_obj, log, a, kwa = get_middleware_args(f, action, log)
+                        err_obj, log, a, kwa = get_md_args(f, action, log)
                         self.run_middleware(f, err_obj, log, *a, **kwa)
                 elif fns_list and hasattr(fns_list, callable):
-                    err_obj, log, a, kwa = get_middleware_args(fns_list, action, log)
+                    err_obj, log, a, kwa = get_md_args(fns_list, action, log)
                     self.run_middleware(fns_list, err_obj, log, *a, **kwa)
                 else:
                     pass
@@ -92,16 +97,17 @@ class WorkflowBase():
     def set_task(self, fn, fn_a, fn_kwa, wf_args, wf_kwargs):
         global tasks
 
+        wfname = wf_kwargs.get("name")
         # print("tasks.keys() ", tasks.keys())
-        print("Workflow task name to add: ", wf_kwargs["name"])
+        print("Workflow task name to add: ", wfname)
 
-        if wf_kwargs["name"] not in tasks.keys():
-            tasks[wf_kwargs["name"]] = {}
+        if wfname not in tasks.keys():
+            tasks[wfname] = {}
 
-        if not isinstance(tasks[wf_kwargs["name"]], dict):
-            tasks.update({wf_kwargs["name"]: {}})
+        if not isinstance(tasks[wfname], dict):
+            tasks.update({wfname: {}})
 
-        tasks[wf_kwargs["name"]].update({
+        tasks[wfname].update({
             "task_order": wf_kwargs["task_order"],
             "wf_args": wf_args, "wf_kwargs": wf_kwargs,
             "fn_a": fn_a, "fn_kwa": fn_kwa,
@@ -110,7 +116,7 @@ class WorkflowBase():
             "function": fn
         })
 
-        print("Workflow set_task: Task added: ", wf_kwargs["name"])
+        print("Workflow set_task: Task added: ", wfname)
         # print("Workflow set_task: ", tasks[kwargs["name"]][kwargs["task_order"]])
 
     def run_task(self, task):
@@ -133,7 +139,7 @@ class WorkflowBase():
             #       Invoke task
             if log:
                 print("Workflow task run: ", task.get("name"))
-            tsk["function"](*tsk["fn_a"], **tsk["fn_kwa"])
+            tsk.get("function")(*tsk.get("fn_a"), **tsk.get("fn_kwa"))
 
             #       Iterate through after for each task
             if log:
@@ -185,7 +191,7 @@ def workflow(*wf_args, **wf_kwargs):
             # print((fn, fn_a, fn_kwa, wf_args, wf_kwargs))
             t.set_task(fn, fn_a, fn_kwa, wf_args, wf_kwargs)
 
-            print("order_tasks - Task added: ", wf_kwargs["name"])
+            print("order_tasks - Task added: ", wf_kwargs.get("name"))
 
         return order_tasks
     return get_decorator
