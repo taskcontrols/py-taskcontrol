@@ -6,8 +6,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-     name='workflow',
-     version='1.0',
+     name='taskcontrol',
+     version='1.0.0',
      scripts=[],
      author="Ganesh B",
      author_email="ganeshsurfs@gmail.com",

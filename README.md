@@ -42,8 +42,11 @@ It provides a simple decorator that takes the name, task, before, after argument
 ```javascript
 
 
+// for git development repo
 // from src.workflow import workflow, Tasks
-from workflow-name-TBD import workflow, Tasks
+
+// for package
+from taskcontrol import workflow, Tasks
 
 
 def test(k, c, d):
