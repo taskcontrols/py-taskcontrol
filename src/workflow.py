@@ -9,7 +9,10 @@ tasks = {
 
 class WorkflowBase():
 
-    def run_middleware(self, fn, error_obj, log, *args, **kwargs):
+    def add_plugin(self):
+        pass
+
+    def _run_middleware(self, fn, error_obj, log, *args, **kwargs):
         try:
             if log:
                 print("Workflow run middleware function: ", fn.__name__)
@@ -65,10 +68,10 @@ class WorkflowBase():
             for action in actions:
                 fn = action.get("function")
                 err_obj, log, a, kwa = get_md_args(fn, action, log)
-                self.run_middleware(fn, err_obj, log, *a, **kwa)
+                self._run_middleware(fn, err_obj, log, *a, **kwa)
         elif actions and isinstance(actions, dict):
             err_obj, log, a, kwa = get_md_args(actions.get("function"), actions, log)
-            self.run_middleware(actions.get("function"), err_obj, log, *a, **kwa)
+            self._run_middleware(actions.get("function"), err_obj, log, *a, **kwa)
 
     def clean_args(self, fn, wf_args, wf_kwargs, fn_a, fn_kwa):
         tpl = fn.__code__.co_varnames
@@ -159,7 +162,8 @@ class Task(WorkflowBase):
             "set_task": self.set_task,
             "run_task": self.run_task,
             "clean_args": self.clean_args,
-            "run_middleware": self.run_middleware
+            "run_middleware": self.setup_run_middleware,
+            "add_plugin": self.add_plugin
         }
 
 
