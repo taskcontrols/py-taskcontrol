@@ -19,8 +19,8 @@ class WorkflowBase():
                 print("Running error for middleware")
             
             if not hasattr(error_obj, "error"):
-                error_obj["error"] = "next"
-            
+                error_obj["error"] = "exit"
+
             ero = error_obj.get("error")
             erno = error_obj.get("error_next_value")
 
@@ -28,9 +28,7 @@ class WorkflowBase():
                 return 'next', (e, erno)
             elif ero == "error_handler":
                 if not hasattr(error_obj, "error_handler"):
-                    if hasattr(error_obj, "error_next_value"):
-                        return "error_handler", (e, erno)
-                    return "error_handler", (e, None)
+                    return "error_handler", (e, erno)
                 return 'error_handler', error_obj.get("error_handler")(e, erno)
             elif ero == "exit":
                 raise Exception("error_obj['error'] exit: Error during middleware: ",
