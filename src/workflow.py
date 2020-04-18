@@ -1,6 +1,8 @@
 # # Project Workflow
 # Goal: Manage Workflow and related middlewares
 # TODO: Make unusable WorkflowBase methods private
+# TODO: Add Simple scalable plugin system
+
 
 tasks = {
     "taskname": {}
