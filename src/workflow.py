@@ -33,6 +33,53 @@ class Task():
             elif error_obj["error"] == "exit":
                 raise Exception("error_obj['error'] exit: Error during middleware: ",
                                 fn.__name__, str(e))
+            else:
+                raise Exception(
+                    "Error during middleware: flow[options[error]] value error")
+
+    def setup_middleware(self, tsk, md_action):
+        #       Iterate through before/after for each task
+        #           trigger before functions with next
+        #           if there is an error, then based on option:
+        #               trigger error_handler
+        #               trigger next
+        #               trigger exit
+        print("tsk", tsk.get("wf_kwargs"))
+        if tsk["wf_kwargs"][md_action] and isinstance(tsk["wf_kwargs"][md_action], list):
+
+            for bf in tsk["wf_kwargs"][md_action]:
+                if bf["functions"] and isinstance(bf["functions"], list):
+                    for f in bf["functions"]:
+                        if bf["flow"][f.__name__] and isinstance(bf["flow"][f.__name__], dict):
+                            f_dt = bf["flow"][f.__name__]
+                            a = []
+                            kwa = {}
+                            err_obj = {}
+                            if "args" in f_dt and isinstance(f_dt["args"], list):
+                                a = f_dt["args"]
+                            if "kwargs" in f_dt and isinstance(f_dt["kwargs"], dict):
+                                kwa = f_dt["kwargs"]
+                            if "options" in f_dt and isinstance(f_dt["options"], dict):
+                                err_obj = f_dt["options"]
+
+                            self.run_middleware(f, err_obj, a, kwa)
+
+                elif bf["functions"] and hasattr(bf["functions"], callable):
+                    if bf["flow"][f.__name__] and isinstance(bf["flow"][f.__name__], dict):
+                        f_dt = bf["flow"][f.__name__]
+                        a = []
+                        kwa = {}
+                        err_obj = {}
+                        if "args" in f_dt and isinstance(f_dt["args"], list):
+                            a = bf["flow"][f.__name__]["args"]
+                        if "kwargs" in f_dt and isinstance(f_dt["kwargs"], dict):
+                            kwa = bf["flow"][f.__name__]["args"]
+                        if "options" in f_dt and isinstance(f_dt["options"], dict):
+                            err_obj = f_dt["options"]
+
+                        self.run_middleware(f, err_obj, a, kwa)
+                else:
+                    pass
 
     def clean_args(self, fn, wf_args, wf_kwargs, fn_a, fn_kwa):
         tpl = fn.__code__.co_varnames
@@ -47,8 +94,10 @@ class Task():
 
     def get_task(self, task=None):
         global tasks
-        if not isinstance(task, None) and isinstance(task, str):
-            return tasks[task]
+        if not task == None and isinstance(task, str):
+            if tasks[task]:
+                return tasks[task]
+            return None
         return tasks
 
     def set_task(self, fn, fn_a, fn_kwa, wf_args, wf_kwargs):
@@ -78,66 +127,20 @@ class Task():
 
     def run_task(self, task):
         global tasks
-        if tasks[task]:
+        tsk = self.get_task(task)
+        if tsk:
             print("Workflow found: ", task)
-            print("The workflow object looks like this: ", tasks[task])
+            print("The workflow object looks like this: ", tsk)
 
             # Put in try except block for clean errors
 
-            # TODO: To be implemented
-
-            if tasks[task]["before"] and isinstance(tasks[task]["before"], list):
-                for bf in tasks[task]["before"]:
-                    if bf["functions"] and isinstance(bf["functions"], list):
-                        for f in bf["functions"]:
-                            if bf["flow"][f.__name__] and isinstance(bf["flow"][f.__name__], dict):
-                                f_dt = bf["flow"][f.__name__]
-                                a = []
-                                kwa = {}
-                                err_obj = {}
-                                if "args" in f_dt and isinstance(f_dt["args"], list):
-                                    a = f_dt["args"]
-                                if "kwargs" in f_dt and isinstance(f_dt["kwargs"], dict):
-                                    kwa = f_dt["kwargs"]
-                                if "options" in f_dt and isinstance(f_dt["options"], dict):
-                                    err_obj = f_dt["options"]
-
-                                self.run_middleware(f, err_obj, a, kwa)
-
-                    elif bf["functions"] and hasattr(bf["functions"], callable):
-                        if bf["flow"][f.__name__] and isinstance(bf["flow"][f.__name__], dict):
-                            f_dt = bf["flow"][f.__name__]
-                            a = None
-                            kwa = None
-                            if "args" in f_dt and isinstance(f_dt["args"], list):
-                                a = bf["flow"][f.__name__]["args"]
-                            if "kwargs" in f_dt and isinstance(f_dt["kwargs"], dict):
-                                kwa = bf["flow"][f.__name__]["args"]
-                            if a and kwa:
-                                f(a, kwa)
-                            elif a and not kwa:
-                                f(a)
-                            elif not a and kwa:
-                                f(kwa)
-                            else:
-                                f()
-                    else:
-                        pass
             #       Iterate through before for each task
-            #           trigger before functions with next
-            #           else if error based on option:
-            #               trigger error_handler
-            #               trigger next
-            #               trigger exit
-
-            #       Trigger task
-
+            self.setup_middleware(tsk, "before")
+            #       Invoke task
+            tsk["function"](tsk["function"]["fn_a"],
+                            tsk["function"]["fn_kwa"])
             #       Iterate through after for each task
-            #           trigger after functions with next
-            #           else if error based on option:
-            #               trigger error_handler
-            #               trigger next
-            #               trigger exit
+            self.setup_middleware(tsk, "after")
 
     def run(self, task):
         if isinstance(task, str):
