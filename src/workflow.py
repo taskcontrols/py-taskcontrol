@@ -9,17 +9,11 @@ tasks = {
 
 class WorkflowBase():
 
-    def run_middleware(self, fn, error_obj={}, *args, **kwargs):
+    def run_middleware(self, fn, error_obj, *args, **kwargs):
         try:
-            if args and kwargs:
-                return True, fn(args, kwargs)
-            elif args and not kwargs:
-                return True, fn(args)
-            elif not args and kwargs:
-                return True, fn(kwargs)
-            else:
-                return True, fn()
+            return True, fn(*args, **kwargs)
         except Exception as e:
+            print("Running error for middleware")
             if not hasattr(error_obj, "error"):
                 error_obj["error"] = "next"
 
@@ -62,8 +56,8 @@ class WorkflowBase():
                                 kwa = f_dt.get("kwargs")
                             if "options" in f_dt and isinstance(f_dt.get("options"), dict):
                                 err_obj = f_dt.get("options")
-
-                            self.run_middleware(f, err_obj, a, kwa)
+                            
+                            self.run_middleware(f, err_obj, *a, **kwa)
 
                 elif fns_list and hasattr(fns_list, callable):
                     f_dt = action.get("flow").get(f.__name__)
@@ -75,8 +69,8 @@ class WorkflowBase():
                             kwa = f_dt.get("kwargs")
                         if "options" in f_dt and isinstance(f_dt.get("options"), dict):
                             err_obj = f_dt.get("options")
-
-                        self.run_middleware(f, err_obj, a, kwa)
+                        
+                        self.run_middleware(f, err_obj, *a, **kwa)
                 else:
                     pass
 
@@ -132,15 +126,15 @@ class WorkflowBase():
 
             #       Iterate through before for each task
             self.setup_run_middleware(tsk, "before")
-            
+
             #       Invoke task
             tsk["function"](tsk["fn_a"], tsk["fn_kwa"])
-            
+
             #       Iterate through after for each task
             self.setup_run_middleware(tsk, "after")
 
 
-class Tasks(WorkflowBase):
+class Task(WorkflowBase):
     def run(self, task):
         if isinstance(task, str):
             # Iterate task through single task

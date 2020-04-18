@@ -1,8 +1,8 @@
 from src.workflow import workflow, Task
 
 
-def test(k):
-    print("Running my Middleware: task items", k)
+def test(k, c, d):
+    print("Running my Middleware: task items", k, c, d)
 
 
 @workflow(
@@ -13,7 +13,7 @@ def test(k):
             "functions": [test],
             "flow": {
                 "test": {
-                    "args": [], "kwargs": {"k": "Testing message"},
+                    "args": [1,2], "kwargs": {"d": "Testing message"},
 
                     # options { error : str,  error_next_value: Object, error_handler: function }
                     # 
@@ -39,7 +39,7 @@ def test(k):
             "functions": [test],
             "flow": {
                 "test": {
-                    "args": [], "kwargs": {"k": "Testing message"},
+                    "args": [5,6], "kwargs": {"d": "Testing message"},
                     "options": {
                         "error": "error_handler",
                         "error_next_value": "value",
