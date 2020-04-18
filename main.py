@@ -66,7 +66,7 @@ def test(k):
     ]
 )
 def taskone(a, b):
-    print(a, b)
+    print("Running my task: taskone", a, b)
 
 
 # Invocation is needed to add the task with function arguments
@@ -77,7 +77,7 @@ taskone(3, 4)
 
 @workflow(name="tasktwo", task_order=2, before=[], after=[])
 def tasktwo(a, b):
-    print(a, b)
+    print("Running my task: tasktwo", a, b)
 
 
 tasktwo(5, 6)

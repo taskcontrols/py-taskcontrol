@@ -1,5 +1,6 @@
 # # Project Workflow
 # Goal: Manage Workflow and related middlewares
+# TODO: Change all object attribute fetches to .get(attr) method
 
 tasks = {
     "taskname": {}
@@ -37,14 +38,14 @@ class Task():
                 raise Exception(
                     "Error during middleware: flow[options[error]] value error")
 
-    def setup_middleware(self, tsk, md_action):
+    def setup_run_middleware(self, tsk, md_action):
         #       Iterate through before/after for each task
         #           trigger before functions with next
         #           if there is an error, then based on option:
         #               trigger error_handler
         #               trigger next
         #               trigger exit
-        print("tsk", tsk.get("wf_kwargs"))
+
         if tsk["wf_kwargs"][md_action] and isinstance(tsk["wf_kwargs"][md_action], list):
 
             for bf in tsk["wf_kwargs"][md_action]:
@@ -92,18 +93,16 @@ class Task():
             return True
         return False
 
-    def get_task(self, task=None):
+    def get_tasks(self, task=None):
         global tasks
-        if not task == None and isinstance(task, str):
-            if tasks[task]:
-                return tasks[task]
-            return None
+        if task and isinstance(task, str):
+            return tasks.get(task)
         return tasks
 
     def set_task(self, fn, fn_a, fn_kwa, wf_args, wf_kwargs):
         global tasks
-        print("tasks.keys() ", tasks.keys(),
-              ", task name to add: ", wf_kwargs["name"])
+        # print("tasks.keys() ", tasks.keys())
+        print("task name to add: ", wf_kwargs["name"])
 
         if wf_kwargs["name"] not in tasks.keys():
             tasks[wf_kwargs["name"]] = {}
@@ -112,35 +111,34 @@ class Task():
             tasks.update({wf_kwargs["name"]: {}})
 
         tasks[wf_kwargs["name"]].update({
-            wf_kwargs["task_order"]: {
-                "name": wf_kwargs["name"],
-                "wf_args": wf_args, "wf_kwargs": wf_kwargs,
-                "fn_a": fn_a, "fn_kwa": fn_kwa,
-                "before": wf_kwargs["before"],
-                "after": wf_kwargs["after"],
-                "function": fn
-            }
+            "task_order": wf_kwargs["task_order"],
+            "wf_args": wf_args, "wf_kwargs": wf_kwargs,
+            "fn_a": fn_a, "fn_kwa": fn_kwa,
+            "before": wf_kwargs["before"],
+            "after": wf_kwargs["after"],
+            "function": fn
         })
 
-        # print("set_task: Task added", kwargs["name"])
+        print("set_task: Task added", wf_kwargs["name"])
         # print("set_task: ", tasks[kwargs["name"]][kwargs["task_order"]])
 
     def run_task(self, task):
         global tasks
-        tsk = self.get_task(task)
+
+        tsk = self.get_tasks(task)
+
         if tsk:
-            print("Workflow found: ", task)
-            print("The workflow object looks like this: ", tsk)
+            # print("Workflow found: ", task)
+            # print("The workflow object looks like this: ", tsk)
 
             # Put in try except block for clean errors
 
             #       Iterate through before for each task
-            self.setup_middleware(tsk, "before")
+            self.setup_run_middleware(tsk, "before")
             #       Invoke task
-            tsk["function"](tsk["function"]["fn_a"],
-                            tsk["function"]["fn_kwa"])
+            tsk["function"](tsk["fn_a"], tsk["fn_kwa"])
             #       Iterate through after for each task
-            self.setup_middleware(tsk, "after")
+            self.setup_run_middleware(tsk, "after")
 
     def run(self, task):
         if isinstance(task, str):
@@ -154,7 +152,7 @@ class Task():
 
     def setter(self):
         return {
-            "get_task": self.get_task,
+            "get_tasks": self.get_tasks,
             "set_task": self.set_task,
             "run_task": self.run_task,
             "clean_args": self.clean_args,
