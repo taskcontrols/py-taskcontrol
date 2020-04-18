@@ -2,7 +2,7 @@ from src.workflow import workflow, Task
 
 
 def test(k):
-    print(k)
+    print("Running my Middleware: task items", k)
 
 
 @workflow(
