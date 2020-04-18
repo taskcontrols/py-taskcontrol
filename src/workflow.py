@@ -9,8 +9,10 @@ tasks = {
 
 class WorkflowBase():
 
-    def run_middleware(self, fn, error_obj, *args, **kwargs):
+    def run_middleware(self, fn, error_obj, log, *args, **kwargs):
         try:
+            if log:
+                print("Workflow run middleware function: ", fn.__name__)
             return True, fn(*args, **kwargs)
         except Exception as e:
             print("Running error for middleware")
@@ -32,7 +34,21 @@ class WorkflowBase():
                 raise Exception(
                     "Error during middleware: flow[options[error]] value error")
 
-    def setup_run_middleware(self, tsk, md_action):
+    def setup_run_middleware(self, task, md_action):
+        
+        def get_middleware_args(f, action, log):
+                    f_dt = action.get("flow").get(f.__name__)
+
+                    if f_dt and isinstance(f_dt, dict):
+                        a, kwa, err_obj = [], {}, {}
+                        if "args" in f_dt and isinstance(f_dt.get("args"), list):
+                            a = f_dt.get("args")
+                        if "kwargs" in f_dt and isinstance(f_dt.get("kwargs"), dict):
+                            kwa = f_dt.get("kwargs")
+                        if "options" in f_dt and isinstance(f_dt.get("options"), dict):
+                            err_obj = f_dt.get("options")
+                    return err_obj, log, a, kwa
+
         #       Iterate through before/after for each task
         #           trigger before functions with next
         #           if there is an error, then based on option:
@@ -40,32 +56,27 @@ class WorkflowBase():
         #               trigger next
         #               trigger exit
 
-        actions = tsk.get("wf_kwargs").get(md_action)
+        actions = task.get("wf_kwargs").get(md_action)
+        log = task.get("log")
         if actions and isinstance(actions, list):
             for action in actions:
+                
                 fns_list = action.get("functions")
-                f_dt = action.get("flow").get(f.__name__)
-                if f_dt and isinstance(f_dt, dict):
-                    a, kwa, err_obj = [], {}, {}
-                    if "args" in f_dt and isinstance(f_dt.get("args"), list):
-                        a = f_dt.get("args")
-                    if "kwargs" in f_dt and isinstance(f_dt.get("kwargs"), dict):
-                        kwa = f_dt.get("kwargs")
-                    if "options" in f_dt and isinstance(f_dt.get("options"), dict):
-                        err_obj = f_dt.get("options")
-                    
+                
                 if fns_list and isinstance(fns_list, list):
                     for f in fns_list:
-                        self.run_middleware(f, err_obj, *a, **kwa)
+                        err_obj, log, a, kwa = get_middleware_args(f, action, log)
+                        self.run_middleware(f, err_obj, log, *a, **kwa)
                 elif fns_list and hasattr(fns_list, callable):
-                    self.run_middleware(f, err_obj, *a, **kwa)
+                    err_obj, log, a, kwa = get_middleware_args(fns_list, action, log)
+                    self.run_middleware(fns_list, err_obj, log, *a, **kwa)
                 else:
                     pass
 
     def clean_args(self, fn, wf_args, wf_kwargs, fn_a, fn_kwa):
         tpl = fn.__code__.co_varnames
         k_fn_kwa = fn_kwa.keys()
-        l_tpl, l_fn_a, l_k_fn_kwa = (len(tpl), len(fn_a), len(k_fn_kwa))
+        l_tpl, l_fn_a, l_k_fn_kwa = len(tpl), len(fn_a), len(k_fn_kwa)
         if (l_tpl == l_fn_a + l_k_fn_kwa):
             for k in k_fn_kwa:
                 if not tpl.index(k) >= l_fn_a:
@@ -83,7 +94,7 @@ class WorkflowBase():
         global tasks
 
         # print("tasks.keys() ", tasks.keys())
-        print("task name to add: ", wf_kwargs["name"])
+        print("Workflow task name to add: ", wf_kwargs["name"])
 
         if wf_kwargs["name"] not in tasks.keys():
             tasks[wf_kwargs["name"]] = {}
@@ -100,25 +111,34 @@ class WorkflowBase():
             "function": fn
         })
 
-        print("set_task: Task added: ", wf_kwargs["name"])
-        # print("set_task: ", tasks[kwargs["name"]][kwargs["task_order"]])
+        print("Workflow set_task: Task added: ", wf_kwargs["name"])
+        # print("Workflow set_task: ", tasks[kwargs["name"]][kwargs["task_order"]])
 
     def run_task(self, task):
 
         tsk = self.get_tasks(task)
-        if tsk:
-            # print("Workflow found: ", task)
+        log = tsk.get("log")
+
+        if log:
+            print("Workflow task found: ", tsk.get("name"))
             # print("The workflow object looks like this: ", tsk)
 
-            # Put in try except block for clean errors
+        if tsk:
+            # TODO: Put in try except block for clean errors
 
             #       Iterate through before for each task
+            if log:
+                print("Workflow before middlewares for task now running: ", task.get("name"))
             self.setup_run_middleware(tsk, "before")
 
             #       Invoke task
+            if log:
+                print("Workflow task run: ", task.get("name"))
             tsk["function"](tsk["fn_a"], tsk["fn_kwa"])
 
             #       Iterate through after for each task
+            if log:
+                print("Workflow after middlewares for task now running: ", task.get("name"))
             self.setup_run_middleware(tsk, "after")
 
 
@@ -126,9 +146,11 @@ class Task(WorkflowBase):
     def run(self, task):
         if isinstance(task, str):
             # Iterate task through single task
+            print("Workflow task provided instantiated.")
             self.run_task(task)
         elif isinstance(task, list):
             # Iterate task through tasks
+            print("Workflow task list provided instantiated.")
             [self.run_task(t) for t in task]
         else:
             print("No workflow or task available to run")

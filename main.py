@@ -63,7 +63,8 @@ def test(k, c, d):
                 }
             }
         }
-    ]
+    ],
+    log=True
 )
 def taskone(a, b):
     print("Running my task: taskone", a, b)
