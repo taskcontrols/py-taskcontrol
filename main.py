@@ -76,6 +76,7 @@ def taskone(a, b):
 taskone(3, 4)
 
 
+# Example two for decorator usage
 @workflow(name="tasktwo", task_order=2, before=[], after=[])
 def tasktwo(a, b):
     print("Running my task: tasktwo", a, b)
