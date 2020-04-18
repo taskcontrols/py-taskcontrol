@@ -8,16 +8,30 @@ tasks = {
 
 class Task():
 
-    def run_middleware(self, fn, error_obj, *args, **kwargs):
+    def run_middleware(self, fn, error_obj={}, *args, **kwargs):
         try:
-            return True, fn(args, kwargs)
+            if args and kwargs:
+                return True, fn(args, kwargs)
+            elif args and not kwargs:
+                return True, fn(args)
+            elif not args and kwargs:
+                return True, fn(kwargs)
+            else:
+                return True, fn()
         except Exception as e:
+            if not hasattr(error_obj, "error"):
+                error_obj["error"] = "next"
+
             if error_obj["error"] == "next":
-                return 'next', error_obj["error_next_value"]
+                return 'next', (e, error_obj["error_next_value"])
             elif error_obj["error"] == "error_handler":
+                if not hasattr(error_obj, "error_handler"):
+                    if hasattr(error_obj, "error_next_value"):
+                        return "error_handler", (e, error_obj["error_next_value"])
+                    return "error_handler", (e, None)
                 return 'error_handler', error_obj["error_handler"](e, error_obj["error_next_value"])
             elif error_obj["error"] == "exit":
-                raise Exception("exit: Error during middleware: ",
+                raise Exception("error_obj['error'] exit: Error during middleware: ",
                                 fn.__name__, str(e))
 
     def clean_args(self, fn, wf_args, wf_kwargs, fn_a, fn_kwa):
@@ -39,7 +53,8 @@ class Task():
 
     def set_task(self, fn, fn_a, fn_kwa, wf_args, wf_kwargs):
         global tasks
-        print("tasks.keys() ", tasks.keys(), ", task name to add: ", wf_kwargs["name"])
+        print("tasks.keys() ", tasks.keys(),
+              ", task name to add: ", wf_kwargs["name"])
 
         if wf_kwargs["name"] not in tasks.keys():
             tasks[wf_kwargs["name"]] = {}
@@ -71,6 +86,43 @@ class Task():
 
             # TODO: To be implemented
 
+            if tasks[task]["before"] and isinstance(tasks[task]["before"], list):
+                for bf in tasks[task]["before"]:
+                    if bf["functions"] and isinstance(bf["functions"], list):
+                        for f in bf["functions"]:
+                            if bf["flow"][f.__name__] and isinstance(bf["flow"][f.__name__], dict):
+                                f_dt = bf["flow"][f.__name__]
+                                a = []
+                                kwa = {}
+                                err_obj = {}
+                                if "args" in f_dt and isinstance(f_dt["args"], list):
+                                    a = f_dt["args"]
+                                if "kwargs" in f_dt and isinstance(f_dt["kwargs"], dict):
+                                    kwa = f_dt["kwargs"]
+                                if "options" in f_dt and isinstance(f_dt["options"], dict):
+                                    err_obj = f_dt["options"]
+
+                                self.run_middleware(f, err_obj, a, kwa)
+
+                    elif bf["functions"] and hasattr(bf["functions"], callable):
+                        if bf["flow"][f.__name__] and isinstance(bf["flow"][f.__name__], dict):
+                            f_dt = bf["flow"][f.__name__]
+                            a = None
+                            kwa = None
+                            if "args" in f_dt and isinstance(f_dt["args"], list):
+                                a = bf["flow"][f.__name__]["args"]
+                            if "kwargs" in f_dt and isinstance(f_dt["kwargs"], dict):
+                                kwa = bf["flow"][f.__name__]["args"]
+                            if a and kwa:
+                                f(a, kwa)
+                            elif a and not kwa:
+                                f(a)
+                            elif not a and kwa:
+                                f(kwa)
+                            else:
+                                f()
+                    else:
+                        pass
             #       Iterate through before for each task
             #           trigger before functions with next
             #           else if error based on option:
@@ -135,4 +187,3 @@ def workflow(*wf_args, **wf_kwargs):
 
 
 __all__ = ["Task", "workflow"]
-
