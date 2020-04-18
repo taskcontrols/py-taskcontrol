@@ -45,32 +45,21 @@ class WorkflowBase():
 
             for action in actions:
                 fns_list = action.get("functions")
+                f_dt = action.get("flow").get(f.__name__)
+                if f_dt and isinstance(f_dt, dict):
+                    a, kwa, err_obj = [], {}, {}
+                    if "args" in f_dt and isinstance(f_dt.get("args"), list):
+                        a = f_dt.get("args")
+                    if "kwargs" in f_dt and isinstance(f_dt.get("kwargs"), dict):
+                        kwa = f_dt.get("kwargs")
+                    if "options" in f_dt and isinstance(f_dt.get("options"), dict):
+                        err_obj = f_dt.get("options")
+                    
                 if fns_list and isinstance(fns_list, list):
                     for f in fns_list:
-                        f_dt = action.get("flow").get(f.__name__)
-                        if f_dt and isinstance(f_dt, dict):
-                            a, kwa, err_obj = [], {}, {}
-                            if "args" in f_dt and isinstance(f_dt.get("args"), list):
-                                a = f_dt.get("args")
-                            if "kwargs" in f_dt and isinstance(f_dt.get("kwargs"), dict):
-                                kwa = f_dt.get("kwargs")
-                            if "options" in f_dt and isinstance(f_dt.get("options"), dict):
-                                err_obj = f_dt.get("options")
-                            
-                            self.run_middleware(f, err_obj, *a, **kwa)
-
-                elif fns_list and hasattr(fns_list, callable):
-                    f_dt = action.get("flow").get(f.__name__)
-                    if f_dt and isinstance(f_dt, dict):
-                        a, kwa, err_obj = [], {}, {}
-                        if "args" in f_dt and isinstance(f_dt.get("args"), list):
-                            a = f_dt.get("args")
-                        if "kwargs" in f_dt and isinstance(f_dt.get("kwargs"), dict):
-                            kwa = f_dt.get("kwargs")
-                        if "options" in f_dt and isinstance(f_dt.get("options"), dict):
-                            err_obj = f_dt.get("options")
-                        
                         self.run_middleware(f, err_obj, *a, **kwa)
+                elif fns_list and hasattr(fns_list, callable):
+                    self.run_middleware(f, err_obj, *a, **kwa)
                 else:
                     pass
 
