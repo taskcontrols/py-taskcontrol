@@ -132,8 +132,10 @@ class WorkflowBase():
 
             #       Iterate through before for each task
             self.setup_run_middleware(tsk, "before")
+            
             #       Invoke task
             tsk["function"](tsk["fn_a"], tsk["fn_kwa"])
+            
             #       Iterate through after for each task
             self.setup_run_middleware(tsk, "after")
 
