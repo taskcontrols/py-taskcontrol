@@ -7,7 +7,7 @@ tasks = {
 }
 
 
-class Task():
+class WorkflowBase():
 
     def run_middleware(self, fn, error_obj={}, *args, **kwargs):
         try:
@@ -46,37 +46,35 @@ class Task():
         #               trigger next
         #               trigger exit
 
-        if tsk["wf_kwargs"][md_action] and isinstance(tsk["wf_kwargs"][md_action], list):
+        actions = tsk.get("wf_kwargs").get(md_action)
+        if actions and isinstance(actions, list):
 
-            for bf in tsk["wf_kwargs"][md_action]:
-                if bf["functions"] and isinstance(bf["functions"], list):
-                    for f in bf["functions"]:
-                        if bf["flow"][f.__name__] and isinstance(bf["flow"][f.__name__], dict):
-                            f_dt = bf["flow"][f.__name__]
-                            a = []
-                            kwa = {}
-                            err_obj = {}
-                            if "args" in f_dt and isinstance(f_dt["args"], list):
-                                a = f_dt["args"]
-                            if "kwargs" in f_dt and isinstance(f_dt["kwargs"], dict):
-                                kwa = f_dt["kwargs"]
-                            if "options" in f_dt and isinstance(f_dt["options"], dict):
-                                err_obj = f_dt["options"]
+            for action in actions:
+                fns_list = action.get("functions")
+                if fns_list and isinstance(fns_list, list):
+                    for f in fns_list:
+                        f_dt = action.get("flow").get(f.__name__)
+                        if f_dt and isinstance(f_dt, dict):
+                            a, kwa, err_obj = [], {}, {}
+                            if "args" in f_dt and isinstance(f_dt.get("args"), list):
+                                a = f_dt.get("args")
+                            if "kwargs" in f_dt and isinstance(f_dt.get("kwargs"), dict):
+                                kwa = f_dt.get("kwargs")
+                            if "options" in f_dt and isinstance(f_dt.get("options"), dict):
+                                err_obj = f_dt.get("options")
 
                             self.run_middleware(f, err_obj, a, kwa)
 
-                elif bf["functions"] and hasattr(bf["functions"], callable):
-                    if bf["flow"][f.__name__] and isinstance(bf["flow"][f.__name__], dict):
-                        f_dt = bf["flow"][f.__name__]
-                        a = []
-                        kwa = {}
-                        err_obj = {}
-                        if "args" in f_dt and isinstance(f_dt["args"], list):
-                            a = bf["flow"][f.__name__]["args"]
-                        if "kwargs" in f_dt and isinstance(f_dt["kwargs"], dict):
-                            kwa = bf["flow"][f.__name__]["args"]
-                        if "options" in f_dt and isinstance(f_dt["options"], dict):
-                            err_obj = f_dt["options"]
+                elif fns_list and hasattr(fns_list, callable):
+                    f_dt = action.get("flow").get(f.__name__)
+                    if f_dt and isinstance(f_dt, dict):
+                        a, kwa, err_obj = [], {}, {}
+                        if "args" in f_dt and isinstance(f_dt.get("args"), list):
+                            a = f_dt.get("args")
+                        if "kwargs" in f_dt and isinstance(f_dt.get("kwargs"), dict):
+                            kwa = f_dt.get("kwargs")
+                        if "options" in f_dt and isinstance(f_dt.get("options"), dict):
+                            err_obj = f_dt.get("options")
 
                         self.run_middleware(f, err_obj, a, kwa)
                 else:
@@ -101,6 +99,7 @@ class Task():
 
     def set_task(self, fn, fn_a, fn_kwa, wf_args, wf_kwargs):
         global tasks
+
         # print("tasks.keys() ", tasks.keys())
         print("task name to add: ", wf_kwargs["name"])
 
@@ -119,14 +118,12 @@ class Task():
             "function": fn
         })
 
-        print("set_task: Task added", wf_kwargs["name"])
+        print("set_task: Task added: ", wf_kwargs["name"])
         # print("set_task: ", tasks[kwargs["name"]][kwargs["task_order"]])
 
     def run_task(self, task):
-        global tasks
 
         tsk = self.get_tasks(task)
-
         if tsk:
             # print("Workflow found: ", task)
             # print("The workflow object looks like this: ", tsk)
@@ -140,6 +137,8 @@ class Task():
             #       Iterate through after for each task
             self.setup_run_middleware(tsk, "after")
 
+
+class Tasks(WorkflowBase):
     def run(self, task):
         if isinstance(task, str):
             # Iterate task through single task
