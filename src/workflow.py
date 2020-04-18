@@ -39,7 +39,7 @@ class Task():
 
     def set_task(self, fn, fn_a, fn_kwa, wf_args, wf_kwargs):
         global tasks
-        print("tasks.keys()", tasks.keys(), wf_kwargs["name"])
+        print("tasks.keys() ", tasks.keys(), ", task name to add: ", wf_kwargs["name"])
 
         if wf_kwargs["name"] not in tasks.keys():
             tasks[wf_kwargs["name"]] = {}
@@ -135,3 +135,4 @@ def workflow(*wf_args, **wf_kwargs):
 
 
 __all__ = ["Task", "workflow"]
+
