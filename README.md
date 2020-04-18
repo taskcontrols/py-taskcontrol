@@ -13,7 +13,7 @@ It provides a simple decorator that takes the name, task, before, after argument
 
 ##### Package Link:
     
-    https://github.com/ganeshkbhat/workflow
+    https://github.com/ganeshkbhat/taskcontrol
     https://pypi.org/project/taskcontrol/
 
 # Features
