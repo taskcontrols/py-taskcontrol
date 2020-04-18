@@ -62,7 +62,9 @@ def test(k, c, d):
             # error { str }: [next, error_handler, exit]
             # error_handler { function }
             # error_next_value { object }
-            #
+            # 
+            # Default error value is `exit`
+            # 
             # Usage:
             # "options": {"error": "next", "error_next_value": "value"}
             # "options": {"error": "exit"}
