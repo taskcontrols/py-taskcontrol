@@ -73,7 +73,7 @@ taskone(3, 4)
 
 # Example two for decorator usage
 @workflow(name="tasktwo", task_order=2,
-        # Declare before/after as an list or an object (if single middleware function)
+          # Declare before/after as an list or an object (if single middleware function)
           before={
               "function": test,
               "args": [1, 2],
