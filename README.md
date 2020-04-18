@@ -144,9 +144,20 @@ Though it may support Python version 2.x. However, it has not been tested in 2.x
 
 # Wiki
 
+
+
 # Todo
 
-# References
+* Add plugin system
+
 
 # License
+
+
+The MIT License (MIT) - See [LICENSE](./LICENSE) for further details
+
+
+Copyright © 2019 - till library works:
+    Ganesh B <ganeshsurfs@gmail.com>
+
 
