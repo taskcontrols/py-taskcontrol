@@ -12,15 +12,17 @@ It provides a simple decorator that takes the name, task, before, after argument
     pip3 install workflow-name-TBD
 
 ##### Package Link:
-
+    
+    https://github.com/ganeshkbhat/workflow
 
 # Features
 
 * Create tasks
 * Named workflow tasks
-* Allows middlewares before and after each task
 * Single or multiple tasks
 * Workflow decorator with simple options to setup workflow
+* Allows middlewares before each task (data fetch, auth, etc)
+* Allows middlewares after each task (data save, logging, logout, cleanup, etc)
 
 
 # Feature Details
@@ -140,14 +142,14 @@ Task().run(tasks=["taskname", "tasktwo"])
 ##### Note:
 
 Though it may support Python version 2.x. However, it has not been tested in 2.x. The Syntax and Features of the library supports Python version 2.x. Use at your own risk.
-
+<!-- 
 # Wiki
-
+ -->
 
 
 # Todo
 
-* Add Tests
+<!-- * Add Tests -->
 * Add plugin system
 
 
