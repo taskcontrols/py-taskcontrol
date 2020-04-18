@@ -39,6 +39,7 @@ It provides a simple decorator that takes the name, task, before, after argument
 
 ```javascript
 
+
 // from src.workflow import workflow, Tasks
 from workflow-name-TBD import workflow, Tasks
 
@@ -130,7 +131,6 @@ tasktwo(5, 6)
 # Example: Within some other function
 Task().run(task=["taskname", "tasktwo"])
 # Task().run(task="taskname")
-
 
 
 ```
