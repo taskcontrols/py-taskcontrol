@@ -34,7 +34,7 @@ class WorkflowBase():
                 raise Exception(
                     "Error during middleware: flow[options[error]] value error")
 
-    def setup_run_middleware(self, task, md_action):
+    def setup_run_middleware(self, task, md_action, log):
         
         def get_middleware_args(f, action, log):
                     f_dt = action.get("flow").get(f.__name__)
@@ -57,7 +57,6 @@ class WorkflowBase():
         #               trigger exit
 
         actions = task.get("wf_kwargs").get(md_action)
-        log = task.get("log")
         if actions and isinstance(actions, list):
             for action in actions:
                 
@@ -129,17 +128,17 @@ class WorkflowBase():
             #       Iterate through before for each task
             if log:
                 print("Workflow before middlewares for task now running: ", task.get("name"))
-            self.setup_run_middleware(tsk, "before")
+            self.setup_run_middleware(tsk, "before", log)
 
             #       Invoke task
             if log:
                 print("Workflow task run: ", task.get("name"))
-            tsk["function"](tsk["fn_a"], tsk["fn_kwa"])
+            tsk["function"](*tsk["fn_a"], **tsk["fn_kwa"])
 
             #       Iterate through after for each task
             if log:
                 print("Workflow after middlewares for task now running: ", task.get("name"))
-            self.setup_run_middleware(tsk, "after")
+            self.setup_run_middleware(tsk, "after", log)
 
 
 class Task(WorkflowBase):
