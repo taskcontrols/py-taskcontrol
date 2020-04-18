@@ -11,7 +11,7 @@ tasks = {
 
 class WorkflowBase():
 
-    def add_plugin(self):
+    def _add_plugin(self):
         pass
 
     def _run_middleware(self, fn, error_obj, log, *args, **kwargs):
@@ -164,12 +164,14 @@ class Task(WorkflowBase):
             "set_task": self.set_task,
             "run_task": self.run_task,
             "clean_args": self.clean_args,
-            "run_middleware": self.setup_run_middleware,
-            "add_plugin": self.add_plugin
+            "run_middleware": self.setup_run_middleware
         }
 
 
 def workflow(*wf_args, **wf_kwargs):
+
+    def add_plugin(self):
+        pass
 
     def get_decorator(fn):
         # print("get_decorator: Decorator init ", "wf_args: ", wf_args, "wf_kwargs: ", wf_kwargs)
