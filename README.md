@@ -119,17 +119,20 @@ def taskone(a, b):
 taskone(3, 4)
 
 
-# Example two for decorator usage
+# Example Two ( decorator usage ):
 @workflow(name="tasktwo", task_order=2, before=[], after=[])
 def tasktwo(a, b):
     print("Running my task: tasktwo", a, b)
-
 
 tasktwo(5, 6)
 
 # Invoke this where needed
 # Example: Within some other function
+
+# Multiple Workflow Tasks run
 Task().run(task=["taskname", "tasktwo"])
+
+# Single Workflow Tasks run
 # Task().run(task="taskname")
 
 
