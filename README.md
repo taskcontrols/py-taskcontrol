@@ -52,6 +52,12 @@ def test(k, c, d):
     name="taskname", task_order=1,
     before=[
         {
+            function: fn,
+            args: [],
+            kwargs: {},
+            options: {}
+        }
+        {
             # before middleware order followed will be of the list sequence
             "functions": [test],
             "flow": {

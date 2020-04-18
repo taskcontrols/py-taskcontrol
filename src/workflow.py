@@ -42,17 +42,17 @@ class WorkflowBase():
     def setup_run_middleware(self, task, md_action, log):
         
         def get_md_args(f, action, log):
-                    f_dt = action.get("flow").get(f.__name__)
+            f_dt = action
 
-                    if f_dt and isinstance(f_dt, dict):
-                        a, kwa, err_obj = [], {}, {}
-                        if "args" in f_dt and isinstance(f_dt.get("args"), list):
-                            a = f_dt.get("args")
-                        if "kwargs" in f_dt and isinstance(f_dt.get("kwargs"), dict):
-                            kwa = f_dt.get("kwargs")
-                        if "options" in f_dt and isinstance(f_dt.get("options"), dict):
-                            err_obj = f_dt.get("options")
-                    return err_obj, log, a, kwa
+            if f_dt and isinstance(f_dt, dict):
+                a, kwa, err_obj = [], {}, {}
+                if "args" in f_dt and isinstance(f_dt.get("args"), list):
+                    a = f_dt.get("args")
+                if "kwargs" in f_dt and isinstance(f_dt.get("kwargs"), dict):
+                    kwa = f_dt.get("kwargs")
+                if "options" in f_dt and isinstance(f_dt.get("options"), dict):
+                    err_obj = f_dt.get("options")
+            return err_obj, log, a, kwa
 
         #       Iterate through before/after for each task
         #           trigger before functions with next
@@ -62,20 +62,14 @@ class WorkflowBase():
         #               trigger exit
 
         actions = task.get("wf_kwargs").get(md_action)
+
         if actions and isinstance(actions, list):
             for action in actions:
-                
-                fns_list = action.get("functions")
-                
-                if fns_list and isinstance(fns_list, list):
-                    for f in fns_list:
-                        err_obj, log, a, kwa = get_md_args(f, action, log)
-                        self.run_middleware(f, err_obj, log, *a, **kwa)
-                elif fns_list and hasattr(fns_list, callable):
-                    err_obj, log, a, kwa = get_md_args(fns_list, action, log)
-                    self.run_middleware(fns_list, err_obj, log, *a, **kwa)
-                else:
-                    pass
+                f = action.get("function")
+                err_obj, log, a, kwa = get_md_args(f, action, log)
+                self.run_middleware(f, err_obj, log, *a, **kwa)
+        elif actions and isinstance(actions, dict):
+            err_obj, log, a, kwa = get_md_args(actions.get("function"), actions, log)
 
     def clean_args(self, fn, wf_args, wf_kwargs, fn_a, fn_kwa):
         tpl = fn.__code__.co_varnames
