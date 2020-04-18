@@ -6,7 +6,7 @@ tasks = {
 }
 
 
-class Tasks():
+class Task():
 
     def run_middleware(self, fn, error_obj, *args, **kwargs):
         try:
@@ -39,8 +39,12 @@ class Tasks():
 
     def set_task(self, fn, fn_a, fn_kwa, wf_args, wf_kwargs):
         global tasks
-        print(tasks.keys())
-        if not tasks[wf_kwargs["name"] and not isinstance(tasks[wf_kwargs["name"]], dict):
+        print("tasks.keys()", tasks.keys(), wf_kwargs["name"])
+        
+        if wf_kwargs["name"] not in tasks.keys():
+            tasks[wf_kwargs["name"]] = {}
+
+        if not isinstance(tasks[wf_kwargs["name"]], dict):
             tasks.update({wf_kwargs["name"]: {}})
 
         tasks[wf_kwargs["name"]].update({
@@ -89,7 +93,7 @@ class Tasks():
         if isinstance(task, str):
             self.run_task(task)
         elif isinstance(task, list):
-            [self.run_task(t) for t in task.items()]
+            [self.run_task(t) for t in task]
         else:
             print("No workflow or task available to run")
 
@@ -114,13 +118,14 @@ def workflow(*wf_args, **wf_kwargs):
 
         def order_tasks(*fn_a, **fn_kwa):
             # print("order_tasks: Decorator init ", "fn_a: ", fn_a, "fn_kwa: ", fn_kwa)
-            global Tasks
+            global Task
             global tasks
-            t= Tasks()
+            t= Task()
             args_normal= t.clean_args(fn, wf_args, wf_kwargs, fn_a, fn_kwa)
             if not args_normal:
                 raise Exception("Args and KwArgs do not match")
-
+            
+            # print((fn, fn_a, fn_kwa, wf_args, wf_kwargs))
             t.set_task(fn, fn_a, fn_kwa, wf_args, wf_kwargs)
 
             print("order_tasks - Task added: ", wf_kwargs["name"])
@@ -130,4 +135,5 @@ def workflow(*wf_args, **wf_kwargs):
     return get_decorator
 
 
-__all__= ["Tasks", "workflow"]
+__all__= ["Task", "workflow"]
+
