@@ -186,8 +186,7 @@ def workflow(*wf_args, **wf_kwargs):
     def get_decorator(fn):
         # print("get_decorator: Decorator init ", "wf_args: ", wf_args, "wf_kwargs: ", wf_kwargs)
         # print("get_decorator: ", fn) 
-
-        # check before middlewares args and kwargs number and validity
+        
         # check after middlewares args and kwargs number and validity
 
         def order_tasks(*fn_a, **fn_kwa):
@@ -197,6 +196,7 @@ def workflow(*wf_args, **wf_kwargs):
             if not t:
                 raise Exception("Task instance not provided")
 
+            # Check before/after middlewares args and kwargs number and validity
             args_normal = t.clean_args(fn, wf_args, wf_kwargs, fn_a, fn_kwa)
 
             if not args_normal:
