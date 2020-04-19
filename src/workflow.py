@@ -53,7 +53,7 @@ class WorkflowBase():
                 kwa = f_dt.get("kwargs")
             if "options" in f_dt and isinstance(f_dt.get("options"), dict):
                 err_obj = f_dt.get("options")
-        return err_obj, log, a, kwa
+        return err_obj, a, kwa
 
     def setup_run_middleware(self, task, md_action, log):
 
@@ -65,14 +65,15 @@ class WorkflowBase():
         #               trigger exit
 
         actions = task.get("wf_kwargs").get(md_action)
+        log  = task.get("wf_kwargs").get("log")
 
         if actions and isinstance(actions, list):
             for action in actions:
                 fn = action.get("function")
-                err_obj, log, a, kwa = self.get_md_args(fn, action, log)
+                err_obj, a, kwa = self.get_md_args(fn, action, log)
                 self._run_middleware(fn, err_obj, log, *a, **kwa)
         elif actions and isinstance(actions, dict):
-            err_obj, log, a, kwa = self.get_md_args(
+            err_obj, a, kwa = self.get_md_args(
                 actions.get("function"), actions, log)
             self._run_middleware(actions.get("function"),
                                  err_obj, log, *a, **kwa)
