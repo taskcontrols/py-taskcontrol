@@ -3,7 +3,7 @@ from src.workflow import workflow, Task
 t = Task()
 
 def test(k, c, d):
-    print("Running my Middleware: task items", k, c, d)
+    print("Running my Middleware Function: test - task items", k, c, d)
 
 @workflow(
     name="taskname",
@@ -64,7 +64,7 @@ def test(k, c, d):
     log=True
 )
 def taskone(a, b):
-    print("Running my task: taskone", a, b)
+    print("Running my task function: taskone", a, b)
 
 
 # Invocation is needed to add the task with function arguments
@@ -81,13 +81,13 @@ taskone(3, 4)
           before={
               "function": test,
               "args": [21, 22],
-              "kwargs": {"d": "Testing message"},
+              "kwargs": {"d": "Before Testing message"},
               "options": {"error": "next", "error_next_value": ""}
           },
           after=[]
           )
 def tasktwo(a, b):
-    print("Running my task: tasktwo", a, b)
+    print("Running my task function: tasktwo", a, b)
 
 tasktwo(5, 6)
 

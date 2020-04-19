@@ -16,7 +16,7 @@ class WorkflowBase():
     def _run_middleware(self, fn, error_obj, log, *args, **kwargs):
         try:
             if log:
-                print("Workflow run middleware function: ", fn.__name__)
+                print("Workflow running middleware function: ", fn.__name__)
             return True, fn(*args, **kwargs)
         except Exception as e:
             if log:
