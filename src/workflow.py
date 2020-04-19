@@ -194,7 +194,7 @@ class Task(WorkflowBase):
             print("No workflow or task available to run")
 
 
-    def setter(self):
+    def apis(self):
 
         return {
             "get_tasks": self.get_tasks,
