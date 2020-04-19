@@ -1,5 +1,3 @@
-
-
 * Add Tests
     Add all variations of tests for 
         - decorator args and kwargs
@@ -8,4 +6,8 @@
         - before and after middlewares
         - run single task
         - run multiple tasks
+* Add merging two workflow instances
+* Add plugin system
+* Add cleaner logging system with memory/console, file, server logging
+
 
