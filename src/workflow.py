@@ -149,7 +149,7 @@ class WorkflowBase():
 
 class Task(WorkflowBase):
 
-    def add_plugin(self):
+    def add_plugin(self, plugin_inst):
         pass
 
     def merge(self, inst):
@@ -160,14 +160,14 @@ class Task(WorkflowBase):
             # Iterate task through single task
             print("Workflow task provided being instantiated: ", str(tasks))
             print("Workflow has tasks: ", str(self.tasks.keys()))
-
             self.run_task(tasks)
+
         elif isinstance(tasks, list):
             # Iterate task through tasks
             print("Workflow task list provided being instantiated: ", str(tasks))
             print("Workflow has tasks: ", str(self.tasks.keys()))
-
             [self.run_task(t) for t in self.tasks]
+
         else:
             print("No workflow or task available to run")
 
