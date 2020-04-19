@@ -114,7 +114,7 @@ class WorkflowBase():
             "function": fn
         })
 
-        print("Workflow set_task: Task added: ", wfname)
+        print("Workflow set_task: Adding Task: ", wfname)
         # print("Workflow set_task: ", tasks[kwargs["name"]][kwargs["task_order"]])
 
     def run_task(self, task):
@@ -191,7 +191,7 @@ def workflow(*wf_args, **wf_kwargs):
         # check after middlewares args and kwargs number and validity
 
         def order_tasks(*fn_a, **fn_kwa):
-            # print("order_tasks: Decorator init ", "fn_a: ", fn_a, "fn_kwa: ", fn_kwa)
+            # print("Workflow order_tasks: Decorator init ", "fn_a: ", fn_a, "fn_kwa: ", fn_kwa)
 
             t = wf_kwargs.get("task_instance")
             if not t:
@@ -205,7 +205,7 @@ def workflow(*wf_args, **wf_kwargs):
             # print((fn, fn_a, fn_kwa, wf_args, wf_kwargs))
             t.set_task(fn, fn_a, fn_kwa, wf_args, wf_kwargs)
 
-            print("order_tasks - Task added: ", wf_kwargs.get("name"))
+            print("Workflow order_tasks - Task added: ", wf_kwargs.get("name"))
 
         return order_tasks
     return get_decorator
