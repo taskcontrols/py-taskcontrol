@@ -16,11 +16,8 @@ class WorkflowBase():
         }
     }
 
-    def merge_instance(self, inst, clash_prefix):
-        pass
 
-
-    def _run_middleware(self, fn, error_obj, log, *args, **kwargs):
+    def __run_middleware(self, fn, error_obj, log, *args, **kwargs):
         try:
             if log:
                 print("Workflow running middleware function: ", fn.__name__)
@@ -49,7 +46,7 @@ class WorkflowBase():
                     "Error during middleware: flow[options[error]] value error")
 
 
-    def get_md_args(self, f, action, log):
+    def __get_md_args(self, f, action, log):
         
         if action and isinstance(action, dict):
             a, kwa, err_obj = [], {}, {}
@@ -64,7 +61,7 @@ class WorkflowBase():
         return err_obj, a, kwa
 
 
-    def setup_run_middleware(self, task, md_action, log):
+    def __setup_run_middleware(self, task, md_action, log):
 
         #       Iterate through before/after for each task
         #           trigger before functions with next
@@ -79,12 +76,12 @@ class WorkflowBase():
         if actions and isinstance(actions, list):
             for action in actions:
                 fn = action.get("function")
-                err_obj, a, kwa = self.get_md_args(fn, action, log)
-                self._run_middleware(fn, err_obj, log, *a, **kwa)
+                err_obj, a, kwa = self.__get_md_args(fn, action, log)
+                self.__run_middleware(fn, err_obj, log, *a, **kwa)
         elif actions and isinstance(actions, dict):
-            err_obj, a, kwa = self.get_md_args(
+            err_obj, a, kwa = self.__get_md_args(
                 actions.get("function"), actions, log)
-            self._run_middleware(actions.get("function"),
+            self.__run_middleware(actions.get("function"),
                                  err_obj, log, *a, **kwa)
 
 
@@ -151,7 +148,7 @@ class WorkflowBase():
             if log:
                 print("Workflow before middlewares for task now running: ",
                       task.get("name"))
-            self.setup_run_middleware(tsk, "before", log)
+            self.__setup_run_middleware(tsk, "before", log)
 
             #       Invoke task
             if log:
@@ -162,7 +159,11 @@ class WorkflowBase():
             if log:
                 print("Workflow after middlewares for task now running: ",
                       task.get("name"))
-            self.setup_run_middleware(tsk, "after", log)
+            self.__setup_run_middleware(tsk, "after", log)
+
+
+    def merge_instance(self, inst, clash_prefix):
+        pass
 
 
 class Task(WorkflowBase):
@@ -234,3 +235,4 @@ def workflow(*wf_args, **wf_kwargs):
 
 
 __all__ = ["Task", "workflow"]
+
