@@ -1,12 +1,14 @@
 from src.workflow import workflow, Task
 
+t = Task()
 
 def test(k, c, d):
     print("Running my Middleware: task items", k, c, d)
 
-
 @workflow(
-    name="taskname", task_order=1,
+    name="taskname",
+    task_order=1,
+    task_instance = t,
     before=[
         # before middleware order followed will be of the list sequence
         {
@@ -72,7 +74,9 @@ taskone(3, 4)
 
 
 # Example two for decorator usage
-@workflow(name="tasktwo", task_order=2,
+@workflow(name="tasktwo",
+        task_instance = t,
+        task_order=2,
           # Declare before/after as an list or an object (if single middleware function)
           before={
               "function": test,
@@ -92,7 +96,7 @@ tasktwo(5, 6)
 # Example: Within some other function
 
 # Multiple Workflow Tasks run
-Task().run(tasks=["taskname", "tasktwo"])
+t.run(tasks=["taskname", "tasktwo"])
 
 # Single Workflow Tasks run
-# Task().run(tasks="taskname")
+# t.run(tasks="taskname")

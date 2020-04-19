@@ -4,12 +4,11 @@
 # TODO: Add Simple scalable plugin system
 
 
-tasks = {
-    "taskname": {}
-}
-
-
 class WorkflowBase():
+
+    tasks = {
+        "taskname": {}
+    }
 
     def _add_plugin(self):
         pass
@@ -22,7 +21,7 @@ class WorkflowBase():
         except Exception as e:
             if log:
                 print("Running error for middleware")
-            
+
             if not hasattr(error_obj, "error"):
                 error_obj["error"] = "exit"
 
@@ -43,7 +42,7 @@ class WorkflowBase():
                     "Error during middleware: flow[options[error]] value error")
 
     def setup_run_middleware(self, task, md_action, log):
-        
+
         def get_md_args(f, action, log):
             f_dt = action
 
@@ -72,8 +71,10 @@ class WorkflowBase():
                 err_obj, log, a, kwa = get_md_args(fn, action, log)
                 self._run_middleware(fn, err_obj, log, *a, **kwa)
         elif actions and isinstance(actions, dict):
-            err_obj, log, a, kwa = get_md_args(actions.get("function"), actions, log)
-            self._run_middleware(actions.get("function"), err_obj, log, *a, **kwa)
+            err_obj, log, a, kwa = get_md_args(
+                actions.get("function"), actions, log)
+            self._run_middleware(actions.get("function"),
+                                 err_obj, log, *a, **kwa)
 
     def clean_args(self, fn, wf_args, wf_kwargs, fn_a, fn_kwa):
         tpl = fn.__code__.co_varnames
@@ -87,25 +88,23 @@ class WorkflowBase():
         return False
 
     def get_tasks(self, task=None):
-        global tasks
         if task and isinstance(task, str):
-            return tasks.get(task)
-        return tasks
+            return self.tasks.get(task)
+        return self.tasks
 
     def set_task(self, fn, fn_a, fn_kwa, wf_args, wf_kwargs):
-        global tasks
 
         wfname = wf_kwargs.get("name")
         # print("tasks.keys() ", tasks.keys())
         print("Workflow task name to add: ", wfname)
 
-        if wfname not in tasks.keys():
-            tasks[wfname] = {}
+        if wfname not in self.tasks.keys():
+            self.tasks[wfname] = {}
 
-        if not isinstance(tasks[wfname], dict):
-            tasks.update({wfname: {}})
+        if not isinstance(self.tasks[wfname], dict):
+            self.tasks.update({wfname: {}})
 
-        tasks[wfname].update({
+        self.tasks[wfname].update({
             "task_order": wf_kwargs["task_order"],
             "wf_args": wf_args, "wf_kwargs": wf_kwargs,
             "fn_a": fn_a, "fn_kwa": fn_kwa,
@@ -131,7 +130,8 @@ class WorkflowBase():
 
             #       Iterate through before for each task
             if log:
-                print("Workflow before middlewares for task now running: ", task.get("name"))
+                print("Workflow before middlewares for task now running: ",
+                      task.get("name"))
             self.setup_run_middleware(tsk, "before", log)
 
             #       Invoke task
@@ -141,11 +141,13 @@ class WorkflowBase():
 
             #       Iterate through after for each task
             if log:
-                print("Workflow after middlewares for task now running: ", task.get("name"))
+                print("Workflow after middlewares for task now running: ",
+                      task.get("name"))
             self.setup_run_middleware(tsk, "after", log)
 
 
 class Task(WorkflowBase):
+
     def run(self, tasks):
         if isinstance(tasks, str):
             # Iterate task through single task
@@ -154,7 +156,7 @@ class Task(WorkflowBase):
         elif isinstance(tasks, list):
             # Iterate task through tasks
             print("Workflow task list provided instantiated.")
-            [self.run_task(t) for t in tasks]
+            [self.run_task(t) for t in self.tasks]
         else:
             print("No workflow or task available to run")
 
@@ -167,11 +169,11 @@ class Task(WorkflowBase):
             "run_middleware": self.setup_run_middleware
         }
 
-
-def workflow(*wf_args, **wf_kwargs):
-
     def add_plugin(self):
         pass
+
+
+def workflow(*wf_args, **wf_kwargs):
 
     def get_decorator(fn):
         # print("get_decorator: Decorator init ", "wf_args: ", wf_args, "wf_kwargs: ", wf_kwargs)
@@ -182,10 +184,13 @@ def workflow(*wf_args, **wf_kwargs):
 
         def order_tasks(*fn_a, **fn_kwa):
             # print("order_tasks: Decorator init ", "fn_a: ", fn_a, "fn_kwa: ", fn_kwa)
-            global Task
-            global tasks
-            t = Task()
+            
+            t = wf_kwargs.get("task_instance")
+            if not t:
+                raise Exception("Task instance not provided")
+
             args_normal = t.clean_args(fn, wf_args, wf_kwargs, fn_a, fn_kwa)
+            
             if not args_normal:
                 raise Exception("Args and KwArgs do not match")
 
