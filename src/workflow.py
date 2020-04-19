@@ -200,8 +200,7 @@ class Task(WorkflowBase):
             "get_tasks": self.get_tasks,
             "set_task": self.set_task,
             "run_task": self.run_task,
-            "clean_args": self.clean_args,
-            "run_middleware": self.setup_run_middleware
+            "clean_args": self.clean_args
         }
 
 
