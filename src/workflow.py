@@ -10,7 +10,7 @@ class WorkflowBase():
         "taskname": {}
     }
 
-    def _add_plugin(self):
+    def merge_instance(self, inst):
         pass
 
     def _run_middleware(self, fn, error_obj, log, *args, **kwargs):
@@ -41,20 +41,21 @@ class WorkflowBase():
                 raise Exception(
                     "Error during middleware: flow[options[error]] value error")
 
+
+    def get_md_args(self, f, action, log):
+        f_dt = action
+
+        if f_dt and isinstance(f_dt, dict):
+            a, kwa, err_obj = [], {}, {}
+            if "args" in f_dt and isinstance(f_dt.get("args"), list):
+                a = f_dt.get("args")
+            if "kwargs" in f_dt and isinstance(f_dt.get("kwargs"), dict):
+                kwa = f_dt.get("kwargs")
+            if "options" in f_dt and isinstance(f_dt.get("options"), dict):
+                err_obj = f_dt.get("options")
+        return err_obj, log, a, kwa
+
     def setup_run_middleware(self, task, md_action, log):
-
-        def get_md_args(f, action, log):
-            f_dt = action
-
-            if f_dt and isinstance(f_dt, dict):
-                a, kwa, err_obj = [], {}, {}
-                if "args" in f_dt and isinstance(f_dt.get("args"), list):
-                    a = f_dt.get("args")
-                if "kwargs" in f_dt and isinstance(f_dt.get("kwargs"), dict):
-                    kwa = f_dt.get("kwargs")
-                if "options" in f_dt and isinstance(f_dt.get("options"), dict):
-                    err_obj = f_dt.get("options")
-            return err_obj, log, a, kwa
 
         #       Iterate through before/after for each task
         #           trigger before functions with next
@@ -68,10 +69,10 @@ class WorkflowBase():
         if actions and isinstance(actions, list):
             for action in actions:
                 fn = action.get("function")
-                err_obj, log, a, kwa = get_md_args(fn, action, log)
+                err_obj, log, a, kwa = self.get_md_args(fn, action, log)
                 self._run_middleware(fn, err_obj, log, *a, **kwa)
         elif actions and isinstance(actions, dict):
-            err_obj, log, a, kwa = get_md_args(
+            err_obj, log, a, kwa = self.get_md_args(
                 actions.get("function"), actions, log)
             self._run_middleware(actions.get("function"),
                                  err_obj, log, *a, **kwa)
@@ -150,6 +151,9 @@ class Task(WorkflowBase):
 
     def add_plugin(self):
         pass
+
+    def merge(self, inst):
+        self.merge_instance(inst)
 
     def run(self, tasks):
         if isinstance(tasks, str):
