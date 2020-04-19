@@ -194,7 +194,6 @@ def workflow(*wf_args, **wf_kwargs):
             # print("order_tasks: Decorator init ", "fn_a: ", fn_a, "fn_kwa: ", fn_kwa)
 
             t = wf_kwargs.get("task_instance")
-
             if not t:
                 raise Exception("Task instance not provided")
 
