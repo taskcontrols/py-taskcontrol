@@ -148,14 +148,21 @@ class WorkflowBase():
 
 class Task(WorkflowBase):
 
+    def add_plugin(self):
+        pass
+
     def run(self, tasks):
         if isinstance(tasks, str):
             # Iterate task through single task
-            print("Workflow task provided instantiated.")
+            print("Workflow task provided being instantiated: ", str(tasks))
+            print("Workflow has tasks: ", str(self.tasks.keys()))
+
             self.run_task(tasks)
         elif isinstance(tasks, list):
             # Iterate task through tasks
-            print("Workflow task list provided instantiated.")
+            print("Workflow task list provided being instantiated: ", str(tasks))
+            print("Workflow has tasks: ", str(self.tasks.keys()))
+
             [self.run_task(t) for t in self.tasks]
         else:
             print("No workflow or task available to run")
@@ -169,9 +176,6 @@ class Task(WorkflowBase):
             "run_middleware": self.setup_run_middleware
         }
 
-    def add_plugin(self):
-        pass
-
 
 def workflow(*wf_args, **wf_kwargs):
 
@@ -184,13 +188,14 @@ def workflow(*wf_args, **wf_kwargs):
 
         def order_tasks(*fn_a, **fn_kwa):
             # print("order_tasks: Decorator init ", "fn_a: ", fn_a, "fn_kwa: ", fn_kwa)
-            
+
             t = wf_kwargs.get("task_instance")
+
             if not t:
                 raise Exception("Task instance not provided")
 
             args_normal = t.clean_args(fn, wf_args, wf_kwargs, fn_a, fn_kwa)
-            
+
             if not args_normal:
                 raise Exception("Args and KwArgs do not match")
 

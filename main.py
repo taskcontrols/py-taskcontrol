@@ -13,8 +13,8 @@ def test(k, c, d):
         # before middleware order followed will be of the list sequence
         {
             "function": test,
-            "args": [1, 2],
-            "kwargs": {"d": "Testing message"},
+            "args": [11, 12],
+            "kwargs": {"d": "Before Testing message Middleware "},
 
             # options { error : str,  error_next_value: Object, error_handler: function }
             #
@@ -36,7 +36,7 @@ def test(k, c, d):
         # after middleware order followed will be of the list sequence
         {
             "function": test,
-            "args": [5, 6], "kwargs": {"d": "Testing message"},
+            "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
             "options": {
                 "error": "error_handler",
                 "error_next_value": "value",
@@ -80,7 +80,7 @@ taskone(3, 4)
           # Declare before/after as an list or an object (if single middleware function)
           before={
               "function": test,
-              "args": [1, 2],
+              "args": [21, 22],
               "kwargs": {"d": "Testing message"},
               "options": {"error": "next", "error_next_value": ""}
           },
@@ -88,7 +88,6 @@ taskone(3, 4)
           )
 def tasktwo(a, b):
     print("Running my task: tasktwo", a, b)
-
 
 tasktwo(5, 6)
 
