@@ -22,3 +22,15 @@ setuptools.setup(
          "Operating System :: OS Independent"
      ],
 )
+
+# RUN setup.py with below command
+# python3 setup.py sdist bdist_wheel
+
+# The Pypirc file stores the PyPi repository information
+# https://docs.python.org/2.5/dist/pypirc.html
+# for Windows :  C:\Users\UserName\.pypirc
+# for *nix :   ~/.pypirc
+
+# To upload your dist/*.whl file on PyPi https://pypi.org/, use Twine
+# python3 -m twine upload dist/*
+
