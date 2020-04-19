@@ -6,12 +6,15 @@
 
 class WorkflowBase():
 
+
     tasks = {
         "taskname": {}
     }
 
+
     def merge_instance(self, inst):
         pass
+
 
     def _run_middleware(self, fn, error_obj, log, *args, **kwargs):
         try:
@@ -43,17 +46,19 @@ class WorkflowBase():
 
 
     def get_md_args(self, f, action, log):
-        f_dt = action
-
-        if f_dt and isinstance(f_dt, dict):
+        
+        if action and isinstance(action, dict):
             a, kwa, err_obj = [], {}, {}
-            if "args" in f_dt and isinstance(f_dt.get("args"), list):
-                a = f_dt.get("args")
-            if "kwargs" in f_dt and isinstance(f_dt.get("kwargs"), dict):
-                kwa = f_dt.get("kwargs")
-            if "options" in f_dt and isinstance(f_dt.get("options"), dict):
-                err_obj = f_dt.get("options")
+            if "args" in action and isinstance(action.get("args"), list):
+                a = action.get("args")
+            if "kwargs" in action and isinstance(action.get("kwargs"), dict):
+                kwa = action.get("kwargs")
+            if "options" in action and isinstance(action.get("options"), dict):
+                err_obj = action.get("options")
+        
+        # TODO: Do clean args here
         return err_obj, a, kwa
+
 
     def setup_run_middleware(self, task, md_action, log):
 
@@ -78,10 +83,13 @@ class WorkflowBase():
             self._run_middleware(actions.get("function"),
                                  err_obj, log, *a, **kwa)
 
+
     def clean_args(self, fn, wf_args, wf_kwargs, fn_a, fn_kwa):
+        
         tpl = fn.__code__.co_varnames
         k_fn_kwa = fn_kwa.keys()
         l_tpl, l_fn_a, l_k_fn_kwa = len(tpl), len(fn_a), len(k_fn_kwa)
+
         if (l_tpl == l_fn_a + l_k_fn_kwa):
             for k in k_fn_kwa:
                 if not tpl.index(k) >= l_fn_a:
@@ -89,15 +97,19 @@ class WorkflowBase():
             return True
         return False
 
+
     def get_tasks(self, task=None):
+        
         if task and isinstance(task, str):
             return self.tasks.get(task)
         return self.tasks
+
 
     def set_task(self, fn, fn_a, fn_kwa, wf_args, wf_kwargs):
 
         wfname = wf_kwargs.get("name")
         # print("tasks.keys() ", tasks.keys())
+
         print("Workflow task name to add: ", wfname)
 
         if wfname not in self.tasks.keys():
@@ -117,6 +129,7 @@ class WorkflowBase():
 
         print("Workflow set_task: Adding Task: ", wfname)
         # print("Workflow set_task: ", tasks[kwargs["name"]][kwargs["task_order"]])
+
 
     def run_task(self, task):
 
@@ -150,13 +163,17 @@ class WorkflowBase():
 
 class Task(WorkflowBase):
 
+
     def add_plugin(self, plugin_inst):
         pass
+
 
     def merge(self, inst):
         self.merge_instance(inst)
 
+
     def run(self, tasks):
+        
         if isinstance(tasks, str):
             # Iterate task through single task
             print("Workflow task provided being instantiated: ", str(tasks))
@@ -172,7 +189,9 @@ class Task(WorkflowBase):
         else:
             print("No workflow or task available to run")
 
+
     def setter(self):
+
         return {
             "get_tasks": self.get_tasks,
             "set_task": self.set_task,
@@ -184,12 +203,11 @@ class Task(WorkflowBase):
 
 def workflow(*wf_args, **wf_kwargs):
 
+
     def get_decorator(fn):
         # print("get_decorator: Decorator init ", "wf_args: ", wf_args, "wf_kwargs: ", wf_kwargs)
         # print("get_decorator: ", fn) 
         
-        # check after middlewares args and kwargs number and validity
-
         def order_tasks(*fn_a, **fn_kwa):
             # print("Workflow order_tasks: Decorator init ", "fn_a: ", fn_a, "fn_kwa: ", fn_kwa)
 
