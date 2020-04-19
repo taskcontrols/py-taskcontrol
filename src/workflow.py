@@ -6,13 +6,17 @@
 
 class WorkflowBase():
 
-
     tasks = {
         "taskname": {}
     }
 
+    plugins = {
+        "pluginname": {
+            "taskname": {}
+        }
+    }
 
-    def merge_instance(self, inst):
+    def merge_instance(self, inst, clash_prefix):
         pass
 
 
@@ -168,8 +172,8 @@ class Task(WorkflowBase):
         pass
 
 
-    def merge(self, inst):
-        self.merge_instance(inst)
+    def merge(self, inst, clash_prefix):
+        self.merge_instance(inst, clash_prefix)
 
 
     def run(self, tasks):
