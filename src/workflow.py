@@ -166,7 +166,7 @@ class WorkflowBase():
         pass
 
 
-class Task(WorkflowBase):
+class Tasks(WorkflowBase):
 
 
     def add_plugin(self, plugin_inst):
@@ -234,5 +234,5 @@ def workflow(*wf_args, **wf_kwargs):
     return get_decorator
 
 
-__all__ = ["Task", "workflow"]
+__all__ = ["Tasks", "workflow"]
 

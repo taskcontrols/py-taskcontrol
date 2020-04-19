@@ -1,6 +1,13 @@
-from src.workflow import workflow, Task
+# for git development repo
+from src.workflow import workflow, Tasks
 
-t = Task()
+# for package
+# from taskcontrol import workflow, Tasks
+
+# Instance of tasks and apis object
+# Every instance will store it own list of tasks 
+#       with their before/after middlewares
+t = Tasks()
 
 def test(k, c, d):
     print("Running my Middleware Function: test - task items", k, c, d)

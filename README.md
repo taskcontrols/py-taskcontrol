@@ -1,5 +1,5 @@
 # workflow
-    Create named workflows and run tasks with before and after middlewares
+    Create named workflows and run tasks with respective before and after middlewares
 
 Workflow is a python library to create tasks in and based on named workflows. It allows middlewares before and after each task. workflow can run single or multiple tasks at a task invocation.
 
@@ -43,34 +43,39 @@ It provides a simple decorator that takes the name, task, before, after argument
 ```javascript
 
 
-// for git development repo
-// from src.workflow import workflow, Tasks
+# for git development repo
+# from src.workflow import workflow, Tasks
 
-// for package
+# for package
 from taskcontrol import workflow, Tasks
+
+# Instance of tasks object
+# Every instance will store it own list of tasks 
+#       with their before/after middlewares
+t = Task()
 
 
 def test(k, c, d):
-    print("Running my Middleware: task items", k, c, d)
+    print("Running my Middleware Function: test - task items", k, c, d)
 
 
 @workflow(
-    name="taskname", task_order=1,
+    name="taskname",
+    task_order=1,
+    task_instance = t,
     before=[
         # before middleware order followed will be of the list sequence
         {
             "function": test,
-            "args": [1, 2],
-            "kwargs": {"d": "Testing message"},
+            "args": [11, 12],
+            "kwargs": {"d": "Before Testing message Middleware "},
 
             # options { error : str,  error_next_value: Object, error_handler: function }
             #
             # error { str }: [next, error_handler, exit]
             # error_handler { function }
             # error_next_value { object }
-            # 
-            # Default error value is `exit`
-            # 
+            #
             # Usage:
             # "options": {"error": "next", "error_next_value": "value"}
             # "options": {"error": "exit"}
@@ -85,8 +90,7 @@ def test(k, c, d):
         # after middleware order followed will be of the list sequence
         {
             "function": test,
-            "args": [5, 6],
-            "kwargs": {"d": "Testing message"},
+            "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
             "options": {
                 "error": "error_handler",
                 "error_next_value": "value",
@@ -114,7 +118,7 @@ def test(k, c, d):
     log=True
 )
 def taskone(a, b):
-    print("Running my task: taskone", a, b)
+    print("Running my task function: taskone", a, b)
 
 
 # Invocation is needed to add the task with function arguments
@@ -124,10 +128,20 @@ taskone(3, 4)
 
 
 # Example two for decorator usage
-@workflow(name="tasktwo", task_order=2, before=[], after=[])
+@workflow(name="tasktwo",
+        task_instance = t,
+        task_order=2,
+          # Declare before/after as an list or an object (if single middleware function)
+          before={
+              "function": test,
+              "args": [21, 22],
+              "kwargs": {"d": "Before Testing message"},
+              "options": {"error": "next", "error_next_value": ""}
+          },
+          after=[]
+          )
 def tasktwo(a, b):
-    print("Running my task: tasktwo", a, b)
-
+    print("Running my task function: tasktwo", a, b)
 
 tasktwo(5, 6)
 
@@ -135,10 +149,10 @@ tasktwo(5, 6)
 # Example: Within some other function
 
 # Multiple Workflow Tasks run
-Task().run(tasks=["taskname", "tasktwo"])
+t.run(tasks=["taskname", "tasktwo"])
 
 # Single Workflow Tasks run
-# Task().run(tasks="taskname")
+# t.run(tasks="taskname")
 
 
 ```
