@@ -20,10 +20,21 @@ class Globals():
     __instance = None
 
     def __init__(self):
+        
+        # Option 1:
         # if Globals.__instance != None:
         #     raise Exception("This class is a singleton!")
         # else:
         #     Globals.__instance = self
+
+        # Option 2:
+        #     """ Virtually private constructor. """
+        #     if Globals.__instance != None:
+        #         raise Exception("This class is a singleton!")
+        #     else:
+        #         Globals.__instance = self
+
+        # Option 3:
         pass
 
     def __new__(cls):
@@ -38,13 +49,6 @@ class Globals():
         if Globals.__instance == None:
             Globals()
         return Globals.__instance
-
-    # def __init__(self):
-    #     """ Virtually private constructor. """
-    #     if Globals.__instance != None:
-    #         raise Exception("This class is a singleton!")
-    #     else:
-    #         Globals.__instance = self
 
 
 class WorkflowBase():
