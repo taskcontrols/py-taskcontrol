@@ -214,7 +214,7 @@ def tester(a,b):
     print(a,b)
     return None
 kwargs_for_first_function = {"a":"a", "b":"b"}
-ls = [kwargs_for_first_function_returns_or_other_value, test, tester]
+ls = [kwargs_for_first_function_the_its_returns_or_other_value_for_next_func, test, tester]
 import functools 
 def red(kwargs_for_first_then_func, p):
     i = p(kwargs.get("a"), kwargs.get("b"))
