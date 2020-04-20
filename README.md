@@ -196,7 +196,7 @@ Though it may support Python version 2.x. However, it has not been tested in 2.x
  -->
 
 ##### Crazy Hint:
-You can also create a simple workflow using a simple list or nested list and loop through them using a for/while loop and invoke them during looping
+You can also create a simple workflow without taskcontrol using a simple list or nested list and loop through them using a for/while loop and invoke them during looping
 
 ```python
 
