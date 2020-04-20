@@ -202,7 +202,7 @@ You can also create a simple workflow without taskcontrol using a simple list or
 
 lst = ["f1", "f2", "f3"]
 nest_lst = [["f1", "f2"], "f3", "f4", ["f5"]]
-# Now loop the above lists
+# Now loop the above lists and invoke the functions
 
 ```
 
