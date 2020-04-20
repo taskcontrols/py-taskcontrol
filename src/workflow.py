@@ -2,6 +2,49 @@
 # Goal: Manage Workflow and related middlewares
 # TODO: Make unusable WorkflowBase methods private
 # TODO: Add Simple scalable plugin system
+# TODO: Add Singleton for global sharable tasks and plugin service
+
+
+class Globals():
+
+    tasks = {
+        "taskname": {}
+    }
+
+    plugins = {
+        "pluginname": {
+            "taskname": {}
+        }
+    }
+
+    __instance = None
+
+    def __init__(self):
+        # if Globals.__instance != None:
+        #     raise Exception("This class is a singleton!")
+        # else:
+        #     Globals.__instance = self
+        pass
+
+    def __new__(cls):
+        if cls.__instance is None:
+            cls.__instance = super(Globals, cls).__new__(cls)
+            # Put any initialization here.
+        return cls.__instance
+
+    @staticmethod 
+    def getInstance():
+        """ Static access method. """
+        if Globals.__instance == None:
+            Globals()
+        return Globals.__instance
+
+    # def __init__(self):
+    #     """ Virtually private constructor. """
+    #     if Globals.__instance != None:
+    #         raise Exception("This class is a singleton!")
+    #     else:
+    #         Globals.__instance = self
 
 
 class WorkflowBase():
@@ -15,6 +58,11 @@ class WorkflowBase():
             "taskname": {}
         }
     }
+
+
+    def __init__(self):
+        self.globals = Globals()
+        # print("Workflow Creating the global object", self.globals)
 
 
     def __run_middleware(self, fn, error_obj, log, *args, **kwargs):

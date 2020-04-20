@@ -5,17 +5,20 @@ from src.workflow import workflow, Tasks
 # from taskcontrol import workflow, Tasks
 
 # Instance of tasks and apis object
-# Every instance will store it own list of tasks 
+# Every instance will store it own list of tasks
 #       with their before/after middlewares
 t = Tasks()
+
 
 def test(k, c, d):
     print("Running my Middleware Function: test - task items", k, c, d)
 
+
 @workflow(
     name="taskname",
     task_order=1,
-    task_instance = t,
+    task_instance=t,
+    task_global=True,
     before=[
         # before middleware order followed will be of the list sequence
         {
@@ -82,8 +85,9 @@ taskone(3, 4)
 
 # Example two for decorator usage
 @workflow(name="tasktwo",
-        task_instance = t,
-        task_order=2,
+          task_instance=t,
+          task_order=2,
+          task_global=False,
           # Declare before/after as an list or an object (if single middleware function)
           before={
               "function": test,
@@ -96,6 +100,7 @@ taskone(3, 4)
 def tasktwo(a, b):
     print("Running my task function: tasktwo", a, b)
 
+
 tasktwo(5, 6)
 
 # Invoke this where needed
@@ -106,3 +111,4 @@ t.run(tasks=["taskname", "tasktwo"])
 
 # Single Workflow Tasks run
 # t.run(tasks="taskname")
+
