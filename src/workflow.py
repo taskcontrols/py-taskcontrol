@@ -144,7 +144,7 @@ class WorkflowBase():
             return True
         return False
 
-    def get_tasks(self, task=None):
+    def get_tasks(self, task=None, shared=False):
         # # get shared if shared is requested
         # if shared:
 
@@ -182,7 +182,8 @@ class WorkflowBase():
             "fn_a": fn_a, "fn_kwa": fn_kwa,
             "before": wf_kwargs["before"],
             "after": wf_kwargs["after"],
-            "function": fn
+            "function": fn,
+            "log": wf_kwargs["log"]
         })
 
         print("Workflow set_task: Adding Task: ", wfname)
@@ -217,20 +218,43 @@ class WorkflowBase():
                       task.get("name"))
             self.__setup_run_middleware(tsk, "after", log)
 
-    def merge_instance(self, inst, shared=False, clash_prefix=None):
-        if shared == True:
-            t = self.shared.tasks.keys()
-        elif shared == False:
-            t = self.tasks.keys()
+    def update_task(self, task):
+        # task object structure
+        # name, args, task_order, shared, before, after, function, fn_a, fn_kwa, log
+        """wf_kwargs: name, args, task_order, shared, before, after, log"""
+        task_obj = {
+            "task_order": task.get("task_order"),
+            "wf_args": task.get("args"), "wf_kwargs": task.get("wf_kwargs"),
+            "fn_a": task.get("fn_a"), "fn_kwa": task.get("fn_args"),
+            "before": task.get("before"),
+            "after": task.get("after"),
+            "function": task.get("function"),
+            "log": task.get("log")
+        }
 
-        for k in self.tasks.keys():
+        if task.get("shared") == True:
+            self.shared.tasks.update(task.get("name"), task_obj)
+        elif task.get("shared") == False:
+            self.tasks.update(task.get("name"), task_obj)
+
+    def __add_instance(self, tasks, inst, shared=None, clash_prefix=None):
+        for k in tasks.keys():
             for ik in inst.tasks.keys():
                 if k == ik:
                     if not clash_prefix:
                         raise Exception(
                             "Workflow merge_instance: clash_prefix not provided")
-                    self.tasks.update(clash_prefix + ik, inst.tasks.get(ik))
-                self.tasks[ik] = inst.tasks.get(ik)
+                    tasks.update(clash_prefix + ik, inst.tasks.get(ik))
+                tasks[ik] = inst.tasks.get(ik)
+        return tasks
+
+    def merge_instance(self, inst, shared, clash_prefix):
+        if shared == True:
+            self.shared.tasks = self.__add_instance(
+                self.shared.tasks, inst, clash_prefix)
+        elif shared == False:
+            self.tasks = self.__add_instance(
+                self.tasks, inst, shared, clash_prefix)
 
 
 class Tasks(WorkflowBase):
@@ -238,8 +262,8 @@ class Tasks(WorkflowBase):
     def add_plugin(self, plugin_inst):
         pass
 
-    def merge(self, inst, clash_prefix):
-        self.merge_instance(inst, clash_prefix)
+    def merge(self, inst, shared=False, clash_prefix=None):
+        self.merge_instance(inst, shared, clash_prefix)
 
     def run(self, tasks):
 
@@ -263,6 +287,7 @@ class Tasks(WorkflowBase):
         return {
             "get_tasks": self.get_tasks,
             "set_task": self.set_task,
+            "update_task": self.update_task,
             "run_task": self.run_task,
             "clean_args": self.clean_args
         }

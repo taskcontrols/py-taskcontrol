@@ -89,7 +89,7 @@ taskone(3, 4)
 @workflow(name="tasktwo",
           task_instance=t,
           task_order=2,
-          task_global=False,
+          shared=False,
           # Declare before/after as an list or an object (if single middleware function)
           before={
               "function": test,
@@ -136,4 +136,3 @@ t.run(tasks=["taskname", "tasktwo"])
 # TODO: Run Tasks run with shared task
 # Single Workflow Tasks run for shared task
 # t.run(tasks="shared:taskname")
-
