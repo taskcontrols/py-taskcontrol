@@ -1,9 +1,9 @@
-# workflow
-    Create named workflows and run tasks with respective before and after middlewares
+# taskcontrol
+    Create named workflow controls and run tasks with respective before and after middlewares
 
-Workflow is a python library to create tasks in and based on named workflows. It allows middlewares before and after each task. workflow can run single or multiple tasks at a task invocation.
+taskcontrol is a python library to create tasks in and based on named workflow controls. It allows middlewares before and after each task. taskcontrol can run single or multiple tasks at a task run invocation.
 
-It provides a simple decorator that takes the name, task, before, after arguments to set up the named workflow.
+It provides a simple decorator called `workflow` that takes the name, task_instance, task_order, task_global, before, after arguments to set up the named workflow control.
 
 # Installation
 
@@ -18,7 +18,7 @@ It provides a simple decorator that takes the name, task, before, after argument
 
 # Features
 
-* Create tasks
+* Create task controls (tasks)
 * Named workflow tasks
 * Single or multiple tasks
 * Workflow decorator with simple options to setup workflow
@@ -46,8 +46,10 @@ It provides a simple decorator that takes the name, task, before, after argument
 # for git development repo
 # from src.workflow import workflow, Tasks
 
+
 # for package
 from taskcontrol import workflow, Tasks
+
 
 # Instance of tasks object
 # Every instance will store it own list of tasks 
@@ -63,6 +65,7 @@ def test(k, c, d):
     name="taskname",
     task_order=1,
     task_instance = t,
+    task_global=True,
     before=[
         # before middleware order followed will be of the list sequence
         {
@@ -131,6 +134,7 @@ taskone(3, 4)
 @workflow(name="tasktwo",
         task_instance = t,
         task_order=2,
+        task_global=False,
           # Declare before/after as an list or an object (if single middleware function)
           before={
               "function": test,
@@ -145,14 +149,18 @@ def tasktwo(a, b):
 
 tasktwo(5, 6)
 
+
 # Invoke this where needed
 # Example: Within some other function
+
 
 # Multiple Workflow Tasks run
 t.run(tasks=["taskname", "tasktwo"])
 
+
 # Single Workflow Tasks run
 # t.run(tasks="taskname")
+
 
 
 ```

@@ -1,8 +1,10 @@
 # for git development repo
 from src.workflow import workflow, Tasks
 
+
 # for package
 # from taskcontrol import workflow, Tasks
+
 
 # Instance of tasks and apis object
 # Every instance will store it own list of tasks
@@ -103,11 +105,14 @@ def tasktwo(a, b):
 
 tasktwo(5, 6)
 
+
 # Invoke this where needed
 # Example: Within some other function
 
+
 # Multiple Workflow Tasks run
 t.run(tasks=["taskname", "tasktwo"])
+
 
 # Single Workflow Tasks run
 # t.run(tasks="taskname")
