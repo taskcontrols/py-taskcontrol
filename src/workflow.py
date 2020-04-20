@@ -159,15 +159,22 @@ class WorkflowBase():
 
         print("Workflow task name to add: ", wfname)
 
+        shared = wf_kwargs.get("shared")
         # TODO: Add in global r local as per decorator
-        # if shared ==True:
+        # if shared == True:
         # set in global or local
 
-        if wfname not in self.tasks.keys():
-            self.tasks[wfname] = {}
+        if shared == True:
+            if wfname not in self.shared.tasks.keys():
+                self.shared.tasks[wfname] = {}
+            if not isinstance(self.shared.tasks[wfname], dict):
+                self.shared.tasks.update({wfname: {}})
 
-        if not isinstance(self.tasks[wfname], dict):
-            self.tasks.update({wfname: {}})
+        elif shared != True:
+            if wfname not in self.tasks.keys():
+                self.tasks[wfname] = {}
+            if not isinstance(self.tasks[wfname], dict):
+                self.tasks.update({wfname: {}})
 
         self.tasks[wfname].update({
             "task_order": wf_kwargs["task_order"],

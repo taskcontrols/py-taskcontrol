@@ -24,11 +24,10 @@ It provides a simple decorator called `workflow` that takes the name, task_insta
 * Workflow decorator with simple options to setup workflow
 * Allows middlewares before each task (data fetch, auth, etc)
 * Allows middlewares after each task (data save, logging, logout, cleanup, etc)
-* In-Development: Allows merging to instances of task controls
+* Allows merging to instances of task controls
 * In-Development: Allows creating shared/common task controls
 * In-Development: Allows creating and registering a set of task controls as a plugin
 * In-Development: Allows adding a plugin to your task controls
-
 
 
 # Feature Details
