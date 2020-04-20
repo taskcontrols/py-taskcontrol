@@ -25,7 +25,7 @@ It provides a simple decorator called `workflow` that takes the name, task_insta
 * Allows middlewares before each task (data fetch, auth, etc)
 * Allows middlewares after each task (data save, logging, logout, cleanup, etc)
 * Allows merging to instances of task controls
-* In-Development: Allows creating shared/common task controls
+* Allows creating shared/common task controls (use shared keyword argument)
 * In-Development: Allows creating and registering a set of task controls as a plugin
 * In-Development: Allows adding a plugin to your task controls
 
@@ -44,7 +44,7 @@ It provides a simple decorator called `workflow` that takes the name, task_insta
 
 ##### Quick Demo:
 
-```javascript
+```python
 
 
 # for git development repo
@@ -195,6 +195,16 @@ Though it may support Python version 2.x. However, it has not been tested in 2.x
 # Wiki
  -->
 
+##### Crazy Hint:
+You can also create a simple workflow using a simple list or nested list and loop through them using a for/while loop and invoke them during looping
+
+```python
+
+lst = ["f1", "f2", "f3"]
+nest_lst = [["f1", "f2"], "f3", "f4", ["f5"]]
+# Now loop the above lists
+
+```
 
 # Todo
 
