@@ -8,7 +8,8 @@
         - run multiple tasks
 * Add merging two workflow instances
 * Add plugin system
-* Add cleaner logging system with memory/console, file, server logging
-* Add globals for tasks and plugins
+* Add cleaner logging system with
+        - memory/console, file, server logging for monitoring
+* Add shared/globals for common tasks and plugins
         - not associated to instance
         - single global sharable instance

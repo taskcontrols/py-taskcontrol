@@ -20,7 +20,7 @@ class Shared():
     __instance = None
 
     def __init__(self):
-        
+
         # Option 1:
         # if Shared.__instance != None:
         #     raise Exception("This class is a singleton!")
@@ -43,7 +43,7 @@ class Shared():
             # Put any initialization here.
         return cls.__instance
 
-    @staticmethod 
+    @staticmethod
     def getInstance():
         """ Static access method. """
         if Shared.__instance == None:
@@ -63,14 +63,12 @@ class WorkflowBase():
         }
     }
 
-
     def __init__(self):
-        self.globals = Shared()
+        self.shared = Shared()
         # print("Workflow Creating the global object", self.globals)
 
-
     def __run_middleware(self, fn, error_obj, log, *args, **kwargs):
-        
+
         try:
             if log:
                 print("Workflow running middleware function: ", fn.__name__)
@@ -99,9 +97,8 @@ class WorkflowBase():
                 raise Exception(
                     "Error during middleware: flow[options[error]] value error")
 
-
     def __get_md_args(self, f, action, log):
-        
+
         if action and isinstance(action, dict):
             a, kwa, err_obj = [], {}, {}
             if "args" in action and isinstance(action.get("args"), list):
@@ -114,18 +111,14 @@ class WorkflowBase():
         # TODO: Do clean args here
         return err_obj, a, kwa
 
-
     def __setup_run_middleware(self, task, md_action, log):
 
         #       Iterate through before/after for each task
-        #           trigger before functions with next
-        #           if there is an error, then based on option:
-        #               trigger error_handler
-        #               trigger next
-        #               trigger exit
+        #           trigger before functions with next or handle error
+        #           with error_handler, next or exit based on options
 
         actions = task.get("wf_kwargs").get(md_action)
-        log  = task.get("wf_kwargs").get("log")
+        log = task.get("wf_kwargs").get("log")
 
         if actions and isinstance(actions, list):
             for action in actions:
@@ -136,11 +129,10 @@ class WorkflowBase():
             err_obj, a, kwa = self.__get_md_args(
                 actions.get("function"), actions, log)
             self.__run_middleware(actions.get("function"),
-                                 err_obj, log, *a, **kwa)
-
+                                  err_obj, log, *a, **kwa)
 
     def clean_args(self, fn, wf_args, wf_kwargs, fn_a, fn_kwa):
-        
+
         tpl = fn.__code__.co_varnames
         k_fn_kwa = fn_kwa.keys()
         l_tpl, l_fn_a, l_k_fn_kwa = len(tpl), len(fn_a), len(k_fn_kwa)
@@ -152,7 +144,6 @@ class WorkflowBase():
             return True
         return False
 
-
     def get_tasks(self, task=None):
         # # get shared if shared is requested
         # if shared:
@@ -160,7 +151,6 @@ class WorkflowBase():
         if task and isinstance(task, str):
             return self.tasks.get(task)
         return self.tasks
-
 
     def set_task(self, fn, fn_a, fn_kwa, wf_args, wf_kwargs):
 
@@ -172,14 +162,13 @@ class WorkflowBase():
         # TODO: Add in global r local as per decorator
         # if shared ==True:
         # set in global or local
-        
+
         if wfname not in self.tasks.keys():
             self.tasks[wfname] = {}
 
         if not isinstance(self.tasks[wfname], dict):
             self.tasks.update({wfname: {}})
 
-        
         self.tasks[wfname].update({
             "task_order": wf_kwargs["task_order"],
             "wf_args": wf_args, "wf_kwargs": wf_kwargs,
@@ -191,7 +180,6 @@ class WorkflowBase():
 
         print("Workflow set_task: Adding Task: ", wfname)
         # print("Workflow set_task: ", tasks[kwargs["name"]][kwargs["task_order"]])
-
 
     def run_task(self, task):
 
@@ -222,24 +210,32 @@ class WorkflowBase():
                       task.get("name"))
             self.__setup_run_middleware(tsk, "after", log)
 
+    def merge_instance(self, inst, shared=False, clash_prefix=None):
+        if shared == True:
+            t = self.shared.tasks.keys()
+        elif shared == False:
+            t = self.tasks.keys()
 
-    def merge_instance(self, inst, clash_prefix):
-        pass
+        for k in self.tasks.keys():
+            for ik in inst.tasks.keys():
+                if k == ik:
+                    if not clash_prefix:
+                        raise Exception(
+                            "Workflow merge_instance: clash_prefix not provided")
+                    self.tasks.update(clash_prefix + ik, inst.tasks.get(ik))
+                self.tasks[ik] = inst.tasks.get(ik)
 
 
 class Tasks(WorkflowBase):
 
-
     def add_plugin(self, plugin_inst):
         pass
-
 
     def merge(self, inst, clash_prefix):
         self.merge_instance(inst, clash_prefix)
 
-
     def run(self, tasks):
-        
+
         if isinstance(tasks, str):
             # Iterate task through single task
             print("Workflow task provided being instantiated: ", str(tasks))
@@ -255,7 +251,6 @@ class Tasks(WorkflowBase):
         else:
             print("No workflow or task available to run")
 
-
     def apis(self):
 
         return {
@@ -268,11 +263,10 @@ class Tasks(WorkflowBase):
 
 def workflow(*wf_args, **wf_kwargs):
 
-
     def get_decorator(fn):
         # print("get_decorator: Decorator init ", "wf_args: ", wf_args, "wf_kwargs: ", wf_kwargs)
-        # print("get_decorator: ", fn) 
-        
+        # print("get_decorator: ", fn)
+
         def order_tasks(*fn_a, **fn_kwa):
             # print("Workflow order_tasks: Decorator init ", "fn_a: ", fn_a, "fn_kwa: ", fn_kwa)
 
@@ -296,4 +290,3 @@ def workflow(*wf_args, **wf_kwargs):
 
 
 __all__ = ["Tasks", "workflow"]
-
