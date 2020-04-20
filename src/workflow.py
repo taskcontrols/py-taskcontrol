@@ -161,12 +161,17 @@ class WorkflowBase():
 
         print("Workflow task name to add: ", wfname)
 
+        # TODO: Add in global r local as per decorator
+        # if task_global ==True:
+        # set in global or local
+        
         if wfname not in self.tasks.keys():
             self.tasks[wfname] = {}
 
         if not isinstance(self.tasks[wfname], dict):
             self.tasks.update({wfname: {}})
 
+        
         self.tasks[wfname].update({
             "task_order": wf_kwargs["task_order"],
             "wf_args": wf_args, "wf_kwargs": wf_kwargs,
