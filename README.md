@@ -24,6 +24,11 @@ It provides a simple decorator called `workflow` that takes the name, task_insta
 * Workflow decorator with simple options to setup workflow
 * Allows middlewares before each task (data fetch, auth, etc)
 * Allows middlewares after each task (data save, logging, logout, cleanup, etc)
+* In-Development: Allows merging to instances of task control sets
+* In-Development: Allows creating shared/common task controls
+* In-Development: Allows creating and registering a set of task controls as a plugin
+* In-Development: Allows adding a plugin to your task controls
+
 
 
 # Feature Details
@@ -154,13 +159,32 @@ tasktwo(5, 6)
 # Example: Within some other function
 
 
+# TODO: Run all tasks
+# Multiple Workflow Tasks run
+# t.run(tasks=["all"])
+
+
+# TODO: Run all shared tasks
+# Shared Workflow Tasks run
+# t.run(tasks=["shared:all"])
+
+
 # Multiple Workflow Tasks run
 t.run(tasks=["taskname", "tasktwo"])
+
+
+# TODO: Run Tasks run with mix of shared
+# Multiple Workflow Tasks run with mix of shared
+# t.run(tasks=["taskname", "tasktwo", "shared:taskname"])
 
 
 # Single Workflow Tasks run
 # t.run(tasks="taskname")
 
+
+# TODO: Run Tasks run with shared task
+# Single Workflow Tasks run for shared task
+# t.run(tasks="shared:taskname")
 
 
 ```
@@ -176,7 +200,11 @@ Though it may support Python version 2.x. However, it has not been tested in 2.x
 # Todo
 
 <!-- * Add Tests -->
-* Add plugin system
+
+* In-Development: Allows merging two instances of task controls
+* In-Development: Allows creating shared/common task controls
+* In-Development: Allows creating and registering a set of task controls as a plugin
+* In-Development: Allows adding a plugin to your task controls
 
 
 # License
