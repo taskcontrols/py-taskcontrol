@@ -5,7 +5,7 @@
 # TODO: Add Singleton for global sharable tasks and plugin service
 
 
-class Globals():
+class Shared():
 
     tasks = {
         "taskname": {}
@@ -22,33 +22,33 @@ class Globals():
     def __init__(self):
         
         # Option 1:
-        # if Globals.__instance != None:
+        # if Shared.__instance != None:
         #     raise Exception("This class is a singleton!")
         # else:
-        #     Globals.__instance = self
+        #     Shared.__instance = self
 
         # Option 2:
         #     """ Virtually private constructor. """
-        #     if Globals.__instance != None:
+        #     if Shared.__instance != None:
         #         raise Exception("This class is a singleton!")
         #     else:
-        #         Globals.__instance = self
+        #         Shared.__instance = self
 
         # Option 3:
         pass
 
     def __new__(cls):
         if cls.__instance is None:
-            cls.__instance = super(Globals, cls).__new__(cls)
+            cls.__instance = super(Shared, cls).__new__(cls)
             # Put any initialization here.
         return cls.__instance
 
     @staticmethod 
     def getInstance():
         """ Static access method. """
-        if Globals.__instance == None:
-            Globals()
-        return Globals.__instance
+        if Shared.__instance == None:
+            Shared()
+        return Shared.__instance
 
 
 class WorkflowBase():
@@ -65,15 +65,17 @@ class WorkflowBase():
 
 
     def __init__(self):
-        self.globals = Globals()
+        self.globals = Shared()
         # print("Workflow Creating the global object", self.globals)
 
 
     def __run_middleware(self, fn, error_obj, log, *args, **kwargs):
+        
         try:
             if log:
                 print("Workflow running middleware function: ", fn.__name__)
             return True, fn(*args, **kwargs)
+
         except Exception as e:
             if log:
                 print("Running error for middleware")
@@ -108,7 +110,7 @@ class WorkflowBase():
                 kwa = action.get("kwargs")
             if "options" in action and isinstance(action.get("options"), dict):
                 err_obj = action.get("options")
-        
+
         # TODO: Do clean args here
         return err_obj, a, kwa
 
@@ -152,7 +154,9 @@ class WorkflowBase():
 
 
     def get_tasks(self, task=None):
-        
+        # # get shared if shared is requested
+        # if shared:
+
         if task and isinstance(task, str):
             return self.tasks.get(task)
         return self.tasks
@@ -166,7 +170,7 @@ class WorkflowBase():
         print("Workflow task name to add: ", wfname)
 
         # TODO: Add in global r local as per decorator
-        # if task_global ==True:
+        # if shared ==True:
         # set in global or local
         
         if wfname not in self.tasks.keys():

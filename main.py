@@ -20,7 +20,7 @@ def test(k, c, d):
     name="taskname",
     task_order=1,
     task_instance=t,
-    task_global=True,
+    shared=True,
     before=[
         # before middleware order followed will be of the list sequence
         {
@@ -109,11 +109,29 @@ tasktwo(5, 6)
 # Invoke this where needed
 # Example: Within some other function
 
+# TODO: Run all tasks
+# Multiple Workflow Tasks run
+t.run(tasks=["all"])
+
+
+# TODO: Run all shared tasks
+# Shared Workflow Tasks run
+t.run(tasks=["shared:all"])
+
 
 # Multiple Workflow Tasks run
 t.run(tasks=["taskname", "tasktwo"])
 
 
+# TODO: Run Tasks run with mix of shared
+# Multiple Workflow Tasks run with mix of shared
+t.run(tasks=["taskname", "tasktwo", "shared:taskname"])
+
+
 # Single Workflow Tasks run
 # t.run(tasks="taskname")
 
+
+# TODO: Run Tasks run with shared task
+# Single Workflow Tasks run for shared task
+# t.run(tasks="shared:taskname")

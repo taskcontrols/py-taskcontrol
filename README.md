@@ -65,7 +65,7 @@ def test(k, c, d):
     name="taskname",
     task_order=1,
     task_instance = t,
-    task_global=True,
+    shared=True,
     before=[
         # before middleware order followed will be of the list sequence
         {
