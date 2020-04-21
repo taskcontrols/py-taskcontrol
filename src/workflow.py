@@ -64,7 +64,7 @@ class WorkflowBase():
             if log_:
                 print("Workflow running middleware function: ",
                       middleware.__name__)
-            return True, middleware(*args, **kwargs)
+            return None, middleware(*args, **kwargs)
 
         except Exception as e:
             if log_:
@@ -77,11 +77,11 @@ class WorkflowBase():
             err_next_value_obj_ = error_obj.get("error_next_value")
 
             if err_enum_ == "next":
-                return False, ('next', e, err_next_value_obj_)
+                return {"error": e, "next": err_next_value_obj_}
             elif err_enum_ == "error_handler":
                 if not hasattr(error_obj, "error_handler"):
-                    return "error_handler", ('error_handler', e, err_next_value_obj_)
-                return False, ('error_handler', e, error_obj.get("error_handler")(e, err_next_value_obj_))
+                    return {"error": e, "next": err_next_value_obj_}
+                return {"error": e, "next": error_obj.get("error_handler")(e, err_next_value_obj_)}
             elif err_enum_ == "exit":
                 raise Exception("error_obj['error'] exit: Error during middleware: ",
                                 middleware.__name__, str(e))
@@ -126,7 +126,6 @@ class WorkflowBase():
                 actions.get("function"), actions, log_)
             result.append(self.__run_middleware(actions.get("function"),
                                                 err_obj, log_, *a, **kwa))
-
         return result
 
     def clean_args(self, function_, function_args, function_kwargs):
@@ -333,4 +332,3 @@ def workflow(*workflow_args, **workflow_kwargs):
 
 
 __all__ = ["Tasks", "workflow"]
-
