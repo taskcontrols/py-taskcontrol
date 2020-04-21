@@ -95,7 +95,6 @@ class WorkflowBase():
     def __get_middleware_args(self, f, action, log_):
 
         if action and isinstance(action, dict):
-
             a, kwa, err_obj = [], {}, {}
 
             if "args" in action and isinstance(action.get("args"), list):
@@ -112,10 +111,6 @@ class WorkflowBase():
 
     def __init_middleware(self, task_, md_action, log_):
 
-        #       Iterate through before/after for each task_
-        #           trigger before functions with next or handle error
-        #           with error_handler, next or exit based on options
-
         actions = task_.get("workflow_kwargs").get(md_action)
         log_ = task_.get("workflow_kwargs").get("log")
         result = []
@@ -124,16 +119,12 @@ class WorkflowBase():
 
             for action in actions:
                 middleware = action.get("function")
-                err_obj, a, kwa = self.__get_middleware_args(
-                    middleware, action, log_)
-                result.append(self.__run_middleware(
-                    middleware, err_obj, log_, *a, **kwa))
+                err_obj, a, kwa = self.__get_middleware_args(middleware, action, log_)
+                result.append(self.__run_middleware(middleware, err_obj, log_, error=result[len(result)-1].get("error"), fn_result= result[len(result)-1].get("fn_result")), *a, **kwa)
 
         elif actions and isinstance(actions, dict):
-            err_obj, a, kwa = self.__get_middleware_args(
-                actions.get("function"), actions, log_)
-            result.append(self.__run_middleware(actions.get("function"),
-                                                err_obj, log_, *a, **kwa))
+            err_obj, a, kwa = self.__get_middleware_args(actions.get("function"), actions, log_)
+            result.append(self.__run_middleware(actions.get("function"), err_obj, log_, error=result[len(result)-1].get("error"), fn_result=result[len(result)-1].get("fn_result")), *a, **kwa)
 
         return result
 
@@ -141,6 +132,7 @@ class WorkflowBase():
 
         arg_list = function_.__code__.co_varnames
         k_fn_kwa = function_kwargs.keys()
+
         l_tpl, l_fn_a, l_k_fn_kwa = len(arg_list), len(
             function_args), len(k_fn_kwa)
 
@@ -149,6 +141,7 @@ class WorkflowBase():
                 if not arg_list.index(k) >= l_fn_a:
                     return False
             return True
+
         return False
 
     def get_tasks(self, task_=None, shared=False):
@@ -156,8 +149,10 @@ class WorkflowBase():
         # get shared if shared is requested
         if shared and task_ and isinstance(task_, str):
             return self.shared_tasks.tasks.get(task_)
+
         elif not shared and task_ and isinstance(task_, str):
             return self.tasks.get(task_)
+
         return self.tasks
 
     def set_task(self, function_, function_args, function_kwargs, workflow_args, workflow_kwargs):
@@ -192,6 +187,7 @@ class WorkflowBase():
         print("Workflow set_task: Adding Task: ", workflow_name)
 
     def get_attr(self, task_, attr):
+
         if not task_.get(attr):
             if not task_.get("shared"):
                 task_[attr] = self.tasks.get(attr)
@@ -200,6 +196,7 @@ class WorkflowBase():
             else:
                 raise Exception(
                     "Workflow get_attr: shared value and task_ attribute presence error")
+
         return task_.get(attr)
 
     def update_task(self, task_):
