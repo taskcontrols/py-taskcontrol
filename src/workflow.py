@@ -89,7 +89,7 @@ class WorkflowBase():
                 raise Exception(
                     "Error during middleware: flow[options[error]] value error")
 
-    def __get_mdlware_args(self, f, action, log_):
+    def __get_middleware_args(self, f, action, log_):
 
         if action and isinstance(action, dict):
             a, kwa, err_obj = [], {}, {}
@@ -115,10 +115,10 @@ class WorkflowBase():
         if actions and isinstance(actions, list):
             for action in actions:
                 middleware = action.get("function")
-                err_obj, a, kwa = self.__get_mdlware_args(middleware, action, log_)
+                err_obj, a, kwa = self.__get_middleware_args(middleware, action, log_)
                 self.__run_middleware(middleware, err_obj, log_, *a, **kwa)
         elif actions and isinstance(actions, dict):
-            err_obj, a, kwa = self.__get_mdlware_args(
+            err_obj, a, kwa = self.__get_middleware_args(
                 actions.get("function"), actions, log_)
             self.__run_middleware(actions.get("function"),
                                   err_obj, log_, *a, **kwa)
@@ -287,15 +287,15 @@ class Tasks(WorkflowBase):
         else:
             print("No workflow or task available to run")
 
-    def apis(self):
+    # def apis(self):
 
-        return {
-            "get_tasks": self.get_tasks,
-            "set_task": self.set_task,
-            "update_task": self.update_task,
-            "run_task": self.run_task,
-            "clean_args": self.clean_args
-        }
+    #     return {
+    #         "get_tasks": self.get_tasks,
+    #         "set_task": self.set_task,
+    #         "update_task": self.update_task,
+    #         "run_task": self.run_task,
+    #         "clean_args": self.clean_args
+    #     }
 
 
 def workflow(*workflow_args, **workflow_kwargs):
