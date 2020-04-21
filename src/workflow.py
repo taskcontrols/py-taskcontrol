@@ -102,7 +102,7 @@ class WorkflowBase():
         # TODO: Do clean args here
         return err_obj, a, kwa
 
-    def init_middleware(self, task_, md_action, log_):
+    def __init_middleware(self, task_, md_action, log_):
 
         #       Iterate through before/after for each task_
         #           trigger before functions with next or handle error
@@ -229,7 +229,7 @@ class WorkflowBase():
             if log_:
                 print("Workflow before middlewares for task_ now running: ",
                       task_)
-            self.init_middleware(task_, "before", log_)
+            self.__init_middleware(task_, "before", log_)
 
             #       Invoke task_
             if log_:
@@ -240,7 +240,7 @@ class WorkflowBase():
             if log_:
                 print("Workflow after middlewares for task_ now running: ",
                       task_)
-            self.init_middleware(task_, "after", log_)
+            self.__init_middleware(task_, "after", log_)
 
     def _merge(self, tasks, inst, shared=None, clash_prefix=None):
         for k in tasks.keys():
@@ -252,7 +252,6 @@ class WorkflowBase():
                     tasks.update(clash_prefix + ik, inst.tasks.get(ik))
                 tasks[ik] = inst.tasks.get(ik)
         return tasks
-
 
 
 class Tasks(WorkflowBase):
