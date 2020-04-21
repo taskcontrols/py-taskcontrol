@@ -120,11 +120,11 @@ class WorkflowBase():
             for action in actions:
                 middleware = action.get("function")
                 err_obj, a, kwa = self.__get_middleware_args(middleware, action, log_)
-                result.append(self.__run_middleware(middleware, err_obj, log_, error=result[len(result)-1].get("error"), fn_result= result[len(result)-1].get("fn_result")), *a, **kwa)
+                result.append(self.__run_middleware(middleware, err_obj, log_, error=result[-1].get("error"), fn_result= result[-1].get("fn_result")), *a, **kwa)
 
         elif actions and isinstance(actions, dict):
             err_obj, a, kwa = self.__get_middleware_args(actions.get("function"), actions, log_)
-            result.append(self.__run_middleware(actions.get("function"), err_obj, log_, error=result[len(result)-1].get("error"), fn_result=result[len(result)-1].get("fn_result")), *a, **kwa)
+            result.append(self.__run_middleware(actions.get("function"), err_obj, log_, error=result[-1].get("error"), fn_result=result[-1].get("fn_result")), *a, **kwa)
 
         return result
 
@@ -141,7 +141,6 @@ class WorkflowBase():
                 if not arg_list.index(k) >= l_fn_a:
                     return False
             return True
-
         return False
 
     def get_tasks(self, task_=None, shared=False):
