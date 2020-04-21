@@ -1,6 +1,6 @@
 # for git development repo
-from src.workflow import workflow, Tasks
-
+from src.workflow import workflow
+from src.tasks import Tasks
 
 # for package
 # from taskcontrol import workflow, Tasks

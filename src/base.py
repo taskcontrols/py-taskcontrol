@@ -4,7 +4,7 @@
 from sys import path
 path.append('./')
 
-from .sharedbase import SharedBase
+from .baseshared import SharedBase
 
 class WorkflowBase():
 
@@ -243,3 +243,4 @@ class WorkflowBase():
                 tasks[ik] = inst.tasks.get(ik)
 
         return tasks
+

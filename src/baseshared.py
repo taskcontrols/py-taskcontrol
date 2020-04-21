@@ -38,3 +38,4 @@ class SharedBase():
         if not SharedBase.__instance:
             SharedBase()
         return SharedBase.__instance
+

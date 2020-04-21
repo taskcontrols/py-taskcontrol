@@ -1,2 +1,2 @@
 
-__all__ = ["workflow"]
+__all__ = ["tasks", "workflow"]
