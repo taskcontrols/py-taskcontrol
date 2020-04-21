@@ -122,23 +122,21 @@ class WorkflowBase():
                 err_obj, a, kwa = self.__get_middleware_args(
                     middleware, action, log_)
                 if len(result) > 0:
-                    r = self.__run_middleware(
+                    result.append(self.__run_middleware(
                         middleware, err_obj, log_, *a, **kwa, error=result[-1].get("error"), fn_result=result[-1].get("fn_result")
-                    )
-                    result.append(r)
+                    ))
                 else:
-                    r = self.__run_middleware(
+                    result.append(self.__run_middleware(
                         middleware, err_obj, log_, *a, **kwa, error=None, fn_result=None
-                    )
-                    result.append(r)
+                    ))
 
         elif actions and isinstance(actions, dict):
             err_obj, a, kwa = self.__get_middleware_args(
                 actions.get("function"), actions, log_)
-            r = self.__run_middleware(
+
+            result.append(self.__run_middleware(
                 actions.get("function"), err_obj, log_, *a, **kwa, error=None, fn_result=None
-            )
-            result.append(r)
+            ))
 
         return result
 
@@ -146,7 +144,6 @@ class WorkflowBase():
 
         arg_list = function_.__code__.co_varnames
         k_fn_kwa = function_kwargs.keys()
-
         l_tpl, l_fn_a, l_k_fn_kwa = len(arg_list), len(
             function_args), len(k_fn_kwa)
 
@@ -162,7 +159,6 @@ class WorkflowBase():
         # get shared if shared is requested
         if shared and task_ and isinstance(task_, str):
             return self.shared_tasks.tasks.get(task_)
-
         elif not shared and task_ and isinstance(task_, str):
             return self.tasks.get(task_)
 
@@ -254,8 +250,7 @@ class WorkflowBase():
 
             #       Iterate through before for each task_
             if log_:
-                print("Workflow before middlewares for task_ now running: ",
-                      task_)
+                print("Workflow before middlewares for task_ now running: ", task_)
             result_before_middleware = self.__init_middleware(
                 task_, "before", log_)
 
@@ -267,8 +262,7 @@ class WorkflowBase():
 
             #       Iterate through after for each task_
             if log_:
-                print("Workflow after middlewares for task_ now running: ",
-                      task_)
+                print("Workflow after middlewares for task_ now running: ", task_)
             result_after_middleware = self.__init_middleware(
                 task_, "after", log_)
 
@@ -309,7 +303,8 @@ class Tasks(WorkflowBase):
 
         print("Workflow task list provided being instantiated: ", str(tasks))
         print("Workflow has tasks: ", str(self.tasks.keys()))
-        print("Workflow has shared tasks: ", str(self.shared_tasks.tasks.keys()))
+        print("Workflow has shared tasks: ", str(
+            self.shared_tasks.tasks.keys()))
 
         result = []
 
