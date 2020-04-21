@@ -149,7 +149,7 @@ class WorkflowBase():
         # # get shared if shared is requested
         if shared and task and isinstance(task, str):
             return self.shared.tasks.get(task)
-        if not shared and task and isinstance(task, str):
+        elif not shared and task and isinstance(task, str):
             return self.tasks.get(task)
         return self.tasks
 
