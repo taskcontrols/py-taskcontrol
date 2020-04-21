@@ -287,16 +287,6 @@ class Tasks(WorkflowBase):
         else:
             print("No workflow or task available to run")
 
-    # def apis(self):
-
-    #     return {
-    #         "get_tasks": self.get_tasks,
-    #         "set_task": self.set_task,
-    #         "update_task": self.update_task,
-    #         "run_task": self.run_task,
-    #         "clean_args": self.clean_args
-    #     }
-
 
 def workflow(*workflow_args, **workflow_kwargs):
 
