@@ -102,7 +102,7 @@ taskone(3, 4)
           )
 def tasktwo(a, b):
     print("Running my task function: tasktwo", a, b)
-    return 5,6
+    return 5, 6
 
 
 tasktwo(5, 6)
@@ -140,4 +140,3 @@ print("r_2", r_2)
 # TODO: Run Tasks run with shared task
 # Single Workflow Tasks run for shared task
 # t.run(tasks="shared:taskname")
-
