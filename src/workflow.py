@@ -275,7 +275,7 @@ class Tasks(WorkflowBase):
 
         if shared == True:
             self.shared_tasks.tasks = self._merge(
-                self.shared_tasks.tasks, inst, clash_prefix)
+                self.shared_tasks.tasks, inst, shared, clash_prefix)
         elif shared == False:
             self.tasks = self._merge(
                 self.tasks, inst, shared, clash_prefix)
