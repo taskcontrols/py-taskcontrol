@@ -260,6 +260,7 @@ class Tasks(WorkflowBase):
         pass
 
     def merge(self, inst, shared=False, clash_prefix=None):
+
         if shared == True:
             self.shared_tasks.tasks = self._merge(
                 self.shared_tasks.tasks, inst, clash_prefix)
@@ -269,18 +270,16 @@ class Tasks(WorkflowBase):
 
     def run(self, tasks):
 
+        print("Workflow task list provided being instantiated: ", str(tasks))
+        print("Workflow has tasks: ", str(self.tasks.keys()))
+        print("Workflow has shared tasks: ", str(self.shared_tasks.tasks.keys()))
+
         if isinstance(tasks, str):
             # Iterate task through single task
-            print("Workflow task provided being instantiated: ", str(tasks))
-            print("Workflow has tasks: ", str(self.tasks.keys()))
             self.run_task(tasks)
-
         elif isinstance(tasks, list):
             # Iterate task through tasks
-            print("Workflow task list provided being instantiated: ", str(tasks))
-            print("Workflow has tasks: ", str(self.tasks.keys()))
             [self.run_task(task_) for task_ in tasks] 
-
         else:
             print("No workflow or task available to run")
 
