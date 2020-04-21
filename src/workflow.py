@@ -64,7 +64,7 @@ class WorkflowBase():
     }
 
     def __init__(self):
-        self.shared = Shared()
+        self.shared = Shared.getInstance()
         # print("Workflow Creating the global object", self.globals)
 
     def __run_middleware(self, fn, error_obj, log, *args, **kwargs):
@@ -219,17 +219,27 @@ class WorkflowBase():
             self.__setup_run_middleware(tsk, "after", log)
 
     def update_task(self, task):
+
+        def get_task_attr(task, attr):
+            if not task.get(attr):
+                if not task.get("shared"):
+                    task[attr] = self.tasks.get(attr)
+                elif task.get("shared"):
+                    task[attr] = self.shared.tasks.get(attr)
+            return task.get(attr)
+
         # task object structure
         # name, args, task_order, shared, before, after, function, fn_a, fn_kwa, log
         """wf_kwargs: name, args, task_order, shared, before, after, log"""
+
         task_obj = {
-            "task_order": task.get("task_order"),
-            "wf_args": task.get("args"), "wf_kwargs": task.get("wf_kwargs"),
-            "fn_a": task.get("fn_a"), "fn_kwa": task.get("fn_args"),
-            "before": task.get("before"),
-            "after": task.get("after"),
-            "function": task.get("function"),
-            "log": task.get("log")
+            "task_order": get_task_attr(task, "task_order"),
+            "wf_args": get_task_attr(task, "args"), "wf_kwargs": get_task_attr(task, "wf_kwargs"),
+            "fn_a": get_task_attr(task, "fn_a"), "fn_kwa": get_task_attr(task, "fn_args"),
+            "before": get_task_attr(task, "before"),
+            "after": get_task_attr(task, "after"),
+            "function": get_task_attr(task, "function"),
+            "log": get_task_attr(task, "log")
         }
 
         if task.get("shared") == True:
