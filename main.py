@@ -113,12 +113,14 @@ tasktwo(5, 6)
 
 # TODO: Run all tasks
 # Multiple Workflow Tasks run
-# t.run(tasks=["all"])
+# t.run(tasks=["0"])
+# t.run(tasks="all")
 
 
 # TODO: Run all shared tasks
 # Shared Workflow Tasks run
 # t.run(tasks=["shared:all"])
+# t.run(tasks="shared:all")
 
 
 # Multiple Workflow Tasks run
@@ -137,3 +139,4 @@ t.run(tasks=["taskname", "tasktwo"])
 # TODO: Run Tasks run with shared task
 # Single Workflow Tasks run for shared task
 # t.run(tasks="shared:taskname")
+
