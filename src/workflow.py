@@ -2,6 +2,7 @@
 # Goal: Manage Workflow and related middlewares
 # TODO: Add Simple scalable plugin system
 
+
 class SharedTasks():
 
     tasks = {
@@ -177,6 +178,40 @@ class WorkflowBase():
         print("Workflow set_task: Adding Task: ", wfname)
         # print("Workflow set_task: ", tasks[kwargs["name"]][kwargs["task_order"]])
 
+    def get_task_attr(self, task, attr):
+        if not task.get(attr):
+            if not task.get("shared"):
+                task[attr] = self.tasks.get(attr)
+            elif task.get("shared"):
+                task[attr] = self.shared_tasks.tasks.get(attr)
+            else:
+                raise Exception(
+                    "Workflow get_task_attr: shared value and task attribute presence error")
+        return task.get(attr)
+
+    def update_task(self, task):
+
+        # task object structure
+        # name, args, task_order, shared, before, after, function, fn_a, fn_kwa, log
+        """wf_kwargs: name, args, task_order, shared, before, after, log"""
+
+        task_obj = {
+            "task_order": self.get_task_attr(task, "task_order"),
+            "wf_args": self.get_task_attr(task, "args"),
+            "wf_kwargs": self.get_task_attr(task, "wf_kwargs"),
+            "fn_a": self.get_task_attr(task, "fn_a"),
+            "fn_kwa": self.get_task_attr(task, "fn_args"),
+            "before": self.get_task_attr(task, "before"),
+            "after": self.get_task_attr(task, "after"),
+            "function": self.get_task_attr(task, "function"),
+            "log": self.get_task_attr(task, "log")
+        }
+
+        if task.get("shared") == True:
+            self.shared_tasks.tasks.update(task.get("name"), task_obj)
+        elif task.get("shared") == False:
+            self.tasks.update(task.get("name"), task_obj)
+
     def run_task(self, task, shared=None):
         # task object structure
         # name, args, task_order, shared, before, after, function, fn_a, fn_kwa, log
@@ -208,39 +243,6 @@ class WorkflowBase():
                 print("Workflow after middlewares for task now running: ",
                       task)
             self.__setup_run_middleware(tsk, "after", log)
-
-    def get_task_attr(self, task, attr):
-        if not task.get(attr):
-            if not task.get("shared"):
-                task[attr] = self.tasks.get(attr)
-            elif task.get("shared"):
-                task[attr] = self.shared_tasks.tasks.get(attr)
-            else:
-                raise Exception("Workflow get_task_attr: shared value and task attribute presence error")
-        return task.get(attr)
-
-    def update_task(self, task):
-
-        # task object structure
-        # name, args, task_order, shared, before, after, function, fn_a, fn_kwa, log
-        """wf_kwargs: name, args, task_order, shared, before, after, log"""
-
-        task_obj = {
-            "task_order": self.get_task_attr(task, "task_order"),
-            "wf_args": self.get_task_attr(task, "args"),
-            "wf_kwargs": self.get_task_attr(task, "wf_kwargs"),
-            "fn_a": self.get_task_attr(task, "fn_a"),
-            "fn_kwa": self.get_task_attr(task, "fn_args"),
-            "before": self.get_task_attr(task, "before"),
-            "after": self.get_task_attr(task, "after"),
-            "function": self.get_task_attr(task, "function"),
-            "log": self.get_task_attr(task, "log")
-        }
-
-        if task.get("shared") == True:
-            self.shared_tasks.tasks.update(task.get("name"), task_obj)
-        elif task.get("shared") == False:
-            self.tasks.update(task.get("name"), task_obj)
 
     def __merge_instance(self, tasks, inst, shared=None, clash_prefix=None):
         for k in tasks.keys():
