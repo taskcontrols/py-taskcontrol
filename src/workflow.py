@@ -59,12 +59,12 @@ class WorkflowBase():
         self.shared_tasks = SharedTasks.getInstance()
         # print("Workflow Creating the global object", self.globals)
 
-    def __run_middleware(self, fn, error_obj, log_, *args, **kwargs):
+    def __run_middleware(self, middleware, error_obj, log_, *args, **kwargs):
 
         try:
             if log_:
-                print("Workflow running middleware function: ", fn.__name__)
-            return True, fn(*args, **kwargs)
+                print("Workflow running middleware function: ", middleware.__name__)
+            return True, middleware(*args, **kwargs)
 
         except Exception as e:
             if log_:
@@ -84,7 +84,7 @@ class WorkflowBase():
                 return 'error_handler', error_obj.get("error_handler")(e, err_next_value_obj_)
             elif err_enum_ == "exit":
                 raise Exception("error_obj['error'] exit: Error during middleware: ",
-                                fn.__name__, str(e))
+                                middleware.__name__, str(e))
             else:
                 raise Exception(
                     "Error during middleware: flow[options[error]] value error")
@@ -114,18 +114,18 @@ class WorkflowBase():
 
         if actions and isinstance(actions, list):
             for action in actions:
-                fn = action.get("function")
-                err_obj, a, kwa = self.__get_mdlware_args(fn, action, log_)
-                self.__run_middleware(fn, err_obj, log_, *a, **kwa)
+                middleware = action.get("function")
+                err_obj, a, kwa = self.__get_mdlware_args(middleware, action, log_)
+                self.__run_middleware(middleware, err_obj, log_, *a, **kwa)
         elif actions and isinstance(actions, dict):
             err_obj, a, kwa = self.__get_mdlware_args(
                 actions.get("function"), actions, log_)
             self.__run_middleware(actions.get("function"),
                                   err_obj, log_, *a, **kwa)
 
-    def clean_args(self, fn, workflow_args, workflow_kwargs, function_args, function_kwargs):
+    def clean_args(self, function_, workflow_args, workflow_kwargs, function_args, function_kwargs):
 
-        tpl = fn.__code__.co_varnames
+        tpl = function_.__code__.co_varnames
         k_fn_kwa = function_kwargs.keys()
         l_tpl, l_fn_a, l_k_fn_kwa = len(tpl), len(function_args), len(k_fn_kwa)
 
@@ -145,7 +145,7 @@ class WorkflowBase():
             return self.tasks.get(task_)
         return self.tasks
 
-    def set_task(self, fn, function_args, function_kwargs, workflow_args, workflow_kwargs):
+    def set_task(self, function_, function_args, function_kwargs, workflow_args, workflow_kwargs):
 
         workflow_name = workflow_kwargs.get("name")
         print("Workflow task name to add: ", workflow_name)
@@ -171,7 +171,7 @@ class WorkflowBase():
             "function_args": function_args, "function_kwargs": function_kwargs,
             "before": workflow_kwargs.get("before"),
             "after": workflow_kwargs.get("after"),
-            "function": fn,
+            "function": function_,
             "log": workflow_kwargs.get("log")
         })
 
@@ -302,9 +302,9 @@ class Tasks(WorkflowBase):
 
 def workflow(*workflow_args, **workflow_kwargs):
 
-    def get_decorator(fn):
+    def get_decorator(function_):
         # print("get_decorator: Decorator init ", "workflow_args: ", workflow_args, "workflow_kwargs: ", workflow_kwargs)
-        # print("get_decorator: ", fn)
+        # print("get_decorator: ", function_)
 
         def order_tasks(*function_args, **function_kwargs):
             # print("Workflow order_tasks: Decorator init ", "function_args: ", function_args, "function_kwargs: ", function_kwargs)
@@ -314,13 +314,13 @@ def workflow(*workflow_args, **workflow_kwargs):
                 raise Exception("Task instance not provided")
 
             # Check before/after middlewares args and kwargs number and validity
-            args_normal = t.clean_args(fn, workflow_args, workflow_kwargs, function_args, function_kwargs)
+            args_normal = t.clean_args(function_, workflow_args, workflow_kwargs, function_args, function_kwargs)
 
             if not args_normal:
                 raise Exception("Args and KwArgs do not match")
 
-            # print((fn, function_args, function_kwargs, workflow_args, workflow_kwargs))
-            t.set_task(fn, function_args, function_kwargs, workflow_args, workflow_kwargs)
+            # print((function_, function_args, function_kwargs, workflow_args, workflow_kwargs))
+            t.set_task(function_, function_args, function_kwargs, workflow_args, workflow_kwargs)
 
             print("Workflow order_tasks - Task added: ", workflow_kwargs.get("name"))
 
