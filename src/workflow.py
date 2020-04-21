@@ -5,7 +5,7 @@
 # TODO: Add Singleton for global sharable tasks and plugin service
 
 
-class Shared():
+class SharedTasks():
 
     tasks = {
         "taskname": {}
@@ -22,33 +22,27 @@ class Shared():
     def __init__(self):
 
         # Option 1:
-        # if Shared.__instance != None:
-        #     raise Exception("This class is a singleton!")
-        # else:
-        #     Shared.__instance = self
+        if SharedTasks.__instance != None:
+            # raise Exception("This class is a singleton!")
+            pass
+        else:
+            SharedTasks.__instance = self
 
-        # Option 2:
-        #     """ Virtually private constructor. """
-        #     if Shared.__instance != None:
-        #         raise Exception("This class is a singleton!")
-        #     else:
-        #         Shared.__instance = self
-
-        # Option 3:
-        pass
+        # Option 3: This is okay due to implementation of __new__
+        # pass
 
     def __new__(cls):
         if cls.__instance is None:
-            cls.__instance = super(Shared, cls).__new__(cls)
+            cls.__instance = super(SharedTasks, cls).__new__(cls)
             # Put any initialization here.
         return cls.__instance
 
     @staticmethod
     def getInstance():
         """ Static access method. """
-        if Shared.__instance == None:
-            Shared()
-        return Shared.__instance
+        if not SharedTasks.__instance:
+            SharedTasks()
+        return SharedTasks.__instance
 
 
 class WorkflowBase():
@@ -64,7 +58,7 @@ class WorkflowBase():
     }
 
     def __init__(self):
-        self.shared = Shared.getInstance()
+        self.shared_tasks = SharedTasks.getInstance()
         # print("Workflow Creating the global object", self.globals)
 
     def __run_middleware(self, fn, error_obj, log, *args, **kwargs):
@@ -148,7 +142,7 @@ class WorkflowBase():
 
         # # get shared if shared is requested
         if shared and task and isinstance(task, str):
-            return self.shared.tasks.get(task)
+            return self.shared_tasks.tasks.get(task)
         elif not shared and task and isinstance(task, str):
             return self.tasks.get(task)
         return self.tasks
@@ -165,12 +159,12 @@ class WorkflowBase():
         # set in global or local
 
         if shared == True:
-            if wfname not in self.shared.tasks.keys():
-                self.shared.tasks[wfname] = {}
-            if not isinstance(self.shared.tasks[wfname], dict):
-                self.shared.tasks.update({wfname: {}})
+            if wfname not in self.shared_tasks.tasks.keys():
+                self.shared_tasks.tasks[wfname] = {}
+            if not isinstance(self.shared_tasks.tasks[wfname], dict):
+                self.shared_tasks.tasks.update({wfname: {}})
 
-        elif shared != True:
+        elif not shared == True:
             if wfname not in self.tasks.keys():
                 self.tasks[wfname] = {}
             if not isinstance(self.tasks[wfname], dict):
@@ -223,7 +217,7 @@ class WorkflowBase():
             if not task.get("shared"):
                 task[attr] = self.tasks.get(attr)
             elif task.get("shared"):
-                task[attr] = self.shared.tasks.get(attr)
+                task[attr] = self.shared_tasks.tasks.get(attr)
             else:
                 raise Exception("Workflow get_task_attr: shared value and task attribute presence error")
         return task.get(attr)
@@ -247,7 +241,7 @@ class WorkflowBase():
         }
 
         if task.get("shared") == True:
-            self.shared.tasks.update(task.get("name"), task_obj)
+            self.shared_tasks.tasks.update(task.get("name"), task_obj)
         elif task.get("shared") == False:
             self.tasks.update(task.get("name"), task_obj)
 
@@ -264,8 +258,8 @@ class WorkflowBase():
 
     def merge_instance(self, inst, shared=False, clash_prefix=None):
         if shared == True:
-            self.shared.tasks = self.__merge_instance(
-                self.shared.tasks, inst, clash_prefix)
+            self.shared_tasks.tasks = self.__merge_instance(
+                self.shared_tasks.tasks, inst, clash_prefix)
         elif shared == False:
             self.tasks = self.__merge_instance(
                 self.tasks, inst, shared, clash_prefix)

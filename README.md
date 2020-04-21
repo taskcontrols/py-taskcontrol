@@ -162,7 +162,7 @@ tasktwo(5, 6)
 
 # TODO: Run all tasks
 # Multiple Workflow Tasks run
-# t.run(tasks=["all"])
+# t.run(tasks=["0"])
 # t.run(tasks="all")
 
 
