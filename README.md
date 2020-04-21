@@ -3,7 +3,7 @@
 
 taskcontrol is a python library to create tasks in and based on named workflow controls. It allows middlewares before and after each task. taskcontrol can run single or multiple tasks at a task run invocation.
 
-It provides a simple decorator called `workflow` that takes the name, task_instance, task_order, shared, before, after arguments to set up the named workflow control.
+It provides a simple decorator called `workflow` that takes the name, task_instance, task_order, shared, before, after arguments to set up the named workflow controls.
 
 It also provides methods to create a plugin and work with tasks as a module and/or pre-created ordered task list
 
@@ -27,10 +27,9 @@ It also provides methods to create a plugin and work with tasks as a module and/
 * Workflow decorator with simple options to setup workflow
 * Allows middlewares before each task (data fetch, auth, etc)
 * Allows middlewares after each task (data save, logging, logout, cleanup, etc)
-* Allows merging to instances of task controls
+* Allows merging two instances of task controls with namespace clash handling
 * Allows creating shared/common task controls (use shared keyword argument)
-* In-Development: Allows creating and registering a set of task controls as a plugin
-* In-Development: Allows adding a plugin to your task controls
+* In-Development: Allows creating, registering, and using a set of task controls as a plugin
 
 
 # Feature Details
@@ -231,10 +230,8 @@ functools.reduce(red, ls)
 
 <!-- * Add Tests -->
 
-* In-Development: Allows merging two instances of task controls
-* In-Development: Allows creating shared/common task controls
 * In-Development: Allows creating and registering a set of task controls as a plugin
-* In-Development: Allows adding a plugin to your task controls
+
 
 
 # License
