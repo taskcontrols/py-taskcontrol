@@ -5,7 +5,7 @@ taskcontrol is a python library to create tasks in and based on named workflow c
 
 It provides a simple decorator called `workflow` that takes the name, task_instance, task_order, shared, before, after arguments to set up the named workflow controls.
 
-It also provides methods to create a plugin and work with tasks as a module and/or pre-created ordered task list
+It also provides methods to create a plugin and work with tasks as a module and/or pre-created ordered task list.
 
 
 # Installation
