@@ -103,7 +103,7 @@ class WorkflowBase():
         # TODO: Do clean args here
         return err_obj, a, kwa
 
-    def __init_middleware(self, task_, md_action, log_):
+    def init_middleware(self, task_, md_action, log_):
 
         #       Iterate through before/after for each task_
         #           trigger before functions with next or handle error
@@ -123,7 +123,7 @@ class WorkflowBase():
             self.__run_middleware(actions.get("function"),
                                   err_obj, log_, *a, **kwa)
 
-    def clean_args(self, function_, workflow_args, workflow_kwargs, function_args, function_kwargs):
+    def clean_args(self, function_, function_args, function_kwargs):
 
         tpl = function_.__code__.co_varnames
         k_fn_kwa = function_kwargs.keys()
@@ -178,7 +178,7 @@ class WorkflowBase():
         print("Workflow set_task: Adding Task: ", workflow_name)
         # print("Workflow set_task: ", tasks[kwargs["name"]][kwargs["task_order"]])
 
-    def get_task_attr(self, task_, attr):
+    def get_attr(self, task_, attr):
         if not task_.get(attr):
             if not task_.get("shared"):
                 task_[attr] = self.tasks.get(attr)
@@ -186,7 +186,7 @@ class WorkflowBase():
                 task_[attr] = self.shared_tasks.tasks.get(attr)
             else:
                 raise Exception(
-                    "Workflow get_task_attr: shared value and task_ attribute presence error")
+                    "Workflow get_attr: shared value and task_ attribute presence error")
         return task_.get(attr)
 
     def update_task(self, task_):
@@ -196,15 +196,15 @@ class WorkflowBase():
         """workflow_kwargs: name, args, task_order, shared, before, after, log"""
 
         task_obj = {
-            "task_order": self.get_task_attr(task_, "task_order"),
-            "workflow_args": self.get_task_attr(task_, "args"),
-            "workflow_kwargs": self.get_task_attr(task_, "workflow_kwargs"),
-            "function_args": self.get_task_attr(task_, "function_args"),
-            "function_kwargs": self.get_task_attr(task_, "function_kwargs"),
-            "before": self.get_task_attr(task_, "before"),
-            "after": self.get_task_attr(task_, "after"),
-            "function": self.get_task_attr(task_, "function"),
-            "log": self.get_task_attr(task_, "log")
+            "task_order": self.get_attr(task_, "task_order"),
+            "workflow_args": self.get_attr(task_, "args"),
+            "workflow_kwargs": self.get_attr(task_, "workflow_kwargs"),
+            "function_args": self.get_attr(task_, "function_args"),
+            "function_kwargs": self.get_attr(task_, "function_kwargs"),
+            "before": self.get_attr(task_, "before"),
+            "after": self.get_attr(task_, "after"),
+            "function": self.get_attr(task_, "function"),
+            "log": self.get_attr(task_, "log")
         }
 
         if task_.get("shared") == True:
@@ -231,7 +231,7 @@ class WorkflowBase():
             if log_:
                 print("Workflow before middlewares for task_ now running: ",
                       task_)
-            self.__init_middleware(task_, "before", log_)
+            self.init_middleware(task_, "before", log_)
 
             #       Invoke task_
             if log_:
@@ -242,9 +242,9 @@ class WorkflowBase():
             if log_:
                 print("Workflow after middlewares for task_ now running: ",
                       task_)
-            self.__init_middleware(task_, "after", log_)
+            self.init_middleware(task_, "after", log_)
 
-    def __merge_instance(self, tasks, inst, shared=None, clash_prefix=None):
+    def _merge(self, tasks, inst, shared=None, clash_prefix=None):
         for k in tasks.keys():
             for ik in inst.tasks.keys():
                 if k == ik:
@@ -255,13 +255,6 @@ class WorkflowBase():
                 tasks[ik] = inst.tasks.get(ik)
         return tasks
 
-    def merge_instance(self, inst, shared=False, clash_prefix=None):
-        if shared == True:
-            self.shared_tasks.tasks = self.__merge_instance(
-                self.shared_tasks.tasks, inst, clash_prefix)
-        elif shared == False:
-            self.tasks = self.__merge_instance(
-                self.tasks, inst, shared, clash_prefix)
 
 
 class Tasks(WorkflowBase):
@@ -270,7 +263,12 @@ class Tasks(WorkflowBase):
         pass
 
     def merge(self, inst, shared=False, clash_prefix=None):
-        self.merge_instance(inst, shared, clash_prefix)
+        if shared == True:
+            self.shared_tasks.tasks = self._merge(
+                self.shared_tasks.tasks, inst, clash_prefix)
+        elif shared == False:
+            self.tasks = self._merge(
+                self.tasks, inst, shared, clash_prefix)
 
     def run(self, tasks):
 
@@ -284,7 +282,7 @@ class Tasks(WorkflowBase):
             # Iterate task through tasks
             print("Workflow task list provided being instantiated: ", str(tasks))
             print("Workflow has tasks: ", str(self.tasks.keys()))
-            [self.run_task(t) for t in self.tasks]
+            [self.run_task(task_) for task_ in self.tasks]
 
         else:
             print("No workflow or task available to run")
@@ -314,7 +312,7 @@ def workflow(*workflow_args, **workflow_kwargs):
                 raise Exception("Task instance not provided")
 
             # Check before/after middlewares args and kwargs number and validity
-            args_normal = t.clean_args(function_, workflow_args, workflow_kwargs, function_args, function_kwargs)
+            args_normal = t.clean_args(function_, function_args, function_kwargs)
 
             if not args_normal:
                 raise Exception("Args and KwArgs do not match")

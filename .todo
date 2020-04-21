@@ -1,15 +1,11 @@
 * Add Tests
     Add all variations of tests for 
-        - decorator args and kwargs
-        - function
-        - function args and kwargs
+        - decorator, args, and kwargs
+        - function, args, and kwargs
         - before and after middlewares
-        - run single task
-        - run multiple tasks
+        - run single task and multiple tasks
 * Add merging two workflow instances
 * Add plugin system
-* Add cleaner logging system with
-        - memory/console, file, server logging for monitoring
-* Add shared/globals for common tasks and plugins
-        - not associated to instance
-        - single global sharable instance
+* Add cleaner logging system for monitoring with
+        - memory/console, file, server logging
+* Consider adding multithreading, multiprocessing, async/await options for concurrent usage
