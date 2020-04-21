@@ -141,15 +141,15 @@ taskone(3, 4)
         task_instance = t,
         task_order=2,
         shared=False,
-          # Declare before/after as an list or an object (if single middleware function)
-          before={
-              "function": test,
-              "args": [21, 22],
-              "kwargs": {"d": "Before Testing message"},
-              "options": {"error": "next", "error_next_value": ""}
-          },
-          after=[]
-          )
+        # Declare before/after as an list or an object (if single middleware function)
+        before={
+            "function": test,
+            "args": [21, 22],
+            "kwargs": {"d": "Before Testing message"},
+            "options": {"error": "next", "error_next_value": ""}
+        },
+        after=[]
+        )
 def tasktwo(a, b):
     print("Running my task function: tasktwo", a, b)
 
