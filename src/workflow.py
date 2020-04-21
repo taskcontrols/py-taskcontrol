@@ -18,7 +18,6 @@ class SharedTasks():
     __instance = None
 
     def __init__(self):
-
         # Option 1:
         if SharedTasks.__instance != None:
             # raise Exception("In case erring out is needed - This class is a singleton!")
@@ -114,6 +113,7 @@ class WorkflowBase():
                 err_obj, a, kwa = self.__get_middleware_args(
                     middleware, action, log_
                 )
+
                 if len(result) > 0:
                     result.append(self.__run_middleware(
                         middleware, err_obj, log_, *a, **kwa,
