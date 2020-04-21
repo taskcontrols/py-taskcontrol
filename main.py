@@ -12,8 +12,8 @@ from src.workflow import workflow, Tasks
 t = Tasks()
 
 
-def test(k, c, d, **prev_func_result):
-    print("Running my Middleware Function: test - task items", k, c, d, prev_func_result)
+def test(k, c, d, **kwargs):
+    print("Running my Middleware Function: test - task items", k, c, d, kwargs)
 
 
 @workflow(

@@ -64,7 +64,7 @@ class WorkflowBase():
             if log_:
                 print("Workflow running middleware function: ",
                       middleware.__name__)
-            return None, middleware(*args, **kwargs)
+            return None, middleware(*args, **kwargs, )
 
         except Exception as e:
             if log_:
@@ -74,17 +74,20 @@ class WorkflowBase():
                 error_obj["error"] = "exit"
 
             err_enum_ = error_obj.get("error")
-            err_next_value_obj_ = error_obj.get("error_next_value")
+            err_next_value_ = error_obj.get("error_next_value")
 
             if err_enum_ == "next":
-                return {"error": e, "next": err_next_value_obj_}
+                return {"error": e, "next": err_next_value_}
+
             elif err_enum_ == "error_handler":
                 if not hasattr(error_obj, "error_handler"):
-                    return {"error": e, "next": err_next_value_obj_}
-                return {"error": e, "next": error_obj.get("error_handler")(e, err_next_value_obj_)}
+                    return {"error": e, "next": err_next_value_}
+                return {"error": e, "next": error_obj.get("error_handler")(e, err_next_value_)}
+
             elif err_enum_ == "exit":
                 raise Exception("error_obj['error'] exit: Error during middleware: ",
                                 middleware.__name__, str(e))
+
             else:
                 raise Exception(
                     "Error during middleware: flow[options[error]] value error")
@@ -121,22 +124,25 @@ class WorkflowBase():
                     middleware, action, log_)
                 result.append(self.__run_middleware(
                     middleware, err_obj, log_, *a, **kwa))
+
         elif actions and isinstance(actions, dict):
             err_obj, a, kwa = self.__get_middleware_args(
                 actions.get("function"), actions, log_)
             result.append(self.__run_middleware(actions.get("function"),
                                                 err_obj, log_, *a, **kwa))
+
         return result
 
     def clean_args(self, function_, function_args, function_kwargs):
 
-        tpl = function_.__code__.co_varnames
+        arg_list = function_.__code__.co_varnames
         k_fn_kwa = function_kwargs.keys()
-        l_tpl, l_fn_a, l_k_fn_kwa = len(tpl), len(function_args), len(k_fn_kwa)
+        l_tpl, l_fn_a, l_k_fn_kwa = len(arg_list), len(
+            function_args), len(k_fn_kwa)
 
         if (l_tpl == l_fn_a + l_k_fn_kwa):
             for k in k_fn_kwa:
-                if not tpl.index(k) >= l_fn_a:
+                if not arg_list.index(k) >= l_fn_a:
                     return False
             return True
         return False
@@ -154,7 +160,6 @@ class WorkflowBase():
 
         workflow_name = workflow_kwargs.get("name")
         print("Workflow task name to add: ", workflow_name)
-
         shared = workflow_kwargs.get("shared")
 
         # set in global or local
