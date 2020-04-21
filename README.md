@@ -29,10 +29,10 @@ It also provides methods to create a plugin and work with tasks as a module and/
 * Allows middlewares after each task (data save, logging, logout, cleanup, etc)
 * Allows merging two instances of task controls with namespace clash handling
 * Allows creating shared/common task controls (use shared keyword argument)
-* In-Development: Allows creating, registering, and using a set of task controls as a plugin
+<!-- * In-Development: Allows creating, registering, and using a set of task controls as a plugin -->
 
 
-# Feature Details
+<!-- # Feature Details -->
 # Technical Specifications
 
 ##### Requirements:
@@ -140,7 +140,7 @@ taskone(3, 4)
 @workflow(name="tasktwo",
         task_instance = t,
         task_order=2,
-        task_global=False,
+        shared=False,
           # Declare before/after as an list or an object (if single middleware function)
           before={
               "function": test,
