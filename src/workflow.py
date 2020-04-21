@@ -89,7 +89,7 @@ class WorkflowBase():
                 raise Exception(
                     "Error during middleware: flow[options[error]] value error")
 
-    def __get_md_args(self, f, action, log_):
+    def __get_mdlware_args(self, f, action, log_):
 
         if action and isinstance(action, dict):
             a, kwa, err_obj = [], {}, {}
@@ -103,7 +103,7 @@ class WorkflowBase():
         # TODO: Do clean args here
         return err_obj, a, kwa
 
-    def __setup_run_middleware(self, task_, md_action, log_):
+    def __init_middleware(self, task_, md_action, log_):
 
         #       Iterate through before/after for each task_
         #           trigger before functions with next or handle error
@@ -115,10 +115,10 @@ class WorkflowBase():
         if actions and isinstance(actions, list):
             for action in actions:
                 fn = action.get("function")
-                err_obj, a, kwa = self.__get_md_args(fn, action, log_)
+                err_obj, a, kwa = self.__get_mdlware_args(fn, action, log_)
                 self.__run_middleware(fn, err_obj, log_, *a, **kwa)
         elif actions and isinstance(actions, dict):
-            err_obj, a, kwa = self.__get_md_args(
+            err_obj, a, kwa = self.__get_mdlware_args(
                 actions.get("function"), actions, log_)
             self.__run_middleware(actions.get("function"),
                                   err_obj, log_, *a, **kwa)
@@ -231,7 +231,7 @@ class WorkflowBase():
             if log_:
                 print("Workflow before middlewares for task_ now running: ",
                       task_)
-            self.__setup_run_middleware(task_, "before", log_)
+            self.__init_middleware(task_, "before", log_)
 
             #       Invoke task_
             if log_:
@@ -242,7 +242,7 @@ class WorkflowBase():
             if log_:
                 print("Workflow after middlewares for task_ now running: ",
                       task_)
-            self.__setup_run_middleware(task_, "after", log_)
+            self.__init_middleware(task_, "after", log_)
 
     def __merge_instance(self, tasks, inst, shared=None, clash_prefix=None):
         for k in tasks.keys():
