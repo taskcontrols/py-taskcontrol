@@ -57,7 +57,6 @@ class WorkflowBase():
 
     def __init__(self):
         self.shared_tasks = SharedTasks.getInstance()
-        # print("Workflow Creating the global object", self.globals)
 
     def __run_middleware(self, middleware, error_obj, log_, *args, **kwargs):
 
@@ -176,7 +175,6 @@ class WorkflowBase():
         })
 
         print("Workflow set_task: Adding Task: ", workflow_name)
-        # print("Workflow set_task: ", tasks[kwargs["name"]][kwargs["task_order"]])
 
     def get_attr(self, task_, attr):
         if not task_.get(attr):
