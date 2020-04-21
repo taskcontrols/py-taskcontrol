@@ -200,7 +200,7 @@ class WorkflowBase():
             "workflow_args": self.get_task_attr(task_, "args"),
             "workflow_kwargs": self.get_task_attr(task_, "workflow_kwargs"),
             "function_args": self.get_task_attr(task_, "function_args"),
-            "function_kwargs": self.get_task_attr(task_, "fn_args"),
+            "function_kwargs": self.get_task_attr(task_, "function_kwargs"),
             "before": self.get_task_attr(task_, "before"),
             "after": self.get_task_attr(task_, "after"),
             "function": self.get_task_attr(task_, "function"),
