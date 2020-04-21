@@ -73,7 +73,7 @@ def test(k, c, d):
             }
         }
     ],
-    log=True
+    log=False
 )
 def taskone(a, b):
     print("Running my task function: taskone", a, b)
@@ -97,7 +97,8 @@ taskone(3, 4)
               "kwargs": {"d": "Before Testing message"},
               "options": {"error": "next", "error_next_value": ""}
           },
-          after=[]
+          after=[],
+          log=False
           )
 def tasktwo(a, b):
     print("Running my task function: tasktwo", a, b)

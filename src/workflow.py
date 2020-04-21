@@ -192,7 +192,6 @@ class WorkflowBase():
     def run_task(self, task, shared=None):
 
         tsk = self.get_tasks(task, shared)
-        print(tsk)
         log = tsk.get("log")
 
         if log:
@@ -225,6 +224,8 @@ class WorkflowBase():
                 task[attr] = self.tasks.get(attr)
             elif task.get("shared"):
                 task[attr] = self.shared.tasks.get(attr)
+            else:
+                raise Exception("Workflow get_task_attr: shared value and task attribute presence error")
         return task.get(attr)
 
     def update_task(self, task):
