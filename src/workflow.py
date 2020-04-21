@@ -279,7 +279,7 @@ class Tasks(WorkflowBase):
             # Iterate task through tasks
             print("Workflow task list provided being instantiated: ", str(tasks))
             print("Workflow has tasks: ", str(self.tasks.keys()))
-            [self.run_task(task_) for task_ in tasks]
+            [self.run_task(task_) for task_ in tasks] 
 
         else:
             print("No workflow or task available to run")
