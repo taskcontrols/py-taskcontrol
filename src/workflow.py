@@ -145,10 +145,11 @@ class WorkflowBase():
         return False
 
     def get_tasks(self, task=None, shared=False):
-        # # get shared if shared is requested
-        # if shared:
 
-        if task and isinstance(task, str):
+        # # get shared if shared is requested
+        if shared and task and isinstance(task, str):
+            return self.shared.tasks.get(task)
+        if not shared and task and isinstance(task, str):
             return self.tasks.get(task)
         return self.tasks
 
@@ -156,7 +157,6 @@ class WorkflowBase():
 
         wfname = wf_kwargs.get("name")
         # print("tasks.keys() ", tasks.keys())
-
         print("Workflow task name to add: ", wfname)
 
         shared = wf_kwargs.get("shared")
@@ -177,25 +177,26 @@ class WorkflowBase():
                 self.tasks.update({wfname: {}})
 
         self.tasks[wfname].update({
-            "task_order": wf_kwargs["task_order"],
+            "task_order": wf_kwargs.get("task_order"),
             "wf_args": wf_args, "wf_kwargs": wf_kwargs,
             "fn_a": fn_a, "fn_kwa": fn_kwa,
-            "before": wf_kwargs["before"],
-            "after": wf_kwargs["after"],
+            "before": wf_kwargs.get("before"),
+            "after": wf_kwargs.get("after"),
             "function": fn,
-            "log": wf_kwargs["log"]
+            "log": wf_kwargs.get("log")
         })
 
         print("Workflow set_task: Adding Task: ", wfname)
         # print("Workflow set_task: ", tasks[kwargs["name"]][kwargs["task_order"]])
 
-    def run_task(self, task):
+    def run_task(self, task, shared=None):
 
-        tsk = self.get_tasks(task)
+        tsk = self.get_tasks(task, shared)
+        print(tsk)
         log = tsk.get("log")
 
         if log:
-            print("Workflow task found: ", tsk.get("name"))
+            print("Workflow task found: ", task)
             # print("The workflow object looks like this: ", tsk)
 
         if tsk:
@@ -204,42 +205,44 @@ class WorkflowBase():
             #       Iterate through before for each task
             if log:
                 print("Workflow before middlewares for task now running: ",
-                      task.get("name"))
+                      task)
             self.__setup_run_middleware(tsk, "before", log)
 
             #       Invoke task
             if log:
-                print("Workflow task run: ", task.get("name"))
+                print("Workflow task run: ", task)
             tsk.get("function")(*tsk.get("fn_a"), **tsk.get("fn_kwa"))
 
             #       Iterate through after for each task
             if log:
                 print("Workflow after middlewares for task now running: ",
-                      task.get("name"))
+                      task)
             self.__setup_run_middleware(tsk, "after", log)
 
-    def update_task(self, task):
+    def get_task_attr(self, task, attr):
+        if not task.get(attr):
+            if not task.get("shared"):
+                task[attr] = self.tasks.get(attr)
+            elif task.get("shared"):
+                task[attr] = self.shared.tasks.get(attr)
+        return task.get(attr)
 
-        def get_task_attr(task, attr):
-            if not task.get(attr):
-                if not task.get("shared"):
-                    task[attr] = self.tasks.get(attr)
-                elif task.get("shared"):
-                    task[attr] = self.shared.tasks.get(attr)
-            return task.get(attr)
+    def update_task(self, task):
 
         # task object structure
         # name, args, task_order, shared, before, after, function, fn_a, fn_kwa, log
         """wf_kwargs: name, args, task_order, shared, before, after, log"""
 
         task_obj = {
-            "task_order": get_task_attr(task, "task_order"),
-            "wf_args": get_task_attr(task, "args"), "wf_kwargs": get_task_attr(task, "wf_kwargs"),
-            "fn_a": get_task_attr(task, "fn_a"), "fn_kwa": get_task_attr(task, "fn_args"),
-            "before": get_task_attr(task, "before"),
-            "after": get_task_attr(task, "after"),
-            "function": get_task_attr(task, "function"),
-            "log": get_task_attr(task, "log")
+            "task_order": self.get_task_attr(task, "task_order"),
+            "wf_args": self.get_task_attr(task, "args"),
+            "wf_kwargs": self.get_task_attr(task, "wf_kwargs"),
+            "fn_a": self.get_task_attr(task, "fn_a"),
+            "fn_kwa": self.get_task_attr(task, "fn_args"),
+            "before": self.get_task_attr(task, "before"),
+            "after": self.get_task_attr(task, "after"),
+            "function": self.get_task_attr(task, "function"),
+            "log": self.get_task_attr(task, "log")
         }
 
         if task.get("shared") == True:
@@ -247,7 +250,7 @@ class WorkflowBase():
         elif task.get("shared") == False:
             self.tasks.update(task.get("name"), task_obj)
 
-    def __add_instance(self, tasks, inst, shared=None, clash_prefix=None):
+    def __merge_instance(self, tasks, inst, shared=None, clash_prefix=None):
         for k in tasks.keys():
             for ik in inst.tasks.keys():
                 if k == ik:
@@ -258,12 +261,12 @@ class WorkflowBase():
                 tasks[ik] = inst.tasks.get(ik)
         return tasks
 
-    def merge_instance(self, inst, shared, clash_prefix):
+    def merge_instance(self, inst, shared=False, clash_prefix=None):
         if shared == True:
-            self.shared.tasks = self.__add_instance(
+            self.shared.tasks = self.__merge_instance(
                 self.shared.tasks, inst, clash_prefix)
         elif shared == False:
-            self.tasks = self.__add_instance(
+            self.tasks = self.__merge_instance(
                 self.tasks, inst, shared, clash_prefix)
 
 
@@ -332,4 +335,3 @@ def workflow(*wf_args, **wf_kwargs):
 
 
 __all__ = ["Tasks", "workflow"]
-
