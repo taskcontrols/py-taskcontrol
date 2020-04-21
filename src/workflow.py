@@ -95,11 +95,15 @@ class WorkflowBase():
     def __get_middleware_args(self, f, action, log_):
 
         if action and isinstance(action, dict):
+
             a, kwa, err_obj = [], {}, {}
+
             if "args" in action and isinstance(action.get("args"), list):
                 a = action.get("args")
+
             if "kwargs" in action and isinstance(action.get("kwargs"), dict):
                 kwa = action.get("kwargs")
+
             if "options" in action and isinstance(action.get("options"), dict):
                 err_obj = action.get("options")
 
