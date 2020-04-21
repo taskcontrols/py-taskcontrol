@@ -1,9 +1,6 @@
 # # Project Workflow
 # Goal: Manage Workflow and related middlewares
-# TODO: Make unusable WorkflowBase methods private
 # TODO: Add Simple scalable plugin system
-# TODO: Add Singleton for global sharable tasks and plugin service
-
 
 class SharedTasks():
 
@@ -23,7 +20,7 @@ class SharedTasks():
 
         # Option 1:
         if SharedTasks.__instance != None:
-            # raise Exception("This class is a singleton!")
+            # raise Exception("In case erring out is needed - This class is a singleton!")
             pass
         else:
             SharedTasks.__instance = self
@@ -34,7 +31,7 @@ class SharedTasks():
     def __new__(cls):
         if cls.__instance is None:
             cls.__instance = super(SharedTasks, cls).__new__(cls)
-            # Put any initialization here.
+            # Note needed currently: Put any initialization code here
         return cls.__instance
 
     @staticmethod
@@ -140,7 +137,7 @@ class WorkflowBase():
 
     def get_tasks(self, task=None, shared=False):
 
-        # # get shared if shared is requested
+        # get shared if shared is requested
         if shared and task and isinstance(task, str):
             return self.shared_tasks.tasks.get(task)
         elif not shared and task and isinstance(task, str):
@@ -150,14 +147,11 @@ class WorkflowBase():
     def set_task(self, fn, fn_a, fn_kwa, wf_args, wf_kwargs):
 
         wfname = wf_kwargs.get("name")
-        # print("tasks.keys() ", tasks.keys())
         print("Workflow task name to add: ", wfname)
 
         shared = wf_kwargs.get("shared")
-        # TODO: Add in global r local as per decorator
-        # if shared == True:
-        # set in global or local
 
+        # set in global or local
         if shared == True:
             if wfname not in self.shared_tasks.tasks.keys():
                 self.shared_tasks.tasks[wfname] = {}
