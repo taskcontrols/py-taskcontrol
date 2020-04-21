@@ -178,6 +178,9 @@ class WorkflowBase():
         # print("Workflow set_task: ", tasks[kwargs["name"]][kwargs["task_order"]])
 
     def run_task(self, task, shared=None):
+        # task object structure
+        # name, args, task_order, shared, before, after, function, fn_a, fn_kwa, log
+        """wf_kwargs: name, args, task_order, shared, before, after, log"""
 
         tsk = self.get_tasks(task, shared)
         log = tsk.get("log")

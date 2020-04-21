@@ -7,11 +7,11 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
      name='taskcontrol',
-     version='1.1.0',
+     version='1.2.0',
      scripts=[],
      author="Ganesh B",
      author_email="ganeshsurfs@gmail.com",
-     description="Create your workflow with order and with before/after middlewares",
+     description="Create named workflow task controls and run the tasks with respective before and after middlewares in ordered manner",
      long_description=long_description,
      long_description_content_type="text/markdown",
      url="https://github.com/ganeshkbhat/taskcontrol",
