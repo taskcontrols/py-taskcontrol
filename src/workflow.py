@@ -62,7 +62,8 @@ class WorkflowBase():
 
         try:
             if log_:
-                print("Workflow running middleware function: ", middleware.__name__)
+                print("Workflow running middleware function: ",
+                      middleware.__name__)
             return True, middleware(*args, **kwargs)
 
         except Exception as e:
@@ -76,11 +77,11 @@ class WorkflowBase():
             err_next_value_obj_ = error_obj.get("error_next_value")
 
             if err_enum_ == "next":
-                return 'next', (e, err_next_value_obj_)
+                return False, ('next', e, err_next_value_obj_)
             elif err_enum_ == "error_handler":
                 if not hasattr(error_obj, "error_handler"):
-                    return "error_handler", (e, err_next_value_obj_)
-                return 'error_handler', error_obj.get("error_handler")(e, err_next_value_obj_)
+                    return "error_handler", ('error_handler', e, err_next_value_obj_)
+                return False, ('error_handler', e, error_obj.get("error_handler")(e, err_next_value_obj_))
             elif err_enum_ == "exit":
                 raise Exception("error_obj['error'] exit: Error during middleware: ",
                                 middleware.__name__, str(e))
@@ -110,17 +111,23 @@ class WorkflowBase():
 
         actions = task_.get("workflow_kwargs").get(md_action)
         log_ = task_.get("workflow_kwargs").get("log")
+        result = []
 
         if actions and isinstance(actions, list):
+
             for action in actions:
                 middleware = action.get("function")
-                err_obj, a, kwa = self.__get_middleware_args(middleware, action, log_)
-                self.__run_middleware(middleware, err_obj, log_, *a, **kwa)
+                err_obj, a, kwa = self.__get_middleware_args(
+                    middleware, action, log_)
+                result.append(self.__run_middleware(
+                    middleware, err_obj, log_, *a, **kwa))
         elif actions and isinstance(actions, dict):
             err_obj, a, kwa = self.__get_middleware_args(
                 actions.get("function"), actions, log_)
-            self.__run_middleware(actions.get("function"),
-                                  err_obj, log_, *a, **kwa)
+            result.append(self.__run_middleware(actions.get("function"),
+                                                err_obj, log_, *a, **kwa))
+
+        return result
 
     def clean_args(self, function_, function_args, function_kwargs):
 
@@ -229,18 +236,23 @@ class WorkflowBase():
             if log_:
                 print("Workflow before middlewares for task_ now running: ",
                       task_)
-            self.__init_middleware(task_, "before", log_)
+            result_before_middleware = self.__init_middleware(
+                task_, "before", log_)
 
             #       Invoke task_
             if log_:
                 print("Workflow task_ run: ", task_)
-            task_.get("function")(*task_.get("function_args"), **task_.get("function_kwargs"))
+            result = task_.get("function")(
+                *task_.get("function_args"), **task_.get("function_kwargs"))
 
             #       Iterate through after for each task_
             if log_:
                 print("Workflow after middlewares for task_ now running: ",
                       task_)
-            self.__init_middleware(task_, "after", log_)
+            result_after_middleware = self.__init_middleware(
+                task_, "after", log_)
+
+            return result_before_middleware, result, result_after_middleware
 
     def _merge(self, tasks, inst, shared=None, clash_prefix=None):
         for k in tasks.keys():
@@ -272,16 +284,20 @@ class Tasks(WorkflowBase):
 
         print("Workflow task list provided being instantiated: ", str(tasks))
         print("Workflow has tasks: ", str(self.tasks.keys()))
-        print("Workflow has shared tasks: ", str(self.shared_tasks.tasks.keys()))
+        print("Workflow has shared tasks: ", str(
+            self.shared_tasks.tasks.keys()))
+
+        result = []
 
         if isinstance(tasks, str):
             # Iterate task through single task
-            self.run_task(tasks)
+            result.append(self.run_task(tasks))
         elif isinstance(tasks, list):
             # Iterate task through tasks
-            [self.run_task(task_) for task_ in tasks] 
+            [result.append(self.run_task(task_)) for task_ in tasks]
         else:
             print("No workflow or task available to run")
+            return result
 
 
 def workflow(*workflow_args, **workflow_kwargs):
@@ -298,19 +314,21 @@ def workflow(*workflow_args, **workflow_kwargs):
                 raise Exception("Task instance not provided")
 
             # Check before/after middlewares args and kwargs number and validity
-            args_normal = t.clean_args(function_, function_args, function_kwargs)
+            args_normal = t.clean_args(
+                function_, function_args, function_kwargs)
 
             if not args_normal:
                 raise Exception("Args and KwArgs do not match")
 
             # print((function_, function_args, function_kwargs, workflow_args, workflow_kwargs))
-            t.set_task(function_, function_args, function_kwargs, workflow_args, workflow_kwargs)
+            t.set_task(function_, function_args, function_kwargs,
+                       workflow_args, workflow_kwargs)
 
-            print("Workflow order_tasks - Task added: ", workflow_kwargs.get("name"))
+            print("Workflow order_tasks - Task added: ",
+                  workflow_kwargs.get("name"))
 
         return order_tasks
     return get_decorator
 
 
 __all__ = ["Tasks", "workflow"]
-
