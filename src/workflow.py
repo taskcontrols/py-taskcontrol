@@ -297,7 +297,7 @@ class Tasks(WorkflowBase):
             [result.append(self.run_task(task_)) for task_ in tasks]
         else:
             print("No workflow or task available to run")
-        
+
         return result
 
 
@@ -333,3 +333,4 @@ def workflow(*workflow_args, **workflow_kwargs):
 
 
 __all__ = ["Tasks", "workflow"]
+

@@ -12,8 +12,8 @@ from src.workflow import workflow, Tasks
 t = Tasks()
 
 
-def test(k, c, d):
-    print("Running my Middleware Function: test - task items", k, c, d)
+def test(k, c, d, **prev_func_result):
+    print("Running my Middleware Function: test - task items", k, c, d, prev_func_result)
 
 
 @workflow(
@@ -102,6 +102,7 @@ taskone(3, 4)
           )
 def tasktwo(a, b):
     print("Running my task function: tasktwo", a, b)
+    return 5,6
 
 
 tasktwo(5, 6)
