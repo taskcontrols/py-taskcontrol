@@ -1,3 +1,4 @@
+# # Project Workflow
 
 class SharedBase():
     tasks = {"taskname": {}}
@@ -63,12 +64,11 @@ class MiddlewareBase():
 
     def run_middlewares(self, middlewares=None, log_=False):
         result = []
+
         if isinstance(middlewares, list):
             for action in middlewares:
                 middleware = action.get("function")
-                err_obj, a, kwa = self.__get_args(
-                    middleware, action, log_
-                )
+                err_obj, a, kwa = self.__get_args(middleware, action, log_)
                 if len(result) > 0:
                     result.append(self.run_middleware(
                         middleware, err_obj, log_, *a, **kwa,
@@ -85,6 +85,7 @@ class MiddlewareBase():
             result.append(self.run_middleware(
                 middlewares.get("function"), err_obj, log_, *a, **kwa, error=None, fn_result=None
             ))
+
         return result
 
     def init_middlewares(self, task_, md_action=None, log_=False):
@@ -103,7 +104,7 @@ class WorkflowBase(SharedBase, MiddlewareBase):
     def __init__(self):
         self.shared_tasks = SharedBase.getInstance()
 
-
+    # Check before/after middlewares args and kwargs number and validity
     def clean_args(self, function_, function_args, function_kwargs):
         arg_list = function_.__code__.co_varnames
         k_fn_kwa = function_kwargs.keys()
