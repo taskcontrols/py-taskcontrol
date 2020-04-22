@@ -22,6 +22,7 @@ class SharedBase():
             SharedBase()
         return SharedBase.__instance
 
+
 class MiddlewareBase():
     def __get_args(self, f, action, log_):
         if action and isinstance(action, dict):
@@ -94,6 +95,7 @@ class MiddlewareBase():
         log_ = task_.get("workflow_kwargs").get("log")
         result = self.run_middlewares(actions, log_)
         return result
+
 
 class WorkflowBase(SharedBase, MiddlewareBase):
     # task_ object structure
