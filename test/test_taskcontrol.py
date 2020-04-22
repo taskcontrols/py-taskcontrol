@@ -1,5 +1,7 @@
 import pytest
 
+from src.workflow import workflow, Tasks
+
 
 # decorator applied on a function and function invocation creates the task
 # decorator creates tasks only on function invocation
@@ -7,10 +9,19 @@ import pytest
 # decorator creates shared tasks
 class TestDecorator():
 
-    def test_create_task(self):
+    def test_creates_task(self):
+        pass
+
+    def test__doesnot_creates_task(self):
+        pass
+
+    def test_doesnot_create_instance_task(self):
         pass
 
     def test_create_instance_task(self):
+        pass
+
+    def test_doesnot_create_shared_task(self):
         pass
 
     def test_create_shared_task(self):
@@ -36,6 +47,7 @@ class TestTaskRunner():
 # decorator runs shared multiple tasks
 # decorator runs shared all tasks
 class TestSharedTaskRunner():
+
     def test_run_single_shared_tasks(self):
         pass
 
@@ -75,27 +87,52 @@ class TestFunctions():
     def test_function_invocation_error_returns(self):
         pass
 
+
 # middlewares can be invoked and can access results context of all previously invoked functions
 class TestMiddlewareAccessContext():
-    pass
+    def test_middlewares_can_access_context(self):
+        pass
 
 
 # functions can be invoked and can access results context of all previously invoked functions
 class TestFunctionsAccessContext():
-    pass
+    def test_functions_can_access_context(self):
+        pass
 
 
 # middlewares return results
 class TestMiddlewaresResultReturns():
-    pass
+    def test_middlewares_returns_results(self):
+        pass
 
 
 # functions return results
 class TestFuctionsResultReturns():
-    pass
+
+    def test_functions_returns_results(self):
+        pass
+
+    def test_functions_doesnot_return_results(self):
+        pass
+
+    def test_functions_doesnot_return_right_results(self):
+        pass
 
 
 # task runs return results and correct numbers
 class TestTaskResultReturns():
-    pass
 
+    def test_task_returns_results(self):
+        pass
+
+    def test_task_doesnot_returns_wrong_results(self):
+        pass
+
+    def test_task_doesnot_return_right_results(self):
+        pass
+
+    def test_task_returns_incorrect_numbers(self):
+        pass
+
+    def test_task_returns_correct_numbers(self):
+        pass
