@@ -139,19 +139,6 @@ class WorkflowBase(SharedBase, MiddlewareBase):
             return self.tasks.get(task_)
         return self.tasks
 
-    def create_task(self, task_):
-        return {
-            "task_order": self.get_attr(task_, "task_order"),
-            "workflow_args": self.get_attr(task_, "args"),
-            "workflow_kwargs": self.get_attr(task_, "workflow_kwargs"),
-            "function_args": self.get_attr(task_, "function_args"),
-            "function_kwargs": self.get_attr(task_, "function_kwargs"),
-            "before": self.get_attr(task_, "before"),
-            "after": self.get_attr(task_, "after"),
-            "function": self.get_attr(task_, "function"),
-            "log": self.get_attr(task_, "log")
-        }
-
     def set_task(self, function_, function_args, function_kwargs, workflow_args, workflow_kwargs):
         workflow_name = workflow_kwargs.get("name")
         print("Workflow task name to add: ", workflow_name)
@@ -167,17 +154,6 @@ class WorkflowBase(SharedBase, MiddlewareBase):
                 self.tasks[workflow_name] = {}
             if not isinstance(self.tasks[workflow_name], dict):
                 self.tasks.update({workflow_name: {}})
-
-        # from copy import deepcopy
-        # task = deepcopy(workflow_kwargs)
-
-        # task["workflow_args"] = workflow_args
-        # task["workflow_kwargs"] = workflow_kwargs
-        # task["function_args"] = function_args
-        # task["function_kwargs"] = function_kwargs
-        # task["function"] = function_
-
-        # self.tasks[workflow_name].update(self.create_task(task))
 
         self.tasks[workflow_name].update({
             "task_order": workflow_kwargs.get("task_order"),
