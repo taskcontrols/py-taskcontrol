@@ -204,7 +204,7 @@ class WorkflowBase(SharedBase, MiddlewareBase):
             result_before_middleware = self.init_middlewares(
                 task_, "before", log_
             )
-
+ 
             #       Invoke task_
             if log_:
                 print("Workflow task_ run: ", task_)
