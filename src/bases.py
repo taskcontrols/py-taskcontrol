@@ -98,6 +98,7 @@ class WorkflowBase(SharedBase, MiddlewareBase):
     # task_ object structure
     # name, args, task_order, shared, before, after, function, function_args, function_kwargs, log
     """workflow_kwargs: name, args, task_order, shared, before, after, log"""
+
     tasks = { "taskname": {} }
     plugins = { "pluginname": { "taskname": {} } }
 
