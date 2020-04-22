@@ -1,5 +1,6 @@
 # # Project Workflow
 
+
 class SharedBase():
     tasks = {"taskname": {}}
     plugins = {"pluginname": {"taskname": {}}}
@@ -22,6 +23,7 @@ class SharedBase():
             SharedBase()
         return SharedBase.__instance
 
+
 class MiddlewareBase():
     def __get_args(self, f, action, log_):
         if action and isinstance(action, dict):
@@ -38,7 +40,8 @@ class MiddlewareBase():
     def run_middleware(self, middleware, error_object, log_, *args, **kwargs):
         try:
             if log_:
-                print("Workflow running middleware function: ", middleware.__name__)
+                print("Workflow running middleware function: ",
+                      middleware.__name__)
             return None, middleware(*args, **kwargs)
         except Exception as e:
             if log_:
@@ -94,13 +97,14 @@ class MiddlewareBase():
         result = self.run_middlewares(actions, log_)
         return result
 
+
 class WorkflowBase(SharedBase, MiddlewareBase):
     # task_ object structure
     # name, args, task_order, shared, before, after, function, function_args, function_kwargs, log
     """workflow_kwargs: name, args, task_order, shared, before, after, log"""
 
-    tasks = { "taskname": {} }
-    plugins = { "pluginname": { "taskname": {} } }
+    tasks = {"taskname": {}}
+    plugins = {"pluginname": {"taskname": {}}}
 
     def __init__(self):
         self.shared_tasks = SharedBase.getInstance()
@@ -138,6 +142,19 @@ class WorkflowBase(SharedBase, MiddlewareBase):
             return self.tasks.get(task_)
         return self.tasks
 
+    def create_task(self, task_):
+        return {
+            "task_order": self.get_attr(task_, "task_order"),
+            "workflow_args": self.get_attr(task_, "args"),
+            "workflow_kwargs": self.get_attr(task_, "workflow_kwargs"),
+            "function_args": self.get_attr(task_, "function_args"),
+            "function_kwargs": self.get_attr(task_, "function_kwargs"),
+            "before": self.get_attr(task_, "before"),
+            "after": self.get_attr(task_, "after"),
+            "function": self.get_attr(task_, "function"),
+            "log": self.get_attr(task_, "log")
+        }
+
     def set_task(self, function_, function_args, function_kwargs, workflow_args, workflow_kwargs):
         workflow_name = workflow_kwargs.get("name")
         print("Workflow task name to add: ", workflow_name)
@@ -154,30 +171,45 @@ class WorkflowBase(SharedBase, MiddlewareBase):
             if not isinstance(self.tasks[workflow_name], dict):
                 self.tasks.update({workflow_name: {}})
 
-        self.tasks[workflow_name].update({
-            "task_order": workflow_kwargs.get("task_order"),
-            "workflow_args": workflow_args, "workflow_kwargs": workflow_kwargs,
-            "function_args": function_args, "function_kwargs": function_kwargs,
-            "before": workflow_kwargs.get("before"),
-            "after": workflow_kwargs.get("after"),
-            "function": function_,
-            "log": workflow_kwargs.get("log")
-        })
+        from copy import deepcopy
+        task = deepcopy(workflow_kwargs)
+
+        task["workflow_args"] = workflow_args
+        task["workflow_kwargs"] = workflow_kwargs
+        task["function_args"] = function_args
+        task["function_kwargs"] = function_kwargs
+        task["function"] = function_
+
+        self.tasks[workflow_name].update(self.create_task(task))
+
+        # self.tasks[workflow_name].update({
+        #     "task_order": workflow_kwargs.get("task_order"),
+        #     "workflow_args": workflow_args, "workflow_kwargs": workflow_kwargs,
+        #     "function_args": function_args, "function_kwargs": function_kwargs,
+        #     "before": workflow_kwargs.get("before"),
+        #     "after": workflow_kwargs.get("after"),
+        #     "function": function_,
+        #     "log": workflow_kwargs.get("log")
+        # })
+
         print("Workflow set_task: Adding Task: ", workflow_name)
         return True
 
     def update_task(self, task_):
-        task_obj = {
-            "task_order": self.get_attr(task_, "task_order"),
-            "workflow_args": self.get_attr(task_, "args"),
-            "workflow_kwargs": self.get_attr(task_, "workflow_kwargs"),
-            "function_args": self.get_attr(task_, "function_args"),
-            "function_kwargs": self.get_attr(task_, "function_kwargs"),
-            "before": self.get_attr(task_, "before"),
-            "after": self.get_attr(task_, "after"),
-            "function": self.get_attr(task_, "function"),
-            "log": self.get_attr(task_, "log")
-        }
+
+        task_obj = self.create_task(task_)
+
+        # task_obj = {
+        #     "task_order": self.get_attr(task_, "task_order"),
+        #     "workflow_args": self.get_attr(task_, "args"),
+        #     "workflow_kwargs": self.get_attr(task_, "workflow_kwargs"),
+        #     "function_args": self.get_attr(task_, "function_args"),
+        #     "function_kwargs": self.get_attr(task_, "function_kwargs"),
+        #     "before": self.get_attr(task_, "before"),
+        #     "after": self.get_attr(task_, "after"),
+        #     "function": self.get_attr(task_, "function"),
+        #     "log": self.get_attr(task_, "log")
+        # }
 
         if task_.get("shared") == True:
             self.shared_tasks.tasks.update(task_.get("name"), task_obj)
@@ -225,4 +257,3 @@ class WorkflowBase(SharedBase, MiddlewareBase):
                 tasks[ik] = inst.tasks.get(ik)
 
         return tasks
-
