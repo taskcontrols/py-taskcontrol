@@ -25,15 +25,15 @@ class SharedBase():
 class MiddlewareBase():
     def __get_args(self, f, action, log_):
         if action and isinstance(action, dict):
-            a, kwa, err_obj = [], {}, {}
+            args, kwargs, err_obj = [], {}, {}
             if isinstance(action.get("args"), list):
-                a = action.get("args")
+                args = action.get("args")
             if isinstance(action.get("kwargs"), dict):
-                kwa = action.get("kwargs")
+                kwargs = action.get("kwargs")
             if isinstance(action.get("options"), dict):
                 err_obj = action.get("options")
         # TODO: Do clean args here
-        return err_obj, a, kwa
+        return err_obj, args, kwargs
 
     def run_middleware(self, middleware, error_object, log_, *args, **kwargs):
         try:
