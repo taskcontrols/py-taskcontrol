@@ -1,6 +1,5 @@
 # # Project Workflow
 
-
 class SharedBase():
     tasks = {"taskname": {}}
     plugins = {"pluginname": {"taskname": {}}}
