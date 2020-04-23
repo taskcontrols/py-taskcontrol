@@ -213,9 +213,16 @@ class WorkflowBase(SharedBase, MiddlewareBase):
             #       Invoke task_
             if log_:
                 print("Workflow task_ run: ", task_)
+            kwa = task_.get("function_kwargs")
+            if len(result_before_middleware) > 0:
+                err, nx = result_before_middleware[len(result_before_middleware)-1]
+                kwa["error"] = err
+                kwa["nx"] = nx
+
             result = task_.get("function")(
                 *task_.get("function_args"), **task_.get("function_kwargs")
             )
+
             #       Iterate through after for each task_
             if log_:
                 print("Workflow after middlewares for task_ now running: ", task_)
@@ -235,3 +242,4 @@ class WorkflowBase(SharedBase, MiddlewareBase):
                 tasks[ik] = inst.tasks.get(ik)
 
         return tasks
+
