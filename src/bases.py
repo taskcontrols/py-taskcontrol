@@ -1,6 +1,8 @@
 # # Project Workflow
 
+
 class SharedBase():
+
     tasks = {"taskname": {}}
     plugins = {"pluginname": {"taskname": {}}}
     __instance = None
@@ -24,6 +26,7 @@ class SharedBase():
 
 
 class MiddlewareBase():
+
     def __get_args(self, f, action, log_):
         if action and isinstance(action, dict):
             args, kwargs, err_obj = [], {}, {}
