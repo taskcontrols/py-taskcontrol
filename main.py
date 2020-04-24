@@ -74,14 +74,14 @@ def test(k, c, d, **kwargs):
     ],
     log=False
 )
-def taskone(a, b):
+def taskone(a, b, error=None, nx=None):
     print("Running my task function: taskone", a, b)
 
 
 # Invocation is needed to add the task with function arguments
 # Invoke this where needed
 # Example: Within some other function
-taskone(3, 4)
+# taskone(3, 4)
 
 
 # Example two for decorator usage
@@ -96,15 +96,17 @@ taskone(3, 4)
               "kwargs": {"d": "Before Testing message"},
               "options": {"error": "next", "error_next_value": ""}
           },
+          args=[],
+          kwargs={},
           after=[],
           log=False
           )
-def tasktwo(a, b):
+def tasktwo(a, b, error=None, nx=None):
     print("Running my task function: tasktwo", a, b)
-    return 5, 6
+    return a,b
 
 
-tasktwo(5, 6)
+# tasktwo(5, 6)
 
 
 # Invoke this where needed
