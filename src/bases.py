@@ -5,6 +5,8 @@ class SharedBase():
 
     tasks = {"taskname": {}}
     plugins = {"pluginname": {"taskname": {}}}
+    ctx = {}
+
     __instance = None
 
     def __init__(self):
@@ -54,6 +56,7 @@ class MiddlewareBase():
             e_enum = error_object.get("error")
             e_next_value = error_object.get("error_next_value")
             e_return = {"error": e, "next": e_next_value}
+
             if e_enum == "next":
                 return e_return
             elif e_enum == "error_handler":
@@ -107,6 +110,7 @@ class WorkflowBase(SharedBase, MiddlewareBase):
 
     tasks = {"taskname": {}}
     plugins = {"pluginname": {"taskname": {}}}
+    ctx = {}
 
     def __init__(self):
         self.shared_tasks = SharedBase.getInstance()
