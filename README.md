@@ -27,7 +27,7 @@ It also provides methods to create a plugin and work with tasks as a module and/
 * Workflow decorator with simple options to setup workflow
 * Allows middlewares before each task (data fetch, auth, etc)
 * Allows middlewares after each task (data save, logging, logout, cleanup, etc)
-* Allows merging two instances of task controls with namespace clash handling
+* Allows creating and merging two instances of task controls with namespace clash handling
 * Allows creating shared/common task controls (use shared keyword argument)
 <!-- * In-Development: Allows creating, registering, and using a set of task controls as a plugin -->
 
