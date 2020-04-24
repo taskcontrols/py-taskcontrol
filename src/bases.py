@@ -41,6 +41,7 @@ class MiddlewareBase():
         # TODO: Do clean args here
         return err_obj, args, kwargs
 
+
     def run_middleware(self, middleware, error_object, log_, *args, **kwargs):
         try:
             if log_:
@@ -70,6 +71,7 @@ class MiddlewareBase():
                 raise Exception(
                     "Error during middleware: flow[options[error]] value error")
 
+
     def run_middlewares(self, middlewares=None, log_=False):
         result = []
 
@@ -96,6 +98,7 @@ class MiddlewareBase():
 
         return result
 
+
     def init_middlewares(self, task_, md_action=None, log_=False):
         actions = task_.get("workflow_kwargs").get(md_action)
         log_ = task_.get("workflow_kwargs").get("log")
@@ -112,8 +115,10 @@ class WorkflowBase(SharedBase, MiddlewareBase):
     plugins = {"pluginname": {"taskname": {}}}
     ctx = {}
 
+
     def __init__(self):
         self.shared_tasks = SharedBase.getInstance()
+
 
     # Check before/after middlewares args and kwargs number and validity
     def clean_args(self, function_, function_args, function_kwargs):
@@ -129,6 +134,7 @@ class WorkflowBase(SharedBase, MiddlewareBase):
             return True
         return False
 
+
     def get_attr(self, task_, attr):
         if not task_.get(attr):
             if not task_.get("shared"):
@@ -141,12 +147,14 @@ class WorkflowBase(SharedBase, MiddlewareBase):
                 )
         return task_.get(attr)
 
+
     def get_tasks(self, task_=None, shared=False):
         if shared and task_ and isinstance(task_, str):
             return self.shared_tasks.tasks.get(task_)
         elif not shared and task_ and isinstance(task_, str):
             return self.tasks.get(task_)
         return self.tasks
+
 
     def set_task(self, function_, function_args, function_kwargs, workflow_args, workflow_kwargs):
         workflow_name = workflow_kwargs.get("name")
@@ -177,6 +185,7 @@ class WorkflowBase(SharedBase, MiddlewareBase):
         print("Workflow set_task: Adding Task: ", workflow_name)
         return True
 
+
     def update_task(self, task_):
 
         # task_obj = self.create_task(task_)
@@ -197,6 +206,7 @@ class WorkflowBase(SharedBase, MiddlewareBase):
             self.shared_tasks.tasks.update(task_.get("name"), task_obj)
         elif task_.get("shared") == False:
             self.tasks.update(task_.get("name"), task_obj)
+
 
     def run_task(self, task_, shared=None):
         task_ = self.get_tasks(task_, shared)
@@ -219,7 +229,8 @@ class WorkflowBase(SharedBase, MiddlewareBase):
                 print("Workflow task_ run: ", task_)
             kwa = task_.get("function_kwargs")
             if len(result_before_middleware) > 0:
-                err, nx = result_before_middleware[len(result_before_middleware)-1]
+                err, nx = result_before_middleware[len(
+                    result_before_middleware)-1]
                 kwa["error"] = err
                 kwa["nx"] = nx
 
@@ -235,6 +246,7 @@ class WorkflowBase(SharedBase, MiddlewareBase):
             )
             return result_before_middleware, result, result_after_middleware
 
+
     def merge_tasks(self, tasks, inst, shared=None, clash_prefix=None):
         for k in tasks.keys():
             for ik in inst.tasks.keys():
@@ -246,4 +258,3 @@ class WorkflowBase(SharedBase, MiddlewareBase):
                 tasks[ik] = inst.tasks.get(ik)
 
         return tasks
-
