@@ -22,6 +22,7 @@ class Tasks(WorkflowBase):
 
     def run(self, tasks):
         # print("Workflow task list provided being instantiated: ", str(tasks))
+        # add this to context (shared/local check design)
         result = []
 
         if isinstance(tasks, str):
@@ -33,6 +34,7 @@ class Tasks(WorkflowBase):
         else:
             print("No workflow or task available to run")
         return result
+
 
 def workflow(*workflow_args, **workflow_kwargs):
     # print("get_decorator: Decorator init ", "workflow_args: ", workflow_args, "workflow_kwargs: ", workflow_kwargs)
@@ -54,6 +56,7 @@ def workflow(*workflow_args, **workflow_kwargs):
             print("Workflow order_tasks - Task added: ", workflow_kwargs.get("name"))
         return order_tasks
     return get_decorator
+
 
 __all__ = ["Tasks", "workflow"]
 
