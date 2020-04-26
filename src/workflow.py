@@ -1,10 +1,10 @@
 # # Project Workflow
 
 
+from .bases import WorkflowBase
 from sys import path
 path.append('./')
 
-from .bases import WorkflowBase
 
 class Tasks(WorkflowBase):
 
@@ -28,14 +28,14 @@ class Tasks(WorkflowBase):
 
         if isinstance(tasks, str):
             # Iterate task through single task
-            result.append(self.run_task(tasks))
+            result.append(self.run_task(self.get_tasks(tasks)))
 
         elif isinstance(tasks, list):
             # Iterate task through tasks
             # reduce is a better and easier way. Compare looping ways
-            import functools
-            # result.append(functools.reduce(lambda x: x, tasks))
-            [result.append(self.run_task(task_)) for task_ in tasks]
+
+            for task_ in tasks:
+                result.append(self.run_task(self.get_tasks(task_)))
         else:
             print("No workflow or task available to run")
         return result
@@ -62,7 +62,7 @@ def workflow(*workflow_args, **workflow_kwargs):
             if len(workflow_args):
                 kwargs.update(**workflow_kwargs)
             if len(function_args):
-                kwargs.update(**function_kwargs) 
+                kwargs.update(**function_kwargs)
 
             # old
             # args_normal = t.clean_args(
@@ -81,4 +81,3 @@ def workflow(*workflow_args, **workflow_kwargs):
 
 
 __all__ = ["Tasks", "workflow"]
-

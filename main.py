@@ -129,7 +129,7 @@ def tasktwo(ctx, result, a, b):
 
 
 # Multiple Workflow Tasks run
-run_1 = t.run(tasks=["taskname", "tasktwo"])
+run_1 = t.run(tasks=["shared:taskname", "tasktwo"])
 # print("t.ctx ",t.ctx)
 print("run_1", run_1)
 
@@ -140,7 +140,7 @@ print("run_1", run_1)
 
 
 # Single Workflow Tasks run
-run_2 = t.run(tasks="taskname")
+run_2 = t.run(tasks="shared:taskname")
 print("run_2", run_2)
 
 
