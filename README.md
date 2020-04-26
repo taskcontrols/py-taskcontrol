@@ -252,7 +252,7 @@ functools.reduce(red, ls)
 * Run all isolated or shared tasks 
 * In-Development: Allows creating and registering a set of task controls as a plugin
 
-
+ 
 
 # License
 
