@@ -11,7 +11,7 @@ from src.workflow import workflow, Tasks
 t = Tasks()
 
 
-def test(k, c, d, **kwargs):
+def test(ctx, result, k, c, d, **kwargs):
     print("Running my Middleware Function: test - task items", k, c, d, kwargs)
 
 
@@ -20,6 +20,8 @@ def test(k, c, d, **kwargs):
     task_order=1,
     task_instance=t,
     shared=True,
+    args=[1, 2],
+    kwargs={},
     before=[
         # before middleware order followed will be of the list sequence
         {
@@ -47,7 +49,8 @@ def test(k, c, d, **kwargs):
         # after middleware order followed will be of the list sequence
         {
             "function": test,
-            "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
+            "args": [13, 14],
+            "kwargs": {"d": "After Middleware Testing message"},
             "options": {
                 "error": "error_handler",
                 "error_next_value": "value",
@@ -74,7 +77,7 @@ def test(k, c, d, **kwargs):
     ],
     log=False
 )
-def taskone(a, b, error=None, nx=None):
+def taskone(ctx, result, a, b):
     print("Running my task function: taskone", a, b)
 
 
@@ -89,6 +92,8 @@ def taskone(a, b, error=None, nx=None):
           task_instance=t,
           task_order=2,
           shared=False,
+          args=[1, 2],
+          kwargs={},
           # Declare before/after as an list or an object (if single middleware function)
           before={
               "function": test,
@@ -96,14 +101,12 @@ def taskone(a, b, error=None, nx=None):
               "kwargs": {"d": "Before Testing message"},
               "options": {"error": "next", "error_next_value": ""}
           },
-          args=[],
-          kwargs={},
           after=[],
           log=False
           )
-def tasktwo(a, b, error=None, nx=None):
+def tasktwo(ctx, result, a, b):
     print("Running my task function: tasktwo", a, b)
-    return a,b
+    return a, b
 
 
 # tasktwo(5, 6)
@@ -143,4 +146,3 @@ print("r_2", r_2)
 # TODO: Run Tasks run with shared task
 # Single Workflow Tasks run for shared task
 # t.run(tasks="shared:taskname")
-

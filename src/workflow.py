@@ -50,28 +50,29 @@ def workflow(*workflow_args, **workflow_kwargs):
             t = workflow_kwargs.get("task_instance")
             if not t:
                 raise Exception("Task instance not provided")
-            
-            # new
-            a = []
+
+            args = []
             if len(workflow_args):
-                a.append(*workflow_args)
+                args.append(*workflow_args)
             if len(function_args):
-                a.append(*function_args)
-            kw = {}
+                args.append(*function_args)
+
+            kwargs = {}
             if len(workflow_args):
-                kw.update(**workflow_kwargs)
+                kwargs.update(**workflow_kwargs)
             if len(function_args):
-                kw.update(**function_kwargs) 
-            
+                kwargs.update(**function_kwargs) 
+
             # old
             # args_normal = t.clean_args(
             #     function_, function_args, function_kwargs)
             # if not args_normal:
             #     raise Exception("Args and KwArgs do not match")
             t.set_task(
-                function_, a, kw,
+                function_, args, kwargs,
                 workflow_args, workflow_kwargs
             )
+
             print("Workflow order_tasks - Task added: ",
                   workflow_kwargs.get("name"))
         return order_tasks()

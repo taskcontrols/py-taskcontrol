@@ -184,7 +184,7 @@ class WorkflowBase(SharedBase, MiddlewareBase):
 
         task_obj = {
             "task_order": self.get_attr(task_, "task_order"),
-            "workflow_args": self.get_attr(task_, "args"),
+            "workflow_args": self.get_attr(task_, "workflow_args"),
             "workflow_kwargs": self.get_attr(task_, "workflow_kwargs"),
             "function_args": self.get_attr(task_, "function_args"),
             "function_kwargs": self.get_attr(task_, "function_kwargs"),
@@ -199,44 +199,92 @@ class WorkflowBase(SharedBase, MiddlewareBase):
         elif task_.get("shared") == False:
             self.tasks.update(task_.get("name"), task_obj)
 
+    def reducer(self, result, task_):
+        if not isinstance(type(task_), dict):
+            fn = task_.get("function")
+            args = task_.get("args")
+            kwargs = task_.get("kwargs")
+            workflow_args = task_.get("workflow_args")
+            workflow_kwargs = task_.get("workflow_kwargs")
+
+        if result:
+            res = result.get("result")
+        if not result:
+            res = []
+            result = {"result": []}
+        if not workflow_args:
+            workflow_args = []
+        if not workflow_kwargs:
+            workflow_kwargs = []
+        print("res, *args, **kwargs", res, args, kwargs)
+        r_ = fn(self.ctx, res, *args, **kwargs)
+        
+        
+        result["result"].append(r_)
+
+        {"result": result.get("result")}
+        return {"result": result.get("result")}
+
     def run_task(self, task_, shared=None):
+        # task_ = self.get_tasks(task_, shared)
+        # log_ = task_.get("log")
+
+        # if log_:
+        #     print("Workflow task_ found: ", task_)
+        #     # print("The workflow object is : ", task_)
+        # if task_:
+        #     # TODO: Put in try except block for clean errors
+        #     #       Iterate through before for each task_
+        #     if log_:
+        #         print("Workflow before middlewares for task_ now running: ", task_)
+        #     result_before_middleware = self.init_middlewares(
+        #         task_, "before", log_
+        #     )
+
+        #     #       Invoke task_
+        #     if log_:
+        #         print("Workflow task_ run: ", task_)
+        #     kwa = task_.get("function_kwargs")
+        #     if len(result_before_middleware) > 0:
+        #         err, nx = result_before_middleware[len(
+        #             result_before_middleware)-1]
+        #         kwa["error"] = err
+        #         kwa["nx"] = nx
+
+        #     result = task_.get("function")(
+        #         *task_.get("function_args"), **task_.get("function_kwargs")
+        #     )
+
+        #     #       Iterate through after for each task_
+        #     if log_:
+        #         print("Workflow after middlewares for task_ now running: ", task_)
+        #     result_after_middleware = self.init_middlewares(
+        #         task_, "after", log_
+        #     )
+
+        #     return result_before_middleware, result, result_after_middleware
+        print(task_)
         task_ = self.get_tasks(task_, shared)
+        print(task_)
         log_ = task_.get("log")
 
-        if log_:
-            print("Workflow task_ found: ", task_)
-            # print("The workflow object is : ", task_)
-        if task_:
-            # TODO: Put in try except block for clean errors
-            #       Iterate through before for each task_
-            if log_:
-                print("Workflow before middlewares for task_ now running: ", task_)
-            result_before_middleware = self.init_middlewares(
-                task_, "before", log_
-            )
+        before = task_.get("before")
 
-            #       Invoke task_
-            if log_:
-                print("Workflow task_ run: ", task_)
-            kwa = task_.get("function_kwargs")
-            if len(result_before_middleware) > 0:
-                err, nx = result_before_middleware[len(
-                    result_before_middleware)-1]
-                kwa["error"] = err
-                kwa["nx"] = nx
+        fn_task = {}
+        fn_task["function"] = task_.get("function")
+        fn_task["args"] = task_.get("workflow_kwargs").get("args")
+        fn_task["kwargs"] = task_.get("workflow_kwargs").get("kwargs")
+        fn_task["workflow_args"] = task_.get("workflow_args")
+        fn_task["workflow_kwargs"] = task_.get("workflow_kwargs")
 
-            result = task_.get("function")(
-                *task_.get("function_args"), **task_.get("function_kwargs")
-            )
+        after = task_.get("after")
 
-            #       Iterate through after for each task_
-            if log_:
-                print("Workflow after middlewares for task_ now running: ", task_)
-            result_after_middleware = self.init_middlewares(
-                task_, "after", log_
-            )
+        tasks_to_run_in_task_ = [None, *before, fn_task, *after]
 
-            return result_before_middleware, result, result_after_middleware
+        import functools
+        functools.reduce(self.reducer, tasks_to_run_in_task_)
+
+        return
 
     def merge_tasks(self, tasks, inst, shared=None, clash_prefix=None):
         for k in tasks.keys():
