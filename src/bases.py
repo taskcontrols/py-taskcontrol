@@ -223,9 +223,10 @@ class WorkflowBase(SharedBase):
     def run_task(self, task_):
         log_ = task_.get("log")
 
-        if isinstance(task_.get("before"), dict):
+        t_before = task_.get("before")
+        if isinstance(t_before, dict):
             before = [task_.get("before")]
-        elif isinstance(task_.get("before"), list):
+        elif isinstance(t_before, list):
             before = task_.get("before")
         else:
             raise Exception("Error: run_task: Definition of before")
@@ -241,9 +242,10 @@ class WorkflowBase(SharedBase):
         fn_task["workflow_args"] = task_.get("workflow_args")
         fn_task["workflow_kwargs"] = task_.get("workflow_kwargs")
 
-        if isinstance(task_.get("after"), dict):
+        t_after = task_.get("after")
+        if isinstance(t_after, dict):
             after = [task_.get("after")]
-        elif isinstance(task_.get("after"), list):
+        elif isinstance(t_after, list):
             after = task_.get("after")
         else:
             raise Exception("Error: run_task: Definition of after")
