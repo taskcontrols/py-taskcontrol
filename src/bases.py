@@ -80,7 +80,6 @@ class WorkflowBase(SharedBase):
 
     def get_tasks(self, task_=None):
         shared = False
-        # print(task_)
         if isinstance(task_, str):
             if len(task_.split("shared:")) > 1:
                 shared = True

@@ -125,7 +125,7 @@ def tasktwo(ctx, result, a, b):
 # TODO: Run all shared tasks
 # Shared Workflow Tasks run
 # t.run(tasks=["shared:1"])
-# t.run(tasks="shared:1")
+t.run(tasks="shared:1")
 
 
 # Multiple Workflow Tasks run
