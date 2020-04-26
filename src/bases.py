@@ -245,8 +245,7 @@ class WorkflowBase(SharedBase, MiddlewareBase):
         tasks_to_run_in_task_ = [None, *before, fn_task, *after]
 
         import functools
-        functools.reduce(self.reducer, tasks_to_run_in_task_)
-        return self.ctx
+        return functools.reduce(self.reducer, tasks_to_run_in_task_)
 
     def merge_tasks(self, tasks, inst, shared=None, clash_prefix=None):
         for k in tasks.keys():
