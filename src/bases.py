@@ -220,6 +220,7 @@ class WorkflowBase(SharedBase, MiddlewareBase):
 
         r_ = fn(self.ctx, res, *args, **kwargs)
         result["result"].append(r_)
+        self.ctx["result"] = result.get("result")
         return {"result": result.get("result")}
 
     def run_task(self, task_, shared=None):
@@ -244,8 +245,7 @@ class WorkflowBase(SharedBase, MiddlewareBase):
 
         import functools
         functools.reduce(self.reducer, tasks_to_run_in_task_)
-
-        return
+        return self.ctx
 
     def merge_tasks(self, tasks, inst, shared=None, clash_prefix=None):
         for k in tasks.keys():
