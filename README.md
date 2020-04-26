@@ -206,6 +206,9 @@ print("r_2", r_2)
 ##### Note:
 
 Though it may support Python version 2.x. However, it has not been tested in 2.x. The Syntax and Features of the library supports Python version 2.x. Use at your own risk.
+
+    Minor argument change from 1.1.0 version
+
 <!-- 
 # Wiki
  -->
