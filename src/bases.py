@@ -27,84 +27,7 @@ class SharedBase():
         return SharedBase.__instance
 
 
-class MiddlewareBase():
-    pass
-
-    # def __get_args(self, f, action, log_):
-    #     if action and isinstance(action, dict):
-    #         args, kwargs, err_obj = [], {}, {}
-    #         if isinstance(action.get("args"), list):
-    #             args = action.get("args")
-    #         if isinstance(action.get("kwargs"), dict):
-    #             kwargs = action.get("kwargs")
-    #         if isinstance(action.get("options"), dict):
-    #             err_obj = action.get("options")
-    #     # TODO: Do clean args here
-    #     return err_obj, args, kwargs
-
-    # def run_middleware(self, middleware, error_object, log_, *args, **kwargs):
-    #     try:
-    #         if log_:
-    #             print("Workflow running middleware function: ",
-    #                   middleware.__name__)
-    #         return None, middleware(*args, **kwargs)
-    #     except Exception as e:
-    #         if log_:
-    #             print("Running error for middleware")
-    #         if not hasattr(error_object, "error"):
-    #             error_object["error"] = "exit"
-
-    #         e_enum = error_object.get("error")
-    #         e_next_value = error_object.get("error_next_value")
-    #         e_return = {"error": e, "next": e_next_value}
-
-    #         if e_enum == "next":
-    #             return e_return
-    #         elif e_enum == "error_handler":
-    #             if not hasattr(error_object, "error_handler"):
-    #                 return e_return
-    #             return {"error": e, "next": error_object.get("error_handler")(e, e_next_value)}
-    #         elif e_enum == "exit":
-    #             raise Exception("error_obj['error'] exit: Error during middleware: ",
-    #                             middleware.__name__, str(e))
-    #         else:
-    #             raise Exception(
-    #                 "Error during middleware: flow[options[error]] value error")
-
-    # def run_middlewares(self, middlewares=None, log_=False):
-    #     result = []
-
-    #     if isinstance(middlewares, list):
-    #         for action in middlewares:
-    #             middleware = action.get("function")
-    #             err_obj, a, kwa = self.__get_args(middleware, action, log_)
-    #             if len(result) > 0:
-    #                 result.append(self.run_middleware(
-    #                     middleware, err_obj, log_, *a, **kwa,
-    #                     error=result[-1].get("error"), fn_result=result[-1].get("fn_result")
-    #                 ))
-    #             else:
-    #                 result.append(self.run_middleware(
-    #                     middleware, err_obj, log_, *a, **kwa, error=None, fn_result=None
-    #                 ))
-    #     elif isinstance(middlewares, dict):
-    #         err_obj, a, kwa = self.__get_args(
-    #             middlewares.get("function"), middlewares, log_
-    #         )
-    #         result.append(self.run_middleware(
-    #             middlewares.get("function"), err_obj, log_, *a, **kwa, error=None, fn_result=None
-    #         ))
-
-    #     return result
-
-    # def init_middlewares(self, task_, md_action=None, log_=False):
-    #     actions = task_.get(md_action)
-    #     log_ = task_.get(task_.get("name")).get("workflow_kwargs").get("log")
-    #     result = self.run_middlewares(actions, log_)
-    #     return result
-
-
-class WorkflowBase(SharedBase, MiddlewareBase):
+class WorkflowBase(SharedBase):
     # task_ object structure
     # name, args, task_order, shared, before, after, function, function_args, function_kwargs, log
     """workflow_kwargs: name, args, task_order, shared, before, after, log"""
@@ -115,6 +38,18 @@ class WorkflowBase(SharedBase, MiddlewareBase):
 
     def __init__(self):
         self.shared_tasks = SharedBase.getInstance()
+
+    # def __get_args(self, f, action, log_):
+        #     if action and isinstance(action, dict):
+        #         args, kwargs, err_obj = [], {}, {}
+        #         if isinstance(action.get("args"), list):
+        #             args = action.get("args")
+        #         if isinstance(action.get("kwargs"), dict):
+        #             kwargs = action.get("kwargs")
+        #         if isinstance(action.get("options"), dict):
+        #             err_obj = action.get("options")
+        #     # TODO: Do clean args here
+        #     return err_obj, args, kwargs
 
     # Check before/after middlewares args and kwargs number and validity
 
