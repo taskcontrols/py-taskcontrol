@@ -27,6 +27,8 @@ It also provides methods to create a plugin and work with tasks as a module and/
 * Workflow decorator with simple options to setup workflow
 * Allows middlewares before each task (data fetch, auth, etc)
 * Allows middlewares after each task (data save, logging, logout, cleanup, etc)
+* Allows context for each set of tasks run accessible by any function
+* Allows returns/results of runs accessible by each task or their middlewares
 * Allows creating isolated instance based tasks (use shared keyword argument as False)
 * Allows creating and merging two instances of task controls with namespace clash handling
 * Allows creating shared/common task controls (use shared keyword argument as True)
@@ -207,7 +209,7 @@ print("r_2", r_2)
 
 Though it may support Python version 2.x. However, it has not been tested in 2.x. The Syntax and Features of the library supports Python version 2.x. Use at your own risk.
 
-    Minor argument change from 1.1.0 version
+    Minor argument order change from 1.1.0 version. ctx, and result is compulsary argument which are magically provided
 
 <!-- 
 # Wiki
