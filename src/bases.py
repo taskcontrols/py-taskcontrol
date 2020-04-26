@@ -224,6 +224,7 @@ class WorkflowBase(SharedBase):
         log_ = task_.get("log")
 
         t_before = task_.get("before")
+
         if isinstance(t_before, dict):
             before = [task_.get("before")]
         elif isinstance(t_before, list):
@@ -243,6 +244,7 @@ class WorkflowBase(SharedBase):
         fn_task["workflow_kwargs"] = task_.get("workflow_kwargs")
 
         t_after = task_.get("after")
+
         if isinstance(t_after, dict):
             after = [task_.get("after")]
         elif isinstance(t_after, list):
