@@ -212,8 +212,6 @@ class WorkflowBase(SharedBase):
             else:
                 raise Exception(
                     "Error during middleware: flow[options[error]] value error")
-        if not r_:
-            r_ = ()
 
         result["result"].append(r_)
         self.ctx["result"] = result.get("result")
