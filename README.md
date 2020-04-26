@@ -1,5 +1,5 @@
 # taskcontrol
-    Create named workflow task controls and run the tasks with respective before and after middlewares
+    Create named shared / isolated workflow task controls and run the tasks with respective before and after middlewares
 
 taskcontrol is a python library to create tasks in and based on named workflow controls. It allows middlewares before and after each task. taskcontrol can run single or multiple tasks at a task run invocation.
 
@@ -53,26 +53,27 @@ It also provides methods to create a plugin and work with tasks as a module and/
 # for git development repo
 # from src.workflow import workflow, Tasks
 
-
 # for package
 from taskcontrol import workflow, Tasks
 
 
-# Instance of tasks object
-# Every instance will store it own list of tasks 
+# Instance of tasks and apis object
+# Every instance will store it own list of tasks
 #       with their before/after middlewares
-t = Task()
+t = Tasks()
 
 
-def test(k, c, d):
-    print("Running my Middleware Function: test - task items", k, c, d)
+def test(ctx, result, k, c, d, **kwargs):
+    print("Running my Middleware Function: test - task items", k, c, d, kwargs)
 
 
 @workflow(
     name="taskname",
     task_order=1,
-    task_instance = t,
+    task_instance=t,
     shared=True,
+    args=[1, 2],
+    kwargs={},
     before=[
         # before middleware order followed will be of the list sequence
         {
@@ -100,7 +101,8 @@ def test(k, c, d):
         # after middleware order followed will be of the list sequence
         {
             "function": test,
-            "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
+            "args": [13, 14],
+            "kwargs": {"d": "After Middleware Testing message"},
             "options": {
                 "error": "error_handler",
                 "error_next_value": "value",
@@ -125,37 +127,41 @@ def test(k, c, d):
             }
         }
     ],
-    log=True
+    log=False
 )
-def taskone(a, b):
+def taskone(ctx, result, a, b):
     print("Running my task function: taskone", a, b)
 
 
 # Invocation is needed to add the task with function arguments
 # Invoke this where needed
 # Example: Within some other function
-taskone(3, 4)
+# taskone(3, 4)
 
 
 # Example two for decorator usage
 @workflow(name="tasktwo",
-        task_instance = t,
-        task_order=2,
-        shared=False,
-        # Declare before/after as an list or an object (if single middleware function)
-        before={
-            "function": test,
-            "args": [21, 22],
-            "kwargs": {"d": "Before Testing message"},
-            "options": {"error": "next", "error_next_value": ""}
-        },
-        after=[]
-        )
-def tasktwo(a, b):
+          task_instance=t,
+          task_order=2,
+          shared=False,
+          args=[1, 2],
+          kwargs={},
+          # Declare before/after as an list or an object (if single middleware function)
+          before={
+              "function": test,
+              "args": [21, 22],
+              "kwargs": {"d": "Before Testing message"},
+              "options": {"error": "next", "error_next_value": ""}
+          },
+          after=[],
+          log=False
+          )
+def tasktwo(ctx, result, a, b):
     print("Running my task function: tasktwo", a, b)
-    return a,b
+    return a, b
 
-tasktwo(5, 6)
+
+# tasktwo(5, 6)
 
 
 # Invoke this where needed
@@ -175,7 +181,8 @@ tasktwo(5, 6)
 
 
 # Multiple Workflow Tasks run
-t.run(tasks=["taskname", "tasktwo"])
+r_1 = t.run(tasks=["taskname", "tasktwo"])
+print("r_1", r_1)
 
 
 # TODO: Run Tasks run with mix of shared
@@ -184,12 +191,14 @@ t.run(tasks=["taskname", "tasktwo"])
 
 
 # Single Workflow Tasks run
-# t.run(tasks="taskname")
+r_2 = t.run(tasks="taskname")
+print("r_2", r_2)
 
 
 # TODO: Run Tasks run with shared task
 # Single Workflow Tasks run for shared task
 # t.run(tasks="shared:taskname")
+
 
 
 ```

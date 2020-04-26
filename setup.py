@@ -11,7 +11,7 @@ setuptools.setup(
      scripts=[],
      author="Ganesh B",
      author_email="ganeshsurfs@gmail.com",
-     description="Create named workflow task controls and run the tasks with respective before and after middlewares in ordered manner",
+     description="Create named isolated/shared workflow task controls and run the tasks with respective before and after middlewares in ordered manner",
      long_description=long_description,
      long_description_content_type="text/markdown",
      url="https://github.com/ganeshkbhat/taskcontrol",
