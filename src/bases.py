@@ -200,6 +200,7 @@ class WorkflowBase(SharedBase, MiddlewareBase):
             self.tasks.update(task_.get("name"), task_obj)
 
     def reducer(self, result, task_):
+
         if not isinstance(type(task_), dict):
             fn = task_.get("function")
             args = task_.get("args")
@@ -216,13 +217,10 @@ class WorkflowBase(SharedBase, MiddlewareBase):
             workflow_args = []
         if not workflow_kwargs:
             workflow_kwargs = []
-        print("res, *args, **kwargs", res, args, kwargs)
-        r_ = fn(self.ctx, res, *args, **kwargs)
-        
-        
-        result["result"].append(r_)
 
-        {"result": result.get("result")}
+        r_ = fn(self.ctx, res, *args, **kwargs)
+
+        result["result"].append(r_)
         return {"result": result.get("result")}
 
     def run_task(self, task_, shared=None):
@@ -263,12 +261,15 @@ class WorkflowBase(SharedBase, MiddlewareBase):
         #     )
 
         #     return result_before_middleware, result, result_after_middleware
-        print(task_)
+        # print("task_ 1",task_)
         task_ = self.get_tasks(task_, shared)
-        print(task_)
+        # print("task_2", task_)
         log_ = task_.get("log")
 
-        before = task_.get("before")
+        if isinstance(task_.get("before"), dict):
+            before = [task_.get("before")]
+        else:
+            before = task_.get("before")
 
         fn_task = {}
         fn_task["function"] = task_.get("function")
@@ -276,6 +277,8 @@ class WorkflowBase(SharedBase, MiddlewareBase):
         fn_task["kwargs"] = task_.get("workflow_kwargs").get("kwargs")
         fn_task["workflow_args"] = task_.get("workflow_args")
         fn_task["workflow_kwargs"] = task_.get("workflow_kwargs")
+
+        # print("fn_task",fn_task)
 
         after = task_.get("after")
 

@@ -29,6 +29,7 @@ class Tasks(WorkflowBase):
         if isinstance(tasks, str):
             # Iterate task through single task
             result.append(self.run_task(tasks))
+
         elif isinstance(tasks, list):
             # Iterate task through tasks
             # reduce is a better and easier way. Compare looping ways
