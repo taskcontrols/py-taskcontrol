@@ -27,8 +27,9 @@ It also provides methods to create a plugin and work with tasks as a module and/
 * Workflow decorator with simple options to setup workflow
 * Allows middlewares before each task (data fetch, auth, etc)
 * Allows middlewares after each task (data save, logging, logout, cleanup, etc)
+* Allows creating isolated instance based tasks (use shared keyword argument as False)
 * Allows creating and merging two instances of task controls with namespace clash handling
-* Allows creating shared/common task controls (use shared keyword argument)
+* Allows creating shared/common task controls (use shared keyword argument as True)
 <!-- * In-Development: Allows creating, registering, and using a set of task controls as a plugin -->
 
 
@@ -152,6 +153,7 @@ taskone(3, 4)
         )
 def tasktwo(a, b):
     print("Running my task function: tasktwo", a, b)
+    return a,b
 
 tasktwo(5, 6)
 
@@ -217,6 +219,7 @@ def test(a,b):
 def tester(a,b):
     print(a,b)
     return None
+
 kwargs_for_first_function_the_its_returns_or_other_value_for_next_func = {"a":"a", "b":"b"}
 ls = [kwargs_for_first_function_the_its_returns_or_other_value_for_next_func, test, tester]
 import functools 
