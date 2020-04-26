@@ -1,5 +1,5 @@
 # taskcontrol
-    Create named shared / isolated workflow task controls and run the tasks with respective before and after middlewares
+    Create named shared / isolated workflow task controls, and run them with respective before/after middlewares
 
 taskcontrol is a python library to create tasks in and based on named workflow controls. It allows middlewares before and after each task. taskcontrol can run single or multiple tasks at a task run invocation.
 
