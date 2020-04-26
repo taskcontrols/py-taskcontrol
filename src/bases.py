@@ -209,22 +209,22 @@ class WorkflowBase(SharedBase, MiddlewareBase):
             workflow_kwargs = task_.get("workflow_kwargs")
 
         if result:
-            res = result.get("result")
+            result_ = result.get("result")
         if not result:
-            res = []
+            result_ = []
             result = {"result": []}
         if not workflow_args:
             workflow_args = []
         if not workflow_kwargs:
             workflow_kwargs = []
 
-        r_ = fn(self.ctx, res, *args, **kwargs)
+        r_ = fn(self.ctx, result_, *args, **kwargs)
         result["result"].append(r_)
         self.ctx["result"] = result.get("result")
 
         return {"result": result.get("result")}
 
-    def run_task(self, task_, shared=None): 
+    def run_task(self, task_, shared=None):
 
         task_ = self.get_tasks(task_, shared)
         log_ = task_.get("log")
