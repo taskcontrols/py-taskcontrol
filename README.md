@@ -184,8 +184,8 @@ def tasktwo(ctx, result, a, b):
 
 
 # Multiple Workflow Tasks run
-r_1 = t.run(tasks=["taskname", "tasktwo"])
-print("r_1", r_1)
+run_1 = t.run(tasks=["taskname", "tasktwo"])
+print("run_1", run_1)
 
 
 # TODO: Run Tasks run with mix of shared
@@ -194,8 +194,8 @@ print("r_1", r_1)
 
 
 # Single Workflow Tasks run
-r_2 = t.run(tasks="taskname")
-print("r_2", r_2)
+run_2 = t.run(tasks="taskname")
+print("run_2", run_2)
 
 
 # TODO: Run Tasks run with shared task
