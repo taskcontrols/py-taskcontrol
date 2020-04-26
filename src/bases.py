@@ -261,9 +261,8 @@ class WorkflowBase(SharedBase, MiddlewareBase):
         #     )
 
         #     return result_before_middleware, result, result_after_middleware
-        # print("task_ 1",task_)
+
         task_ = self.get_tasks(task_, shared)
-        # print("task_2", task_)
         log_ = task_.get("log")
 
         if isinstance(task_.get("before"), dict):
@@ -278,10 +277,7 @@ class WorkflowBase(SharedBase, MiddlewareBase):
         fn_task["workflow_args"] = task_.get("workflow_args")
         fn_task["workflow_kwargs"] = task_.get("workflow_kwargs")
 
-        # print("fn_task",fn_task)
-
         after = task_.get("after")
-
         tasks_to_run_in_task_ = [None, *before, fn_task, *after]
 
         import functools
