@@ -5,7 +5,7 @@ class SharedBase():
 
     tasks = {"taskname": {}}
     plugins = {"pluginname": {"taskname": {}}}
-    ctx = {}
+    ctx = {"result": []}
 
     __instance = None
 
