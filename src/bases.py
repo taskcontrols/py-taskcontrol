@@ -224,7 +224,7 @@ class WorkflowBase(SharedBase, MiddlewareBase):
 
         return {"result": result.get("result")}
 
-    def run_task(self, task_, shared=None):
+    def run_task(self, task_, shared=None): 
 
         task_ = self.get_tasks(task_, shared)
         log_ = task_.get("log")
