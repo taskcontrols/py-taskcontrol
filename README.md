@@ -32,6 +32,7 @@ It also provides methods to create a plugin and work with tasks as a module and/
 * Allows creating isolated instance based tasks (use shared keyword argument as False)
 * Allows creating and merging two instances of task controls with namespace clash handling
 * Allows creating shared/common task controls (use shared keyword argument as True)
+* Allows running instance, shared, or mixed tasks for each set of tasks run
 <!-- * In-Development: Allows creating, registering, and using a set of task controls as a plugin -->
 
 
