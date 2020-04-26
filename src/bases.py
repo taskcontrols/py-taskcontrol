@@ -28,79 +28,80 @@ class SharedBase():
 
 
 class MiddlewareBase():
+    pass
 
-    def __get_args(self, f, action, log_):
-        if action and isinstance(action, dict):
-            args, kwargs, err_obj = [], {}, {}
-            if isinstance(action.get("args"), list):
-                args = action.get("args")
-            if isinstance(action.get("kwargs"), dict):
-                kwargs = action.get("kwargs")
-            if isinstance(action.get("options"), dict):
-                err_obj = action.get("options")
-        # TODO: Do clean args here
-        return err_obj, args, kwargs
+    # def __get_args(self, f, action, log_):
+    #     if action and isinstance(action, dict):
+    #         args, kwargs, err_obj = [], {}, {}
+    #         if isinstance(action.get("args"), list):
+    #             args = action.get("args")
+    #         if isinstance(action.get("kwargs"), dict):
+    #             kwargs = action.get("kwargs")
+    #         if isinstance(action.get("options"), dict):
+    #             err_obj = action.get("options")
+    #     # TODO: Do clean args here
+    #     return err_obj, args, kwargs
 
-    def run_middleware(self, middleware, error_object, log_, *args, **kwargs):
-        try:
-            if log_:
-                print("Workflow running middleware function: ",
-                      middleware.__name__)
-            return None, middleware(*args, **kwargs)
-        except Exception as e:
-            if log_:
-                print("Running error for middleware")
-            if not hasattr(error_object, "error"):
-                error_object["error"] = "exit"
+    # def run_middleware(self, middleware, error_object, log_, *args, **kwargs):
+    #     try:
+    #         if log_:
+    #             print("Workflow running middleware function: ",
+    #                   middleware.__name__)
+    #         return None, middleware(*args, **kwargs)
+    #     except Exception as e:
+    #         if log_:
+    #             print("Running error for middleware")
+    #         if not hasattr(error_object, "error"):
+    #             error_object["error"] = "exit"
 
-            e_enum = error_object.get("error")
-            e_next_value = error_object.get("error_next_value")
-            e_return = {"error": e, "next": e_next_value}
+    #         e_enum = error_object.get("error")
+    #         e_next_value = error_object.get("error_next_value")
+    #         e_return = {"error": e, "next": e_next_value}
 
-            if e_enum == "next":
-                return e_return
-            elif e_enum == "error_handler":
-                if not hasattr(error_object, "error_handler"):
-                    return e_return
-                return {"error": e, "next": error_object.get("error_handler")(e, e_next_value)}
-            elif e_enum == "exit":
-                raise Exception("error_obj['error'] exit: Error during middleware: ",
-                                middleware.__name__, str(e))
-            else:
-                raise Exception(
-                    "Error during middleware: flow[options[error]] value error")
+    #         if e_enum == "next":
+    #             return e_return
+    #         elif e_enum == "error_handler":
+    #             if not hasattr(error_object, "error_handler"):
+    #                 return e_return
+    #             return {"error": e, "next": error_object.get("error_handler")(e, e_next_value)}
+    #         elif e_enum == "exit":
+    #             raise Exception("error_obj['error'] exit: Error during middleware: ",
+    #                             middleware.__name__, str(e))
+    #         else:
+    #             raise Exception(
+    #                 "Error during middleware: flow[options[error]] value error")
 
-    def run_middlewares(self, middlewares=None, log_=False):
-        result = []
+    # def run_middlewares(self, middlewares=None, log_=False):
+    #     result = []
 
-        if isinstance(middlewares, list):
-            for action in middlewares:
-                middleware = action.get("function")
-                err_obj, a, kwa = self.__get_args(middleware, action, log_)
-                if len(result) > 0:
-                    result.append(self.run_middleware(
-                        middleware, err_obj, log_, *a, **kwa,
-                        error=result[-1].get("error"), fn_result=result[-1].get("fn_result")
-                    ))
-                else:
-                    result.append(self.run_middleware(
-                        middleware, err_obj, log_, *a, **kwa, error=None, fn_result=None
-                    ))
-        elif isinstance(middlewares, dict):
-            err_obj, a, kwa = self.__get_args(
-                middlewares.get("function"), middlewares, log_
-            )
-            result.append(self.run_middleware(
-                middlewares.get("function"), err_obj, log_, *a, **kwa, error=None, fn_result=None
-            ))
+    #     if isinstance(middlewares, list):
+    #         for action in middlewares:
+    #             middleware = action.get("function")
+    #             err_obj, a, kwa = self.__get_args(middleware, action, log_)
+    #             if len(result) > 0:
+    #                 result.append(self.run_middleware(
+    #                     middleware, err_obj, log_, *a, **kwa,
+    #                     error=result[-1].get("error"), fn_result=result[-1].get("fn_result")
+    #                 ))
+    #             else:
+    #                 result.append(self.run_middleware(
+    #                     middleware, err_obj, log_, *a, **kwa, error=None, fn_result=None
+    #                 ))
+    #     elif isinstance(middlewares, dict):
+    #         err_obj, a, kwa = self.__get_args(
+    #             middlewares.get("function"), middlewares, log_
+    #         )
+    #         result.append(self.run_middleware(
+    #             middlewares.get("function"), err_obj, log_, *a, **kwa, error=None, fn_result=None
+    #         ))
 
-        return result
+    #     return result
 
-    def init_middlewares(self, task_, md_action=None, log_=False):
-        actions = task_.get("workflow_kwargs").get(md_action)
-        log_ = task_.get("workflow_kwargs").get("log")
-        result = self.run_middlewares(actions, log_)
-        return result
+    # def init_middlewares(self, task_, md_action=None, log_=False):
+    #     actions = task_.get(md_action)
+    #     log_ = task_.get(task_.get("name")).get("workflow_kwargs").get("log")
+    #     result = self.run_middlewares(actions, log_)
+    #     return result
 
 
 class WorkflowBase(SharedBase, MiddlewareBase):
@@ -165,8 +166,20 @@ class WorkflowBase(SharedBase, MiddlewareBase):
             if not isinstance(self.tasks[workflow_name], dict):
                 self.tasks.update({workflow_name: {}})
 
+        if not self.ctx.get(workflow_kwargs.get("name")):
+            self.ctx[workflow_kwargs.get("name")] = {}
+
+        self.ctx[workflow_kwargs.get(
+            "name")]["log"] = workflow_kwargs.get("log")
+        self.ctx[workflow_kwargs.get("name")]["workflow_args"] = workflow_args
+        self.ctx[workflow_kwargs.get(
+            "name")]["workflow_kwargs"] = workflow_kwargs
+
         self.tasks[workflow_name].update({
+            # task run not configured for ordered run
             "task_order": workflow_kwargs.get("task_order"),
+            # workflow args are getting duplicated
+            # consider saving it in ctx
             "workflow_args": workflow_args, "workflow_kwargs": workflow_kwargs,
             "function_args": function_args, "function_kwargs": function_kwargs,
             "before": workflow_kwargs.get("before"),
@@ -181,9 +194,17 @@ class WorkflowBase(SharedBase, MiddlewareBase):
     def update_task(self, task_):
 
         # task_obj = self.create_task(task_)
+        self.ctx[task_.get("name")]["log"] = self.get_attr(task_, "log")
+        self.ctx[task_.get("name")]["workflow_args"] = self.get_attr(
+            task_, "workflow_args")
+        self.ctx[task_.get("name")]["workflow_kwargs"] = self.get_attr(
+            task_, "workflow_kwargs")
 
         task_obj = {
+            # task run not configured for ordered run
             "task_order": self.get_attr(task_, "task_order"),
+            # workflow args are getting duplicated
+            # consider saving it in ctx
             "workflow_args": self.get_attr(task_, "workflow_args"),
             "workflow_kwargs": self.get_attr(task_, "workflow_kwargs"),
             "function_args": self.get_attr(task_, "function_args"),
@@ -207,6 +228,8 @@ class WorkflowBase(SharedBase, MiddlewareBase):
             kwargs = task_.get("kwargs")
             workflow_args = task_.get("workflow_args")
             workflow_kwargs = task_.get("workflow_kwargs")
+            log_ = task_.get("log")
+            error_object = task_.get("options")
 
         if result:
             result_ = result.get("result")
@@ -218,7 +241,31 @@ class WorkflowBase(SharedBase, MiddlewareBase):
         if not workflow_kwargs:
             workflow_kwargs = []
 
-        r_ = fn(self.ctx, result_, *args, **kwargs)
+        try:
+            r_ = fn(self.ctx, result_, *args, **kwargs)
+        except Exception as e:
+            if log_:
+                print("Running error for middleware")
+            if not hasattr(error_object, "error"):
+                error_object["error"] = "exit"
+
+            e_enum = error_object.get("error")
+            e_next_value = error_object.get("error_next_value")
+            e_return = {"error": e, "next": e_next_value}
+
+            if e_enum == "next":
+                return e_return
+            elif e_enum == "error_handler":
+                if not hasattr(error_object, "error_handler"):
+                    return e_return
+                return {"error": e, "next": error_object.get("error_handler")(e, e_next_value)}
+            elif e_enum == "exit":
+                raise Exception("error_obj['error'] exit: Error during middleware: ",
+                                fn.__name__, str(e))
+            else:
+                raise Exception(
+                    "Error during middleware: flow[options[error]] value error")
+
         result["result"].append(r_)
         self.ctx["result"] = result.get("result")
 
@@ -231,17 +278,32 @@ class WorkflowBase(SharedBase, MiddlewareBase):
 
         if isinstance(task_.get("before"), dict):
             before = [task_.get("before")]
-        else:
+        elif isinstance(task_.get("before"), list):
             before = task_.get("before")
+        else:
+            raise Exception("Error: run_task: Definition of before")
+
+        for b in before:
+            b["name"] = task_.get("name")
 
         fn_task = {}
+        fn_task["name"] = task_.get("name")
         fn_task["function"] = task_.get("function")
         fn_task["args"] = task_.get("workflow_kwargs").get("args")
         fn_task["kwargs"] = task_.get("workflow_kwargs").get("kwargs")
         fn_task["workflow_args"] = task_.get("workflow_args")
         fn_task["workflow_kwargs"] = task_.get("workflow_kwargs")
 
-        after = task_.get("after")
+        if isinstance(task_.get("after"), dict):
+            after = [task_.get("after")]
+        elif isinstance(task_.get("after"), list):
+            after = task_.get("after")
+        else:
+            raise Exception("Error: run_task: Definition of after")
+
+        for a in after:
+            a["name"] = task_.get("name")
+
         tasks_to_run_in_task_ = [None, *before, fn_task, *after]
 
         import functools
