@@ -1,6 +1,7 @@
 # taskcontrol
     Create named shared / isolated workflow task controls, and run them with respective before/after middlewares
 
+
 taskcontrol is a python library to create tasks in and based on named workflow controls. It allows middlewares before and after each task. taskcontrol can run single or multiple tasks at a task run invocation.
   
 It provides a simple decorator called `workflow` that takes the name, task_instance, task_order, shared, before, after arguments to set up the named workflow controls.
@@ -8,21 +9,27 @@ It provides a simple decorator called `workflow` that takes the name, task_insta
 It also provides methods to create a plugin and work with tasks as a module and/or pre-created ordered task list.
 
 
+
 # Installation
+
 
 ##### Command:
 
     pip3 install taskcontrol
+
 
 ##### Version:
 
     In Development: 1.2.0 (functional - production ready with most planned features with MVP)
     Current Version: 1.1.0 (functional - not production ready)
 
+
 ##### Package Link:
     
     https://github.com/apprepute/taskcontrol
     https://pypi.org/project/taskcontrol/
+
+
 
 # Features
 
@@ -39,16 +46,21 @@ It also provides methods to create a plugin and work with tasks as a module and/
 
 <!-- # Feature Details -->
 
+
+
 # Technical Specifications
+
 
 ##### Requirements:
 
 * Python 3.x
 * Any OS supporting Python 3.x
 
+
 ##### Package Dependencies:
 
 * None
+
 
 ##### Quick Demo:
 
@@ -209,12 +221,14 @@ t.run(tasks="shared:taskname")
 
 ```
 
+
 ##### Note:
 
 Though it may support Python version 2.x. However, it has not been tested in 2.x. The Syntax and Features of the library supports Python version 2.x. Use at your own risk.
 
     Minor argument order change from 1.1.0 version
     ctx, and result is compulsary argument which are magically provided
+
 
 
 # Wiki
@@ -240,8 +254,10 @@ Though it may support Python version 2.x. However, it has not been tested in 2.x
     Describes creating a instance (isolated task) and an shared task (available to all instances)
 
 
+
 ##### Crazy Hint:
 You can also create a simple workflow without taskcontrol using a simple list or nested list and loop through them using a for/while loop and invoke them during looping
+
 
 
 ```python
