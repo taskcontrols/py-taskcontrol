@@ -14,9 +14,13 @@ It also provides methods to create a plugin and work with tasks as a module and/
 
     pip3 install taskcontrol
 
+##### Version:
+
+    1.1.0 (functional - not production ready)
+
 ##### Package Link:
     
-    https://github.com/ganeshkbhat/taskcontrol
+    https://github.com/apprepute/taskcontrol
     https://pypi.org/project/taskcontrol/
 
 # Features
