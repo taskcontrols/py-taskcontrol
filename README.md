@@ -134,7 +134,8 @@ functools.reduce(red, ls)
 
 
 * e2e and Unit Tests - Add Tests (Structure of package created - to be cleaned after writing tests)
-* Allows creating and registering a set of task controls as a plugin
+* Allow creating and registering a set of task controls as a plugin
+* Add logging system
 
 
 # Status
