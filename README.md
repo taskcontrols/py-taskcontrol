@@ -227,7 +227,7 @@ Though it may support Python version 2.x. However, it has not been tested in 2.x
 
 * [taskcontrol `workflow` before / after argument declaration](./docs/workflow-middlewares.md)
 
-* [taskcontrol `workflow` instance and shared tasks argument](./docs/instance-shared-tasks.md)
+* [taskcontrol `workflow` instance and shared tasks argument](./docs/workflow-instance-shared-tasks.md)
 
 
 ##### Crazy Hint:
