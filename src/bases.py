@@ -106,15 +106,6 @@ class WorkflowBase(SharedBase):
         print("Workflow task name to add: ", workflow_name)
         shared = workflow_kwargs.get("shared")
 
-        # if not self.ctx.get(workflow_kwargs.get("name")):
-        #     self.ctx[workflow_kwargs.get("name")] = {}
-
-        # self.ctx[workflow_kwargs.get(
-        #     "name")]["log"] = workflow_kwargs.get("log")
-        # self.ctx[workflow_kwargs.get("name")]["workflow_args"] = workflow_args
-        # self.ctx[workflow_kwargs.get(
-        #     "name")]["workflow_kwargs"] = workflow_kwargs
-
         if shared == True:
             if workflow_name not in self.shared_tasks.tasks.keys():
                 self.shared_tasks.tasks[workflow_name] = {}
