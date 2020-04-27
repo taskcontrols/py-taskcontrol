@@ -62,6 +62,56 @@ It also provides methods to create a plugin and work with tasks as a module and/
 ```python
 
 
+from taskcontrol import workflow, Tasks
+
+inst = Tasks()
+
+def middleware(ctx, result, k, c, d, **kwargs):
+    print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+
+
+@workflow(
+    name="taskname",
+    task_order=1,
+    task_instance=inst,
+    shared=False,
+    args=[1, 2],
+    kwargs={},
+    before=[
+        {
+            "function": middleware,
+            "args": [11, 12],
+            "kwargs": {"d": "Before Testing message Middleware "},
+            "options": {"error": "next", "error_next_value": ""}
+        }
+    ],
+    after=[
+        {
+            "function": test,
+            "args": [13, 14],
+            "kwargs": {"d": "After Middleware Testing message"},
+            "options": {
+                "error": "error_handler",
+                "error_next_value": "value",
+                "error_handler": lambda err, value: (err, None)
+            }
+        }
+    ],
+    log=False
+)
+def taskone(ctx, result, a, b):
+    print("Running my task function: taskone", a, b)
+
+
+# Run single task
+t.run(tasks="taskname")
+
+
+# Run all tasks
+t.run(tasks=["1"])
+# t.run(tasks=["taskname", ..., "anothertask"])
+
+
 
 ```
 
