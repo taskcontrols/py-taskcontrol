@@ -248,8 +248,13 @@ functools.reduce(red, ls)
 
 # Todo
 
-* In-Development: e2e and Unit Tests - Add Tests
-* In-Development: Allows creating and registering a set of task controls as a plugin
+* e2e and Unit Tests - Add Tests (Structure of package created - to be cleaned after writing tests)
+* Allows creating and registering a set of task controls as a plugin
+
+
+# Status
+
+* In Development
 
 
 # License
