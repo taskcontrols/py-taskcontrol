@@ -221,13 +221,13 @@ Though it may support Python version 2.x. However, it has not been tested in 2.x
 
 * [Getting started](./docs/getting-started.md)
 
-* taskcontrol `workflow` decorator
+* [taskcontrol `workflow` decorator](./docs/workflow.md)
 
-* taskcontrol `workflow` decorator argument details
+* [taskcontrol `workflow` decorator argument details](./docs/workflow-arguments.md)
 
-* taskcontrol `workflow` before / after argument declaration
+* [taskcontrol `workflow` before / after argument declaration](./docs/workflow-middlewares.md)
 
-* taskcontrol `workflow` instance and shared tasks argument
+* [taskcontrol `workflow` instance and shared tasks argument](./docs/instance-shared-tasks.md)
 
 
 ##### Crazy Hint:
