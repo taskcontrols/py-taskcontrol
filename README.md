@@ -219,7 +219,7 @@ Though it may support Python version 2.x. However, it has not been tested in 2.x
 
 # Wiki
 
-* [Getting started](:doc:/getting-started.md)
+* [Getting started](../getting-started.md)
 
 * taskcontrol `workflow` decorator
 
