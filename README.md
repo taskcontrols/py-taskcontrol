@@ -208,7 +208,8 @@ t.run(tasks="shared:taskname")
 
 Though it may support Python version 2.x. However, it has not been tested in 2.x. The Syntax and Features of the library supports Python version 2.x. Use at your own risk.
 
-    Minor argument order change from 1.1.0 version. ctx, and result is compulsary argument which are magically provided
+    Minor argument order change from 1.1.0 version
+    ctx, and result is compulsary argument which are magically provided
 
 <!-- 
 # Wiki
