@@ -119,9 +119,6 @@ t.run(tasks=["1"])
 
 Though it may support Python version 2.x. However, it has not been tested in 2.x. The Syntax and Features of the library supports Python version 2.x. Use at your own risk.
 
-    Minor argument order change from 1.1.0 version
-    ctx, and result is compulsary argument which are magically provided
-
 
 
 # Wiki
@@ -186,6 +183,7 @@ functools.reduce(red, ls)
 * e2e and Unit Tests - Add Tests (Structure of package created - to be cleaned after writing tests)
 * Allow creating and registering a set of task controls as a plugin
 * Add logging system
+
 
 
 # Status
