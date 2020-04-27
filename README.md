@@ -216,13 +216,23 @@ Though it may support Python version 2.x. However, it has not been tested in 2.x
     Minor argument order change from 1.1.0 version
     ctx, and result is compulsary argument which are magically provided
 
-<!-- 
+
 # Wiki
- -->
+
+* [Getting started](:doc:/getting-started.md)
+
+* taskcontrol `workflow` decorator
+
+* taskcontrol `workflow` decorator argument details
+
+* taskcontrol `workflow` before / after argument declaration
+
+* taskcontrol `workflow` instance and shared tasks argument
 
 
 ##### Crazy Hint:
 You can also create a simple workflow without taskcontrol using a simple list or nested list and loop through them using a for/while loop and invoke them during looping
+
 
 ```python
 
