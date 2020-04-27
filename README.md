@@ -33,6 +33,7 @@ It also provides methods to create a plugin and work with tasks as a module and/
 <!-- * In-Development: Allows  -->
 
 <!-- # Feature Details -->
+
 # Technical Specifications
 
 ##### Requirements:
@@ -70,7 +71,7 @@ def test(ctx, result, k, c, d, **kwargs):
     name="taskname",
     task_order=1,
     task_instance=t,
-    shared=True,
+    shared=False,
     args=[1, 2],
     kwargs={},
     before=[
@@ -169,34 +170,35 @@ def tasktwo(ctx, result, a, b):
 
 # TODO: Run all tasks
 # Multiple Workflow Tasks run
-# t.run(tasks=["1"])
-# t.run(tasks="1")
+t.run(tasks=["1"])
+t.run(tasks="1")
 
 
 # TODO: Run all shared tasks
 # Shared Workflow Tasks run
-# t.run(tasks=["shared:1"])
-# t.run(tasks="shared:1")
+t.run(tasks=["shared:1"])
+t.run(tasks="shared:1")
 
 
 # Multiple Workflow Tasks run
-run_1 = t.run(tasks=["taskname", "tasktwo"])
+run_1 = t.run(tasks=["shared:taskname", "tasktwo"])
+# print("t.ctx ",t.ctx)
 print("run_1", run_1)
 
 
 # TODO: Run Tasks run with mix of shared
 # Multiple Workflow Tasks run with mix of shared
-# t.run(tasks=["taskname", "tasktwo", "shared:taskname"])
+t.run(tasks=["taskname", "tasktwo", "shared:taskname"])
 
 
 # Single Workflow Tasks run
-run_2 = t.run(tasks="taskname")
+run_2 = t.run(tasks="shared:taskname")
 print("run_2", run_2)
 
 
 # TODO: Run Tasks run with shared task
 # Single Workflow Tasks run for shared task
-# t.run(tasks="shared:taskname")
+t.run(tasks="shared:taskname")
 
 
 
@@ -211,6 +213,7 @@ Though it may support Python version 2.x. However, it has not been tested in 2.x
 <!-- 
 # Wiki
  -->
+
 
 ##### Crazy Hint:
 You can also create a simple workflow without taskcontrol using a simple list or nested list and loop through them using a for/while loop and invoke them during looping
@@ -244,11 +247,9 @@ functools.reduce(red, ls)
 
 # Todo
 
-<!-- * Add Tests -->
-* Run all isolated or shared tasks 
+* e2e and Unit Tests: Add Tests
 * In-Development: Allows creating and registering a set of task controls as a plugin
 
- 
 
 # License
 
@@ -258,5 +259,4 @@ The MIT License (MIT) - See [LICENSE](./LICENSE) for further details
 
 Copyright © 2020 - till library works:
     Ganesh B <ganeshsurfs@gmail.com>
-
 

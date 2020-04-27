@@ -114,7 +114,6 @@ class TestFunctions():
     def test_function_doesnot_invoke_with_arguments(self):
         pass
 
-
     def test_function_invocation_returns(self):
         pass
 
@@ -123,7 +122,6 @@ class TestFunctions():
 
     def test_function_invocation_error_returns(self):
         pass
-
 
     def test_function_doesnot_invoke_error_returns(self):
         pass
