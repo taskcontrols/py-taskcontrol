@@ -26,6 +26,8 @@ It also provides methods to create a plugin and work with tasks as a module and/
 
 ##### Command:
 
+####### Python
+
     pip3 install taskcontrol
 
 
