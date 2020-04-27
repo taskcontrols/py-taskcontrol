@@ -21,20 +21,16 @@ It also provides methods to create a plugin and work with tasks as a module and/
 
 # Features
 
-* Create task controls (tasks)
-* Named workflow tasks
-* Single or multiple tasks
-* Workflow decorator with simple options to setup workflow
+* Create Named task controls (tasks) using a Workflow decorator with simple options to setup workflow
 * Allows middlewares before each task (data fetch, auth, etc)
 * Allows middlewares after each task (data save, logging, logout, cleanup, etc)
-* Allows context for each set of tasks run accessible by any function
-* Allows returns/results of runs accessible by each task or their middlewares
-* Allows creating isolated instance based tasks (use shared keyword argument as False)
+* Allows context (currently read-only) for each set of tasks run accessible by any function
+* Allows accessing returns/results of runs by each task or their middlewares
+* Allows creating isolated instance tasks or common/shared tasks based on shared keyword argument
 * Allows creating and merging two instances of task controls with namespace clash handling
-* Allows creating shared/common task controls (use shared keyword argument as True)
-* Allows running instance, shared, or mixed tasks for each set of tasks run
+* Allows running single or multiple isolated, shared, or mixed tasks for each set of tasks run
 <!-- * In-Development: Allows creating, registering, and using a set of task controls as a plugin -->
-
+<!-- * In-Development: Allows  -->
 
 <!-- # Feature Details -->
 # Technical Specifications

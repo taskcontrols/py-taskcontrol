@@ -26,14 +26,15 @@ class Tasks(WorkflowBase):
         # add this to context (shared/local check design)
         result = []
 
+        if isinstance(tasks, str) or type(tasks) == int:
+            tasks = self.parse_tasks(tasks)
+
         if isinstance(tasks, str):
             # Iterate task through single task
             result.append(self.run_task(self.get_tasks(tasks)))
-
         elif isinstance(tasks, list):
             # Iterate task through tasks
             # reduce is a better and easier way. Compare looping ways
-
             for task_ in tasks:
                 result.append(self.run_task(self.get_tasks(task_)))
         else:

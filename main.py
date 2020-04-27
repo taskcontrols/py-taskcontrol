@@ -19,7 +19,7 @@ def test(ctx, result, k, c, d, **kwargs):
     name="taskname",
     task_order=1,
     task_instance=t,
-    shared=True,
+    shared=False,
     args=[1, 2],
     kwargs={},
     before=[
@@ -125,7 +125,7 @@ def tasktwo(ctx, result, a, b):
 # TODO: Run all shared tasks
 # Shared Workflow Tasks run
 # t.run(tasks=["shared:1"])
-t.run(tasks="shared:1")
+# t.run(tasks="shared:1")
 
 
 # Multiple Workflow Tasks run

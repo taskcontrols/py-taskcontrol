@@ -78,6 +78,16 @@ class WorkflowBase(SharedBase):
                 )
         return task_.get(attr)
 
+    def parse_tasks(self, task_):
+        if task_ == "1" or task_ == 1:
+            return list(self.tasks.keys())
+        if task_ == "shared:1":
+            s_tasks = self.shared_tasks.tasks.keys()
+            return ["shared:"+i for i in list(s_tasks)]
+        if task_ == 1 and type(task_) == int:
+            return list(self.tasks.keys())
+        return task_
+
     def get_tasks(self, task_=None):
         shared = False
         if isinstance(task_, str):
@@ -96,14 +106,14 @@ class WorkflowBase(SharedBase):
         print("Workflow task name to add: ", workflow_name)
         shared = workflow_kwargs.get("shared")
 
-        if not self.ctx.get(workflow_kwargs.get("name")):
-            self.ctx[workflow_kwargs.get("name")] = {}
+        # if not self.ctx.get(workflow_kwargs.get("name")):
+        #     self.ctx[workflow_kwargs.get("name")] = {}
 
-        self.ctx[workflow_kwargs.get(
-            "name")]["log"] = workflow_kwargs.get("log")
-        self.ctx[workflow_kwargs.get("name")]["workflow_args"] = workflow_args
-        self.ctx[workflow_kwargs.get(
-            "name")]["workflow_kwargs"] = workflow_kwargs
+        # self.ctx[workflow_kwargs.get(
+        #     "name")]["log"] = workflow_kwargs.get("log")
+        # self.ctx[workflow_kwargs.get("name")]["workflow_args"] = workflow_args
+        # self.ctx[workflow_kwargs.get(
+        #     "name")]["workflow_kwargs"] = workflow_kwargs
 
         if shared == True:
             if workflow_name not in self.shared_tasks.tasks.keys():
@@ -218,14 +228,21 @@ class WorkflowBase(SharedBase):
         return {"result": result.get("result")}
 
     def run_task(self, task_):
-        log_ = task_.get("log")
+        if task_ == None:
+            return
+        if len(task_.keys()) == 0:
+            return
 
+        log_ = task_.get("log")
         t_before = task_.get("before")
 
+        if t_before == None:
+            t_before = []
+
         if isinstance(t_before, dict):
-            before = [task_.get("before")]
+            before = [t_before]
         elif isinstance(t_before, list):
-            before = task_.get("before")
+            before = t_before
         else:
             raise Exception("Error: run_task: Definition of before")
 
@@ -242,10 +259,13 @@ class WorkflowBase(SharedBase):
 
         t_after = task_.get("after")
 
+        if t_after == None:
+            t_after = []
+
         if isinstance(t_after, dict):
-            after = [task_.get("after")]
+            after = [t_after]
         elif isinstance(t_after, list):
-            after = task_.get("after")
+            after = t_after
         else:
             raise Exception("Error: run_task: Definition of after")
 
