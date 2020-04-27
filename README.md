@@ -135,7 +135,7 @@ Though it may support Python version 2.x. However, it has not been tested in 2.x
     
     Describes in detail the arguments of workflow decorator
 
-* [taskcontrol `workflow` before / after argument declaration](./docs/workflow-middlewares.md)
+* [taskcontrol `workflow` before / after argument for middleware declaration](./docs/workflow-middlewares.md)
     
     Describes creating, defining, and running middlewares
 
