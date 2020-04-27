@@ -197,7 +197,7 @@ functools.reduce(red, ls)
 The MIT License (MIT) - See [LICENSE](./LICENSE) for further details
 
 
-Copyright © 2020 - till library works:
+Copyright © 2020 - till library works
 
 Ganesh B <ganeshsurfs@gmail.com>
 
