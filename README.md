@@ -220,18 +220,23 @@ Though it may support Python version 2.x. However, it has not been tested in 2.x
 # Wiki
 
 * [Getting started](./docs/getting-started.md)
+    
     Describes in short the usage of the package
 
 * [taskcontrol `workflow` decorator](./docs/workflow.md)
+    
     Describes how to use the taskcontrol workflow decorator in detail
 
 * [taskcontrol `workflow` decorator argument details](./docs/workflow-arguments.md)
+    
     Describes in detail the arguments of workflow decorator
 
 * [taskcontrol `workflow` before / after argument declaration](./docs/workflow-middlewares.md)
+    
     Describes creating, defining, and running middlewares
 
 * [taskcontrol `workflow` instance and shared tasks argument](./docs/workflow-instance-shared-tasks.md)
+    
     Describes creating a instance (isolated task) and an shared task (available to all instances)
 
 
