@@ -9,7 +9,6 @@ It provides a simple decorator called `workflow` that takes the name, task_insta
 It also provides methods to create a plugin and work with tasks as a module and/or pre-created ordered task list.
 
 
-
 # Features
 
 * Create Named task controls (tasks) - instance and isolated
@@ -18,7 +17,6 @@ It also provides methods to create a plugin and work with tasks as a module and/
 * Allows Merging two instances of task controls with namespace clash handling
 * Run instance, shared, and mix of tasks (individual or all groups)
 * In-Development: Allows creating, registering, and using task controls as a plugin
-
 
 
 # Installation
@@ -41,7 +39,6 @@ It also provides methods to create a plugin and work with tasks as a module and/
     
     https://github.com/taskcontrols/py-taskcontrol
     https://pypi.org/project/taskcontrol/
-
 
 
 # Technical Specifications
@@ -148,10 +145,8 @@ Though it may support Python version 2.x. However, it has not been tested in 2.x
     Describes creating a instance (isolated task) and an shared task (available to all instances)
 
 
-
 ##### Crazy Hint:
 You can also create a simple workflow without taskcontrol using a simple list or nested list and loop through them using a for/while loop and invoke them during looping
-
 
 
 ```python
@@ -187,7 +182,6 @@ functools.reduce(red, ls)
 * e2e and Unit Tests - Add Tests (Structure of package created - to be cleaned after writing tests)
 * Allow creating and registering a set of task controls as a plugin
 * Add logging system
-
 
 
 # Status
