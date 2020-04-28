@@ -44,7 +44,6 @@ It also provides methods to create a plugin and work with tasks as a module and/
 
 
 
-
 # Technical Specifications
 
 
