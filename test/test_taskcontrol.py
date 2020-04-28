@@ -7,10 +7,33 @@ from src.workflow import workflow, Tasks
 # decorator creates tasks only on function invocation
 # decorator creates instance tasks
 # decorator creates shared tasks
+
+
 class TestDecorator():
 
+    def __init__(self):
+        self.t = Tasks()
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+        self.middleware = middleware
+
     def test_creates_task(self):
-        pass
+
+        @workflow(
+            name="taskname", task_order=1, task_instance=self.t,
+            shared=False, args=[1, 2], kwargs={}, log=False,
+            before=[{
+                "function": self.middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                    "options": {"error": "next", "error_next_value": ""}
+                    }],
+            after=[{
+                "function": self.middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+            }])
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = self.t.run(tasks="taskname")
 
     def test_doesnot_creates_task(self):
         pass
@@ -199,4 +222,3 @@ class TestTaskResultReturns():
 
     def test_task_doesnot_return_correct_numbers(self):
         pass
-

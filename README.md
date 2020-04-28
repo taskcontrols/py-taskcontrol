@@ -59,6 +59,7 @@ It also provides methods to create a plugin and work with tasks as a module and/
 
 [demo example - main.py](./main.py)
 
+
 ```python
 
 
@@ -115,6 +116,7 @@ t.run(tasks=["1"])
 
 
 ```
+
 
 ##### Note:
 
@@ -189,13 +191,19 @@ functools.reduce(red, ls)
 * In Development
 
 
-# License
+# Support
 
+[Paypal.me/taskcontrols](https://paypal.me/taskcontrols)
+[OpenCollective](https://opencollective.com/taskcontrol)
+
+
+# License
 
 The MIT License (MIT) - See [LICENSE](./LICENSE) for further details
 
 
 Copyright © 2020 - till library works
 
-Ganesh B <ganeshsurfs@gmail.com>
+taskcontrols@gmail.com
+
 
