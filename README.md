@@ -194,6 +194,7 @@ functools.reduce(red, ls)
 # Support
 
 [Paypal.me/taskcontrols](https://paypal.me/taskcontrols)
+
 [OpenCollective](https://opencollective.com/taskcontrol)
 
 
