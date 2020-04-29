@@ -11,34 +11,429 @@ from src.workflow import workflow, Tasks
 
 class TestDecorator():
 
-    def __init__(self):
-        self.t = Tasks()
+    def test_creates_task_before_as_list(self):
+        t = Tasks()
+
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-        self.middleware = middleware
-
-    def test_creates_task(self):
 
         @workflow(
-            name="taskname", task_order=1, task_instance=self.t,
+            name="taskname", task_order=1, task_instance=t,
             shared=False, args=[1, 2], kwargs={}, log=False,
             before=[{
-                "function": self.middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
                     "options": {"error": "next", "error_next_value": ""}
                     }],
             after=[{
-                "function": self.middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
+                "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
                 "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
 
-        result = self.t.run(tasks="taskname")
+        result = t.run(tasks="taskname")
+        print(result)
 
-    def test_doesnot_creates_task(self):
-        pass
+        assert type(result) == list
+        assert not hasattr(result, "result")
+        assert len(result) > 0
+        assert type(result[0]) == dict
 
-    def test_create_instance_task(self):
+        for i in result:
+            assert type(i) == dict
+            assert len(i) == 1
+            assert len(i.keys()) == 1
+
+            for j in i:
+                assert type(j) == str
+                assert len(i[j]) == 3
+                assert type(i[j]) == list
+
+    def test_creates_task_before_as_dict(self):
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+
+        @workflow(
+            name="taskname", task_order=1, task_instance=t,
+            shared=False, args=[1, 2], kwargs={}, log=False,
+            before={
+                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                "options": {"error": "next", "error_next_value": ""}
+            },
+            after=[{
+                "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+            }])
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
+
+        assert type(result) == list
+        assert not hasattr(result, "result")
+        assert len(result) > 0
+        assert type(result[0]) == dict
+
+        for i in result:
+            assert type(i) == dict
+            assert len(i) == 1
+            assert len(i.keys()) == 1
+
+            for j in i:
+                assert type(j) == str
+                assert len(i[j]) == 3
+                assert type(i[j]) == list
+    
+    def test_creates_task_after_as_list(self):
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+
+        @workflow(
+            name="taskname", task_order=1, task_instance=t,
+            shared=False, args=[1, 2], kwargs={}, log=False,
+            before=[{
+                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                "options": {"error": "next", "error_next_value": ""}
+            }],
+            after=[{
+                "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+            }])
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
+
+        assert type(result) == list
+        assert not hasattr(result, "result")
+        assert len(result) > 0
+        assert type(result[0]) == dict
+
+        for i in result:
+            assert type(i) == dict
+            assert len(i) == 1
+            assert len(i.keys()) == 1
+
+            for j in i:
+                assert type(j) == str
+                assert len(i[j]) == 3
+                assert type(i[j]) == list
+
+    def test_creates_task_after_as_dict(self):
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+
+        @workflow(
+            name="taskname", task_order=1, task_instance=t,
+            shared=False, args=[1, 2], kwargs={}, log=False,
+            before=[{
+                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                "options": {"error": "next", "error_next_value": ""}
+            }],
+            after={
+                "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+            })
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
+
+        assert type(result) == list
+        assert not hasattr(result, "result")
+        assert len(result) > 0
+        assert type(result[0]) == dict
+
+        for i in result:
+            assert type(i) == dict
+            assert len(i) == 1
+            assert len(i.keys()) == 1
+
+            for j in i:
+                assert type(j) == str
+                assert len(i[j]) == 3
+                assert type(i[j]) == list
+
+    def test_creates_task_after_and_before_as_dict(self):
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+
+        @workflow(
+            name="taskname", task_order=1, task_instance=t,
+            shared=False, args=[1, 2], kwargs={}, log=False,
+            before={
+                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                "options": {"error": "next", "error_next_value": ""}
+            },
+            after={
+                "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+            })
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
+
+        assert type(result) == list
+        assert not hasattr(result, "result")
+        assert len(result) > 0
+        assert type(result[0]) == dict
+
+        for i in result:
+            assert type(i) == dict
+            assert len(i) == 1
+            assert len(i.keys()) == 1
+
+            for j in i:
+                assert type(j) == str
+                assert len(i[j]) == 3
+                assert type(i[j]) == list
+
+    def test_creates_task_after_and_before_as_list(self):
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+
+        @workflow(
+            name="taskname", task_order=1, task_instance=t,
+            shared=False, args=[1, 2], kwargs={}, log=False,
+            before=[{
+                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                "options": {"error": "next", "error_next_value": ""}
+            }],
+            after=[{
+                "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+            }])
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
+
+        assert type(result) == list
+        assert not hasattr(result, "result")
+        assert len(result) > 0
+        assert type(result[0]) == dict
+
+        for i in result:
+            assert type(i) == dict
+            assert len(i) == 1
+            assert len(i.keys()) == 1
+
+            for j in i:
+                assert type(j) == str
+                assert len(i[j]) == 3
+                assert type(i[j]) == list
+
+    def test_creates_task_with_before_list_with_right_args(self):
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+
+        @workflow(
+            name="taskname", task_order=1, task_instance=t,
+            shared=False, args=[1, 2], kwargs={}, log=False,
+            before=[{
+                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                "options": {"error": "next", "error_next_value": ""}
+            }],
+            after=[{
+                "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+            }])
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
+
+        assert type(result) == list
+        assert not hasattr(result, "result")
+        assert len(result) > 0
+        assert type(result[0]) == dict
+
+        for i in result:
+            assert type(i) == dict
+            assert len(i) == 1
+            assert len(i.keys()) == 1
+
+            for j in i:
+                assert type(j) == str
+                assert len(i[j]) == 3
+                assert type(i[j]) == list
+
+    def test_creates_task_with_after_list_with_right_args(self):
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+
+        @workflow(
+            name="taskname", task_order=1, task_instance=t,
+            shared=False, args=[1, 2], kwargs={}, log=False,
+            before=[{
+                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                "options": {"error": "next", "error_next_value": ""}
+            }],
+            after=[{
+                "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+            }])
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
+
+        assert type(result) == list
+        assert not hasattr(result, "result")
+        assert len(result) > 0
+        assert type(result[0]) == dict
+
+        for i in result:
+            assert type(i) == dict
+            assert len(i) == 1
+            assert len(i.keys()) == 1
+
+            for j in i:
+                assert type(j) == str
+                assert len(i[j]) == 3
+                assert type(i[j]) == list
+
+    def test_doesnot_creates_task_with_before_list_with_wrong_args_throws_TypeError(self):
+        with pytest.raises(Exception) as e:
+            t = Tasks()
+
+            def middleware(ctx, result, k, c, d, **kwargs):
+                print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+
+            @workflow(
+                name="taskname", task_order=1, task_instance=t,
+                shared=False, args=[1, 2], kwargs={}, log=False,
+                before=[{
+                    "function": middleware, "args": [11], "kwargs": {"d": "Before Testing message Middleware "},
+                    "options": {"error": "next", "error_next_value": ""}
+                }],
+                after=[{
+                    "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
+                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                }])
+            def taskone(ctx, result, a, b):
+                print("Running my task function: taskone", a, b)
+
+            result = t.run(tasks="taskname")
+
+        assert e.type is Exception
+
+    def test_doesnot_creates_task_with_after_list_with_wrong_args_throws_TypeError(self):
+        with pytest.raises(Exception) as e:
+            t = Tasks()
+
+            def middleware(ctx, result, k, c, d, **kwargs):
+                print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+
+            @workflow(
+                name="taskname", task_order=1, task_instance=t,
+                shared=False, args=[1, 2], kwargs={}, log=False,
+                before=[{
+                    "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                    "options": {"error": "next", "error_next_value": ""}
+                }],
+                after=[{
+                    "function": middleware, "args": [13], "kwargs": {"d": "After Middleware Testing message"},
+                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                }])
+            def taskone(ctx, result, a, b):
+                print("Running my task function: taskone", a, b)
+
+            result = t.run(tasks="taskname")
+
+        assert e.type is Exception
+
+    def test_doesnot_creates_task_with__before_and_after_list_with_wrong_args_throws_TypeError(self):
+        with pytest.raises(Exception) as e:
+            t = Tasks()
+
+            def middleware(ctx, result, k, c, d, **kwargs):
+                print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+
+            @workflow(
+                name="taskname", task_order=1, task_instance=t,
+                shared=False, args=[1, 2], kwargs={}, log=False,
+                before=[{
+                    "function": middleware, "args": [12], "kwargs": {"d": "Before Testing message Middleware "},
+                    "options": {"error": "next", "error_next_value": ""}
+                }],
+                after=[{
+                    "function": middleware, "args": [13], "kwargs": {"d": "After Middleware Testing message"},
+                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                }])
+            def taskone(ctx, result, a, b):
+                print("Running my task function: taskone", a, b)
+
+            result = t.run(tasks="taskname")
+
+        assert e.type is Exception
+
+    def test_doesnot_creates_task_with_wrong_print_args_for_task_function_throws_TypeError(self):
+        with pytest.raises(Exception) as e:
+            t = Tasks()
+
+            def middleware(ctx, result, k, c, d, **kwargs):
+                print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+
+            @workflow(
+                name="taskname", task_order=1, task_instance=t,
+                shared=False, args=[1, 2], kwargs={}, log=False,
+                before=[{
+                    "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                    "options": {"error": "next", "error_next_value": ""}
+                }],
+                after=[{
+                    "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
+                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                }])
+            def taskone(ctx, result, a, b):
+                print("Running my task function: taskone", a, c)
+
+            result = t.run(tasks="taskname")
+
+        assert e.type is TypeError
+
+    def test_doesnot_creates_task_with_wrong_def_of_args_for_task_function_throws_TypeError(self):
+        with pytest.raises(Exception) as e:
+            t = Tasks()
+
+            def middleware(ctx, result, k, c, d, **kwargs):
+                print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+
+            @workflow(
+                name="taskname", task_order=1, task_instance=t,
+                shared=False, args=[1, 2], kwargs={}, log=False,
+                before=[{
+                    "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                    "options": {"error": "next", "error_next_value": ""}
+                }],
+                after=[{
+                    "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
+                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                }])
+            def taskone(ctx, result, a):
+                print("Running my task function: taskone", a)
+
+            result = t.run(tasks="taskname")
+
+        assert e.type is TypeError
+
+    def test_creates_instance_task(self):
         pass
 
     def test_doesnot_create_instance_task(self):

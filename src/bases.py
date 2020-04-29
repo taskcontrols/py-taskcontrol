@@ -73,7 +73,7 @@ class WorkflowBase(SharedBase):
             elif task_.get("shared"):
                 task_[attr] = self.shared_tasks.tasks.get(attr)
             else:
-                raise Exception(
+                raise ValueError(
                     "Workflow get_attr: shared value and task_ attribute presence error"
                 )
         return task_.get(attr)
@@ -190,7 +190,7 @@ class WorkflowBase(SharedBase):
 
         try:
             r_ = fn(self.ctx, result_, *args, **kwargs)
-        except Exception as e:
+        except (Exception) as e:
             if log_:
                 print("Running error for middleware")
             if not hasattr(error_object, "error"):
@@ -235,7 +235,7 @@ class WorkflowBase(SharedBase):
         elif isinstance(t_before, list):
             before = t_before
         else:
-            raise Exception("Error: run_task: Definition of before")
+            raise ValueError("Error: run_task: Definition of before")
 
         for b in before:
             b["name"] = task_.get("name")
@@ -258,7 +258,7 @@ class WorkflowBase(SharedBase):
         elif isinstance(t_after, list):
             after = t_after
         else:
-            raise Exception("Error: run_task: Definition of after")
+            raise ValueError("Error: run_task: Definition of after")
 
         for a in after:
             a["name"] = task_.get("name")
@@ -273,7 +273,7 @@ class WorkflowBase(SharedBase):
             for ik in inst.tasks.keys():
                 if k == ik:
                     if not clash_prefix:
-                        raise Exception(
+                        raise TypeError(
                             "Workflow merge_instance: clash_prefix not provided")
                     tasks.update(clash_prefix + ik, inst.tasks.get(ik))
                 tasks[ik] = inst.tasks.get(ik)
