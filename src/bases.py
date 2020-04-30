@@ -1,6 +1,7 @@
 # # Project Workflow
 # Add support for Concurrency
 
+
 class SharedBase():
 
     tasks = {"taskname": {}}
@@ -30,8 +31,10 @@ class SharedBase():
             SharedBase()
         return SharedBase.__instance
 
+
 class ConcurencyBase():
     pass
+
 
 class WorkflowBase(SharedBase):
     """middleware_task_ Structure: name, function, args, kwargs, options"""
