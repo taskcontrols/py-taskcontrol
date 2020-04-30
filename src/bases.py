@@ -4,8 +4,12 @@
 class SharedBase():
 
     tasks = {"taskname": {}}
-    plugins = {"pluginname": {"taskname": {}}}
     ctx = {"result": []}
+
+    # TODO: Other features
+    config = {}
+    # TODO: Plugins features
+    plugins = {"pluginname": {"taskname": {}}}
 
     __instance = None
 
@@ -53,7 +57,6 @@ class WorkflowBase(SharedBase):
         #     return err_obj, args, kwargs
 
     # Check before/after middlewares args and kwargs number and validity
-
     def clean_args(self, function_, function_args, function_kwargs):
         arg_list = function_.__code__.co_varnames
         k_fn_kwa = function_kwargs.keys()
