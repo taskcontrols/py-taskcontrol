@@ -41,8 +41,12 @@ class WorkflowBase(SharedBase):
     """workflow_kwargs: name, task_instance, task_order, shared, args, kwargs, before, after, log"""
 
     tasks = {"taskname": {}}
-    plugins = {"pluginname": {"taskname": {}}}
     ctx = {}
+
+    # TODO: Other features
+    config = {}
+    # TODO: Plugins features
+    plugins = {"pluginname": {"taskname": {}}}
 
     def __init__(self):
         self.shared_tasks = SharedBase.getInstance()
