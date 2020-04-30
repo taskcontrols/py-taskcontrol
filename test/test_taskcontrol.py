@@ -1,3 +1,4 @@
+# TODO: Reorder tasks 
 import pytest
 
 from src.workflow import workflow, Tasks
@@ -85,7 +86,7 @@ class TestDecorator():
                 assert type(j) == str
                 assert len(i[j]) == 3
                 assert type(i[j]) == list
-    
+
     def test_creates_task_after_as_list(self):
         t = Tasks()
 
@@ -313,7 +314,8 @@ class TestDecorator():
             t = Tasks()
 
             def middleware(ctx, result, k, c, d, **kwargs):
-                print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+                print("Running my Middleware Function: test - task items",
+                      k, c, d, kwargs)
 
             @workflow(
                 name="taskname", task_order=1, task_instance=t,
@@ -338,7 +340,8 @@ class TestDecorator():
             t = Tasks()
 
             def middleware(ctx, result, k, c, d, **kwargs):
-                print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+                print("Running my Middleware Function: test - task items",
+                      k, c, d, kwargs)
 
             @workflow(
                 name="taskname", task_order=1, task_instance=t,
@@ -363,7 +366,8 @@ class TestDecorator():
             t = Tasks()
 
             def middleware(ctx, result, k, c, d, **kwargs):
-                print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+                print("Running my Middleware Function: test - task items",
+                      k, c, d, kwargs)
 
             @workflow(
                 name="taskname", task_order=1, task_instance=t,
@@ -388,7 +392,8 @@ class TestDecorator():
             t = Tasks()
 
             def middleware(ctx, result, k, c, d, **kwargs):
-                print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+                print("Running my Middleware Function: test - task items",
+                      k, c, d, kwargs)
 
             @workflow(
                 name="taskname", task_order=1, task_instance=t,
@@ -413,7 +418,8 @@ class TestDecorator():
             t = Tasks()
 
             def middleware(ctx, result, k, c, d, **kwargs):
-                print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+                print("Running my Middleware Function: test - task items",
+                      k, c, d, kwargs)
 
             @workflow(
                 name="taskname", task_order=1, task_instance=t,

@@ -8,4 +8,6 @@
 * Add plugin system
 * Add cleaner logging system for monitoring with
         - memory/console, file, server logging
-* Consider adding multithreading, multiprocessing, async/await options for concurrent usage
+* Consider adding concurrent suport: multithreading, multiprocessing, async/await options 
+* Add support for multi-threading, multiprocessing in base  (test current single task flow logic)
+* Add support for async-await in base (test async await for current single task flow logic)
