@@ -26,6 +26,8 @@ class SharedBase():
             SharedBase()
         return SharedBase.__instance
 
+class ConcurencyBase():
+    pass
 
 class WorkflowBase(SharedBase):
     # task_ object structure
