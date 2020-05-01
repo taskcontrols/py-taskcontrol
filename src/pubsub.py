@@ -48,3 +48,4 @@ class HooksBase():
 
     def receive(self):
         pass
+
