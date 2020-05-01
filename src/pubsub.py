@@ -1,6 +1,10 @@
+# Actions and Hooks Base
+# TODO: Create structure
 
+
+# Inherit shared and logging
 class ActionsBase():
-    
+
     # list of registered actions/events
     actions = []
     # list of actions/events listeners
@@ -21,6 +25,8 @@ class ActionsBase():
     def listen(self):
         pass
 
+
+# Inherit shared and logging
 class HooksBase():
 
     # list of registered web hooks

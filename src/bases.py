@@ -50,6 +50,10 @@ class ConcurencyBase():
         pass
 
 
+class LoggerBase():
+    pass
+
+
 class PluginsBase(SharedBase, ConcurencyBase):
 
     # add plugin to instance or shared
@@ -61,7 +65,7 @@ class PluginsBase(SharedBase, ConcurencyBase):
         pass
 
 
-class WorkflowBase(SharedBase, ConcurencyBase):
+class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
     """middleware_task_ Structure: name, function, args, kwargs, options"""
     """workflow_kwargs: name, task_instance, task_order, shared, args, kwargs, before, after, log"""
     # Allow instance tasks
