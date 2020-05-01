@@ -32,6 +32,7 @@ class HooksBase():
     # list of registered web hooks
     hooks = []
     # list of web hooks listeners
+    # check if this is needed
     hook_listeners = []
 
     def hook_state(self):
@@ -40,6 +41,7 @@ class HooksBase():
     def register_hook(self):
         pass
 
+    # check if this is needed
     def register_receiver(self):
         pass
 
