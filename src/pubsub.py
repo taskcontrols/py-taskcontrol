@@ -19,6 +19,9 @@ class ActionsBase():
     def register_listener(self):
         pass
 
+    def unregister_listener(self):
+        pass
+
     def message(self):
         pass
 
@@ -36,6 +39,12 @@ class HooksBase():
     hook_listeners = []
 
     def hook_state(self):
+        pass
+
+    def run_hook_service(self):
+        pass
+
+    def stop_hook_service(self):
         pass
 
     def register_hook(self):
