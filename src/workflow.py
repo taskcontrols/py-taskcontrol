@@ -1,14 +1,11 @@
 # # Project Workflow
 
+from .bases import WorkflowBase, PluginsBase
 from sys import path
 path.append('./')
-from .bases import WorkflowBase
 
 
-class Tasks(WorkflowBase):
-
-    def add_plugin(self, plugin_inst):
-        pass
+class Tasks(WorkflowBase, PluginsBase):
 
     def merge(self, inst, shared=False, clash_prefix=None):
         if shared == True:
@@ -65,7 +62,8 @@ def workflow(*workflow_args, **workflow_kwargs):
                 kwargs.update(**function_kwargs)
 
             # old
-            args_normal = t.clean_args(function_, function_args, function_kwargs)
+            args_normal = t.clean_args(
+                function_, function_args, function_kwargs)
             # if not args_normal:
             #     raise Exception("Args and KwArgs do not match")
             t.set_task(
@@ -73,10 +71,10 @@ def workflow(*workflow_args, **workflow_kwargs):
                 workflow_args, workflow_kwargs
             )
 
-            print("Workflow order_tasks - Task added: ", workflow_kwargs.get("name"))
+            print("Workflow order_tasks - Task added: ",
+                  workflow_kwargs.get("name"))
         return order_tasks()
     return get_decorator
 
 
 __all__ = ["Tasks", "workflow"]
-

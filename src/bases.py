@@ -4,11 +4,19 @@
 
 class SharedBase():
 
+    """middleware_task_ Structure: name, function, args, kwargs, options"""
+    """workflow_kwargs: name, task_instance, task_order, shared, args, kwargs, before, after, log"""
+    # Allow instance tasks
     tasks = {"taskname": {}}
+
+    """ Results of task runs (shared) """
+    # Access results from tasks, shared tasks during a task run
     ctx = {"result": []}
 
+    """  """
     # TODO: Other features
     config = {}
+
     # TODO: Plugins features
     plugins = {"pluginname": {"taskname": {}}}
 
@@ -33,18 +41,41 @@ class SharedBase():
 
 
 class ConcurencyBase():
-    pass
+    # asynchronous, needs_join
+    def mthread_run(self, function, options):
+        pass
+
+    # asynchronous, needs_join
+    def mprocess_run(self, function, options):
+        pass
 
 
-class WorkflowBase(SharedBase):
+class PluginsBase(SharedBase, ConcurencyBase):
+
+    # add plugin to instance or shared
+    def register_plugin(self, name, plugin_instance):
+        pass
+
+    # return plugin instance/module
+    def create_plugin(self, name, plugin_instance):
+        pass
+
+
+class WorkflowBase(SharedBase, ConcurencyBase):
     """middleware_task_ Structure: name, function, args, kwargs, options"""
     """workflow_kwargs: name, task_instance, task_order, shared, args, kwargs, before, after, log"""
-
+    # Allow instance tasks
     tasks = {"taskname": {}}
+
+    """ Results of task runs (instance) """
+    # Access results from tasks, shared tasks during a task run
     ctx = {}
 
+    """  """
     # TODO: Other features
     config = {}
+
+    """  """
     # TODO: Plugins features
     plugins = {"pluginname": {"taskname": {}}}
 
@@ -290,11 +321,3 @@ class WorkflowBase(SharedBase):
                 tasks[ik] = inst.tasks.get(ik)
 
         return tasks
-
-    def register_plugin(self, name, plugin_instance):
-        pass
-
-    def create_plugin(self, name, plugin_instance):
-        pass
-
-
