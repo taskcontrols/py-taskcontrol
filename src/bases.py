@@ -290,3 +290,11 @@ class WorkflowBase(SharedBase):
                 tasks[ik] = inst.tasks.get(ik)
 
         return tasks
+
+    def register_plugin(self, name, plugin_instance):
+        pass
+
+    def create_plugin(self, name, plugin_instance):
+        pass
+
+
