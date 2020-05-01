@@ -43,9 +43,6 @@ class HooksBase():
     def register_hook_listener(self):
         pass
 
-    def register_hook_producer(self):
-        pass
-
     def send(self):
         pass
 
