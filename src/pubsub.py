@@ -1,76 +1,47 @@
 
-def loop(ls, data, state, idx):
-    tmp = None
-    fn = ls[idx]
-    idx += idx
-    if (not fn):
-        return state
-    tmp = fn(state, data)
-    if not tmp:
-        return loop(ls, data, state, idx)
-    if isinstance(tmp, dict):
-        state = tmp
-    return loop(ls, data, state, idx)
-
-# get event
-def x(obj):
-    srv = None
-    tree = {}
-    hooks = {}
-    value = obj
-    if not value:
-        value = {}
-
-    def rem(arr, func):
-        pass
+class ActionsBase():
     
-    def srv():
-       pass
+    # list of registered actions/events
+    actions = []
+    # list of actions/events listeners
+    action_listeners = []
 
-    return
+    def action_state(self):
+        pass
 
+    def register_event(self):
+        pass
 
-# function loop(list, data, state, idx) {
-#     var tmp, fn = list[idx++];
-#     if (!fn) return Promise.resolve(state);
+    def register_listener(self):
+        pass
 
-#     tmp = fn(state, data);
-#     if (tmp == null) return loop(list, data, state, idx);
-#     if (typeof tmp.then == 'function') return tmp.then(d => loop(list, data, d, idx));
+    def message(self):
+        pass
 
-#     if (typeof tmp == 'object') state = tmp;
-#     return loop(list, data, state, idx);
-# }
+    def listen(self):
+        pass
 
-# export default function (obj) {
-#     var $, tree = {}, hooks = {}, value = obj || {};
+class HooksBase():
 
-#     var rem = (arr, func) => {
-#         arr.splice(arr.indexOf(func) >>> 0, 1);
-#     }
+    # list of registered web hooks
+    hooks = []
+    # list of web hooks listeners
+    hook_listeners = []
 
-#     return $ = {
-#         get state() {
-#             return klona(value);
-#         },
+    def hook_state(self):
+        pass
 
-#         on(evt, func) {
-#             tree[evt] = (tree[evt] || []).concat(func);
-#             return () => rem(tree[evt], func);
-#         },
+    def register_hook(self):
+        pass
 
-#         set(obj, evt) {
-#             loop((hooks['*'] || []).concat(evt && hooks[evt] || []), value, klona(value = obj), 0);
-#         },
+    def register_hook_listener(self):
+        pass
 
-#         listen(evt, func) {
-#             if (typeof evt == 'function') { func = evt; evt = '*' }
-#             hooks[evt] = (hooks[evt] || []).concat(func);
-#             return () => rem(hooks[evt], func);
-#         },
+    def register_hook_producer(self):
+        pass
 
-#         dispatch(evt, data) {
-#             return loop(tree[evt] || [], data, klona(value), 0).then(x => $.set(x, evt));
-#         }
-#     };
-# }
+    def send(self):
+        pass
+
+    def receive(self):
+        pass
