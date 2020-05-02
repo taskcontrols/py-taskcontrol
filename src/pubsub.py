@@ -38,10 +38,10 @@ class HooksBase():
     def hook_state(self):
         pass
 
-    def run_service(self):
+    def service_run(self):
         pass
 
-    def stop_service(self):
+    def service_stop(self):
         pass
 
     def register_hook(self):
