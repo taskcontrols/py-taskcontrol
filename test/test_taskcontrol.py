@@ -918,6 +918,7 @@ class TestMiddlewares():
 class TestFunctions():
     def test_function_invocation_with_args(self):
         t = Tasks()
+
         @workflow(
             name="taskname", task_instance=t,
             shared=False, args=[11, 12], kwargs={}
@@ -929,6 +930,7 @@ class TestFunctions():
 
     def test_function_invocation_with_no_args_in_def(self):
         t = Tasks()
+
         @workflow(
             name="taskname", task_instance=t,
             shared=False, args=[], kwargs={}
@@ -941,6 +943,7 @@ class TestFunctions():
     def test_creates_task_without_args(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
+
             @workflow(
                 name="taskname", task_instance=t,
                 shared=False, kwargs={}
@@ -954,6 +957,7 @@ class TestFunctions():
 
     def test_creates_task_with_kwargs(self):
         t = Tasks()
+
         @workflow(
             name="taskname", task_instance=t,
             shared=False, args=[], kwargs={"a": 11, "b": 12}
@@ -965,6 +969,7 @@ class TestFunctions():
 
     def test_creates_task_without_kwargs(self):
         t = Tasks()
+
         @workflow(
             name="taskname", task_instance=t,
             shared=False, args=[1, 2]
@@ -973,6 +978,20 @@ class TestFunctions():
             print("Running my task function: taskone", a, b)
 
         result = t.run(tasks="taskname")
+
+    def test_creates_task_without_args_without_kwargs(self):
+        with pytest.raises(TypeError) as e:
+            t = Tasks()
+
+            @workflow(
+                name="taskname", task_instance=t,
+                shared=False
+            )
+            def taskone(ctx, result, a, b):
+                print("Running my task function: taskone", a, b)
+
+            result = t.run(tasks="taskname")
+        assert e.type == TypeError
 
     def test_function_invocation_returns_1_None(self):
         pass
