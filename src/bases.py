@@ -266,7 +266,8 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
                 raise Exception("error_obj['error'] exit: Error during middleware: ",
                                 fn.__name__, str(e))
             else:
-                raise TypeError("Error during middleware: flow[options[error]] value error")
+                raise TypeError(
+                    "Error during middleware: flow[options[error]] value error")
 
         result["result"].append(r_)
         self.ctx["result"] = result.get("result")
@@ -296,7 +297,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
             b["name"] = task_.get("name")
 
         fn_task = {}
-        fn_task["name"] = task_.get("name")
+        fn_task["name"] = task_.get("workflow_kwargs").get("name")
         fn_task["function"] = task_.get("function")
         fn_task["args"] = task_.get("workflow_kwargs").get("args")
         fn_task["kwargs"] = task_.get("workflow_kwargs").get("kwargs")
