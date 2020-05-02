@@ -9,7 +9,9 @@ from src.workflow import workflow, Tasks
 # decorator creates instance tasks
 # decorator creates shared tasks
 
-
+# IMPORTANT:
+# Maintain the results of all tests even with change of flow
+# These are functionality tests for usage of decorator
 class TestDecorator():
 
     def test_creates_task_before_as_list(self):
@@ -461,6 +463,7 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
+# TODO
     def test_doesnot_create_instance_task(self):
         t = Tasks()
 
@@ -483,7 +486,7 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
-    def test_create_shared_task(self):
+    def test_creates_shared_task(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -505,6 +508,7 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
+# TODO
     def test_doesnot_create_shared_task(self):
         t = Tasks()
 
@@ -528,7 +532,7 @@ class TestDecorator():
         result = t.run(tasks="taskname")
 
     def test_does_not_create_task_without_name_throws_TypeError(self):
-        with pytest.raises(Exception) as e:
+        with pytest.raises(TypeError) as e:
             t = Tasks()
 
             def middleware(ctx, result, k, c, d, **kwargs):
@@ -551,36 +555,10 @@ class TestDecorator():
 
             result = t.run(tasks="taskname")
 
-        assert e.type is Exception
-
-    def test_does_not_create_task_without_taskorder_throws_TypeError(self):
-        with pytest.raises(Exception) as e:
-            t = Tasks()
-
-            def middleware(ctx, result, k, c, d, **kwargs):
-                print("Running my Middleware Function: test - task items",
-                      k, c, d, kwargs)
-
-            @workflow(
-                name="taskname", task_instance=t,
-                shared=False, args=[1, 2], kwargs={}, log=False,
-                before=[{
-                    "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
-                    "options": {"error": "next", "error_next_value": ""}
-                }],
-                after=[{
-                    "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
-                }])
-            def taskone(ctx, result, a, b):
-                print("Running my task function: taskone", a, b)
-
-            result = t.run(tasks="taskname")
-
-        assert e.type is Exception
+        assert e.type is TypeError
 
     def test_does_not_create_task_without_task_instance_throws_TypeError(self):
-        with pytest.raises(Exception) as e:
+        with pytest.raises(TypeError) as e:
             t = Tasks()
 
             def middleware(ctx, result, k, c, d, **kwargs):
@@ -603,17 +581,19 @@ class TestDecorator():
 
             result = t.run(tasks="taskname")
 
-        assert e.type is Exception
+        assert e.type is TypeError
 
-    def test_creates_task_without_args(self):
+    def test_creates_task_without_taskorder(self):
+        # with pytest.raises(Exception) as e:
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
-            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+            print("Running my Middleware Function: test - task items",
+                    k, c, d, kwargs)
 
         @workflow(
-            name="taskname", task_order=1, task_instance=t,
-            shared=False, kwargs={}, log=False,
+            name="taskname", task_instance=t,
+            shared=False, args=[1, 2], kwargs={}, log=False,
             before=[{
                 "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
                 "options": {"error": "next", "error_next_value": ""}
@@ -626,6 +606,32 @@ class TestDecorator():
             print("Running my task function: taskone", a, b)
 
         result = t.run(tasks="taskname")
+
+        # assert e.type is Exception
+
+    def test_creates_task_without_args(self):
+        with pytest.raises(Exception) as e:
+            t = Tasks()
+
+            def middleware(ctx, result, k, c, d, **kwargs):
+                print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+
+            @workflow(
+                name="taskname", task_order=1, task_instance=t,
+                shared=False, kwargs={}, log=False,
+                before=[{
+                    "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                    "options": {"error": "next", "error_next_value": ""}
+                }],
+                after=[{
+                    "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
+                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                }])
+            def taskone(ctx, result, a, b):
+                print("Running my task function: taskone", a, b)
+
+            result = t.run(tasks="taskname")
+        assert e.type is Exception
 
     def test_creates_task_without_kwargs(self):
         t = Tasks()
@@ -667,7 +673,7 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
-    def test_create_task_without_after(self):
+    def test_creates_task_without_after(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -685,7 +691,7 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
-    def test_create_task_without_log(self):
+    def test_creates_task_without_log(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):

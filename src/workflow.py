@@ -47,7 +47,9 @@ def workflow(*workflow_args, **workflow_kwargs):
             # print((function_, function_args, function_kwargs, workflow_args, workflow_kwargs))
             t = workflow_kwargs.get("task_instance")
             if not t:
-                raise Exception("Task instance not provided")
+                raise TypeError("Task instance not provided")
+            if not workflow_kwargs.get("name"):
+                raise TypeError("Argument not provided")
 
             if not workflow_kwargs.get("log"):
                 workflow_kwargs["log"] = False
@@ -61,9 +63,6 @@ def workflow(*workflow_args, **workflow_kwargs):
                 workflow_kwargs["kwargs"] = {}
             if not workflow_kwargs.get("options"):
                 workflow_kwargs["options"] = {}
-
-            if not workflow_kwargs.get("name"):
-                raise TypeError("Argument not provided")
             
             # print(workflow_kwargs)
 

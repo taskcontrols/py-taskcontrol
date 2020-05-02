@@ -228,9 +228,13 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
         else:
             raise TypeError("Object not a dictionary type")
 
-        if not workflow_args or isinstance(workflow_args, list) or type(workflow_args) == list:
+        if args == None or not isinstance(args, list) or not type(args) == list:
+            raise TypeError("Object not a dictionary type")
+        if kwargs == None or not isinstance(kwargs, dict) or not type(kwargs) == dict:
+            raise TypeError("Object not a dictionary type")
+        if workflow_args == None or not isinstance(workflow_args, list) or not type(workflow_args) == list:
             workflow_args = []
-        if not workflow_kwargs or isinstance(workflow_kwargs, dict) or type(workflow_kwargs) == dict:
+        if workflow_kwargs == None or not isinstance(workflow_kwargs, dict) or not type(workflow_kwargs) == dict:
             workflow_kwargs = {}
 
         if result:
@@ -238,7 +242,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
         if not result:
             result_ = []
             result = {"result": []}
-        
+
         try:
             r_ = fn(self.ctx, result_, *args, **kwargs)
         except (Exception) as e:
