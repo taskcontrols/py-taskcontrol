@@ -48,21 +48,22 @@ def workflow(*workflow_args, **workflow_kwargs):
             t = workflow_kwargs.get("task_instance")
             if not t:
                 raise TypeError("Task instance not provided")
+
             if not workflow_kwargs.get("name"):
                 raise TypeError("Name Argument not provided")
             if not workflow_kwargs.get("args"):
-                raise TypeError("Args not a dictionary type")
+                workflow_kwargs["args"] = []
             if not workflow_kwargs.get("kwargs"):
-                raise TypeError("Kwargs not a dictionary type")
+                workflow_kwargs["kwargs"] = {}
 
-            if not workflow_kwargs.get("log"):
-                workflow_kwargs["log"] = False
             if not workflow_kwargs.get("before"):
                 workflow_kwargs["before"] = []
             if not workflow_kwargs.get("after"):
                 workflow_kwargs["after"] = []
             if not workflow_kwargs.get("options"):
                 workflow_kwargs["options"] = {}
+            if not workflow_kwargs.get("log"):
+                workflow_kwargs["log"] = False
 
             args = []
             if len(workflow_args):
