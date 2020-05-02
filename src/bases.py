@@ -229,9 +229,9 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
             raise TypeError("Object not a dictionary type")
 
         if args == None or not isinstance(args, list) or not type(args) == list:
-            raise TypeError("Object not a dictionary type")
+            raise TypeError("Args not a dictionary type")
         if kwargs == None or not isinstance(kwargs, dict) or not type(kwargs) == dict:
-            raise TypeError("Object not a dictionary type")
+            raise TypeError("Kwargs not a dictionary type")
         if workflow_args == None or not isinstance(workflow_args, list) or not type(workflow_args) == list:
             workflow_args = []
         if workflow_kwargs == None or not isinstance(workflow_kwargs, dict) or not type(workflow_kwargs) == dict:
