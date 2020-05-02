@@ -589,7 +589,7 @@ class TestDecorator():
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items",
-                    k, c, d, kwargs)
+                  k, c, d, kwargs)
 
         @workflow(
             name="taskname", task_instance=t,
@@ -750,17 +750,161 @@ class TestAnyTaskRunner():
 # These are functionality tests for running of decorator created middlewares
 class TestMiddlewares():
 
-    def test_run_middlewares(self):
-        pass
+    def test_run_middlewares_before_middlewares(self):
+        t = Tasks()
 
-    def test_run_doesnot_middlewares(self):
-        pass
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
 
-    def test_run_single_middleware(self):
-        pass
+        @workflow(
+            name="taskname", task_instance=t,
+            shared=False,
+            before=[{
+                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                "options": {"error": "next", "error_next_value": ""}
+            }])
+        def taskone(ctx, result):
+            print("Running my task function: taskone")
 
-    def test_run_doesnot_single_middleware(self):
-        pass
+        result = t.run(tasks="taskname")
+
+    def test_run_middlewares_after_middlewares(self):
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+
+        @workflow(
+            name="taskname", task_instance=t,
+            shared=False,
+            after=[{
+                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                "options": {"error": "next", "error_next_value": ""}
+            }])
+        def taskone(ctx, result):
+            print("Running my task function: taskone")
+
+        result = t.run(tasks="taskname")
+
+    def test_run_doesnot_middlewares_before_middleware(self):
+        with pytest.raises(Exception) as e:
+            t = Tasks()
+
+            def middleware(ctx, result, k, c, d, **kwargs):
+                print("Running my Middleware Function: test - task items",
+                      k, c, d, kwargs)
+
+            @workflow(
+                name="taskname", task_instance=t,
+                shared=False,
+                before=[{
+                    "function": middleware,
+                    "options": {"error": "next", "error_next_value": ""}
+                }])
+            def taskone(ctx, result):
+                print("Running my task function: taskone")
+
+            result = t.run(tasks="taskname")
+
+        assert e.type == TypeError
+
+    def test_run_doesnot_middlewares_after_middleware(self):
+        with pytest.raises(Exception) as e:
+            t = Tasks()
+
+            def middleware(ctx, result, k, c, d, **kwargs):
+                print("Running my Middleware Function: test - task items",
+                      k, c, d, kwargs)
+
+            @workflow(
+                name="taskname", task_instance=t,
+                shared=False,
+                after=[{
+                    "function": middleware,
+                    "options": {"error": "next", "error_next_value": ""}
+                }])
+            def taskone(ctx, result):
+                print("Running my task function: taskone")
+
+            result = t.run(tasks="taskname")
+
+        assert e.type == TypeError
+
+    def test_run_single_middleware_before_middleware(self):
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+
+        @workflow(
+            name="taskname", task_instance=t,
+            shared=False,
+            before=[{
+                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                "options": {"error": "next", "error_next_value": ""}
+            }])
+        def taskone(ctx, result):
+            pass
+
+        result = t.run(tasks="taskname")
+
+    def test_run_single_middleware_after_middleware(self):
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+
+        @workflow(
+            name="taskname", task_instance=t,
+            shared=False,
+            after=[{
+                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                "options": {"error": "next", "error_next_value": ""}
+            }])
+        def taskone(ctx, result):
+            pass
+
+        result = t.run(tasks="taskname")
+
+    def test_run_doesnot_single_middleware_before_middleware(self):
+        with pytest.raises(Exception) as e:
+            t = Tasks()
+
+            def middleware(ctx, result, k, c, d, **kwargs):
+                print("Running my Middleware Function: test - task items",
+                      k, c, d, kwargs)
+
+            @workflow(
+                name="taskname", task_instance=t,
+                shared=False,
+                before=[{
+                    "function": middleware,
+                    "options": {"error": "next", "error_next_value": ""}
+                }])
+            def taskone(ctx, result):
+                pass
+
+            result = t.run(tasks="taskname")
+
+    def test_run_doesnot_single_middleware_after_middleware(self):
+        with pytest.raises(Exception) as e:
+            t = Tasks()
+
+            def middleware(ctx, result, k, c, d, **kwargs):
+                print("Running my Middleware Function: test - task items",
+                      k, c, d, kwargs)
+
+            @workflow(
+                name="taskname", task_instance=t,
+                shared=False,
+                after=[{
+                    "function": middleware,
+                    "options": {"error": "next", "error_next_value": ""}
+                }])
+            def taskone(ctx, result):
+                pass
+
+            result = t.run(tasks="taskname")
 
 
 # functions can be invoked with arguments and keyword arguments
@@ -775,22 +919,24 @@ class TestFunctions():
     def test_function_invocation_with_args(self):
         t = Tasks()
 
-        def middleware(ctx, result, k, c, d, **kwargs):
-            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-
         @workflow(
-            name="taskname", task_order=1, task_instance=t,
-            shared=False, args=[11, 12], kwargs={}, log=False,
-            before=[{
-                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
-                "options": {"error": "next", "error_next_value": ""}
-            }],
-            after=[{
-                "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
-            }])
+            name="taskname", task_instance=t,
+            shared=False, args=[11, 12], kwargs={}
+        )
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
+
+    def test_function_invocation_with_no_args_in_def(self):
+        t = Tasks()
+
+        @workflow(
+            name="taskname", task_instance=t,
+            shared=False, args=[], kwargs={}
+        )
+        def taskone(ctx, result):
+            print("Running my task function: taskone")
 
         result = t.run(tasks="taskname")
 
@@ -798,43 +944,24 @@ class TestFunctions():
         with pytest.raises(Exception) as e:
             t = Tasks()
 
-            def middleware(ctx, result, k, c, d, **kwargs):
-                print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-
             @workflow(
-                name="taskname", task_order=1, task_instance=t,
-                shared=False, kwargs={}, log=False,
-                before=[{
-                    "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
-                    "options": {"error": "next", "error_next_value": ""}
-                }],
-                after=[{
-                    "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
-                }])
+                name="taskname", task_instance=t,
+                shared=False, kwargs={}
+            )
             def taskone(ctx, result, a, b):
                 print("Running my task function: taskone", a, b)
 
             result = t.run(tasks="taskname")
+
         assert e.type is Exception
 
     def test_creates_task_with_kwargs(self):
         t = Tasks()
 
-        def middleware(ctx, result, k, c, d, **kwargs):
-            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-
         @workflow(
-            name="taskname", task_order=1, task_instance=t,
-            shared=False, args=[], kwargs={"a": 11, "b": 12}, log=False,
-            before=[{
-                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
-                "options": {"error": "next", "error_next_value": ""}
-            }],
-            after=[{
-                "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
-            }])
+            name="taskname", task_instance=t,
+            shared=False, args=[], kwargs={"a": 11, "b": 12}
+        )
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
 
@@ -843,20 +970,10 @@ class TestFunctions():
     def test_creates_task_without_kwargs(self):
         t = Tasks()
 
-        def middleware(ctx, result, k, c, d, **kwargs):
-            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-
         @workflow(
-            name="taskname", task_order=1, task_instance=t,
-            shared=False, args=[1, 2], log=False,
-            before=[{
-                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
-                "options": {"error": "next", "error_next_value": ""}
-            }],
-            after=[{
-                "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
-            }])
+            name="taskname", task_instance=t,
+            shared=False, args=[1, 2]
+        )
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
 
@@ -868,13 +985,13 @@ class TestFunctions():
     def test_function_invocation_returns_2_None(self):
         pass
 
-    def test_function_invocation_returns_value(self):
+    def test_function_invocation_returns_1_value(self):
         pass
 
-    def test_function_invocation_returns_values(self):
+    def test_function_invocation_returns_2_values(self):
         pass
 
-    def test_function_invocation_returns_value(self):
+    def test_function_invocation_returns_3_value(self):
         pass
 
     def test_function_doesnot_invoke_returns_throws_Error(self):
@@ -901,7 +1018,7 @@ class TestFunctions():
 
 # middlewares return results
 class TestBeforeMiddlewaresResultReturns():
-    
+
     def test_middlewares_doesnot_return_results(self):
         pass
 
@@ -930,8 +1047,10 @@ class TestBeforeMiddlewaresResultReturns():
         pass
 
 # middlewares return results
+
+
 class TestAfterMiddlewaresResultReturns():
-    
+
     def test_middlewares_doesnot_return_results(self):
         pass
 
@@ -1007,4 +1126,3 @@ class TestFunctionsAccessContext():
 
     def test_functions_doesnot_access_context(self):
         pass
-
