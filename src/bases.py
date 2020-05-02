@@ -222,7 +222,10 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
             workflow_args = task_.get("workflow_args")
             workflow_kwargs = task_.get("workflow_kwargs")
             log_ = task_.get("log")
-            error_object = task_.get("options")
+            if not task_.get("options"):
+                error_object = {}
+            elif task_.get("options"):
+                error_object = task_.get("options")
 
         if result:
             result_ = result.get("result")
@@ -232,7 +235,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
         if not workflow_args:
             workflow_args = []
         if not workflow_kwargs:
-            workflow_kwargs = []
+            workflow_kwargs = {}
 
         try:
             r_ = fn(self.ctx, result_, *args, **kwargs)
@@ -256,8 +259,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
                 raise Exception("error_obj['error'] exit: Error during middleware: ",
                                 fn.__name__, str(e))
             else:
-                raise Exception(
-                    "Error during middleware: flow[options[error]] value error")
+                raise Exception("Error during middleware: flow[options[error]] value error")
 
         result["result"].append(r_)
         self.ctx["result"] = result.get("result")

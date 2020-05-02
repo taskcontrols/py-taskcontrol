@@ -49,6 +49,20 @@ def workflow(*workflow_args, **workflow_kwargs):
             if not t:
                 raise Exception("Task instance not provided")
 
+            if not workflow_kwargs.get("log"):
+                workflow_kwargs["log"] = False
+            if not workflow_kwargs.get("before"):
+                workflow_kwargs["before"] = []
+            if not workflow_kwargs.get("after"):
+                workflow_kwargs["after"] = []
+            if not workflow_kwargs.get("args"):
+                workflow_kwargs["args"] = []
+            if not workflow_kwargs.get("kwargs"):
+                workflow_kwargs["kwargs"] = {}
+
+            if not workflow_kwargs.get("name"):
+                raise TypeError("Argument not provided")
+
             args = []
             if len(workflow_args):
                 args.append(*workflow_args)
@@ -62,8 +76,8 @@ def workflow(*workflow_args, **workflow_kwargs):
                 kwargs.update(**function_kwargs)
 
             # old
-            args_normal = t.clean_args(
-                function_, function_args, function_kwargs)
+            # args_normal = t.clean_args(
+            #     function_, function_args, function_kwargs)
             # if not args_normal:
             #     raise Exception("Args and KwArgs do not match")
             t.set_task(
