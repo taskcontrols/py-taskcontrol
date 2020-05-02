@@ -998,40 +998,154 @@ class TestFunctions():
         assert e.type == Exception
 
     def test_function_invocation_returns_1_None(self):
-        pass
+        t = Tasks()
+
+        @workflow(
+            name="taskname", task_instance=t,
+            shared=False, args=[11, 12], kwargs={}
+        )
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
 
     def test_function_invocation_returns_2_None(self):
-        pass
+        t = Tasks()
+
+        @workflow(
+            name="taskname", task_instance=t,
+            shared=False, args=[11, 12], kwargs={}
+        )
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
 
     def test_function_invocation_returns_1_value(self):
-        pass
+        t = Tasks()
+
+        @workflow(
+            name="taskname", task_instance=t,
+            shared=False, args=[11, 12], kwargs={}
+        )
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+            return a,b
+
+        result = t.run(tasks="taskname")
 
     def test_function_invocation_returns_2_values(self):
-        pass
+        t = Tasks()
+
+        @workflow(
+            name="taskname", task_instance=t,
+            shared=False, args=[11, 12], kwargs={}
+        )
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+            return a+b
+
+        result = t.run(tasks="taskname")
 
     def test_function_invocation_returns_3_value(self):
-        pass
+        t = Tasks()
+
+        @workflow(
+            name="taskname", task_instance=t,
+            shared=False, args=[11, 12], kwargs={}
+        )
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+            return ctx, result, a, b, a*b
+
+        result = t.run(tasks="taskname")
 
     def test_function_doesnot_invoke_returns_throws_Error(self):
-        pass
+        t = Tasks()
 
+        @workflow(
+            name="taskname", task_instance=t,
+            shared=False, args=[11, 12], kwargs={}
+        )
+        def taskone(ctx, result):
+            print("Running my task function: taskone")
+            return ctx, result
+
+        result = t.run(tasks="taskname")
+
+    # TODO: THIS TEST IS NOT COMPLETE FOR ITS ARGUMENTS
     def test_function_invocation_error_returns_completes_flow(self):
-        pass
+        t = Tasks()
 
+        @workflow(
+            name="taskname", task_instance=t,
+            shared=False, args=[11, 12], kwargs={}
+        )
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
+
+    # TODO: THIS TEST IS NOT COMPLETE FOR ITS ARGUMENTS
     def test_function_doesnot_invoke_error_returns_completes_flow_with_handler(self):
-        pass
+        t = Tasks()
+
+        @workflow(
+            name="taskname", task_instance=t,
+            shared=False, args=[11, 12], kwargs={}
+        )
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
 
     def test_functions_returns_results(self):
-        pass
+        t = Tasks()
+
+        @workflow(
+            name="taskname", task_instance=t,
+            shared=False, args=[11, 12], kwargs={}
+        )
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
 
     def test_functions_doesnot_return_results(self):
-        pass
+        t = Tasks()
+
+        @workflow(
+            name="taskname", task_instance=t,
+            shared=False, args=[11, 12], kwargs={}
+        )
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
 
     def test_functions_returns_right_results(self):
-        pass
+        t = Tasks()
+
+        @workflow(
+            name="taskname", task_instance=t,
+            shared=False, args=[11, 12], kwargs={}
+        )
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
 
     def test_functions_doesnot_return_right_results(self):
-        pass
+        t = Tasks()
+
+        @workflow(
+            name="taskname", task_instance=t,
+            shared=False, args=[11, 12], kwargs={}
+        )
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
 
 
 # middlewares return results
