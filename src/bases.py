@@ -57,11 +57,11 @@ class LoggerBase():
 class PluginsBase(SharedBase, ConcurencyBase):
 
     # add plugin to instance or shared
-    def register_plugin(self, name, plugin_instance):
+    def plugin_register(self, name, plugin_instance):
         pass
 
     # return plugin instance/module
-    def create_plugin(self, name, plugin_instance):
+    def plugin_create(self, name, plugin_instance):
         pass
 
 
