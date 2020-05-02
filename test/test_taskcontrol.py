@@ -411,7 +411,7 @@ class TestDecorator():
 
             result = t.run(tasks="taskname")
 
-        assert e.type is TypeError
+        assert e.type is Exception
 
     def test_doesnot_creates_task_with_wrong_def_of_args_for_task_function_throws_TypeError(self):
         with pytest.raises(Exception) as e:
@@ -437,7 +437,7 @@ class TestDecorator():
 
             result = t.run(tasks="taskname")
 
-        assert e.type is TypeError
+        assert e.type is Exception
 
     def test_creates_instance_task(self):
         t = Tasks()
@@ -528,7 +528,7 @@ class TestDecorator():
         result = t.run(tasks="taskname")
 
     def test_does_not_create_task_without_name_throws_TypeError(self):
-        with pytest.raises(TypeError) as e:
+        with pytest.raises(Exception) as e:
             t = Tasks()
 
             def middleware(ctx, result, k, c, d, **kwargs):
@@ -551,10 +551,10 @@ class TestDecorator():
 
             result = t.run(tasks="taskname")
 
-        assert e.type is TypeError
+        assert e.type is Exception
 
     def test_does_not_create_task_without_taskorder_throws_TypeError(self):
-        with pytest.raises(TypeError) as e:
+        with pytest.raises(Exception) as e:
             t = Tasks()
 
             def middleware(ctx, result, k, c, d, **kwargs):
@@ -577,10 +577,10 @@ class TestDecorator():
 
             result = t.run(tasks="taskname")
 
-        assert e.type is TypeError
+        assert e.type is Exception
 
     def test_does_not_create_task_without_task_instance_throws_TypeError(self):
-        with pytest.raises(TypeError) as e:
+        with pytest.raises(Exception) as e:
             t = Tasks()
 
             def middleware(ctx, result, k, c, d, **kwargs):
@@ -603,7 +603,7 @@ class TestDecorator():
 
             result = t.run(tasks="taskname")
 
-        assert e.type is TypeError
+        assert e.type is Exception
 
     def test_creates_task_without_args(self):
         t = Tasks()

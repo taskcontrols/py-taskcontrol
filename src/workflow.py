@@ -59,9 +59,13 @@ def workflow(*workflow_args, **workflow_kwargs):
                 workflow_kwargs["args"] = []
             if not workflow_kwargs.get("kwargs"):
                 workflow_kwargs["kwargs"] = {}
+            if not workflow_kwargs.get("options"):
+                workflow_kwargs["options"] = {}
 
             if not workflow_kwargs.get("name"):
                 raise TypeError("Argument not provided")
+            
+            # print(workflow_kwargs)
 
             args = []
             if len(workflow_args):

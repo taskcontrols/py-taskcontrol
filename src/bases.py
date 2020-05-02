@@ -214,34 +214,37 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
             self.tasks.update(task_.get("name"), task_obj)
 
     def reducer(self, result, task_):
-
-        if not isinstance(type(task_), dict):
+        if isinstance(type(task_), dict) or type(task_) == dict:
             fn = task_.get("function")
             args = task_.get("args")
             kwargs = task_.get("kwargs")
             workflow_args = task_.get("workflow_args")
             workflow_kwargs = task_.get("workflow_kwargs")
             log_ = task_.get("log")
-            if not task_.get("options"):
-                error_object = {}
-            elif task_.get("options"):
+            if task_.get("options") and not task_.get("options") == None:
                 error_object = task_.get("options")
+            else:
+                error_object = {}
+        else:
+            raise TypeError("Object not a dictionary type")
+
+        if not workflow_args or isinstance(workflow_args, list) or type(workflow_args) == list:
+            workflow_args = []
+        if not workflow_kwargs or isinstance(workflow_kwargs, dict) or type(workflow_kwargs) == dict:
+            workflow_kwargs = {}
 
         if result:
             result_ = result.get("result")
         if not result:
             result_ = []
             result = {"result": []}
-        if not workflow_args:
-            workflow_args = []
-        if not workflow_kwargs:
-            workflow_kwargs = {}
-
+        
         try:
             r_ = fn(self.ctx, result_, *args, **kwargs)
         except (Exception) as e:
             if log_:
                 print("Running error for middleware")
+
             if not hasattr(error_object, "error"):
                 error_object["error"] = "exit"
 
@@ -259,7 +262,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
                 raise Exception("error_obj['error'] exit: Error during middleware: ",
                                 fn.__name__, str(e))
             else:
-                raise Exception("Error during middleware: flow[options[error]] value error")
+                raise TypeError("Error during middleware: flow[options[error]] value error")
 
         result["result"].append(r_)
         self.ctx["result"] = result.get("result")
