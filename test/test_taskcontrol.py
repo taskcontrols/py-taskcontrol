@@ -12,6 +12,7 @@ from src.workflow import workflow, Tasks
 # IMPORTANT:
 # Maintain the results of all tests even with change of flow
 # These are functionality tests for usage of decorator
+# TODO: Write result asserts for some
 class TestDecorator():
 
     def test_creates_task_before_as_list(self):
@@ -748,6 +749,7 @@ class TestAnyTaskRunner():
 # IMPORTANT:
 # Maintain the results of all tests even with change of flow
 # These are functionality tests for running of decorator created middlewares
+# TODO: Write result asserts for all
 class TestMiddlewares():
 
     def test_run_middlewares_before_middlewares(self):
@@ -915,6 +917,7 @@ class TestMiddlewares():
 # IMPORTANT:
 # Maintain the results of all tests even with change of flow
 # These are functionality tests for creating of decorator created tasks
+# TODO: Write result asserts for all
 class TestFunctions():
     def test_function_invocation_with_args(self):
         t = Tasks()
