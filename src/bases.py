@@ -247,7 +247,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
             r_ = fn(self.ctx, result_, *args, **kwargs)
         except (Exception) as e:
             if log_:
-                print("Running error for middleware")
+                print("reducer: Running error for middleware")
 
             if not hasattr(error_object, "error"):
                 error_object["error"] = "exit"
@@ -263,7 +263,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
                     return e_return
                 return {"error": e, "next": error_object.get("error_handler")(e, e_next_value)}
             elif e_enum == "exit":
-                raise Exception("error_obj['error'] exit: Error during middleware: ",
+                raise Exception("Error during middleware: error_obj['error'] exit",
                                 fn.__name__, str(e))
             else:
                 raise TypeError(
