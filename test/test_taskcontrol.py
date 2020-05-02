@@ -980,7 +980,7 @@ class TestFunctions():
         result = t.run(tasks="taskname")
 
     def test_creates_task_without_args_without_kwargs(self):
-        with pytest.raises(TypeError) as e:
+        with pytest.raises(Exception) as e:
             t = Tasks()
 
             @workflow(
@@ -991,7 +991,8 @@ class TestFunctions():
                 print("Running my task function: taskone", a, b)
 
             result = t.run(tasks="taskname")
-        assert e.type == TypeError
+
+        assert e.type == Exception
 
     def test_function_invocation_returns_1_None(self):
         pass
