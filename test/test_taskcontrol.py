@@ -979,7 +979,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_creates_task_without_args_without_kwargs(self):
+    def test_doesnot_create_task_without_args_without_kwargs(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
