@@ -1523,66 +1523,66 @@ class TestFunctionsAccessContext():
 
 class TestMiddlewareBeforeForAsyncAwait:
 
-    def TestMiddlewareBeforeForAsyncAwait(self):
+    def test_Middleware_before_for_asyncAwait(self):
         pass
 
 
-    def TestMiddlewareAfterForAsyncAwait(self):
+    def test_Middleware_after_for_asyncAwait(self):
         pass
 
 
-    def TestMiddlewareFunctionForAsyncAwait(self):
+    def test_Middleware_function_for_asyncAwait(self):
         pass
 
 
 class TestMiddlewareBeforeForMultiThreads:
 
-    def TestMiddlewareBeforeForMultiThreads_without_Join(self):
+    def test_Middleware_before_for_multiThreads_without_Join(self):
         pass
 
 
-    def TestMiddlewareBeforeForMultiThreads_with_Join(self):
+    def test_Middleware_before_for_multiThreads_with_Join(self):
         pass
 
 
-    def TestMiddlewareAfterForMultiThreads_without_Join(self):
+    def test_Middleware_after_for_multiThreads_without_Join(self):
         pass
 
 
-    def TestMiddlewareAfterForMultiThreads_with_Join(self):
+    def test_Middleware_after_for_multiThreads_with_Join(self):
         pass
 
 
-    def TestMiddlewareFunctionForMultiThreads_without_Join(self):
+    def test_Middleware_function_for_multiThreads_without_Join(self):
         pass
 
 
-    def TestMiddlewareFunctionForMultiThreads_with_Join(self):
+    def test_Middleware_function_for_multiThreads_with_Join(self):
         pass
 
 
 class TestMiddlewareBeforeForMultiProcessing:
 
-    def TestMiddlewareBeforeForMultiProcessing_without_Join(self):
+    def test_Middleware_before_for_multiProcessing_without_Join(self):
         pass
 
 
-    def TestMiddlewareBeforeForMultiProcessing_with_Join(self):
+    def test_Middleware_before_for_multiProcessing_with_Join(self):
         pass
 
 
-    def TestMiddlewareAfterForMultiProcessing_without_Join(self):
+    def test_Middleware_after_for_multiProcessing_without_Join(self):
         pass
 
 
-    def TestMiddlewareAfterForMultiProcessing_with_Join(self):
+    def test_Middleware_after_for_multiProcessing_with_Join(self):
         pass
 
 
-    def TestMiddlewareFunctionForMultiProcess_without_Join(self):
+    def test_Middleware_function_for_multiProcess_without_Join(self):
         pass
 
 
-    def TestMiddlewareFunctionForMultiProcess_with_Join(self):
+    def test_Middleware_function_for_multiProcess_with_Join(self):
         pass
 
