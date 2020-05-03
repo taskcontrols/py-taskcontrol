@@ -1,3 +1,7 @@
+<p align="center">
+  <img width="30%" height="20%" src="docs/images/logo.jpg">
+</p>
+
 # taskcontrol
     Create named shared / isolated workflow task controls, and run them with respective before/after middlewares
 
