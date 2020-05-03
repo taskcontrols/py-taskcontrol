@@ -13,6 +13,7 @@ from src.workflow import workflow, Tasks
 # Maintain the results of all tests even with change of flow
 # These are functionality tests for usage of decorator
 # TODO: Write result asserts for some
+
 class TestDecorator():
 
     def test_creates_task_before_as_list(self):
@@ -676,6 +677,7 @@ class TestDecorator():
 # IMPORTANT:
 # Maintain the results of all tests even with change of flow
 # These are functionality tests for running of decorator created tasks
+
 class TestTaskRunner():
 
     def test_run_single_instance_task(self):
@@ -705,6 +707,7 @@ class TestTaskRunner():
 # IMPORTANT:
 # Maintain the results of all tests even with change of flow
 # These are functionality tests for running of decorator created shared tasks
+
 class TestSharedTaskRunner():
 
     def test_run_single_shared_tasks(self):
@@ -732,6 +735,7 @@ class TestSharedTaskRunner():
 # IMPORTANT:
 # Maintain the results of all tests even with change of flow
 # These are functionality tests for running of decorator created tasks or shared tasks
+
 class TestAnyTaskRunner():
 
     def test_any_type_task_shared_task(self):
@@ -841,6 +845,7 @@ class TestAnyTaskRunner():
 # Maintain the results of all tests even with change of flow
 # These are functionality tests for running of decorator created middlewares
 # TODO: Write result asserts for all
+
 class TestMiddlewares():
 
     def test_run_middlewares_before_middlewares(self):
@@ -1010,6 +1015,7 @@ class TestMiddlewares():
 # Maintain the results of all tests even with change of flow
 # These are functionality tests for creating of decorator created tasks
 # TODO: Write result asserts for all
+
 class TestFunctions():
     def test_function_invocation_with_args(self):
         t = Tasks()
@@ -1241,6 +1247,7 @@ class TestFunctions():
 
 
 # middlewares return results
+
 class TestBeforeMiddlewaresResultReturns():
 
     def test_middlewares_doesnot_return_results(self):
@@ -1432,7 +1439,6 @@ class TestBeforeMiddlewaresResultReturns():
 
 # middlewares return results
 
-
 class TestAfterMiddlewaresResultReturns():
 
     def test_middlewares_doesnot_return_results(self):
@@ -1464,6 +1470,7 @@ class TestAfterMiddlewaresResultReturns():
 
 
 # task runs return results and correct numbers
+
 class TestTaskResultReturns():
 
     def test_task_returns_results(self):
@@ -1495,6 +1502,7 @@ class TestTaskResultReturns():
 
 
 # middlewares can be invoked and can access results context of all previously invoked functions
+
 class TestMiddlewareAccessContext():
     def test_middlewares_can_access_context(self):
         pass
@@ -1504,6 +1512,7 @@ class TestMiddlewareAccessContext():
 
 
 # functions can be invoked and can access results context of all previously invoked functions
+
 class TestFunctionsAccessContext():
     def test_functions_can_access_context(self):
         pass
@@ -1534,6 +1543,7 @@ class TestMiddlewareBeforeForMultiThreads_with_Join():
 
 class TestMiddlewareAfterForMultiThreads_without_Join():
     pass
+
 
 class TestMiddlewareAfterForMultiThreads_with_Join():
     pass
