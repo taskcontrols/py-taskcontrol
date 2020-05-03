@@ -734,11 +734,102 @@ class TestSharedTaskRunner():
 # These are functionality tests for running of decorator created tasks or shared tasks
 class TestAnyTaskRunner():
 
-    def test_any_type_task(self):
-        pass
+    def test_any_type_task_shared_task(self):
+        t = Tasks()
 
-    def test_doesnot_any_type_task(self):
-        pass
+        @workflow(
+            name="taskname", task_instance=t,
+            shared=True
+        )
+        def taskone(ctx, result):
+            print("Running my task function: taskone")
+            return "taskname"
+
+        result = t.run(tasks="shared:taskname")
+
+    def test_any_type_task_shared_task_doesnot_run_throws_Error(self):
+        with pytest.raises(Exception) as e:
+            t = Tasks()
+
+            @workflow(
+                name="taskname",
+                shared=True
+            )
+            def taskone(ctx, result):
+                print("Running my task function: taskone")
+                return "taskname"
+
+            result = t.run(tasks="shared:taskname")
+
+    def test_any_type_task_instance(self):
+        t = Tasks()
+
+        @workflow(
+            name="taskname", task_instance=t,
+            shared=False
+        )
+        def taskname(ctx, result):
+            print("Running my task function: taskname")
+            return "taskname"
+
+        result = t.run(tasks="taskname")
+
+    def test_any_type_task_instance_doesnot_run_throws_Error(self):
+        with pytest.raises(Exception) as e:
+            t = Tasks()
+
+            @workflow(
+                name="taskname",
+                shared=False
+            )
+            def taskname(ctx, result):
+                print("Running my task function: taskname")
+                return "taskname"
+
+            result = t.run(tasks="taskname")
+
+    def test_any_type_task_shared_and_instance(self):
+        t = Tasks()
+
+        @workflow(
+            name="taskname", task_instance=t,
+            shared=False
+        )
+        def taskname(ctx, result):
+            print("Running my task function: taskname")
+            return "taskname"
+
+        @workflow(
+            name="taskone", task_instance=t,
+            shared=True
+        )
+        def taskone(ctx, result):
+            print("Running my task function: taskone")
+            return "taskone"
+
+        result = t.run(tasks=["taskname", "shared:taskone"])
+
+    def test_doesnot_any_type_task_shared_and_instance_throws_Error(self):
+        with pytest.raises(Exception) as e:
+            t = Tasks()
+
+            @workflow(
+                name="taskname", task_instance=t,
+                shared=False
+            )
+            def taskname(ctx, result):
+                print("Running my task function: taskname")
+                return "taskname"
+
+            @workflow(
+                name="taskone", task_instance=t,
+                shared=True
+            )
+            def taskone(ctx, result):
+                print("Running my task function: taskone")
+                return "taskone"
+
+            result = t.run(tasks=["taskname", "shared:taskone"])
 
 
 # middlewares can be invoked with arguments and keyword arguments
@@ -780,11 +871,12 @@ class TestMiddlewares():
             name="taskname", task_instance=t,
             shared=False,
             after=[{
-                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                "function": middleware,
+                "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
                 "options": {"error": "next", "error_next_value": ""}
             }])
-        def taskone(ctx, result):
-            print("Running my task function: taskone")
+        def taskname(ctx, result):
+            print("Running my task function: taskname")
 
         result = t.run(tasks="taskname")
 
@@ -1329,7 +1421,7 @@ class TestBeforeMiddlewaresResultReturns():
             name="taskname", task_instance=t,
             before=[{
                     "function": middleware, "args": [11, 12, 13], "kwargs":{},
-                    "options": {"error": "next", "error_handler": lambda x, y: y, x , "error_next_value": ""}
+                    "options": {"error": "next", "error_handler": lambda x, y: y, x, "error_next_value": ""}
                     }],
             shared=False, args=[11, 12], kwargs={}
         )
