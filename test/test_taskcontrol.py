@@ -1428,7 +1428,7 @@ class TestBeforeMiddlewaresResultReturns():
             name="taskname", task_instance=t,
             before=[{
                     "function": middleware, "args": [11, 12, 13], "kwargs":{},
-                    "options": {"error": "next", "error_handler": lambda x, y: y, x, "error_next_value": ""}
+                    "options": {"error": "next", "error_handler": lambda x, y: (y, x), "error_next_value": ""}
                     }],
             shared=False, args=[11, 12], kwargs={}
         )
