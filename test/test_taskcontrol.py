@@ -1030,7 +1030,7 @@ class TestFunctions():
         )
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return a,b
+            return a, b
 
         result = t.run(tasks="taskname")
 
@@ -1152,31 +1152,191 @@ class TestFunctions():
 class TestBeforeMiddlewaresResultReturns():
 
     def test_middlewares_doesnot_return_results(self):
-        pass
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items",
+                  k, c, d, kwargs)
+
+        @workflow(
+            name="taskname", task_instance=t,
+            before=[{
+                    "function": middleware, "args": [11, 12, 13], "kwargs":{},
+                    "options": {"error": "next", "error_next_value": ""}
+                    }],
+            shared=False, args=[11, 12], kwargs={}
+        )
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
 
     def test_middlewares_invocation_returns_1_None(self):
-        pass
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items",
+                  k, c, d, kwargs)
+
+        @workflow(
+            name="taskname", task_instance=t,
+            before=[{
+                    "function": middleware, "args": [11, 12, 13], "kwargs":{},
+                    "options": {"error": "next", "error_next_value": ""}
+                    }],
+            shared=False, args=[11, 12], kwargs={}
+        )
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
 
     def test_middlewares_invocation_returns_2_None(self):
-        pass
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items",
+                  k, c, d, kwargs)
+            return None
+
+        @workflow(
+            name="taskname", task_instance=t,
+            before=[{
+                    "function": middleware, "args": [11, 12, 13], "kwargs":{},
+                    "options": {"error": "next", "error_next_value": ""}
+                    }],
+            shared=False, args=[11, 12], kwargs={}
+        )
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
 
     def test_middlewares_invocation_returns_1_values(self):
-        pass
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items",
+                  k, c, d, kwargs)
+            return k, c, d
+
+        @workflow(
+            name="taskname", task_instance=t,
+            before=[{
+                    "function": middleware, "args": [11, 12, 13], "kwargs":{},
+                    "options": {"error": "next", "error_next_value": ""}
+                    }],
+            shared=False, args=[11, 12], kwargs={}
+        )
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
 
     def test_middlewares_invocation_returns_2_values(self):
-        pass
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items",
+                  k, c, d, kwargs)
+            return k
+
+        @workflow(
+            name="taskname", task_instance=t,
+            before=[{
+                    "function": middleware, "args": [11, 12, 13], "kwargs":{},
+                    "options": {"error": "next", "error_next_value": ""}
+                    }],
+            shared=False, args=[11, 12], kwargs={}
+        )
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
 
     def test_middlewares_invocation_returns_3_values(self):
-        pass
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items",
+                  k, c, d, kwargs)
+            return k, c
+
+        @workflow(
+            name="taskname", task_instance=t,
+            before=[{
+                    "function": middleware, "args": [11, 12, 13], "kwargs":{},
+                    "options": {"error": "next", "error_next_value": ""}
+                    }],
+            shared=False, args=[11, 12], kwargs={}
+        )
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
 
     def test_middlewares_doesnot_invoke_returns_throws_Error(self):
-        pass
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items",
+                  k, c, d, kwargs)
+            return a, c
+
+        @workflow(
+            name="taskname", task_instance=t,
+            before=[{
+                    "function": middleware,
+                    "options": {"error": "next", "error_next_value": ""}
+                    }],
+            shared=False
+        )
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
 
     def test_middlewares_invocation_error_returns_completes_flow(self):
-        pass
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items",
+                  k, c, d, kwargs)
+            return k, c, d
+
+        @workflow(
+            name="taskname", task_instance=t,
+            before=[{
+                    "function": middleware,
+                    "options": {"error": "next", "error_next_value": "some value"}
+                    }],
+            shared=False, args=[11, 12], kwargs={}
+        )
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
 
     def test_middlewares_doesnot_invoke_error_returns_completes_flow_with_handler(self):
-        pass
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items",
+                  k, c, d, kwargs)
+            return k, c, d
+
+        @workflow(
+            name="taskname", task_instance=t,
+            before=[{
+                    "function": middleware, "args": [11, 12, 13], "kwargs":{},
+                    "options": {"error": "next", "error_handler": lambda x, y: y, x , "error_next_value": ""}
+                    }],
+            shared=False, args=[11, 12], kwargs={}
+        )
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
 
 # middlewares return results
 
