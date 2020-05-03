@@ -1510,3 +1510,63 @@ class TestFunctionsAccessContext():
 
     def test_functions_doesnot_access_context(self):
         pass
+
+
+class TestMiddlewareBeforeForAsyncAwait():
+    pass
+
+
+class TestMiddlewareAfterForAsyncAwait():
+    pass
+
+
+class TestMiddlewareFunctionForAsyncAwait():
+    pass
+
+
+class TestMiddlewareBeforeForMultiThreads_without_Join():
+    pass
+
+
+class TestMiddlewareBeforeForMultiThreads_with_Join():
+    pass
+
+
+class TestMiddlewareAfterForMultiThreads_without_Join():
+    pass
+
+class TestMiddlewareAfterForMultiThreads_with_Join():
+    pass
+
+
+class TestMiddlewareFunctionForMultiThreads_without_Join():
+    pass
+
+
+class TestMiddlewareFunctionForMultiThreads_with_Join():
+    pass
+
+
+class TestMiddlewareBeforeForMultiProcessing_without_Join():
+    pass
+
+
+class TestMiddlewareBeforeForMultiProcessing_with_Join():
+    pass
+
+
+class TestMiddlewareAfterForMultiProcessing_without_Join():
+    pass
+
+
+class TestMiddlewareAfterForMultiProcessing_with_Join():
+    pass
+
+
+class TestMiddlewareFunctionForMultiProcess_without_Join():
+    pass
+
+
+class TestMiddlewareFunctionForMultiProcess_with_Join():
+    pass
+
