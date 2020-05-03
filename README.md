@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="30%" height="20%" src="docs/images/logo.jpg">
+  <img width="40%" height="30%" src="docs/images/logo.jpg">
 </p>
 
 # taskcontrol
