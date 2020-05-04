@@ -1,0 +1,3 @@
+include README.md
+include docs/*.md
+include docs/images/logo.jpg
