@@ -72,7 +72,7 @@ It also provides methods to create a plugin and work with tasks as a module and/
 
 from taskcontrol.workflow import workflow, Tasks
 
-inst = Tasks()
+sparrow = Tasks()
 
 def middleware(ctx, result, k, c, d, **kwargs):
     print("Running my Middleware Function: test - task items", k, c, d, kwargs)
@@ -81,7 +81,7 @@ def middleware(ctx, result, k, c, d, **kwargs):
 @workflow(
     name="taskname",
     task_order=1,
-    task_instance=inst,
+    task_instance=sparrow,
     shared=False,
     args=[1, 2],
     kwargs={},
@@ -112,11 +112,11 @@ def taskone(ctx, result, a, b):
 
 
 # Run single task
-t.run(tasks="taskname")
+sparrow.run(tasks="taskname")
 
 
 # Run all tasks
-t.run(tasks=["1"])
+sparrow.run(tasks=["1"])
 # t.run(tasks=["taskname", ..., "anothertask"])
 
 

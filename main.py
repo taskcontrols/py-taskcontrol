@@ -8,7 +8,7 @@ from taskcontrol.workflow import workflow, Tasks
 # Instance of tasks and apis object
 # Every instance will store it own list of tasks
 #       with their before/after middlewares
-t = Tasks()
+sparrow = Tasks()
 
 
 def test(ctx, result, k, c, d, **kwargs):
@@ -18,7 +18,7 @@ def test(ctx, result, k, c, d, **kwargs):
 @workflow(
     name="taskname",
     task_order=1,
-    task_instance=t,
+    task_instance=sparrow,
     shared=False,
     args=[1, 2],
     kwargs={},
@@ -81,15 +81,9 @@ def taskone(ctx, result, a, b):
     print("Running my task function: taskone", a, b)
 
 
-# Invocation is needed to add the task with function arguments
-# Invoke this where needed
-# Example: Within some other function
-# taskone(3, 4)
-
-
 # Example two for decorator usage
 @workflow(name="tasktwo",
-          task_instance=t,
+          task_instance=sparrow,
           task_order=2,
           shared=False,
           args=[1, 2],
@@ -109,39 +103,39 @@ def tasktwo(ctx, result, a, b):
     return a, b
 
 
-# Invoke this where needed
+# INVOKE BELOW WHERE NEEDED
 # Example: Within some other function
 
 
 # Run all tasks
 # Multiple Workflow Tasks run
-t.run(tasks=["1"])
-t.run(tasks="1")
+sparrow.run(tasks=["1"])
+sparrow.run(tasks="1")
 
 
 # Run all shared tasks
 # Shared Workflow Tasks run
-t.run(tasks=["shared:1"])
-t.run(tasks="shared:1")
+sparrow.run(tasks=["shared:1"])
+sparrow.run(tasks="shared:1")
 
 
 # Multiple Workflow Tasks run
-run_1 = t.run(tasks=["shared:taskname", "tasktwo"])
-# print("t.ctx ",t.ctx)
+run_1 = sparrow.run(tasks=["shared:taskname", "tasktwo"])
+# print("sparrow.ctx ", sparrow.ctx)
 print("run_1", run_1)
 
 
 # Run Tasks run with mix of shared
 # Multiple Workflow Tasks run with mix of shared
-t.run(tasks=["taskname", "tasktwo", "shared:taskname"])
+sparrow.run(tasks=["taskname", "tasktwo", "shared:taskname"])
 
 
 # Single Workflow Tasks run
-run_2 = t.run(tasks="shared:taskname")
+run_2 = sparrow.run(tasks="shared:taskname")
 print("run_2", run_2)
 
 
 # Run Tasks run with shared task
 # Single Workflow Tasks run for shared task
-t.run(tasks="shared:taskname")
+sparrow.run(tasks="shared:taskname")
 
