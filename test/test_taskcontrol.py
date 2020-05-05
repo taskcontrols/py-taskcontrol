@@ -16,7 +16,7 @@ from src.workflow import workflow, Tasks
 
 class TestDecorator():
 
-    def test_creates_task_before_as_list(self):
+    def test_1_1_creates_task_before_as_list(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -54,7 +54,7 @@ class TestDecorator():
                 assert len(i[j]) == 3
                 assert type(i[j]) == list
 
-    def test_creates_task_before_as_dict(self):
+    def test_1_2_creates_task_before_as_dict(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -91,7 +91,7 @@ class TestDecorator():
                 assert len(i[j]) == 3
                 assert type(i[j]) == list
 
-    def test_creates_task_after_as_list(self):
+    def test_1_3_creates_task_after_as_list(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -128,7 +128,7 @@ class TestDecorator():
                 assert len(i[j]) == 3
                 assert type(i[j]) == list
 
-    def test_creates_task_after_as_dict(self):
+    def test_1_4_creates_task_after_as_dict(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -165,7 +165,7 @@ class TestDecorator():
                 assert len(i[j]) == 3
                 assert type(i[j]) == list
 
-    def test_creates_task_after_and_before_as_dict(self):
+    def test_1_5_creates_task_after_and_before_as_dict(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -202,7 +202,7 @@ class TestDecorator():
                 assert len(i[j]) == 3
                 assert type(i[j]) == list
 
-    def test_creates_task_after_and_before_as_list(self):
+    def test_1_6_creates_task_after_and_before_as_list(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -239,7 +239,7 @@ class TestDecorator():
                 assert len(i[j]) == 3
                 assert type(i[j]) == list
 
-    def test_creates_task_with_before_list_with_right_args(self):
+    def test_1_7_creates_task_with_before_list_with_right_args(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -276,7 +276,7 @@ class TestDecorator():
                 assert len(i[j]) == 3
                 assert type(i[j]) == list
 
-    def test_creates_task_with_after_list_with_right_args(self):
+    def test_1_8_creates_task_with_after_list_with_right_args(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -313,7 +313,7 @@ class TestDecorator():
                 assert len(i[j]) == 3
                 assert type(i[j]) == list
 
-    def test_doesnot_creates_task_with_before_list_with_wrong_args_throws_Exception(self):
+    def test_1_9_doesnot_creates_task_with_before_list_with_wrong_args_throws_Exception(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -339,7 +339,7 @@ class TestDecorator():
 
         assert e.type is Exception
 
-    def test_doesnot_creates_task_with_after_list_with_wrong_args_throws_TypeError(self):
+    def test_1_10_doesnot_creates_task_with_after_list_with_wrong_args_throws_TypeError(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -365,7 +365,7 @@ class TestDecorator():
 
         assert e.type is Exception
 
-    def test_doesnot_creates_task_with__before_and_after_list_with_wrong_args_throws_TypeError(self):
+    def test_1_11_doesnot_creates_task_with__before_and_after_list_with_wrong_args_throws_TypeError(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -391,7 +391,7 @@ class TestDecorator():
 
         assert e.type is Exception
 
-    def test_doesnot_creates_task_with_wrong_print_args_for_task_function_throws_TypeError(self):
+    def test_1_12_doesnot_creates_task_with_wrong_print_args_for_task_function_throws_TypeError(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -417,7 +417,7 @@ class TestDecorator():
 
         assert e.type is Exception
 
-    def test_doesnot_creates_task_with_wrong_def_of_args_for_task_function_throws_TypeError(self):
+    def test_1_13_doesnot_creates_task_with_wrong_def_of_args_for_task_function_throws_TypeError(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -443,7 +443,99 @@ class TestDecorator():
 
         assert e.type is Exception
 
-    def test_creates_instance_task(self):
+    def test_1_14_creates_instance_task(self):
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+            return 14
+
+        @workflow(
+            name="taskname", task_order=1, task_instance=t,
+            shared=False, args=[1, 2], kwargs={}, log=False,
+            before=[{
+                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                "options": {"error": "next", "error_next_value": ""}
+            }],
+            after=[{
+                "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+            }])
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+            return 14
+
+        result = t.run(tasks="taskname")
+
+        assert type(result) == list
+        assert not hasattr(result, "result")
+        assert len(result) > 0
+        assert type(result[0]) == dict
+
+        assert type(result[0].get("result")) == list
+        assert len(result[0].get("result")) == 3
+        for i in result[0].get("result"):
+            assert i == 14
+
+    def test_1_15_doesnot_create_instance_task(self):
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+            return 15
+
+        @workflow(
+            name="taskname", task_order=1, task_instance=t,
+            shared=True, args=[1, 2], kwargs={}, log=False,
+            before=[{
+                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                "options": {"error": "next", "error_next_value": ""}
+            }],
+            after=[{
+                "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
+            }])
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+            return 15
+
+        result = t.run(tasks="taskname")
+
+    def test_1_16_creates_shared_task(self):
+        t = Tasks()
+
+        def middleware(ctx, result, k, c, d, **kwargs):
+            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+            return 16
+
+        @workflow(
+            name="taskname", task_order=1, task_instance=t,
+            shared=True, args=[1, 2], kwargs={}, log=False,
+            before=[{
+                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                "options": {"error": "next", "error_next_value": ""}
+            }],
+            after=[{
+                "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
+            }])
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+            return 16
+
+        result = t.run(tasks="shared:taskname")
+
+        assert type(result) == list
+        assert not hasattr(result, "result")
+        assert len(result) > 0
+        assert type(result[0]) == dict
+
+        assert type(result[0].get("result")) == list
+        assert len(result[0].get("result")) == 3
+        for i in result[0].get("result"):
+            assert i == 16
+
+    def test_1_17_doesnot_create_shared_task(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -465,75 +557,7 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
-# TODO
-    def test_doesnot_create_instance_task(self):
-        t = Tasks()
-
-        def middleware(ctx, result, k, c, d, **kwargs):
-            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-
-        @workflow(
-            name="taskname", task_order=1, task_instance=t,
-            shared=True, args=[1, 2], kwargs={}, log=False,
-            before=[{
-                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
-                "options": {"error": "next", "error_next_value": ""}
-            }],
-            after=[{
-                "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
-            }])
-        def taskone(ctx, result, a, b):
-            print("Running my task function: taskone", a, b)
-
-        result = t.run(tasks="taskname")
-
-    def test_creates_shared_task(self):
-        t = Tasks()
-
-        def middleware(ctx, result, k, c, d, **kwargs):
-            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-
-        @workflow(
-            name="taskname", task_order=1, task_instance=t,
-            shared=True, args=[1, 2], kwargs={}, log=False,
-            before=[{
-                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
-                "options": {"error": "next", "error_next_value": ""}
-            }],
-            after=[{
-                "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
-            }])
-        def taskone(ctx, result, a, b):
-            print("Running my task function: taskone", a, b)
-
-        result = t.run(tasks="taskname")
-
-# TODO
-    def test_doesnot_create_shared_task(self):
-        t = Tasks()
-
-        def middleware(ctx, result, k, c, d, **kwargs):
-            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-
-        @workflow(
-            name="taskname", task_order=1, task_instance=t,
-            shared=False, args=[1, 2], kwargs={}, log=False,
-            before=[{
-                "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
-                "options": {"error": "next", "error_next_value": ""}
-            }],
-            after=[{
-                "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
-            }])
-        def taskone(ctx, result, a, b):
-            print("Running my task function: taskone", a, b)
-
-        result = t.run(tasks="taskname")
-
-    def test_does_not_create_task_without_name_throws_TypeError(self):
+    def test_1_18_does_not_create_task_without_name_throws_TypeError(self):
         with pytest.raises(TypeError) as e:
             t = Tasks()
 
@@ -559,7 +583,7 @@ class TestDecorator():
 
         assert e.type is TypeError
 
-    def test_does_not_create_task_without_task_instance_throws_TypeError(self):
+    def test_1_19_does_not_create_task_without_task_instance_throws_TypeError(self):
         with pytest.raises(TypeError) as e:
             t = Tasks()
 
@@ -585,7 +609,7 @@ class TestDecorator():
 
         assert e.type is TypeError
 
-    def test_creates_task_without_taskorder(self):
+    def test_1_20_creates_task_without_taskorder(self):
         # with pytest.raises(Exception) as e:
         t = Tasks()
 
@@ -611,7 +635,7 @@ class TestDecorator():
 
         # assert e.type is Exception
 
-    def test_creates_task_without_before(self):
+    def test_1_21_creates_task_without_before(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -629,7 +653,7 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
-    def test_creates_task_without_after(self):
+    def test_1_22_creates_task_without_after(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -647,7 +671,7 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
-    def test_creates_task_without_log(self):
+    def test_1_23_creates_task_without_log(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -680,22 +704,22 @@ class TestDecorator():
 
 class TestTaskRunner():
 
-    def test_run_single_instance_task(self):
+    def test_2_1_run_single_instance_task(self):
         pass
 
-    def test_run_doesnot_single_instance_task(self):
+    def test_2_2_run_doesnot_single_instance_task(self):
         pass
 
-    def test_run_multiple_instance_task(self):
+    def test_2_3_run_multiple_instance_task(self):
         pass
 
-    def test_run_doesnot_multiple_instance_task(self):
+    def test_2_4_run_doesnot_multiple_instance_task(self):
         pass
 
-    def test_run_all_instance_task(self):
+    def test_2_5_run_all_instance_task(self):
         pass
 
-    def test_run_doesnot_all_instance_task(self):
+    def test_2_6_run_doesnot_all_instance_task(self):
         pass
 
 
@@ -710,22 +734,22 @@ class TestTaskRunner():
 
 class TestSharedTaskRunner():
 
-    def test_run_single_shared_tasks(self):
+    def test_3_1_run_single_shared_tasks(self):
         pass
 
-    def test_run_doesnot_single_shared_tasks(self):
+    def test_3_2_run_doesnot_single_shared_tasks(self):
         pass
 
-    def test_run_single_multiple_tasks(self):
+    def test_3_3_run_single_multiple_tasks(self):
         pass
 
-    def test_run_doesnot_single_multiple_tasks(self):
+    def test_3_4_run_doesnot_single_multiple_tasks(self):
         pass
 
-    def test_run_single_all_shared_tasks(self):
+    def test_3_5_run_single_all_shared_tasks(self):
         pass
 
-    def test_run_doesnot_single_all_shared_tasks(self):
+    def test_3_6_run_doesnot_single_all_shared_tasks(self):
         pass
 
 
@@ -738,7 +762,7 @@ class TestSharedTaskRunner():
 
 class TestAnyTaskRunner():
 
-    def test_any_type_task_shared_task(self):
+    def test_4_1_any_type_task_shared_task(self):
         t = Tasks()
 
         @workflow(
@@ -751,7 +775,7 @@ class TestAnyTaskRunner():
 
         result = t.run(tasks="shared:taskname")
 
-    def test_any_type_task_shared_task_doesnot_run_throws_Error(self):
+    def test_4_2_any_type_task_shared_task_doesnot_run_throws_Error(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -765,7 +789,7 @@ class TestAnyTaskRunner():
 
             result = t.run(tasks="shared:taskname")
 
-    def test_any_type_task_instance(self):
+    def test_4_3_any_type_task_instance(self):
         t = Tasks()
 
         @workflow(
@@ -778,7 +802,7 @@ class TestAnyTaskRunner():
 
         result = t.run(tasks=taskname)
 
-    def test_any_type_task_instance_doesnot_run_throws_Error(self):
+    def test_4_4_any_type_task_instance_doesnot_run_throws_Error(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -792,7 +816,7 @@ class TestAnyTaskRunner():
 
             result = t.run(tasks="taskname")
 
-    def test_any_type_task_shared_and_instance(self):
+    def test_4_5_any_type_task_shared_and_instance(self):
         t = Tasks()
 
         @workflow(
@@ -813,7 +837,7 @@ class TestAnyTaskRunner():
 
         result = t.run(tasks=["taskname", "shared:taskone"])
 
-    def test_doesnot_any_type_task_shared_and_instance_throws_Error(self):
+    def test_4_6_doesnot_any_type_task_shared_and_instance_throws_Error(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -848,7 +872,7 @@ class TestAnyTaskRunner():
 
 class TestMiddlewares():
 
-    def test_run_middlewares_before_middlewares(self):
+    def test_5_1_run_middlewares_before_middlewares(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -866,7 +890,7 @@ class TestMiddlewares():
 
         result = t.run(tasks="taskname")
 
-    def test_run_middlewares_after_middlewares(self):
+    def test_5_2_run_middlewares_after_middlewares(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -885,7 +909,7 @@ class TestMiddlewares():
 
         result = t.run(tasks="taskname")
 
-    def test_run_doesnot_middlewares_before_middleware(self):
+    def test_5_3_run_doesnot_middlewares_before_middleware(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -907,7 +931,7 @@ class TestMiddlewares():
 
         assert e.type == TypeError
 
-    def test_run_doesnot_middlewares_after_middleware(self):
+    def test_5_4_run_doesnot_middlewares_after_middleware(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -929,7 +953,7 @@ class TestMiddlewares():
 
         assert e.type == TypeError
 
-    def test_run_single_middleware_before_middleware(self):
+    def test_5_5_run_single_middleware_before_middleware(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -947,7 +971,7 @@ class TestMiddlewares():
 
         result = t.run(tasks="taskname")
 
-    def test_run_single_middleware_after_middleware(self):
+    def test_5_6_run_single_middleware_after_middleware(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -965,7 +989,7 @@ class TestMiddlewares():
 
         result = t.run(tasks="taskname")
 
-    def test_run_doesnot_single_middleware_before_middleware(self):
+    def test_5_7_run_doesnot_single_middleware_before_middleware(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -985,7 +1009,7 @@ class TestMiddlewares():
 
             result = t.run(tasks="taskname")
 
-    def test_run_doesnot_single_middleware_after_middleware(self):
+    def test_5_8_run_doesnot_single_middleware_after_middleware(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -1017,7 +1041,7 @@ class TestMiddlewares():
 # TODO: Write result asserts for all
 
 class TestFunctions():
-    def test_function_invocation_with_args(self):
+    def test_6_1_function_invocation_with_args(self):
         t = Tasks()
 
         @workflow(
@@ -1029,7 +1053,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_function_invocation_with_no_args_in_def(self):
+    def test_6_2_function_invocation_with_no_args_in_def(self):
         t = Tasks()
 
         @workflow(
@@ -1041,7 +1065,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_creates_task_without_args(self):
+    def test_6_3_creates_task_without_args(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -1056,7 +1080,7 @@ class TestFunctions():
 
         assert e.type is Exception
 
-    def test_creates_task_with_kwargs(self):
+    def test_6_4_creates_task_with_kwargs(self):
         t = Tasks()
 
         @workflow(
@@ -1068,7 +1092,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_creates_task_without_kwargs(self):
+    def test_6_5_creates_task_without_kwargs(self):
         t = Tasks()
 
         @workflow(
@@ -1080,7 +1104,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_doesnot_create_task_without_args_without_kwargs(self):
+    def test_6_6_doesnot_create_task_without_args_without_kwargs(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -1095,7 +1119,7 @@ class TestFunctions():
 
         assert e.type == Exception
 
-    def test_function_invocation_returns_1_None(self):
+    def test_6_7_function_invocation_returns_1_None(self):
         t = Tasks()
 
         @workflow(
@@ -1107,7 +1131,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_function_invocation_returns_2_None(self):
+    def test_6_8_function_invocation_returns_2_None(self):
         t = Tasks()
 
         @workflow(
@@ -1119,7 +1143,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_function_invocation_returns_1_value(self):
+    def test_6_9_function_invocation_returns_1_value(self):
         t = Tasks()
 
         @workflow(
@@ -1132,7 +1156,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_function_invocation_returns_2_values(self):
+    def test_6_10_function_invocation_returns_2_values(self):
         t = Tasks()
 
         @workflow(
@@ -1145,7 +1169,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_function_invocation_returns_3_value(self):
+    def test_6_11_function_invocation_returns_3_value(self):
         t = Tasks()
 
         @workflow(
@@ -1158,7 +1182,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_function_doesnot_invoke_returns_throws_Error(self):
+    def test_6_12_unction_doesnot_invoke_returns_throws_Error(self):
         t = Tasks()
 
         @workflow(
@@ -1172,7 +1196,7 @@ class TestFunctions():
         result = t.run(tasks="taskname")
 
     # TODO: THIS TEST IS NOT COMPLETE FOR ITS ARGUMENTS
-    def test_function_invocation_error_returns_completes_flow(self):
+    def test_6_13_function_invocation_error_returns_completes_flow(self):
         t = Tasks()
 
         @workflow(
@@ -1185,7 +1209,7 @@ class TestFunctions():
         result = t.run(tasks="taskname")
 
     # TODO: THIS TEST IS NOT COMPLETE FOR ITS ARGUMENTS
-    def test_function_doesnot_invoke_error_returns_completes_flow_with_handler(self):
+    def test_6_14_function_doesnot_invoke_error_returns_completes_flow_with_handler(self):
         t = Tasks()
 
         @workflow(
@@ -1197,7 +1221,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_functions_returns_results(self):
+    def test_6_15_functions_returns_results(self):
         t = Tasks()
 
         @workflow(
@@ -1209,7 +1233,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_functions_doesnot_return_results(self):
+    def test_6_16_functions_doesnot_return_results(self):
         t = Tasks()
 
         @workflow(
@@ -1221,7 +1245,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_functions_returns_right_results(self):
+    def test_6_17_functions_returns_right_results(self):
         t = Tasks()
 
         @workflow(
@@ -1233,7 +1257,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_functions_doesnot_return_right_results(self):
+    def test_6_18_functions_doesnot_return_right_results(self):
         t = Tasks()
 
         @workflow(
@@ -1250,7 +1274,7 @@ class TestFunctions():
 
 class TestBeforeMiddlewaresResultReturns():
 
-    def test_middlewares_doesnot_return_results(self):
+    def test_7_1_middlewares_doesnot_return_results(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1270,7 +1294,7 @@ class TestBeforeMiddlewaresResultReturns():
 
         result = t.run(tasks="taskname")
 
-    def test_middlewares_invocation_returns_1_None(self):
+    def test_7_2_middlewares_invocation_returns_1_None(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1290,7 +1314,7 @@ class TestBeforeMiddlewaresResultReturns():
 
         result = t.run(tasks="taskname")
 
-    def test_middlewares_invocation_returns_2_None(self):
+    def test_7_3_middlewares_invocation_returns_2_None(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1311,7 +1335,7 @@ class TestBeforeMiddlewaresResultReturns():
 
         result = t.run(tasks="taskname")
 
-    def test_middlewares_invocation_returns_1_values(self):
+    def test_7_4_middlewares_invocation_returns_1_values(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1332,7 +1356,7 @@ class TestBeforeMiddlewaresResultReturns():
 
         result = t.run(tasks="taskname")
 
-    def test_middlewares_invocation_returns_2_values(self):
+    def test_7_5_middlewares_invocation_returns_2_values(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1353,7 +1377,7 @@ class TestBeforeMiddlewaresResultReturns():
 
         result = t.run(tasks="taskname")
 
-    def test_middlewares_invocation_returns_3_values(self):
+    def test_7_6_middlewares_invocation_returns_3_values(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1374,7 +1398,7 @@ class TestBeforeMiddlewaresResultReturns():
 
         result = t.run(tasks="taskname")
 
-    def test_middlewares_doesnot_invoke_returns_throws_Error(self):
+    def test_7_7_middlewares_doesnot_invoke_returns_throws_Error(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1395,7 +1419,7 @@ class TestBeforeMiddlewaresResultReturns():
 
         result = t.run(tasks="taskname")
 
-    def test_middlewares_invocation_error_returns_completes_flow(self):
+    def test_7_8_middlewares_invocation_error_returns_completes_flow(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1416,7 +1440,7 @@ class TestBeforeMiddlewaresResultReturns():
 
         result = t.run(tasks="taskname")
 
-    def test_middlewares_doesnot_invoke_error_returns_completes_flow_with_handler(self):
+    def test_7_9_middlewares_doesnot_invoke_error_returns_completes_flow_with_handler(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1439,41 +1463,34 @@ class TestBeforeMiddlewaresResultReturns():
 
 # middlewares return results
 
+
 class TestAfterMiddlewaresResultReturns():
 
-    def test_middlewares_doesnot_return_results(self):
+    def test_8_1_middlewares_doesnot_return_results(self):
         pass
 
-
-    def test_middlewares_invocation_returns_1_None(self):
+    def test_8_2_middlewares_invocation_returns_1_None(self):
         pass
 
-
-    def test_middlewares_invocation_returns_2_None(self):
+    def test_8_3_middlewares_invocation_returns_2_None(self):
         pass
 
-
-    def test_middlewares_invocation_returns_1_values(self):
+    def test_8_4_middlewares_invocation_returns_1_values(self):
         pass
 
-
-    def test_middlewares_invocation_returns_2_values(self):
+    def test_8_5_middlewares_invocation_returns_2_values(self):
         pass
 
-
-    def test_middlewares_invocation_returns_3_values(self):
+    def test_8_6_middlewares_invocation_returns_3_values(self):
         pass
 
-
-    def test_middlewares_doesnot_invoke_returns_throws_Error(self):
+    def test_8_7_middlewares_doesnot_invoke_returns_throws_Error(self):
         pass
 
-
-    def test_middlewares_invocation_error_returns_completes_flow(self):
+    def test_8_8_middlewares_invocation_error_returns_completes_flow(self):
         pass
 
-
-    def test_middlewares_doesnot_invoke_error_returns_completes_flow_with_handler(self):
+    def test_8_9_middlewares_doesnot_invoke_error_returns_completes_flow_with_handler(self):
         pass
 
 
@@ -1481,39 +1498,31 @@ class TestAfterMiddlewaresResultReturns():
 
 class TestTaskResultReturns():
 
-    def test_task_returns_results(self):
+    def test_9_1_task_returns_results(self):
         pass
 
-
-    def test_task_returns_right_results(self):
+    def test_9_2_task_returns_right_results(self):
         pass
 
-
-    def test_task_doesnot_return_right_results(self):
+    def test_9_3_task_doesnot_return_right_results(self):
         pass
 
-
-    def test_task_doesnot_return_wrong_results(self):
+    def test_9_3_task_doesnot_return_wrong_results(self):
         pass
 
-
-    def test_task_return_wrong_results(self):
+    def test_9_4_task_return_wrong_results(self):
         pass
 
-
-    def test_task_returns_incorrect_numbers(self):
+    def test_9_5_task_returns_incorrect_numbers(self):
         pass
 
-
-    def test_task_returns_correct_numbers(self):
+    def test_9_6_task_returns_correct_numbers(self):
         pass
 
-
-    def test_task_doesnot_return_incorrect_numbers(self):
+    def test_9_7_task_doesnot_return_incorrect_numbers(self):
         pass
 
-
-    def test_task_doesnot_return_correct_numbers(self):
+    def test_9_8_task_doesnot_return_correct_numbers(self):
         pass
 
 
@@ -1521,11 +1530,10 @@ class TestTaskResultReturns():
 
 class TestMiddlewareAccessContext():
 
-    def test_middlewares_can_access_context(self):
+    def test_10_1_middlewares_can_access_context(self):
         pass
 
-
-    def test_middlewares_doesnot_access_context(self):
+    def test_10_2_middlewares_doesnot_access_context(self):
         pass
 
 
@@ -1533,76 +1541,62 @@ class TestMiddlewareAccessContext():
 
 class TestFunctionsAccessContext():
 
-    def test_functions_can_access_context(self):
+    def test_11_1_functions_can_access_context(self):
         pass
 
-
-    def test_functions_doesnot_access_context(self):
+    def test_11_2_functions_doesnot_access_context(self):
         pass
 
 
 class TestMiddlewareBeforeForAsyncAwait:
 
-    def test_Middleware_before_for_asyncAwait(self):
+    def test_12_1_Middleware_before_for_asyncAwait(self):
         pass
 
-
-    def test_Middleware_after_for_asyncAwait(self):
+    def test_12_2_Middleware_after_for_asyncAwait(self):
         pass
 
-
-    def test_Middleware_function_for_asyncAwait(self):
+    def test_12_3_Middleware_function_for_asyncAwait(self):
         pass
 
 
 class TestMiddlewareBeforeForMultiThreads:
 
-    def test_Middleware_before_for_multiThreads_without_Join(self):
+    def test_13_1_Middleware_before_for_multiThreads_without_Join(self):
         pass
 
-
-    def test_Middleware_before_for_multiThreads_with_Join(self):
+    def test_13_2_Middleware_before_for_multiThreads_with_Join(self):
         pass
 
-
-    def test_Middleware_after_for_multiThreads_without_Join(self):
+    def test_13_3_Middleware_after_for_multiThreads_without_Join(self):
         pass
 
-
-    def test_Middleware_after_for_multiThreads_with_Join(self):
+    def test_13_4_Middleware_after_for_multiThreads_with_Join(self):
         pass
 
-
-    def test_Middleware_function_for_multiThreads_without_Join(self):
+    def test_13_5_Middleware_function_for_multiThreads_without_Join(self):
         pass
 
-
-    def test_Middleware_function_for_multiThreads_with_Join(self):
+    def test_13_6_Middleware_function_for_multiThreads_with_Join(self):
         pass
 
 
 class TestMiddlewareBeforeForMultiProcessing:
 
-    def test_Middleware_before_for_multiProcessing_without_Join(self):
+    def test_14_1_Middleware_before_for_multiProcessing_without_Join(self):
         pass
 
-
-    def test_Middleware_before_for_multiProcessing_with_Join(self):
+    def test_14_2_Middleware_before_for_multiProcessing_with_Join(self):
         pass
 
-
-    def test_Middleware_after_for_multiProcessing_without_Join(self):
+    def test_14_3_Middleware_after_for_multiProcessing_without_Join(self):
         pass
 
-
-    def test_Middleware_after_for_multiProcessing_with_Join(self):
+    def test_14_4_Middleware_after_for_multiProcessing_with_Join(self):
         pass
 
-
-    def test_Middleware_function_for_multiProcess_without_Join(self):
+    def test_14_5_Middleware_function_for_multiProcess_without_Join(self):
         pass
 
-
-    def test_Middleware_function_for_multiProcess_with_Join(self):
+    def test_14_6_Middleware_function_for_multiProcess_with_Join(self):
         pass
-
