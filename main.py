@@ -109,9 +109,6 @@ def tasktwo(ctx, result, a, b):
     return a, b
 
 
-# tasktwo(5, 6)
-
-
 # Invoke this where needed
 # Example: Within some other function
 
