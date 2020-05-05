@@ -62,7 +62,7 @@ It also provides methods to create a plugin and work with tasks as a module and/
 
 ##### Quick Demo:
 
-[demo example - main.py](./main.py)
+[demo example - main.py](https://github.com/taskcontrols/py-taskcontrol/blob/master/main.py)
 
 
 ```python
