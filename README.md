@@ -41,9 +41,7 @@ It also provides methods to create a plugin and work with tasks as a module and/
     Previous Version: 1.1.0/1.1.1 (functional - not production ready - minor bug. Please upgrade to v1.1.2)
 
 
-[Releases](https://github.com/taskcontrols/py-taskcontrol/blob/master/docs/releases.md)
-    
-    Describes in short the usage of the package
+[Releases](https://github.com/taskcontrols/py-taskcontrol/blob/master/docs/releases.md) Lists in short the releases of the package
 
 
 ##### Package Link:
