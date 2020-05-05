@@ -183,7 +183,7 @@ functools.reduce(red, ls)
 
 ```
 
-# [Todo](./.todo)
+# [Todo](https://github.com/taskcontrols/py-taskcontrol/blob/master/.todo)
 
 
 * e2e and Unit Tests - Add Tests (Structure of package created - to be cleaned after writing tests)
@@ -193,7 +193,7 @@ functools.reduce(red, ls)
 
 # Status
 
-* In Development
+* In Active Development (taskcontrol version 1.2.1)
 
 
 # Support
@@ -205,7 +205,7 @@ functools.reduce(red, ls)
 
 # License
 
-The MIT License (MIT) - See [LICENSE](./LICENSE) for further details
+The MIT License (MIT) - See [LICENSE](https://github.com/taskcontrols/py-taskcontrol/blob/master/LICENSE) for further details
 
 
 Copyright © 2020 - till library works
