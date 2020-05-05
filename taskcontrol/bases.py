@@ -147,7 +147,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
                 return self.shared_tasks.tasks.get(task_)
             elif not shared:
                 return self.tasks.get(task_)
-        return self.tasks
+        return
 
     def set_task(self, function_, function_args, function_kwargs, workflow_args, workflow_kwargs):
         workflow_name = workflow_kwargs.get("name")

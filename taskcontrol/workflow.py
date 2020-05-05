@@ -28,12 +28,16 @@ class Tasks(WorkflowBase, PluginsBase):
 
         if isinstance(tasks, str):
             # Iterate task through single task
-            result.append(self.run_task(self.get_tasks(tasks)))
+            task_ = self.get_tasks(tasks)
+            if not task_ == None:
+                result.append(self.run_task(task_))
         elif isinstance(tasks, list):
             # Iterate task through tasks
             # reduce is a better and easier way. Compare looping ways
             for task_ in tasks:
-                result.append(self.run_task(self.get_tasks(task_)))
+                t = self.get_tasks(task_)
+                if not t == None:
+                    result.append(self.run_task(t))
         else:
             print("No workflow or task available to run")
         return result
