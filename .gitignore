@@ -131,7 +131,7 @@ dmypy.json
 demos.py
 
 pyvenv.cfg
-lib64/
+lib64/*
 bin/
 lib/
 include/
