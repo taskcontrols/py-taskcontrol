@@ -117,7 +117,7 @@ sparrow.run(tasks="taskname")
 
 # Run all tasks
 sparrow.run(tasks=["1"])
-# t.run(tasks=["taskname", ..., "anothertask"])
+# sparrow.run(tasks=["taskname", ..., "anothertask"])
 
 
 

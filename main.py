@@ -11,8 +11,8 @@ from taskcontrol.workflow import workflow, Tasks
 sparrow = Tasks()
 
 
-def test(ctx, result, k, c, d, **kwargs):
-    print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+def nesttree(ctx, result, k, c, d, **kwargs):
+    print("Running my Middleware Function: nesttree - task items", k, c, d, kwargs)
 
 
 @workflow(
@@ -25,7 +25,7 @@ def test(ctx, result, k, c, d, **kwargs):
     before=[
         # before middleware order followed will be of the list sequence
         {
-            "function": test,
+            "function": nesttree,
             "args": [11, 12],
             "kwargs": {"d": "Before Testing message Middleware "},
 
@@ -48,7 +48,7 @@ def test(ctx, result, k, c, d, **kwargs):
     after=[
         # after middleware order followed will be of the list sequence
         {
-            "function": test,
+            "function": nesttree,
             "args": [13, 14],
             "kwargs": {"d": "After Middleware Testing message"},
             "options": {
@@ -90,7 +90,7 @@ def taskone(ctx, result, a, b):
           kwargs={},
           # Declare before/after as an list or an object (if single middleware function)
           before={
-              "function": test,
+              "function": nesttree,
               "args": [21, 22],
               "kwargs": {"d": "Before Testing message"},
               "options": {"error": "next", "error_next_value": ""}
