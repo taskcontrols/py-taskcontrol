@@ -70,7 +70,7 @@ It also provides methods to create a plugin and work with tasks as a module and/
 
 
 
-from taskcontrol import workflow, Tasks
+from taskcontrol.workflow import workflow, Tasks
 
 inst = Tasks()
 

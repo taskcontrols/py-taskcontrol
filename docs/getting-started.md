@@ -21,10 +21,10 @@
 
 
 # for git development repo
-# from src.workflow import workflow, Tasks
+# from taskcontrol.workflow import workflow, Tasks
 
 # for package
-from taskcontrol import workflow, Tasks
+from taskcontrol.workflow import workflow, Tasks
 
 
 # Instance of tasks and apis object
