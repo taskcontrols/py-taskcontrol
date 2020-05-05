@@ -1,8 +1,9 @@
 # # Project Workflow
 
-from .bases import WorkflowBase, PluginsBase
 from sys import path
 path.append('./')
+
+from .bases import WorkflowBase, PluginsBase
 
 
 class Tasks(WorkflowBase, PluginsBase):
