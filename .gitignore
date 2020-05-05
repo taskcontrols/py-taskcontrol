@@ -129,3 +129,10 @@ dmypy.json
 .pyre/
 
 demos.py
+
+pyvenv.cfg
+lib64/
+bin/
+lib/
+include/
+share/
