@@ -74,7 +74,7 @@ from taskcontrol.workflow import workflow, Tasks
 
 sparrow = Tasks()
 
-def middleware(ctx, result, k, c, d, **kwargs):
+def middleware_trees(ctx, result, k, c, d, **kwargs):
     print("Running my Middleware Function: test - task items", k, c, d, kwargs)
 
 
@@ -87,7 +87,7 @@ def middleware(ctx, result, k, c, d, **kwargs):
     kwargs={},
     before=[
         {
-            "function": middleware,
+            "function": middleware_trees,
             "args": [11, 12],
             "kwargs": {"d": "Before Testing message Middleware "},
             "options": {"error": "next", "error_next_value": ""}
@@ -95,7 +95,7 @@ def middleware(ctx, result, k, c, d, **kwargs):
     ],
     after=[
         {
-            "function": test,
+            "function": middleware_trees,
             "args": [13, 14],
             "kwargs": {"d": "After Middleware Testing message"},
             "options": {
