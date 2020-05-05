@@ -35,8 +35,9 @@ It also provides methods to create a plugin and work with tasks as a module and/
 
 ##### Version:
 
-    In Development: 1.2.0 (functional - production ready with most planned features with MVP)
-    Current Version: 1.1.0 (functional - not production ready)
+    In Development Version: 1.2.0 (functional - production ready with plugin and concurrency support)
+    Current Version: 1.2.0 (functional - production ready with most planned features with MVP)
+    Previous Version: 1.1.0 (functional - not production ready)
 
 
 ##### Package Link:
@@ -130,23 +131,23 @@ Though it may support Python version 2.x. However, it has not been tested in 2.x
 
 # Wiki
 
-* [Getting started](./docs/getting-started.md)
+* [Getting started](https://github.com/taskcontrols/py-taskcontrol/blob/master/docs/getting-started.md)
     
     Describes in short the usage of the package
 
-* [taskcontrol `workflow` decorator](./docs/workflow.md)
+* [taskcontrol `workflow` decorator](https://github.com/taskcontrols/py-taskcontrol/blob/master/docs/workflow.md)
     
     Describes how to use the taskcontrol workflow decorator in detail
 
-* [taskcontrol `workflow` decorator argument details](./docs/workflow-arguments.md)
+* [taskcontrol `workflow` decorator argument details](https://github.com/taskcontrols/py-taskcontrol/blob/master/docs/workflow-arguments.md)
     
     Describes in detail the arguments of workflow decorator
 
-* [taskcontrol `workflow` before / after argument for middleware declaration](./docs/workflow-middlewares.md)
+* [taskcontrol `workflow` before / after argument for middleware declaration](https://github.com/taskcontrols/py-taskcontrol/blob/master/docs/workflow-middlewares.md)
     
     Describes creating, defining, and running middlewares
 
-* [taskcontrol `workflow` instance and shared tasks argument](./docs/workflow-instance-shared-tasks.md)
+* [taskcontrol `workflow` instance and shared tasks argument](https://github.com/taskcontrols/py-taskcontrol/blob/master/docs/workflow-instance-shared-tasks.md)
     
     Describes creating a instance (isolated task) and an shared task (available to all instances)
 
