@@ -3,16 +3,15 @@
 
 # Release 1.2.5
 
+    Functional, tested release (Major release version)
+    
     Change of core functional structure and shared tasks execution in 1.2.5 version
     Read only ctx, and result is compulsary argument which are magically provided
+    Ordering of tasks feature functional for all tasks run enabled
+    Logger functionality enabled
     Minor bug fix in task run
+    Minor doc bugs removed
     Minor support using docs
-
-
-# Release 1.2.0
-
-    Minor argument order change from 1.1.0 version
-    ctx, and result is compulsary argument which are magically provided
 
 
 # Release 1.1.2
