@@ -205,7 +205,7 @@ functools.reduce(red, ls)
 
 [Paypal.me/taskcontrols](https://paypal.me/taskcontrols)
 
-[OpenCollective](https://opencollective.com/taskcontrol)
+[Be a Patreon](https://www.patreon.com/taskcontrols)
 
 
 # License
