@@ -68,7 +68,7 @@ class PluginsBase(SharedBase, ConcurencyBase):
 class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
     """middleware_task_ Structure: name, function, args, kwargs, options"""
     """workflow_kwargs: name, task_instance, task_order, shared, args, kwargs, before, after, log"""
-    """ TODO: Move this to close and make real privacy so cannot be accessed """
+    """ TODO: Move this to closure and make real privacy so cannot be accessed """
 
     # Allow instance tasks
     tasks = {"taskname": {}}
