@@ -35,9 +35,10 @@ It also provides methods to create a plugin and work with tasks as a module and/
 
 ##### Version:
 
-    In Development Version: 1.2.0 (functional - production ready with plugin and concurrency support)
-    Current Version: 1.2.0 (functional - production ready with most planned features with MVP)
-    Previous Version: 1.1.0 (functional - not production ready)
+    In Development Version: 1.2.6 (functional - production ready with plugin and concurrency support)
+    Current Version: 1.2.5 (functional - production ready with most planned features with MVP)
+    Previous Version: 1.2.0 (functional - production ready minor issues)
+    Previous Version: 1.1.0/1.1.1 (functional - not production ready - minor bug. Please upgrade to v1.1.2)
 
 
 ##### Package Link:
