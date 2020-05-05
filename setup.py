@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
      name='taskcontrol',
-     version='1.2.4',
+     version='1.2.0',
      scripts=[],
      author="Ganesh B",
      author_email="ganeshsurfs@gmail.com",

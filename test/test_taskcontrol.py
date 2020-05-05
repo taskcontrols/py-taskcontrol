@@ -757,7 +757,7 @@ class TestAnyTaskRunner():
 
             @workflow(
                 name="taskname",
-                shared=True
+                shared=False
             )
             def taskone(ctx, result):
                 print("Running my task function: taskone")
@@ -776,7 +776,7 @@ class TestAnyTaskRunner():
             print("Running my task function: taskname")
             return "taskname"
 
-        result = t.run(tasks="taskname")
+        result = t.run(tasks=taskname)
 
     def test_any_type_task_instance_doesnot_run_throws_Error(self):
         with pytest.raises(Exception) as e:
