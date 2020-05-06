@@ -135,7 +135,7 @@ def taskone(ctx, result, a, b):
         ],
         log = <boolean>
     )
-    def function: <function> (ctx, result, arg, arg..., kwargs):
+    def function: <function> (ctx, result, args, ..., kwargs):
         <code_here>
     ```
 
