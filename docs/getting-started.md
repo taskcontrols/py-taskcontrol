@@ -127,56 +127,56 @@ def taskone(ctx, result, a, b):
     ```
 
 #### name
-* Task name key takes a list of definitions
+* `name` key takes a string for the name of task instance
 * `<str>` type
 
 
 #### log
-* log key takes a boolean to allow logging or not
+* `log` key takes a boolean to allow logging or not
 * Whether logging should be allowed or not (Not functional yet)
 * `<boolean>` type
 
 
 #### after
-* after key takes definitions of a list of dict / dict definitions
+* `after` key takes definitions of a list of dict / dict definitions
 * after middleware order followed will be of the list sequence
 * `<list>` type or `<dict>` type
 
 
 #### before
-* before key takes definitions of a list of dict / dict
+* `before` key takes definitions of a list of dict / dict
 * before middleware order followed will be of the list sequence
 * `<list>` type or `<dict>` type
 
 
 #### args
-* args key takes a list of definitions
+* `args` key takes a list of definitions
 * Arguments that should be provided to the task function the decorator is applied on
 * `<list>` type
 
 
 #### kwargs
-* kwargs key takes a list of definitions
+* `kwargs` key takes a list of definitions
 * Keyword arguments for the function the decorator is applied on
 * `<dict>` type
 
 
 #### shared
-* shared key takes a boolean whether to create a shared task or not
+* `shared` key takes a boolean whether to create a shared task or not
 * Whether the Task is a shared task or instance isolated task
 * Shared Task is sharable and accessable across the app
 * `<boolean>` type
 
 
 #### task_instance
-* task_instance key takes instance of the Tasks object imported
+* `task_instance` key takes instance of the Tasks object imported
 * Task instance which is used for creating tasks
 * Tasks are isolated to this task instance
 * `<object>` instance type
 
 
 #### task_order
-* task_order key takes an ordering number / integer
+* `task_order` key takes an ordering number / integer
 * Order of the task function when all tasks are run (Not functional yet)
 * `<int>` type
 
