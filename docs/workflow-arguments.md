@@ -1,6 +1,9 @@
 # taskcontrol
 
+
 # Workflow decorator argument usage
+
+All Decorator arguments that can be used are are below. The only compulsory arguments are `name` and `task_instance`. `args`, `kwargs` key used for the function args and keyword args are not compulsory but the function will throw errors if there is a number of arguments mismatch.
 
 
 #### name
@@ -259,30 +262,32 @@ def nesttree(ctx, result, k, c, d, **kwargs):
     print("Running my Middleware Function: nesttree - task items", k, c, d, kwargs)
 
 @workflow(
-    name="taskname",
-    task_order=1,
-    task_instance=sparrow,
-    shared=False,
-    args=[1, 2],
-    kwargs={},
-    before=[
+    name="taskname",  # task name 
+    task_order=1,  # task order when to run when all runs are used 
+    task_instance=sparrow,  # instance of Task 
+    shared=False,  # boolean whether a shared task 
+    args=[1, 2],  # list of args 
+    kwargs={},  # dict of kwargs 
+    before=[  # before middleware definition
         {
-            "function": nesttree,
-            "args": [11, 12],
-            "kwargs": {"d": "Before Testing message Middleware "},
-            "options": {"error": "next", "error_next_value": ""}
+            "function": nesttree,  # middleware function definition
+            "args": [11, 12],  # list of args 
+            "kwargs": {"d": "Before Testing message Middleware "},  # dict of kwargs 
+            "options": {"error": "next", "error_next_value": ""}  # dict options
         }
     ],
-    after={
-            "function": nesttree,
-            "args": [11, 12],
-            "kwargs": {"d": "Before Testing message Middleware "},
-            "options": {"error": "next", "error_next_value": ""}
+    after={  # after middleware definition
+            "function": nesttree,  # list of args 
+            "args": [11, 12],  # list of args 
+            "kwargs": {"d": "Before Testing message Middleware "},  # dict of kwargs
+            "options": {"error": "next", "error_next_value": ""}  # dict options
         },
-    log=False
+    log=False  # log enabled or not
 )
 def taskone(ctx, result, a, b):
     print("Running my task function: taskone", a, b)
+    return a, b
 
 
 ```
+
