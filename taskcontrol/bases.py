@@ -337,4 +337,3 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
                 tasks[ik] = inst.tasks.get(ik)
 
         return tasks
-
