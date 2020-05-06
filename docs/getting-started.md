@@ -33,81 +33,6 @@
 * Run the task when needed using `.run(tasks=['taskname'])` invocation
 
 
-```python
-
-
-# for package
-from taskcontrol.workflow import workflow, Tasks
-
-
-# Create an instance of the task you are creating
-sparrow = Tasks()
-
-
-# Middleware that we are running
-# Use any middleware that runs with or withour returning results
-# Demo uses common middleware for all. Please use you own middlewares
-def nesttree(ctx, result, k, c, d, **kwargs):
-    print("Running my Middleware Function: nesttree - task items", k, c, d, kwargs)
-
-
-# workflow decorator
-@workflow(
-    
-    # Task name
-    name="taskname",
-    
-    # Order of the task function when all tasks are run (Not functional yet)
-    task_order=1,
-    
-    # Task instance whic is used for creating tasks
-    # Tasks are isolated to this task instance
-    task_instance=sparrow,
-
-    # Whether the Task is a shared task or instance isolated task
-    # Shared Task is sharable and accessable across the app
-    shared=False,
-
-    # Arguments that should be provided to the task function the decorator is applied on
-    args=[1, 2],
-
-    # Keyword arguments for the function the decorator is applied on
-    kwargs={},
-
-    # before middleware order followed will be of the list sequence
-    before=[
-        {
-            "function": nesttree,
-            "args": [11, 12],
-            "kwargs": {"d": "Before Testing message Middleware "},
-            "options": {"error": "next", "error_next_value": ""}
-        }
-    ],
-
-    # after middleware order followed will be of the list sequence
-    after=[
-        {
-            "function": nesttree,
-            "args": [13, 14],
-            "kwargs": {"d": "After Middleware Testing message"},
-            "options": {
-                "error": "error_handler",
-                "error_next_value": "value",
-                "error_handler": lambda err, value: (err, None)
-            }
-        }
-    ],
-
-    # Whether logging should be allowed or not (Not functional yet)
-    log=False
-)
-# Main function for the task
-def taskone(ctx, result, a, b):
-    print("Running my task function: taskone", a, b)
-
-
-```
-
 ## workflow decorator arguments
 * Usage:
     ```python
@@ -202,4 +127,83 @@ def taskone(ctx, result, a, b):
 * Order of the task function when all tasks are run (Not functional yet)
 * `<int>` type
 * [more]()
+
+
+## Demo Usage
+
+
+```python
+
+
+# for package
+from taskcontrol.workflow import workflow, Tasks
+
+
+# Create an instance of the task you are creating
+sparrow = Tasks()
+
+
+# Middleware that we are running
+# Use any middleware that runs with or withour returning results
+# Demo uses common middleware for all. Please use you own middlewares
+def nesttree(ctx, result, k, c, d, **kwargs):
+    print("Running my Middleware Function: nesttree - task items", k, c, d, kwargs)
+
+
+# workflow decorator
+@workflow(
+    
+    # Task name
+    name="taskname",
+    
+    # Order of the task function when all tasks are run (Not functional yet)
+    task_order=1,
+    
+    # Task instance whic is used for creating tasks
+    # Tasks are isolated to this task instance
+    task_instance=sparrow,
+
+    # Whether the Task is a shared task or instance isolated task
+    # Shared Task is sharable and accessable across the app
+    shared=False,
+
+    # Arguments that should be provided to the task function the decorator is applied on
+    args=[1, 2],
+
+    # Keyword arguments for the function the decorator is applied on
+    kwargs={},
+
+    # before middleware order followed will be of the list sequence
+    before=[
+        {
+            "function": nesttree,
+            "args": [11, 12],
+            "kwargs": {"d": "Before Testing message Middleware "},
+            "options": {"error": "next", "error_next_value": ""}
+        }
+    ],
+
+    # after middleware order followed will be of the list sequence
+    after=[
+        {
+            "function": nesttree,
+            "args": [13, 14],
+            "kwargs": {"d": "After Middleware Testing message"},
+            "options": {
+                "error": "error_handler",
+                "error_next_value": "value",
+                "error_handler": lambda err, value: (err, None)
+            }
+        }
+    ],
+
+    # Whether logging should be allowed or not (Not functional yet)
+    log=False
+)
+# Main function for the task
+def taskone(ctx, result, a, b):
+    print("Running my task function: taskone", a, b)
+
+
+```
 
