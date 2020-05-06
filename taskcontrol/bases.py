@@ -188,12 +188,12 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
 
     def update_task(self, task_):
 
-        # task_obj = self.create_task(task_)
-        self.ctx[task_.get("name")]["log"] = self.get_attr(task_, "log")
-        self.ctx[task_.get("name")]["workflow_args"] = self.get_attr(
-            task_, "workflow_args")
-        self.ctx[task_.get("name")]["workflow_kwargs"] = self.get_attr(
-            task_, "workflow_kwargs")
+        # # task_obj = self.create_task(task_)
+        # self.ctx[task_.get("name")]["log"] = self.get_attr(task_, "log")
+        # self.ctx[task_.get("name")]["workflow_args"] = self.get_attr(
+        #     task_, "workflow_args")
+        # self.ctx[task_.get("name")]["workflow_kwargs"] = self.get_attr(
+        #     task_, "workflow_kwargs")
 
         task_obj = {
             # task run not configured for ordered run
@@ -337,3 +337,4 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
                 tasks[ik] = inst.tasks.get(ik)
 
         return tasks
+

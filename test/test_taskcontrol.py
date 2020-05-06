@@ -501,7 +501,6 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
-
     def test_1_16_creates_shared_task(self):
         t = Tasks()
 
