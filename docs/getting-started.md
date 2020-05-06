@@ -19,6 +19,16 @@
 
 # Demo Usage
 
+* Import workflow and Tasks object from workflow module in taskcontrol package
+* Create a Task instance
+* Create a workflow definition using `@workflow` decorator
+* name, task_instance (compulsary)
+* args, kwargs, optional for function arguments - throws TypeError if wrong args provided
+* shared key is optional (defaults to False)
+* before and after arguments is optional and provides before and after middlewares for a specific task
+* log key is optional and default to False
+
+
 ```python
 
 
@@ -92,7 +102,6 @@ def taskone(ctx, result, a, b):
     print("Running my task function: taskone", a, b)
 
 
-
 ```
 
 ## workflow decorator arguments
@@ -125,6 +134,7 @@ def taskone(ctx, result, a, b):
     def function: <function> (ctx, result, arg, arg..., kwargs):
         <code_here>
     ```
+
 
 #### name
 * `name` key takes a string for the name of task instance
