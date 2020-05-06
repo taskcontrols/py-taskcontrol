@@ -22,6 +22,8 @@
 * Import workflow and Tasks object from workflow module in taskcontrol package
 * Create a Task instance
 * Create a workflow definition using `@workflow` decorator
+    - Usage: 
+        - `@workflow(name, task_order, task_instance, args, kwargs, before, after, shared, log)`
     - `name`, `task_instance` keys definitions are compulsary
     - `args`, `kwargs`, optional for function arguments - throws `TypeError` if wrong args provided
     - `before` and `after` keys are optional and provides before and after middlewares for a specific task
