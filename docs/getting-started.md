@@ -97,7 +97,8 @@ def taskone(ctx, result, a, b):
 
 ## workflow decorator arguments
 * Usage:
-    `@workflow(
+    ```python
+    @workflow(
         name = <str>,
         task_order = <int>,
         task_instance= <object_instance>,
@@ -123,7 +124,7 @@ def taskone(ctx, result, a, b):
     )
     def function <function> (ctx, result, arg, arg..., kwargs):
         <code_here>
-    `
+    ```
 
 #### name
 * Task name
