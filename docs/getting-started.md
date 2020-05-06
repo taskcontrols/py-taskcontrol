@@ -100,47 +100,47 @@ def taskone(ctx, result, a, b):
 
 #### name
 * Task name
-* <str> type
+* `<str>` type
 
 
 #### log
 * Whether logging should be allowed or not (Not functional yet)
-* <boolean> type
+* `<boolean>` type
 
 
 #### after
 * after middleware order followed will be of the list sequence
-* <list> type or <dict> type
+* `<list>` type or `<dict>` type
 
 
 #### before
 * before middleware order followed will be of the list sequence
-* <list> type or <dict> type
+* `<list>` type or `<dict>` type
 
 
 #### args
 * Arguments that should be provided to the task function the decorator is applied on
-* <list> type
+* `<list>` type
 
 
 #### kwargs
 * Keyword arguments for the function the decorator is applied on
-* <dict> type
+* `<dict>` type
 
 
 #### shared
 * Whether the Task is a shared task or instance isolated task
 * Shared Task is sharable and accessable across the app
-* <boolean> type
+* `<boolean>` type
 
 
 #### task_instance
 * Task instance whic is used for creating tasks
 * Tasks are isolated to this task instance
-* <object> instance type
+* `<object>` instance type
 
 
 #### task_order
 * Order of the task function when all tasks are run (Not functional yet)
-* <int> type
+* `<int>` type
 
