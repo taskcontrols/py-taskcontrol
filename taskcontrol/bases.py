@@ -136,6 +136,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
 
         """ Results of task runs (instance) """
         # Access results from tasks, shared tasks during a task run
+        # Make context based on taskname
         _ctx = {}
 
         """  """
