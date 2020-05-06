@@ -96,7 +96,34 @@ def taskone(ctx, result, a, b):
 ```
 
 ## workflow decorator arguments
-
+* Usage:
+    `@workflow(
+        name = <str>,
+        task_order = <int>,
+        task_instance= <object_instance>,
+        shared = <boolean>,
+        args = <list>,
+        kwargs = <dict>,
+        before = <list[<dict>]> or <dict> [
+            {
+                "function": <function>,
+                "args": <list[<object>]>,
+                "kwargs": <dict>,
+                "options": <dict> {"error": <str>, "error_next_value": <object> or <any>}
+            }
+        ],
+        after= <list[<dict>]> or <dict>  [ {
+                "function": <function>,
+                "args": <list>,
+                "kwargs": <dict>,
+                "options": { "error":<str>, "error_next_value":<object> or <any>, "error_handler":<function>}
+            }
+        ],
+        log = <boolean>
+    )
+    def function <function> (ctx, result, arg, arg..., kwargs):
+        <code_here>
+    `
 
 #### name
 * Task name
