@@ -31,7 +31,7 @@ class TestDecorator():
                     }],
             after=[{
                 "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
@@ -69,7 +69,7 @@ class TestDecorator():
             },
             after=[{
                 "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
@@ -106,7 +106,7 @@ class TestDecorator():
             }],
             after=[{
                 "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
@@ -143,7 +143,7 @@ class TestDecorator():
             }],
             after={
                 "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
             })
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
@@ -180,7 +180,7 @@ class TestDecorator():
             },
             after={
                 "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
             })
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
@@ -217,7 +217,7 @@ class TestDecorator():
             }],
             after=[{
                 "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
@@ -254,7 +254,7 @@ class TestDecorator():
             }],
             after=[{
                 "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
@@ -291,7 +291,7 @@ class TestDecorator():
             }],
             after=[{
                 "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
@@ -330,7 +330,7 @@ class TestDecorator():
                 }],
                 after=[{
                     "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
                 }])
             def taskone(ctx, result, a, b):
                 print("Running my task function: taskone", a, b)
@@ -356,7 +356,7 @@ class TestDecorator():
                 }],
                 after=[{
                     "function": middleware, "args": [13], "kwargs": {"d": "After Middleware Testing message"},
-                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
                 }])
             def taskone(ctx, result, a, b):
                 print("Running my task function: taskone", a, b)
@@ -382,7 +382,7 @@ class TestDecorator():
                 }],
                 after=[{
                     "function": middleware, "args": [13], "kwargs": {"d": "After Middleware Testing message"},
-                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
                 }])
             def taskone(ctx, result, a, b):
                 print("Running my task function: taskone", a, b)
@@ -408,7 +408,7 @@ class TestDecorator():
                 }],
                 after=[{
                     "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
                 }])
             def taskone(ctx, result, a, b):
                 print("Running my task function: taskone", a, c)
@@ -434,7 +434,7 @@ class TestDecorator():
                 }],
                 after=[{
                     "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
                 }])
             def taskone(ctx, result, a):
                 print("Running my task function: taskone", a)
@@ -459,7 +459,7 @@ class TestDecorator():
             }],
             after=[{
                 "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
@@ -500,6 +500,7 @@ class TestDecorator():
             return 15
 
         result = t.run(tasks="taskname")
+
 
     def test_1_16_creates_shared_task(self):
         t = Tasks()
@@ -550,7 +551,7 @@ class TestDecorator():
             }],
             after=[{
                 "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
@@ -574,7 +575,7 @@ class TestDecorator():
                 }],
                 after=[{
                     "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
                 }])
             def taskone(ctx, result, a, b):
                 print("Running my task function: taskone", a, b)
@@ -600,7 +601,7 @@ class TestDecorator():
                 }],
                 after=[{
                     "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
                 }])
             def taskone(ctx, result, a, b):
                 print("Running my task function: taskone", a, b)
@@ -626,7 +627,7 @@ class TestDecorator():
             }],
             after=[{
                 "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
@@ -646,7 +647,7 @@ class TestDecorator():
             shared=False, args=[1, 2], kwargs={}, log=False,
             after=[{
                 "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
@@ -686,7 +687,7 @@ class TestDecorator():
             }],
             after=[{
                 "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
-                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, None)}
+                "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
