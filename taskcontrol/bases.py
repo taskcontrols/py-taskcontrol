@@ -66,39 +66,142 @@ class PluginsBase(SharedBase, ConcurencyBase):
 
 
 class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
-    """middleware_task_ Structure: name, function, args, kwargs, options"""
-    """workflow_kwargs: name, task_instance, task_order, shared, args, kwargs, before, after, log"""
-    """ TODO: Move this to closure and make real privacy so cannot be accessed """
-
-    # Allow instance tasks
-    tasks = {"taskname": {}}
-
-    """ Results of task runs (instance) """
-    # Access results from tasks, shared tasks during a task run
-    ctx = {}
-
-    """  """
-    # TODO: Other features
-    config = {}
-
-    """  """
-    # TODO: Plugins features
-    plugins = {"pluginname": {"taskname": {}}}
 
     def __init__(self):
         self.shared_tasks = SharedBase.getInstance()
+        self.get_attr, self.update_task, self.set_task, self.parse_tasks, self.get_tasks = self.arg_closure()
+
+    def arg_closure(self):
+        """middleware_task_ Structure: name, function, args, kwargs, options"""
+        """workflow_kwargs: name, task_instance, task_order, shared, args, kwargs, before, after, log"""
+        """ TODO: Move this to closure and make real privacy so cannot be accessed """
+
+        # Allow instance tasks
+        tasks = {"taskname": {}}
+
+        """ Results of task runs (instance) """
+        # Access results from tasks, shared tasks during a task run
+        ctx = {}
+
+        """  """
+        # TODO: Other features
+        config = {}
+
+        """  """
+        # TODO: Plugins features
+        plugins = {"pluginname": {"taskname": {}}}
+
+        def get_attr(task_, attr):
+            if not task_.get(attr):
+                if not task_.get("shared"):
+                    task_[attr] = self.tasks.get(attr)
+                elif task_.get("shared"):
+                    task_[attr] = self.shared_tasks.tasks.get(attr)
+                else:
+                    raise ValueError(
+                        "Workflow get_attr: shared value and task_ attribute presence error"
+                    )
+            return task_.get(attr)
+
+        def update_task(task_):
+            
+            # # task_obj = self.create_task(task_)
+            # self.ctx[task_.get("name")]["log"] = self.get_attr(task_, "log")
+            # self.ctx[task_.get("name")]["workflow_args"] = self.get_attr(
+            #     task_, "workflow_args")
+            # self.ctx[task_.get("name")]["workflow_kwargs"] = self.get_attr(
+            #     task_, "workflow_kwargs")
+            
+            task_obj = {
+                # task run not configured for ordered run
+                "task_order": get_attr(task_, "task_order"),
+                # workflow args are getting duplicated
+                # consider saving it in ctx
+                "workflow_args": get_attr(task_, "workflow_args"),
+                "workflow_kwargs": get_attr(task_, "workflow_kwargs"),
+                "function_args": get_attr(task_, "function_args"),
+                "function_kwargs": get_attr(task_, "function_kwargs"),
+                "before": get_attr(task_, "before"),
+                "after": get_attr(task_, "after"),
+                "function": get_attr(task_, "function"),
+                "log": get_attr(task_, "log")
+            }
+
+            if task_.get("shared") == True:
+                self.shared_tasks.tasks.update(task_.get("name"), task_obj)
+            elif task_.get("shared") == False:
+                tasks.update(task_.get("name"), task_obj)
+
+        def set_task(function_, function_args, function_kwargs, workflow_args, workflow_kwargs):
+            workflow_name = workflow_kwargs.get("name")
+            print("Workflow task name to add: ", workflow_name)
+            shared = workflow_kwargs.get("shared")
+
+            if shared == True:
+                if workflow_name not in self.shared_tasks.tasks.keys():
+                    self.shared_tasks.tasks[workflow_name] = {}
+                if not isinstance(self.shared_tasks.tasks[workflow_name], dict):
+                    self.shared_tasks.tasks.update({workflow_name: {}})
+            elif not shared == True:
+                if workflow_name not in tasks.keys():
+                    tasks[workflow_name] = {}
+                if not isinstance(tasks[workflow_name], dict):
+                    tasks.update({workflow_name: {}})
+
+            task_ = {
+                "task_order": workflow_kwargs.get("task_order"),
+                "workflow_args": workflow_args, "workflow_kwargs": workflow_kwargs,
+                "function_args": function_args, "function_kwargs": function_kwargs,
+                "before": workflow_kwargs.get("before"),
+                "after": workflow_kwargs.get("after"),
+                "function": function_,
+                "log": workflow_kwargs.get("log")
+            }
+
+            if shared == True:
+                self.shared_tasks.tasks[workflow_name].update(task_)
+            elif shared == False:
+                tasks[workflow_name].update(task_)
+
+            print("Workflow set_task: Adding Task: ", workflow_name)
+            return True
+
+        def parse_tasks(task_):
+            if task_ == "1" or task_ == 1:
+                return list(tasks.keys())
+            if task_ == "shared:1":
+                s_tasks = self.shared_tasks.tasks.keys()
+                return ["shared:"+i for i in list(s_tasks)]
+            if task_ == 1 and type(task_) == int:
+                return list(tasks.keys())
+            return task_
+
+        def get_tasks(task_=None):
+            shared = False
+            if isinstance(task_, str):
+                if len(task_.split("shared:")) > 1:
+                    shared = True
+                    task_ = task_.split("shared:")[1]
+
+                if shared:
+                    return self.shared_tasks.tasks.get(task_)
+                elif not shared:
+                    return tasks.get(task_)
+            return
+
+        return (get_attr, update_task, set_task, parse_tasks, get_tasks)
 
     # def __get_args(self, f, action, log_):
-        #     if action and isinstance(action, dict):
-        #         args, kwargs, err_obj = [], {}, {}
-        #         if isinstance(action.get("args"), list):
-        #             args = action.get("args")
-        #         if isinstance(action.get("kwargs"), dict):
-        #             kwargs = action.get("kwargs")
-        #         if isinstance(action.get("options"), dict):
-        #             err_obj = action.get("options")
-        #     # TODO: Do clean args here
-        #     return err_obj, args, kwargs
+            #     if action and isinstance(action, dict):
+            #         args, kwargs, err_obj = [], {}, {}
+            #         if isinstance(action.get("args"), list):
+            #             args = action.get("args")
+            #         if isinstance(action.get("kwargs"), dict):
+            #             kwargs = action.get("kwargs")
+            #         if isinstance(action.get("options"), dict):
+            #             err_obj = action.get("options")
+            #     # TODO: Do clean args here
+            #     return err_obj, args, kwargs
 
     # Check before/after middlewares args and kwargs number and validity
     def clean_args(self, function_, function_args, function_kwargs):
@@ -113,107 +216,6 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
                     return False
             return True
         return False
-
-    def get_attr(self, task_, attr):
-        if not task_.get(attr):
-            if not task_.get("shared"):
-                task_[attr] = self.tasks.get(attr)
-            elif task_.get("shared"):
-                task_[attr] = self.shared_tasks.tasks.get(attr)
-            else:
-                raise ValueError(
-                    "Workflow get_attr: shared value and task_ attribute presence error"
-                )
-        return task_.get(attr)
-
-    def parse_tasks(self, task_):
-        if task_ == "1" or task_ == 1:
-            return list(self.tasks.keys())
-        if task_ == "shared:1":
-            s_tasks = self.shared_tasks.tasks.keys()
-            return ["shared:"+i for i in list(s_tasks)]
-        if task_ == 1 and type(task_) == int:
-            return list(self.tasks.keys())
-        return task_
-
-    def get_tasks(self, task_=None):
-        shared = False
-        if isinstance(task_, str):
-            if len(task_.split("shared:")) > 1:
-                shared = True
-                task_ = task_.split("shared:")[1]
-
-            if shared:
-                return self.shared_tasks.tasks.get(task_)
-            elif not shared:
-                return self.tasks.get(task_)
-        return
-
-    def set_task(self, function_, function_args, function_kwargs, workflow_args, workflow_kwargs):
-        workflow_name = workflow_kwargs.get("name")
-        print("Workflow task name to add: ", workflow_name)
-        shared = workflow_kwargs.get("shared")
-
-        if shared == True:
-            if workflow_name not in self.shared_tasks.tasks.keys():
-                self.shared_tasks.tasks[workflow_name] = {}
-            if not isinstance(self.shared_tasks.tasks[workflow_name], dict):
-                self.shared_tasks.tasks.update({workflow_name: {}})
-        elif not shared == True:
-            if workflow_name not in self.tasks.keys():
-                self.tasks[workflow_name] = {}
-            if not isinstance(self.tasks[workflow_name], dict):
-                self.tasks.update({workflow_name: {}})
-
-        task_ = {
-            # task run not configured for ordered run
-            "task_order": workflow_kwargs.get("task_order"),
-            # workflow args are getting duplicated
-            # consider saving it in ctx
-            "workflow_args": workflow_args, "workflow_kwargs": workflow_kwargs,
-            "function_args": function_args, "function_kwargs": function_kwargs,
-            "before": workflow_kwargs.get("before"),
-            "after": workflow_kwargs.get("after"),
-            "function": function_,
-            "log": workflow_kwargs.get("log")
-        }
-
-        if shared == True:
-            self.shared_tasks.tasks[workflow_name].update(task_)
-        elif shared == False:
-            self.tasks[workflow_name].update(task_)
-
-        print("Workflow set_task: Adding Task: ", workflow_name)
-        return True
-
-    def update_task(self, task_):
-
-        # # task_obj = self.create_task(task_)
-        # self.ctx[task_.get("name")]["log"] = self.get_attr(task_, "log")
-        # self.ctx[task_.get("name")]["workflow_args"] = self.get_attr(
-        #     task_, "workflow_args")
-        # self.ctx[task_.get("name")]["workflow_kwargs"] = self.get_attr(
-        #     task_, "workflow_kwargs")
-
-        task_obj = {
-            # task run not configured for ordered run
-            "task_order": self.get_attr(task_, "task_order"),
-            # workflow args are getting duplicated
-            # consider saving it in ctx
-            "workflow_args": self.get_attr(task_, "workflow_args"),
-            "workflow_kwargs": self.get_attr(task_, "workflow_kwargs"),
-            "function_args": self.get_attr(task_, "function_args"),
-            "function_kwargs": self.get_attr(task_, "function_kwargs"),
-            "before": self.get_attr(task_, "before"),
-            "after": self.get_attr(task_, "after"),
-            "function": self.get_attr(task_, "function"),
-            "log": self.get_attr(task_, "log")
-        }
-
-        if task_.get("shared") == True:
-            self.shared_tasks.tasks.update(task_.get("name"), task_obj)
-        elif task_.get("shared") == False:
-            self.tasks.update(task_.get("name"), task_obj)
 
     def reducer(self, result, task_):
         if isinstance(type(task_), dict) or type(task_) == dict:
