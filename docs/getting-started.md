@@ -169,12 +169,14 @@ def taskone(ctx, result, a, b):
 
 
 #### task_instance
+* task_instance key takes instance of the Tasks object imported
 * Task instance which is used for creating tasks
 * Tasks are isolated to this task instance
 * `<object>` instance type
 
 
 #### task_order
+* task_order key takes an ordering number / integer
 * Order of the task function when all tasks are run (Not functional yet)
 * `<int>` type
 
