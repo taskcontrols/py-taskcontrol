@@ -95,34 +95,34 @@ def taskone(ctx, result, a, b):
 
 ```
 
+## workflow decorator arguments
 
+#### name
+* Task name
 
-### name
-Task name
+#### log
+* Whether logging should be allowed or not (Not functional yet)
 
-### log
-Whether logging should be allowed or not (Not functional yet)
-
-### after
-after middleware order followed will be of the list sequence
+#### after
+* after middleware order followed will be of the list sequence
     
-### before
-before middleware order followed will be of the list sequence
+#### before
+* before middleware order followed will be of the list sequence
 
-### args
-Arguments that should be provided to the task function the decorator is applied on
+#### args
+* Arguments that should be provided to the task function the decorator is applied on
 
-### kwargs
-Keyword arguments for the function the decorator is applied on
+#### kwargs
+* Keyword arguments for the function the decorator is applied on
 
-### shared
-Whether the Task is a shared task or instance isolated task
-Shared Task is sharable and accessable across the app
+#### shared
+* Whether the Task is a shared task or instance isolated task
+* Shared Task is sharable and accessable across the app
 
-### task_instance
-Task instance whic is used for creating tasks
-Tasks are isolated to this task instance
+#### task_instance
+* Task instance whic is used for creating tasks
+* Tasks are isolated to this task instance
 
-### task_order
-Order of the task function when all tasks are run (Not functional yet)
+#### task_order
+* Order of the task function when all tasks are run (Not functional yet)
 
