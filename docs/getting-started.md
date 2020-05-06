@@ -17,58 +17,61 @@
 
 <!-- # Feature Details -->
 
+# Demo Usage
+
 ```python
 
-
-# for git development repo
-# from taskcontrol.workflow import workflow, Tasks
 
 # for package
 from taskcontrol.workflow import workflow, Tasks
 
 
-# Instance of tasks and apis object
-# Every instance will store it own list of tasks
-#       with their before/after middlewares
+# Create an instance of the task you are creating
 sparrow = Tasks()
 
 
+# Middleware that we are running
+# Use any middleware that runs with or withour returning results
+# Demo uses common middleware for all. Please use you own middlewares
 def nesttree(ctx, result, k, c, d, **kwargs):
     print("Running my Middleware Function: nesttree - task items", k, c, d, kwargs)
 
 
+# workflow decorator
 @workflow(
+    
+    # Task name
     name="taskname",
+    
+    # Order of the task function when all tasks are run (Not functional yet)
     task_order=1,
+    
+    # Task instance whic is used for creating tasks
+    # Tasks are isolated to this task instance
     task_instance=sparrow,
+
+    # Whether the Task is a shared task or instance isolated task
+    # Shared Task is sharable and accessable across the app
     shared=False,
+
+    # Arguments that should be provided to the task function the decorator is applied on
     args=[1, 2],
+
+    # Keyword arguments for the function the decorator is applied on
     kwargs={},
+
+    # before middleware order followed will be of the list sequence
     before=[
-        # before middleware order followed will be of the list sequence
         {
             "function": nesttree,
             "args": [11, 12],
             "kwargs": {"d": "Before Testing message Middleware "},
-
-            # options { error : str,  error_next_value: Object, error_handler: function }
-            #
-            # error { str }: [next, error_handler, exit]
-            # error_handler { function }
-            # error_next_value { object }
-            #
-            # Usage:
-            # "options": {"error": "next", "error_next_value": "value"}
-            # "options": {"error": "exit"}
-            # "options": {
-            #    "error": "error_handler", error_handler: func, "error_next_value": "value"
-            #    }
-
             "options": {"error": "next", "error_next_value": ""}
         }
     ],
+
+    # after middleware order followed will be of the list sequence
     after=[
-        # after middleware order followed will be of the list sequence
         {
             "function": nesttree,
             "args": [13, 14],
@@ -76,96 +79,17 @@ def nesttree(ctx, result, k, c, d, **kwargs):
             "options": {
                 "error": "error_handler",
                 "error_next_value": "value",
-
-                #
-                # Default error_handler implementation used internally, if no
-                #           error_handler is provided
-                #
-                # Implementation One:
-                #   if error_next_value defined
-                #       lambda err, value: (err, error_next_value)
-                # Implementation Two:
-                #   if error_next_value not defined
-                #       lambda err, value: (err, None)
-                #
-                # Returning the two value tuple in error_handler implementation is compulsary
-                #       err is the error that occurred
-                #       error_next_value is error_next_value provided in options
-                #
-
                 "error_handler": lambda err, value: (err, None)
             }
         }
     ],
+
+    # Whether logging should be allowed or not (Not functional yet)
     log=False
 )
+# Main function for the task
 def taskone(ctx, result, a, b):
     print("Running my task function: taskone", a, b)
-
-
-# Invocation is needed to add the task with function arguments
-# Invoke this where needed
-# Example: Within some other function
-# taskone(3, 4)
-
-
-# Example two for decorator usage
-@workflow(name="tasktwo",
-          task_instance=t,
-          task_order=2,
-          shared=False,
-          args=[1, 2],
-          kwargs={},
-          # Declare before/after as an list or an object (if single middleware function)
-          before={
-              "function": nesttree,
-              "args": [21, 22],
-              "kwargs": {"d": "Before Testing message"},
-              "options": {"error": "next", "error_next_value": ""}
-          },
-          after=[],
-          log=False
-          )
-def tasktwo(ctx, result, a, b):
-    print("Running my task function: tasktwo", a, b)
-    return a, b
-
-
-# Invoke this where needed
-# Example: Within some other function
-
-
-# TODO: Run all tasks
-# Multiple Workflow Tasks run
-sparrow.run(tasks=["1"])
-sparrow.run(tasks="1")
-
-
-# TODO: Run all shared tasks
-# Shared Workflow Tasks run
-sparrow.run(tasks=["shared:1"])
-sparrow.run(tasks="shared:1")
-
-
-# Multiple Workflow Tasks run
-run_1 = sparrow.run(tasks=["shared:taskname", "tasktwo"])
-# print("sparrow.ctx ",sparrow.ctx)
-print("run_1", run_1)
-
-
-# TODO: Run Tasks run with mix of shared
-# Multiple Workflow Tasks run with mix of shared
-sparrow.run(tasks=["taskname", "tasktwo", "shared:taskname"])
-
-
-# Single Workflow Tasks run
-run_2 = sparrow.run(tasks="shared:taskname")
-print("run_2", run_2)
-
-
-# TODO: Run Tasks run with shared task
-# Single Workflow Tasks run for shared task
-sparrow.run(tasks="shared:taskname")
 
 
 
