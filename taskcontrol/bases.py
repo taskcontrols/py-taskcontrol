@@ -23,6 +23,8 @@ class SharedBase():
     __instance = None
 
     def __init__(self):
+        # Failing at creating properties for tasks and ctx
+        # self.tasks, self.ctx, self.config = self.arg_closure()
         if SharedBase.__instance != None:
             pass
         else:
@@ -32,6 +34,59 @@ class SharedBase():
         if cls.__instance is None:
             cls.__instance = super(SharedBase, cls).__new__(cls)
         return cls.__instance
+
+    def arg_closure(self):
+        """middleware_task_ Structure: name, function, args, kwargs, options"""
+        """workflow_kwargs: name, task_instance, task_order, shared, args, kwargs, before, after, log"""
+        # Allow instance tasks
+        _tasks = {"taskname": {}}
+
+        """ Results of task runs (shared) """
+        # Access results from tasks, shared tasks during a task run
+        _ctx = {"result": []}
+
+        """  """
+        # TODO: Other features
+        _config = {}
+
+        # TODO: Plugins features
+        _plugins = {"pluginname": {"taskname": {}}}
+
+        @property
+        def tasks():
+            pass
+
+        @tasks.getter
+        def tasks():
+            # TODO: Add Auth
+            return _tasks
+
+        @tasks.setter
+        def tasks(val):
+            # TODO: Add Auth
+            _tasks = val
+
+        @property
+        def ctx():
+            # TODO: Add Auth
+            return _ctx
+
+        @ctx.setter
+        def ctx(val):
+            # TODO: Add Auth
+            _ctx = val
+
+        @property
+        def config():
+            # TODO: Add Auth
+            return _config
+
+        @config.setter
+        def config(val):
+            # TODO: Add Auth
+            _config = val
+
+        return (tasks, ctx, config)
 
     @staticmethod
     def getInstance():
@@ -69,7 +124,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
 
     def __init__(self):
         self.shared_tasks = SharedBase.getInstance()
-        self.get_attr, self.update_task, self.set_task, self.parse_tasks, self.get_tasks = self.arg_closure()
+        self.ctx, self.get_attr, self.update_task, self.set_task, self.parse_tasks, self.get_tasks = self.arg_closure()
 
     def arg_closure(self):
         """middleware_task_ Structure: name, function, args, kwargs, options"""
@@ -81,7 +136,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
 
         """ Results of task runs (instance) """
         # Access results from tasks, shared tasks during a task run
-        ctx = {}
+        _ctx = {}
 
         """  """
         # TODO: Other features
@@ -91,10 +146,20 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
         # TODO: Plugins features
         plugins = {"pluginname": {"taskname": {}}}
 
+        @property
+        def ctx():
+            # Make immutable with better getters and setter; not this way
+            return _ctx
+
+        @ctx.setter
+        def ctx(val):
+            # Make immutable with better getters and setter; not this way
+            _ctx = val
+
         def get_attr(task_, attr):
             if not task_.get(attr):
                 if not task_.get("shared"):
-                    task_[attr] = self.tasks.get(attr)
+                    task_[attr] = tasks.get(attr)
                 elif task_.get("shared"):
                     task_[attr] = self.shared_tasks.tasks.get(attr)
                 else:
@@ -104,14 +169,14 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
             return task_.get(attr)
 
         def update_task(task_):
-            
+
             # # task_obj = self.create_task(task_)
             # self.ctx[task_.get("name")]["log"] = self.get_attr(task_, "log")
             # self.ctx[task_.get("name")]["workflow_args"] = self.get_attr(
             #     task_, "workflow_args")
             # self.ctx[task_.get("name")]["workflow_kwargs"] = self.get_attr(
             #     task_, "workflow_kwargs")
-            
+
             task_obj = {
                 # task run not configured for ordered run
                 "task_order": get_attr(task_, "task_order"),
@@ -189,19 +254,19 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
                     return tasks.get(task_)
             return
 
-        return (get_attr, update_task, set_task, parse_tasks, get_tasks)
+        return (ctx, get_attr, update_task, set_task, parse_tasks, get_tasks)
 
     # def __get_args(self, f, action, log_):
-            #     if action and isinstance(action, dict):
-            #         args, kwargs, err_obj = [], {}, {}
-            #         if isinstance(action.get("args"), list):
-            #             args = action.get("args")
-            #         if isinstance(action.get("kwargs"), dict):
-            #             kwargs = action.get("kwargs")
-            #         if isinstance(action.get("options"), dict):
-            #             err_obj = action.get("options")
-            #     # TODO: Do clean args here
-            #     return err_obj, args, kwargs
+        #     if action and isinstance(action, dict):
+        #         args, kwargs, err_obj = [], {}, {}
+        #         if isinstance(action.get("args"), list):
+        #             args = action.get("args")
+        #         if isinstance(action.get("kwargs"), dict):
+        #             kwargs = action.get("kwargs")
+        #         if isinstance(action.get("options"), dict):
+        #             err_obj = action.get("options")
+        #     # TODO: Do clean args here
+        #     return err_obj, args, kwargs
 
     # Check before/after middlewares args and kwargs number and validity
     def clean_args(self, function_, function_args, function_kwargs):
@@ -274,7 +339,11 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
                     "Error during middleware: flow[options[error]] value error")
 
         result["result"].append(r_)
-        self.ctx["result"] = result.get("result")
+
+        # Applying below for SharedBase Closure support
+        # Doesnt work without assigning keys, makes it immutable for dict props/keys
+        # Check implementation of getter and setter
+        self.ctx = {"result": result.get("result")}
 
         return {"result": result.get("result")}
 

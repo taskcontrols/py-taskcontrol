@@ -1,9 +1,9 @@
 # for git development repo
-# from taskcontrol.workflow import workflow, Tasks
+from taskcontrol.workflow import workflow, Tasks
 
 # for package
 # from taskcontrol.workflow import workflow, Tasks
-from wf import workflow, Tasks
+
 
 # Instance of tasks and apis object
 # Every instance will store it own list of tasks
