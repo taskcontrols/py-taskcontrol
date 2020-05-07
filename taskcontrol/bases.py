@@ -56,10 +56,10 @@ class SharedBase():
                 if len(task_.split("shared:")) > 1:
                     task_ = task_.split("shared:")[1]
                 return tasks.get(task_)
-            elif task_ == 1 and type(task_) == str:
+            elif task_ == 1 and type(task_) == int:
                 return tasks
             else:
-                return {}
+                return None
 
         def set_tasks():
             pass
