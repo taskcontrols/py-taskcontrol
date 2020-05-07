@@ -107,7 +107,9 @@ class ConcurencyBase():
 
     # asynchronous, needs_join
     def mprocess_run(self, function, options):
-        from multiprocessing import Process
+        from multiprocessing import Process, Array
+        # Apply Array for share with multiple treads
+        # check need here. Create a common one outside by user
         worker = Process(target=function, args=(
             *options.get("args"),), kwargs={**options.get("kwargs")})
         worker.start()
