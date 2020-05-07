@@ -124,7 +124,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
 
     def __init__(self):
         self.shared_tasks = SharedBase.getInstance()
-        self.ctx, self.get_attr, self.update_task, self.set_task, self.parse_tasks, self.get_tasks = self.arg_closure()
+        self.get_ctx, self.set_ctx, self.get_attr, self.update_task, self.set_task, self.parse_tasks, self.get_tasks = self.arg_closure()
 
     def arg_closure(self):
         """middleware_task_ Structure: name, function, args, kwargs, options"""
@@ -137,7 +137,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
         """ Results of task runs (instance) """
         # Access results from tasks, shared tasks during a task run
         # Make context based on taskname
-        _ctx = {}
+        ctx = {}
 
         """  """
         # TODO: Other features
@@ -147,15 +147,32 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
         # TODO: Plugins features
         plugins = {"pluginname": {"taskname": {}}}
 
-        @property
-        def ctx():
-            # Make immutable with better getters and setter; not this way
-            return _ctx
+        def get_ctx(val):
+            if val == 1 and type(val) == int:
+                return ctx
+            if type(val) == str:
+                return ctx.get(val)
+            if type(val) == list:
+                c = {}
+                for v in val:
+                    valid_value = ctx.get(v)
+                    if valid_value:
+                        c[v] = valid_value
+                return c
+            return
 
-        @ctx.setter
-        def ctx(val):
-            # Make immutable with better getters and setter; not this way
-            _ctx = val
+        def set_ctx(val):
+            if type(val) == dict:
+                for i in val.keys():
+                    ctx[i] = val[i]
+                return True
+            elif type(val) == list:
+                for l in val:
+                    if type(l) == dict:
+                        for j in l.keys():
+                            ctx[j] = l[j]
+                return True
+            return False
 
         def get_attr(task_, attr):
             if not task_.get(attr):
@@ -255,7 +272,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
                     return tasks.get(task_)
             return
 
-        return (ctx, get_attr, update_task, set_task, parse_tasks, get_tasks)
+        return (get_ctx, set_ctx, get_attr, update_task, set_task, parse_tasks, get_tasks)
 
     # def __get_args(self, f, action, log_):
         #     if action and isinstance(action, dict):
@@ -314,7 +331,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
             result = {"result": []}
 
         try:
-            r_ = fn(self.ctx, result_, *args, **kwargs)
+            r_ = fn(self.get_ctx(1), result_, *args, **kwargs)
         except (Exception) as e:
             if log_:
                 print("reducer: Running error for middleware")
@@ -344,7 +361,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
         # Applying below for SharedBase Closure support
         # Doesnt work without assigning keys, makes it immutable for dict props/keys
         # Check implementation of getter and setter
-        self.ctx = {"result": result.get("result")}
+        self.set_ctx({"result": result.get("result")})
 
         return {"result": result.get("result")}
 
