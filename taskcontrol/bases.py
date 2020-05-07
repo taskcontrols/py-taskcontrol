@@ -39,7 +39,7 @@ class SharedBase():
         """middleware_task_ Structure: name, function, args, kwargs, options"""
         """workflow_kwargs: name, task_instance, task_order, shared, args, kwargs, before, after, log"""
         # Allow instance tasks
-        _tasks = {"taskname": {}}
+        tasks = {"taskname": {}}
 
         """ Results of task runs (shared) """
         # Access results from tasks, shared tasks during a task run
@@ -47,10 +47,36 @@ class SharedBase():
 
         """  """
         # TODO: Other features
-        _config = {}
+        config = {}
 
         # TODO: Plugins features
-        _plugins = {"pluginname": {"taskname": {}}}
+        plugins = {"pluginname": {"taskname": {}}}
+
+        def get_tasks():
+            pass
+
+        def set_tasks():
+            pass
+
+        def get_ctx():
+            pass
+
+        def set_ctx():
+            pass
+
+        def get_config():
+            pass
+
+        def set_config():
+            pass
+
+        def get_plugins():
+            pass
+
+        def set_plugins():
+            pass
+
+        return (get_tasks, set_tasks, get_ctx, set_ctx, get_config, set_config, get_plugins, set_plugins)
 
     @staticmethod
     def getInstance():
