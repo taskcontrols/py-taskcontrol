@@ -97,7 +97,8 @@ class ConcurencyBase():
     def mthread_run(self, function, options):
         from threading import Thread
         result = None
-        worker = Thread(target=function, args=(*options.get("args"), result))
+        worker = Thread(target=function, daemon=True, args=(
+            *options.get("args"), result), kwargs={**options.get("kwargs")})
         worker.setDaemon(True)
         worker.start()
         if options.get("needs_join"):
@@ -107,7 +108,8 @@ class ConcurencyBase():
     # asynchronous, needs_join
     def mprocess_run(self, function, options):
         from multiprocessing import Process
-        worker = Process(target=function, args=(*options.get("args"),))
+        worker = Process(target=function, args=(
+            *options.get("args"),), kwargs={**options.get("kwargs")})
         worker.start()
         if options.get("needs_join"):
             result = worker.join()
