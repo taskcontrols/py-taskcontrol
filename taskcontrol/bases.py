@@ -23,7 +23,6 @@ class SharedBase():
     __instance = None
 
     def __init__(self):
-        # Failing at creating properties for tasks and ctx
         self.get_tasks, self.set_tasks, self.get_ctx, self.set_ctx, self.get_config, self.set_config, self.get_plugins, self.set_plugins = self.shared_closure()
         if SharedBase.__instance != None:
             pass
@@ -126,7 +125,6 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
     def wf_closure(self):
         """middleware_task_ Structure: name, function, args, kwargs, options"""
         """workflow_kwargs: name, task_instance, task_order, shared, args, kwargs, before, after, log"""
-        """ TODO: Move this to closure and make real privacy so cannot be accessed """
 
         # Allow instance tasks
         tasks = {"taskname": {}}
