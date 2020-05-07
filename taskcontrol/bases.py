@@ -19,7 +19,7 @@ class SharedBase():
 
     # TODO: Plugins features
     plugins = {"pluginname": {"taskname": {}}}
-
+ 
     __instance = None
 
     def __init__(self):
