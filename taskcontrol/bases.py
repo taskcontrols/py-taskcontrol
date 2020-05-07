@@ -166,6 +166,18 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
                 return True
             return False
 
+        def get_config():
+            pass
+
+        def set_config():
+            pass
+
+        def get_plugins():
+            pass
+
+        def set_plugins():
+            pass
+
         def get_attr(task_, attr):
             if not task_.get(attr):
                 if not task_.get("shared"):
@@ -263,8 +275,12 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
                 elif not shared:
                     return tasks.get(task_)
             return
+        
+        def set_tasks(task_=None):
+            shared = False
+            return False
 
-        return (get_ctx, set_ctx, get_attr, update_task, set_task, parse_tasks, get_tasks)
+        return (get_ctx, set_ctx, get_attr, update_task, set_task, parse_tasks, get_tasks, set_tasks)
 
     # def __get_args(self, f, action, log_):
         #     if action and isinstance(action, dict):
