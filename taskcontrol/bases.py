@@ -19,7 +19,7 @@ class SharedBase():
 
     # TODO: Plugins features
     plugins = {"pluginname": {"taskname": {}}}
- 
+
     __instance = None
 
     def __init__(self):
@@ -43,7 +43,7 @@ class SharedBase():
 
         """ Results of task runs (shared) """
         # Access results from tasks, shared tasks during a task run
-        _ctx = {"result": []}
+        ctx = {"result": []}
 
         """  """
         # TODO: Other features
@@ -51,42 +51,6 @@ class SharedBase():
 
         # TODO: Plugins features
         _plugins = {"pluginname": {"taskname": {}}}
-
-        @property
-        def tasks():
-            pass
-
-        @tasks.getter
-        def tasks():
-            # TODO: Add Auth
-            return _tasks
-
-        @tasks.setter
-        def tasks(val):
-            # TODO: Add Auth
-            _tasks = val
-
-        @property
-        def ctx():
-            # TODO: Add Auth
-            return _ctx
-
-        @ctx.setter
-        def ctx(val):
-            # TODO: Add Auth
-            _ctx = val
-
-        @property
-        def config():
-            # TODO: Add Auth
-            return _config
-
-        @config.setter
-        def config(val):
-            # TODO: Add Auth
-            _config = val
-
-        return (tasks, ctx, config)
 
     @staticmethod
     def getInstance():
@@ -148,6 +112,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
         plugins = {"pluginname": {"taskname": {}}}
 
         def get_ctx(keys=None):
+            # TODO: Add Auth & Logger
             if keys == 1 and type(keys) == int:
                 return ctx
             if type(keys) == str:
@@ -162,6 +127,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
             return
 
         def set_ctx(val=None):
+            # TODO: Add Auth & Logger
             if type(val) == dict:
                 for i in val.keys():
                     ctx[i] = val[i]
@@ -366,6 +332,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
         return {"result": result.get("result")}
 
     def run_task(self, task_):
+        # TODO: Add Auth & Logger
         if task_ == None:
             return
         if len(task_.keys()) == 0:
