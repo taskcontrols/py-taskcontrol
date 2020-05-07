@@ -114,7 +114,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
 
     def __init__(self):
         self.shared_tasks = SharedBase.getInstance()
-        self.get_ctx, self.set_ctx, self.get_attr, self.update_task, self.set_task, self.parse_tasks, self.get_tasks = self.arg_closure()
+        self.get_ctx, self.set_ctx, self.get_attr, self.update_task, self.set_tasks, self.parse_tasks, self.get_tasks = self.arg_closure()
 
     def arg_closure(self):
         """middleware_task_ Structure: name, function, args, kwargs, options"""
@@ -219,7 +219,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
             elif task_.get("shared") == False:
                 tasks.update(task_.get("name"), task_obj)
 
-        def set_task(function_, function_args, function_kwargs, workflow_args, workflow_kwargs):
+        def set_tasks(function_, function_args, function_kwargs, workflow_args, workflow_kwargs):
             workflow_name = workflow_kwargs.get("name")
             print("Workflow task name to add: ", workflow_name)
             shared = workflow_kwargs.get("shared")
@@ -250,7 +250,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
             elif shared == False:
                 tasks[workflow_name].update(task_)
 
-            print("Workflow set_task: Adding Task: ", workflow_name)
+            print("Workflow set_tasks: Adding Task: ", workflow_name)
             return True
 
         def parse_tasks(task_):
@@ -276,7 +276,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
                     return tasks.get(task_)
             return
         
-        return (get_ctx, set_ctx, get_attr, update_task, set_task, parse_tasks, get_tasks)
+        return (get_ctx, set_ctx, get_attr, update_task, set_tasks, parse_tasks, get_tasks)
 
     # def __get_args(self, f, action, log_):
         #     if action and isinstance(action, dict):

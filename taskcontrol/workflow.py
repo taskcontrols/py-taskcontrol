@@ -88,7 +88,7 @@ def workflow(*workflow_args, **workflow_kwargs):
             #     function_, function_args, function_kwargs)
             # if not args_normal:
             #     raise Exception("Args and KwArgs do not match")
-            t.set_task(
+            t.set_tasks(
                 function_, args, kwargs,
                 workflow_args, workflow_kwargs
             )
