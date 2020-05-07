@@ -276,11 +276,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
                     return tasks.get(task_)
             return
         
-        def set_tasks(task_=None):
-            shared = False
-            return False
-
-        return (get_ctx, set_ctx, get_attr, update_task, set_task, parse_tasks, get_tasks, set_tasks)
+        return (get_ctx, set_ctx, get_attr, update_task, set_task, parse_tasks, get_tasks)
 
     # def __get_args(self, f, action, log_):
         #     if action and isinstance(action, dict):
