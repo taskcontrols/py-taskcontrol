@@ -147,21 +147,21 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
         # TODO: Plugins features
         plugins = {"pluginname": {"taskname": {}}}
 
-        def get_ctx(val):
-            if val == 1 and type(val) == int:
+        def get_ctx(keys=None):
+            if keys == 1 and type(keys) == int:
                 return ctx
-            if type(val) == str:
-                return ctx.get(val)
-            if type(val) == list:
+            if type(keys) == str:
+                return ctx.get(keys)
+            if type(keys) == list:
                 c = {}
-                for v in val:
+                for v in keys:
                     valid_value = ctx.get(v)
                     if valid_value:
                         c[v] = valid_value
                 return c
             return
 
-        def set_ctx(val):
+        def set_ctx(val=None):
             if type(val) == dict:
                 for i in val.keys():
                     ctx[i] = val[i]
