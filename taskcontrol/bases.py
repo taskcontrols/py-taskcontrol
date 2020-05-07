@@ -202,8 +202,6 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
             task_obj = {
                 # task run not configured for ordered run
                 "task_order": get_attr(task_, "task_order"),
-                # workflow args are getting duplicated
-                # consider saving it in ctx
                 "workflow_args": get_attr(task_, "workflow_args"),
                 "workflow_kwargs": get_attr(task_, "workflow_kwargs"),
                 "function_args": get_attr(task_, "function_args"),
