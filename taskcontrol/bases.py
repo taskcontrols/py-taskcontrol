@@ -92,17 +92,30 @@ class SharedBase():
 
 
 class ConcurencyBase():
+
     # asynchronous, needs_join
     def mthread_run(self, function, options):
-        pass
+        from threading import Thread
+        result = None
+        worker = Thread(target=function, args=(*options.get("args"), result))
+        worker.setDaemon(True)
+        worker.start()
+        if options.get("needs_join"):
+            worker.join()
+        return worker, result
 
     # asynchronous, needs_join
     def mprocess_run(self, function, options):
-        pass
+        from multiprocessing import Process
+        worker = Process(target=function, args=(*options.get("args"),))
+        worker.start()
+        if options.get("needs_join"):
+            result = worker.join()
+        return worker, result
 
 
 class LoggerBase():
-    
+
     def create(self):
         pass
 
@@ -287,7 +300,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
                 elif not shared:
                     return tasks.get(task_)
             return
-        
+
         return (get_ctx, set_ctx, get_attr, update_task, set_tasks, parse_tasks, get_tasks)
 
     # def __get_args(self, f, action, log_):
