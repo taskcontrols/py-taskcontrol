@@ -144,12 +144,12 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
             if type(keys) == str:
                 return ctx.get(keys)
             if type(keys) == list:
-                c = {}
+                cx = {}
                 for v in keys:
                     valid_value = ctx.get(v)
                     if valid_value:
-                        c[v] = valid_value
-                return c
+                        cx[v] = valid_value
+                return cx
             return
 
         def set_ctx(val=None):
