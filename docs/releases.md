@@ -3,6 +3,7 @@
 
 # Release 1.2.5
 
+### Features
     Functional, tested release (Major release version)
     
     Change of core functional structure and shared tasks execution in 1.2.5 version
@@ -13,10 +14,15 @@
     Minor doc bugs removed
     Minor support using docs
 
+### BugFix
+
 
 # Release 1.1.2
 
     Major bug fix for runtime from version 1.1.1
+
+### Features
+### BugFix
 
 
 # Release 1.1.1
