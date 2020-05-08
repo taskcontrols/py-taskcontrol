@@ -140,3 +140,5 @@ t.py
 xc.py
 dist/
 lib64
+t.spec
+./t.py
