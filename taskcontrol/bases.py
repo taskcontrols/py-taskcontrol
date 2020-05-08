@@ -63,7 +63,7 @@ class SharedBase():
             else:
                 return None
 
-        def set_tasks():
+        def set_tasks(val):
             pass
 
         def get_ctx():
