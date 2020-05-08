@@ -1,7 +1,7 @@
 # TODO: Reorder tasks
 import pytest
 
-from src.workflow import workflow, Tasks
+from taskcontrol.workflow import workflow, Tasks
 
 
 # decorator applied on a function and function invocation creates the task
@@ -534,6 +534,7 @@ class TestDecorator():
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
             assert i == 16
+            # pass
 
     def test_1_17_doesnot_create_shared_task(self):
         t = Tasks()

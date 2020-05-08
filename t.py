@@ -1,9 +1,12 @@
 from taskcontrol.workflow import workflow, Tasks
+
+
+
 t = Tasks()
 
 def middleware(ctx, result, k, c, d, **kwargs):
     print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-    return 15
+    return 16
 
 @workflow(
     name="taskname", task_order=1, task_instance=t,
@@ -18,8 +21,8 @@ def middleware(ctx, result, k, c, d, **kwargs):
     }])
 def taskone(ctx, result, a, b):
     print("Running my task function: taskone", a, b)
-    return 15
+    return 16
 
-result = t.run(tasks="taskname")
+result = t.run(tasks="shared:taskname")
 print(result)
 
