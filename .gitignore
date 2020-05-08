@@ -129,6 +129,7 @@ dmypy.json
 .pyre/
 
 demos.py
+t.py
 
 pyvenv.cfg
 lib64/
@@ -141,4 +142,4 @@ xc.py
 dist/
 lib64
 t.spec
-./t.py
+
