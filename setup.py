@@ -16,6 +16,10 @@ setuptools.setup(
      long_description_content_type="text/markdown",
      url="https://github.com/ganeshkbhat/taskcontrol",
      packages=setuptools.find_packages(),
+     install_requires=[
+          'tornado=6.0.4',
+      ],
+     license='MIT',
      classifiers=[
          "Programming Language :: Python :: 3",
          "License :: OSI Approved :: MIT License",
