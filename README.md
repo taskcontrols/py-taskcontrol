@@ -47,12 +47,12 @@ It also provides methods to create a plugin and work with tasks as a module and/
 
 ##### Package Link:
     
-    [https://github.com/taskcontrols/py-taskcontrol](https://github.com/taskcontrols/py-taskcontrol)
-    [https://pypi.org/project/taskcontrol/](https://pypi.org/project/taskcontrol/)
+    https://github.com/taskcontrols/py-taskcontrol
+    https://pypi.org/project/taskcontrol
     
 ##### Website:
     
-    [https://taskcontrols.github.io/](https://taskcontrols.github.io/)
+    https://taskcontrols.github.io/
 
 
 # Technical Specifications
