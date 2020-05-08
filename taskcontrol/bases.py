@@ -2,10 +2,10 @@
 # Add support for Concurrency
 
 from .sharedbase import SharedBase
-from .concurrencybase import ConcurencyBase
-from .actionsbase import ActionsBase
-from .loggerbase import LoggerBase
-from .pluginbase import PluginsBase
+from .concurrency import ConcurencyBase
+from .actions import ActionsBase
+from .logger import LoggerBase
+from .plugin import PluginsBase
 
 
 class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):

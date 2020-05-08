@@ -1,6 +1,6 @@
 
 from .sharedbase import SharedBase
-from .concurrencybase import ConcurencyBase
+from .concurrency import ConcurencyBase
 
 
 class PluginsBase(SharedBase, ConcurencyBase):
