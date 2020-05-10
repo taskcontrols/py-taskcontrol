@@ -1,5 +1,6 @@
 # taskcontrol
-    Create named shared / isolated workflow task controls, and run them with respective before/after middlewares
+
+    Create named shared / isolated workflow task controls, and run them with respective before/after middlewares. taskcontrols also supports plugins, concurrency, and authentication
 
 
 # Features Details
@@ -16,6 +17,7 @@
 <!-- * In-Development: Allows  -->
 
 <!-- # Feature Details -->
+
 
 # Demo Usage
 
