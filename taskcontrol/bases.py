@@ -97,7 +97,6 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
             #     task, "workflow_kwargs")
 
             task_obj = {
-                # task run not configured for ordered run
                 "task_order": get_attr(task, "task_order"),
                 "workflow_args": get_attr(task, "workflow_args"),
                 "workflow_kwargs": get_attr(task, "workflow_kwargs"),
@@ -110,7 +109,8 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
             }
 
             if task.get("shared") == True:
-                self.shared_tasks.set_shared_tasks({task.get("name"): task_obj})
+                self.shared_tasks.set_shared_tasks(
+                    {task.get("name"): task_obj})
             elif task.get("shared") == False:
                 tasks.update(task.get("name"), task_obj)
 
