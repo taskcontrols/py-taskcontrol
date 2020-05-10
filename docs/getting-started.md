@@ -38,7 +38,6 @@
 
 ```python
 
-
 # for package
 from taskcontrol.workflow import workflow, Tasks
 
@@ -107,6 +106,8 @@ def nesttree(ctx, result, k, c, d, **kwargs):
 # Main function for the task
 def taskone(ctx, result, a, b):
     print("Running my task function: taskone", a, b)
+
+sparrow.run(tasks="taskname")
 
 
 ```
