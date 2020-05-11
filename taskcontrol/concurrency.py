@@ -13,7 +13,7 @@ class ConcurencyBase():
 
     # asynchronous, needs_join
     def mthread_run(self, function, options):
-        # # args, kwargs, share_value, needs_join
+        # # args, kwargs, needs_join, share_value
         # Consider adding thread alive, and other method options access to functions
         from threading import Thread
         result = None
@@ -34,7 +34,7 @@ class ConcurencyBase():
     # asynchronous, needs_join
     def mprocess_run(self, function, options):
         # options structure
-        # args, kwargs, share_data, share_array, needs_join
+        # args, kwargs, needs_join
 
         # Consider adding process alive, and other method options access to functions
         from multiprocessing import Process
