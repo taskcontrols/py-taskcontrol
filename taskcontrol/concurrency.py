@@ -47,18 +47,11 @@ class ConcurencyBase():
 
         # # Check need here. Create a common one outside by user
         # # Consider if you want to handle this
+        # # share_value, share_array, share_queue, share_pipe, share_lock, share_rlock, 
+        # # share_manager, share_pool, share_connection, share_event, 
+        # # share_semaphore, share_bounded_semaphore
+
         # sv = options.get("share_value")
-        # sa = options.get("share_array")
-        # sq = options.get("share_queue")
-        # spi = options.get("share_pipe")
-        # sl = options.get("share_lock")
-        # srl = options.get("share_rlock")
-        # sm = options.get("share_manager")
-        # spl = options.get("share_pool")
-        # sc = options.get("share_connection")
-        # se = options.get("share_event")
-        # ss = options.get("share_semaphore")
-        # ssb = options.get("share_bounded_semaphore")
 
         worker = Process(
             target=function,
