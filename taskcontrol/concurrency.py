@@ -33,7 +33,7 @@ class ConcurencyBase():
         return {"worker": worker, "result": result, "share_data": share_data}
 
     # asynchronous, needs_join
-    def mprocess_run(self, function, options):
+    def mprocess_run(self, function, options): 
         # options structure
         # args, kwargs, share_data, share_array, needs_join
 
