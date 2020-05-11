@@ -4,16 +4,39 @@ from sys import path
 path.append('./')
 
 from .bases import WorkflowBase, PluginsBase
+from .hooks import HooksBase
+from .logger import LoggerBase
 
 
 class Tasks(WorkflowBase, PluginsBase):
 
+    # add plugin to instance or shared
+    def plugin_register(self, plugin_instance):
+        if type(plugin_instance) != dict:
+            raise TypeError("plugins definition has an issue")
+        if type(plugin_instance) == dict:
+            # if not plugin_instance.get("config"):
+            #     raise ValueError("config definition has an issue")
+            # if not plugin_instance.get("ctx"):
+            #     raise ValueError("ctx definition has an issue")
+            # if not plugin_instance.get("plugins"):
+            #     raise ValueError("internal plugins definition has an issue")
+            # if not plugin_instance.get("shared"):
+            #     raise ValueError("shared definition has an issue")
+            # if not plugin_instance.get("tasks"):
+            #     raise ValueError("tasks definition has an issue")
+            pass
+
     def merge(self, inst, shared=False, clash_prefix=None):
         if shared == True:
+            # Check this based on new closure ways
+            # TODO: Tests pending
             self.shared_tasks.tasks = self.merge_tasks(
                 self.shared_tasks.tasks, inst, shared, clash_prefix
             )
         elif shared == False:
+            # Check this based on new closure ways
+            # TODO: Tests pending
             self.tasks = self.merge_tasks(
                 self.tasks, inst, shared, clash_prefix
             )
@@ -45,6 +68,7 @@ class Tasks(WorkflowBase, PluginsBase):
 
 def workflow(*workflow_args, **workflow_kwargs):
     # print("get_decorator: Decorator init ", "workflow_args: ", workflow_args, "workflow_kwargs: ", workflow_kwargs)
+
     def get_decorator(function_):
         # print("get_decorator: ", function_)
         def order_tasks(*function_args, **function_kwargs):
@@ -83,7 +107,7 @@ def workflow(*workflow_args, **workflow_kwargs):
             if len(function_args):
                 kwargs.update(**function_kwargs)
 
-            # old
+            # TODO: NOT WORKING CLEANING WRITE UNITS - old
             # args_normal = t.clean_args(
             #     function_, function_args, function_kwargs)
             # if not args_normal:

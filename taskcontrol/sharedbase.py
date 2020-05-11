@@ -4,19 +4,19 @@ class SharedBase():
 
     """middleware_task_ Structure: name, function, args, kwargs, options"""
     """workflow_kwargs: name, task_instance, task_order, shared, args, kwargs, before, after, log"""
-    # Allow instance tasks
-    tasks = {"taskname": {}}
+    # # Allow instance tasks
+    # tasks = {"taskname": {}}
 
-    """ Results of task runs (shared) """
-    # Access results from tasks, shared tasks during a task run
-    ctx = {"result": []}
+    # """ Results of task runs (shared) """
+    # # Access results from tasks, shared tasks during a task run
+    # ctx = {"result": []}
 
-    """  """
-    # TODO: Other features
-    config = {}
+    # """  """
+    # # TODO: Other features
+    # config = {}
 
-    # TODO: Plugins features
-    plugins = {"pluginname": {"taskname": {}}}
+    # # TODO: Plugins features
+    # plugins = {"pluginname": {"taskname": {}}}
 
     __instance = None
 

@@ -7,8 +7,8 @@ from .actions import ActionsBase
 from .logger import LoggerBase
 from .plugin import PluginsBase
 
-
-class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase):
+# TODO: REDO THIS AFTER UNIT TESTS
+class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
 
     def __init__(self):
         self.shared_tasks = SharedBase.getInstance()
