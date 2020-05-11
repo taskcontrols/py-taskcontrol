@@ -8,9 +8,9 @@ class LoggerBase():
         # self.format = None
         # implement handlers and LoggerAdapters
         # self.handler = None
-        # del implementation fn
+        # del implementation fn (get from config)
         self.delt = lambda x: x
-        # delete implementation fn
+        # delete implementation fn (get from config)
         self.delete = lambda x: x
 
     def create(self, name, config):
