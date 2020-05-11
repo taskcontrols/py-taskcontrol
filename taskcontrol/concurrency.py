@@ -3,8 +3,8 @@
 
 class ConcurencyBase():
 
-    # consider adding concurrency futures 
-    def concurrency_run(self):
+    # consider adding concurrency futures
+    def futures_run(self):
         pass
 
     # consider adding asyncio lib
@@ -30,7 +30,7 @@ class ConcurencyBase():
         worker.start()
         if options.get("needs_join"):
             worker.join()
-        return worker, result
+        return {"worker": worker, "result": result, "share_data": share_data}
 
     # asynchronous, needs_join
     def mprocess_run(self, function, options):
@@ -42,6 +42,8 @@ class ConcurencyBase():
         result = None
         sa = options.get("share_array")
         sv = options.get("share_data")
+        if sa == None:
+            sa = []
         # check need here. Create a common one outside by user
         worker = Process(
             target=function,
@@ -52,5 +54,4 @@ class ConcurencyBase():
         worker.start()
         if options.get("needs_join"):
             result = worker.join()
-        return worker, result
-
+        return {"worker": worker, "result": result, "share_array": sa, "share_data": sv}
