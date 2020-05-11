@@ -3,6 +3,14 @@
 
 class ConcurencyBase():
 
+    # consider adding concurrency futures 
+    def concurrency_run(self):
+        pass
+
+    # consider adding asyncio lib
+    def asyncio_run(self):
+        pass
+
     # asynchronous, needs_join
     def mthread_run(self, function, options):
         # Consider adding thread alive, and other method options access to functions
