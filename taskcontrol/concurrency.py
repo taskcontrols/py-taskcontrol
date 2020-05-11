@@ -1,15 +1,22 @@
 # Actions and Hooks Base
-# TODO: Create structure
 
 
 class ConcurencyBase():
 
     # asynchronous, needs_join
     def mthread_run(self, function, options):
+        # Consider adding thread alive, and other method options access to functions
         from threading import Thread
         result = None
-        worker = Thread(target=function, daemon=True, args=(
-            *options.get("args"), result), kwargs={**options.get("kwargs")})
+        if type(options) == dict:
+            share_data = options.get("share_data")
+        worker = Thread(
+            target=function,
+            daemon=True,
+            args=(*options.get("args"), ),
+            kwargs={**options.get("kwargs"),
+                    "share_data": share_data, "result": result}
+        )
         worker.setDaemon(True)
         worker.start()
         if options.get("needs_join"):
@@ -18,13 +25,19 @@ class ConcurencyBase():
 
     # asynchronous, needs_join
     def mprocess_run(self, function, options):
-        from multiprocessing import Process, Array
-        # Apply Array for share with multiple treads
+        # Consider adding process alive, and other method options access to functions
+        from multiprocessing import Process, Array, Value
+        result = None
+        sa = options.get("share_array")
+        sv = options.get("share_data")
         # check need here. Create a common one outside by user
-        worker = Process(target=function, args=(
-            *options.get("args"),), kwargs={**options.get("kwargs")})
+        worker = Process(
+            target=function,
+            args=(*options.get("args"), ),
+            kwargs={**options.get("kwargs"),
+                    "share_array": sa, "share_value": sv}
+        )
         worker.start()
         if options.get("needs_join"):
             result = worker.join()
         return worker, result
-
