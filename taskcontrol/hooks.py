@@ -1,5 +1,10 @@
 # Hooks Base
 
+
+class SocketsBase():
+    pass
+
+
 # Inherit shared and logging
 class HooksBase():
 
