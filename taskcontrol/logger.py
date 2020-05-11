@@ -1,21 +1,24 @@
 
+import logging
 
 class LoggerBase():
 
-    def __init__(self, name):
-        import logging
-        self.logger = logging.Logger(name)
-        # self.logger.setLevel(logging.DEBUG)
-        # self.logger.setLevel(logging.DEBUG)
+    def __init__(self, name, config):
+        self.create(name, config)
         # self.format = None
+        # implement handlers and LoggerAdapters
         # self.handler = None
         # del implementation fn
         self.delt = lambda x: x
         # delete implementation fn
         self.delete = lambda x: x
 
-    def create(self):
-        pass
+    def create(self, name, config):
+        self.logger = logging.Logger(name)
+        # use config here
+        # config contains network info if logging needed to network
+        # self.logger.setLevel(logging.DEBUG)
+        # self.logger.setLevel(logging.DEBUG)
 
     def log(self, level, message):
         if level == "debug":
@@ -39,6 +42,5 @@ class LoggerBase():
         # self.format = None
         # self.handler = None
         
-
         # self.delete(1)
         pass

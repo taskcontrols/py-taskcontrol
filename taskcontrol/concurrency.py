@@ -1,5 +1,7 @@
 # Actions and Hooks Base
 
+from threading import Thread
+from multiprocessing import Process
 
 class ConcurencyBase():
 
@@ -17,7 +19,7 @@ class ConcurencyBase():
         # # args, kwargs, needs_join, share_value
         
         # Test this instance of MThreading for lock and other params
-        from threading import Thread
+        
         result = None
         if type(options) == dict:
             share_value = options.get("share_value")
@@ -39,7 +41,7 @@ class ConcurencyBase():
         # args, kwargs, needs_join
 
         # Test this instance of MProcessing for lock and other params
-        from multiprocessing import Process
+        
         result = None
 
         # # Check need here. Create a common one outside by user
