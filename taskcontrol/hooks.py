@@ -1,4 +1,4 @@
-
+# Hooks Base
 
 # Inherit shared and logging
 class HooksBase():

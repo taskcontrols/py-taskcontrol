@@ -1,3 +1,4 @@
+# Logger Base
 
 import logging
 
@@ -44,3 +45,4 @@ class LoggerBase():
         
         # self.delete(1)
         pass
+
