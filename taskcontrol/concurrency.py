@@ -29,7 +29,7 @@ class ConcurencyBase():
         worker.start()
         if options.get("needs_join"):
             worker.join()
-        return {"worker": worker, "result": result, "share_value": share_value}
+        return {"worker": worker, "result": result}
 
     # asynchronous, needs_join
     def mprocess_run(self, function, options):
