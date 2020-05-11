@@ -4,6 +4,7 @@
 from threading import Thread
 from multiprocessing import Process
 
+
 class ConcurencyBase():
 
     # consider adding concurrency futures
@@ -18,15 +19,18 @@ class ConcurencyBase():
     def mthread_run(self, function, options):
         # options structure
         # # args, kwargs, needs_join, share_value
-        
+
         # Test this instance of MThreading for lock and other params
-        
+
         result = None
         if type(options) == dict:
             share_value = options.get("share_value")
+        daemon = options.get("daemon")
+        if type(daemon) != bool:
+            daemon = True
         worker = Thread(
             target=function,
-            daemon=True,
+            daemon=daemon,
             args=(*options.get("args"), ),
             kwargs={**options.get("kwargs")}
         )
@@ -42,13 +46,13 @@ class ConcurencyBase():
         # args, kwargs, needs_join
 
         # Test this instance of MProcessing for lock and other params
-        
+
         result = None
 
         # # Check need here. Create a common one outside by user
         # # Consider if you want to handle this
-        # # share_value, share_array, share_queue, share_pipe, share_lock, share_rlock, 
-        # # share_manager, share_pool, share_connection, share_event, 
+        # # share_value, share_array, share_queue, share_pipe, share_lock, share_rlock,
+        # # share_manager, share_pool, share_connection, share_event,
         # # share_semaphore, share_bounded_semaphore
 
         # sv = options.get("share_value")
@@ -62,4 +66,3 @@ class ConcurencyBase():
         if options.get("needs_join"):
             result = worker.join()
         return {"worker": worker, "result": result}
-
