@@ -11,7 +11,7 @@ from .plugin import PluginsBase
 class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
 
     def __init__(self):
-        self.shared_tasks = SharedBase.getInstance()
+        self.shared = SharedBase.getInstance()
         self.get_ctx, self.set_ctx, self.get_attr, self.update_task, self.set_tasks, self.parse_tasks, self.get_tasks = self.wf_closure()
 
     def wf_closure(self):
@@ -80,7 +80,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
                 if not task.get("shared"):
                     task[attr] = tasks.get(attr)
                 elif task.get("shared"):
-                    task[attr] = self.shared_tasks.get_shared_tasks(attr)
+                    task[attr] = self.shared.get_shared_tasks(attr)
                 else:
                     raise ValueError(
                         "Workflow get_attr: shared value and task attribute presence error"
@@ -109,7 +109,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
             }
 
             if task.get("shared") == True:
-                self.shared_tasks.set_shared_tasks(
+                self.shared.set_shared_tasks(
                     {task.get("name"): task_obj})
             elif task.get("shared") == False:
                 tasks.update(task.get("name"), task_obj)
@@ -120,11 +120,11 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
             shared = workflow_kwargs.get("shared")
 
             if shared == True:
-                wf = self.shared_tasks.get_shared_tasks(workflow_name)
+                wf = self.shared.get_shared_tasks(workflow_name)
                 if isinstance(wf, dict) and not wf == None:
-                    self.shared_tasks.set_shared_tasks({workflow_name: {}})
+                    self.shared.set_shared_tasks({workflow_name: {}})
                 if not isinstance(wf, dict):
-                    self.shared_tasks.set_shared_tasks({workflow_name: {}})
+                    self.shared.set_shared_tasks({workflow_name: {}})
             elif not shared == True:
                 if workflow_name not in tasks.keys():
                     tasks[workflow_name] = {}
@@ -142,7 +142,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
             }
 
             if shared == True:
-                self.shared_tasks.set_shared_tasks({workflow_name: task})
+                self.shared.set_shared_tasks({workflow_name: task})
             elif shared == False:
                 tasks[workflow_name].update(task)
 
@@ -153,7 +153,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
             if task == "1" or task == 1:
                 return list(tasks.keys())
             if task == "shared:1":
-                s_tasks = self.shared_tasks.get_shared_tasks(1).keys()
+                s_tasks = self.shared.get_shared_tasks(1).keys()
                 return ["shared:"+i for i in list(s_tasks)]
             if task == 1 and type(task) == int:
                 return list(tasks.keys())
@@ -167,7 +167,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
                     task = task.split("shared:")[1]
 
                 if shared:
-                    return self.shared_tasks.get_shared_tasks(task)
+                    return self.shared.get_shared_tasks(task)
                 elif not shared:
                     return tasks.get(task)
             return

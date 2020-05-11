@@ -31,8 +31,8 @@ class Tasks(WorkflowBase, PluginsBase):
         if shared == True:
             # Check this based on new closure ways
             # TODO: Tests pending
-            self.shared_tasks.tasks = self.merge_tasks(
-                self.shared_tasks.tasks, inst, shared, clash_prefix
+            self.shared.tasks = self.merge_tasks(
+                self.shared.tasks, inst, shared, clash_prefix
             )
         elif shared == False:
             # Check this based on new closure ways
