@@ -13,8 +13,10 @@ class ConcurencyBase():
 
     # asynchronous, needs_join
     def mthread_run(self, function, options):
+        # options structure
         # # args, kwargs, needs_join, share_value
-        # Consider adding thread alive, and other method options access to functions
+        
+        # Test this instance of MThreading for lock and other params
         from threading import Thread
         result = None
         if type(options) == dict:
@@ -36,7 +38,7 @@ class ConcurencyBase():
         # options structure
         # args, kwargs, needs_join
 
-        # Consider adding process alive, and other method options access to functions
+        # Test this instance of MProcessing for lock and other params
         from multiprocessing import Process
         result = None
 
