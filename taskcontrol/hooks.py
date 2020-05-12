@@ -8,8 +8,20 @@ class SocketsBase():
 # Inherit shared and logging
 class HooksBase():
 
-    # list of registered web hooks
-    hooks = []
+    def __init__(self):
+        self.get_gooks, self.set_hooks = self.hooks_closure()
+    
+    def hooks_closure(self):
+        # list of registered web hooks
+        hooks = []
+
+        def get_hooks(self):
+            pass
+
+        def set_hooks(self):
+            pass
+
+        return {"get_hooks": get_hooks, "set_hooks": set_hooks}
 
     def hook_state(self):
         pass

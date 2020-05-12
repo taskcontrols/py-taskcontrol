@@ -4,7 +4,7 @@
 from .sharedbase import SharedBase
 from .concurrency import ConcurencyBase
 from .actions import ActionsBase
-from .logger import LoggerBase
+from .logger_timer import LoggerBase
 from .plugin import PluginsBase
 
 # TODO: REDO THIS AFTER UNIT TESTS
@@ -245,7 +245,6 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
 
         result["result"].append(r_)
 
-        # Applying below for SharedBase Closure support
         self.set_ctx({"result": result.get("result")})
 
         return {"result": result.get("result")}

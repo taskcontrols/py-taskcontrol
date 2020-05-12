@@ -16,6 +16,8 @@ class TimerBase():
 class LoggerBase(TimerBase):
 
     def __init__(self, name, config):
+        self.get_logger, self.set_logger = self.logger_closure()
+
         self.create(name, config)
         # self.format = None
         # implement handlers and LoggerAdapters
@@ -24,6 +26,15 @@ class LoggerBase(TimerBase):
         self.delt = lambda x: x
         # delete implementation fn (get from config)
         self.delete = lambda x: x
+
+    def logger_closure(self):
+        logger = []
+        def get_logger(self):
+            pass
+        def set_logger(self):
+            pass
+
+        return {"get_logger": get_logger, "set_logger": set_logger}
 
     def create(self, name, config):
         self.logger = logging.Logger(name)
