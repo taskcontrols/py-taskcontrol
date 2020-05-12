@@ -1,11 +1,12 @@
 # # Project Workflow
 
-
 from sys import path
 path.append('./')
-from .logger_timer import LoggerBase
-from .hooks import HooksBase
+
+
 from .bases import WorkflowBase, PluginsBase
+from .hooks import HooksBase
+from .logger_timer import LoggerBase
 
 
 class Tasks(WorkflowBase, PluginsBase):

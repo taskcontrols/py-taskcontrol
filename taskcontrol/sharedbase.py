@@ -1,11 +1,11 @@
 # SHARED BASE
 
+
 class SharedBase():
 
     __instance = None
 
     def __init__(self):
-
         """middleware_task_ Structure: name, function, args, kwargs, options"""
         """workflow_kwargs: name, task_instance, task_order, shared, args, kwargs, before, after, log"""
         self.get_shared_tasks, self.set_shared_tasks, self.get_shared_ctx, self.set_shared_ctx, self.get_shared_config, self.set_shared_config, self.get_shared_plugins, self.set_shared_plugins = self.shared_closure()

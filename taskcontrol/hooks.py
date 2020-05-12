@@ -9,16 +9,16 @@ class SocketsBase():
 class HooksBase():
 
     def __init__(self):
-        self.get_gooks, self.set_hooks = self.hooks_closure()
+        self.get_hooks, self.set_hooks = self.hooks_closure()
     
     def hooks_closure(self):
         # list of registered web hooks
         hooks = []
 
-        def get_hooks(self):
+        def get_hooks():
             pass
 
-        def set_hooks(self):
+        def set_hooks():
             pass
 
         return {"get_hooks": get_hooks, "set_hooks": set_hooks}
