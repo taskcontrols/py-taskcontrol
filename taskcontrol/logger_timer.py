@@ -7,15 +7,18 @@ import time
 class TimerBase():
 
     def __init__(self):
+        
         pass
     
     def time(self):
+        
         pass
 
 
 class LoggerBase(TimerBase):
 
     def __init__(self, name, config):
+
         self.get_logger, self.set_logger = self.logger_closure()
 
         self.create(name, config)
@@ -28,6 +31,7 @@ class LoggerBase(TimerBase):
         self.delete = lambda x: x
 
     def logger_closure(self):
+
         logger = []
         def get_logger(self):
             pass
@@ -37,6 +41,7 @@ class LoggerBase(TimerBase):
         return {"get_logger": get_logger, "set_logger": set_logger}
 
     def create(self, name, config):
+
         self.logger = logging.Logger(name)
         # use config here
         # config contains network info if logging needed to network
@@ -44,6 +49,7 @@ class LoggerBase(TimerBase):
         # self.logger.setLevel(logging.DEBUG)
 
     def log(self, level, message):
+
         if level == "debug":
             self.logger.debug(message)
         if level == "info":
@@ -56,6 +62,7 @@ class LoggerBase(TimerBase):
             self.logger.critical(message)
 
     def __del__(self):
+
         # TODO: Add Logger
 
         # TODO: Add Authentication
@@ -67,6 +74,7 @@ class LoggerBase(TimerBase):
         pass
 
     def __delete__(self, instance):
+
         # TODO: Add Logger
 
         # TODO: Add Authentication

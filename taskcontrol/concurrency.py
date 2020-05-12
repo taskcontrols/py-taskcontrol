@@ -9,14 +9,26 @@ class ConcurencyBase():
 
     # consider adding concurrency futures
     def futures_run(self):
+        
         pass
 
     # consider adding asyncio lib
     def asyncio_run(self):
+        
         pass
 
     # asynchronous, needs_join
     def mthread_run(self, function, options):
+        """
+        Description of mthread_run
+
+        Args:
+            self (undefined):
+            function (undefined):
+            options (undefined):
+
+        """
+        
         # options structure
         # # args, kwargs, needs_join, share_value
 
@@ -42,6 +54,16 @@ class ConcurencyBase():
 
     # asynchronous, needs_join
     def mprocess_run(self, function, options):
+        """
+        Description of mprocess_run
+
+        Args:
+            self (undefined):
+            function (undefined):
+            options (undefined):
+
+        """
+        
         # options structure
         # args, kwargs, needs_join
 

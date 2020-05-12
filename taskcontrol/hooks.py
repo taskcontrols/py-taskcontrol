@@ -12,6 +12,7 @@ class HooksBase():
         self.get_hooks, self.set_hooks = self.hooks_closure()
 
     def hooks_closure(self):
+        
         # list of registered web hooks
         hooks = []
 
@@ -34,6 +35,7 @@ class HooksBase():
         return {"get_hooks": get_hooks, "set_hooks": set_hooks}
 
     def hook_state(self):
+        
         # TODO: Add Logger
 
         # TODO: Add Authentication
@@ -42,6 +44,7 @@ class HooksBase():
         pass
 
     def service_run(self):
+        
         # TODO: Add Logger
 
         # TODO: Add Authentication
@@ -50,6 +53,7 @@ class HooksBase():
         pass
 
     def service_stop(self):
+        
         # TODO: Add Logger
 
         # TODO: Add Authentication
@@ -58,6 +62,7 @@ class HooksBase():
         pass
 
     def register_hook(self):
+        
         # TODO: Add Logger
 
         # TODO: Add Authentication
@@ -66,6 +71,7 @@ class HooksBase():
         pass
 
     def register_receiver(self):
+        
         # TODO: Add Logger
 
         # TODO: Add Authentication
@@ -74,6 +80,7 @@ class HooksBase():
         pass
 
     def send(self):
+        
         # TODO: Add Logger
 
         # TODO: Add Authentication
@@ -82,6 +89,7 @@ class HooksBase():
         pass
 
     def receive(self):
+        
         # TODO: Add Logger
 
         # TODO: Add Authentication

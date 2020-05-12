@@ -13,6 +13,7 @@ class Tasks(WorkflowBase, PluginsBase):
 
     # add plugin to instance or shared
     def plugin_register(self, plugin_instance):
+
         # TODO: Add Logger
 
         # TODO: Add Authentication
@@ -35,6 +36,7 @@ class Tasks(WorkflowBase, PluginsBase):
             pass
 
     def merge(self, inst, shared=False, clash_prefix=None):
+        
         # TODO: Add Logger
 
         # TODO: Add Authentication
@@ -54,6 +56,7 @@ class Tasks(WorkflowBase, PluginsBase):
             )
 
     def run(self, tasks):
+        
         # print("Workflow task list provided being instantiated: ", str(tasks))
         # add this to context (shared/local check design)
         result = []
@@ -79,11 +82,14 @@ class Tasks(WorkflowBase, PluginsBase):
 
 
 def workflow(*workflow_args, **workflow_kwargs):
+    
     # print("get_decorator: Decorator init ", "workflow_args: ", workflow_args, "workflow_kwargs: ", workflow_kwargs)
 
     def get_decorator(function_):
+
         # print("get_decorator: ", function_)
         def add_tasks(*function_args, **function_kwargs):
+
             # print("Workflow add_tasks: Decorator init ", "function_args: ", function_args, "function_kwargs: ", function_kwargs)
             # print((function_, function_args, function_kwargs, workflow_args, workflow_kwargs))
             workflow_kwargs.update({"function_args": function_args})

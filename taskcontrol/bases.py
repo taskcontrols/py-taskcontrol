@@ -11,8 +11,28 @@ from .plugin import PluginsBase
 
 
 class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
+    """
+    Description of WorkflowBase
 
+    Attributes:
+        attr1 (str): Description of 'attr1' 
+
+    Inheritance:
+        SharedBase:
+        ConcurencyBase:
+        LoggerBase:
+        PluginsBase:
+
+    """
+    
     def __init__(self):
+        """
+        Description of __init__
+
+        Args:
+            self (undefined):
+
+        """
         self.shared = SharedBase.getInstance()
         self.get_ctx, self.set_ctx, self.get_attr, self.update_task, self.set_tasks, self.parse_tasks, self.get_tasks = self.wf_closure()
 
@@ -126,6 +146,14 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
             return task.get(attr)
 
         def update_task(task):
+            """
+            Description of update_task
+            update_task function updates the current task with new task values
+
+            Args:
+                task (undefined):
+
+            """
             # TODO: Add Logger
 
             # TODO: Add Authentication
@@ -151,6 +179,18 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
                 tasks.update(task.get("name"), task_obj)
 
         def set_tasks(function_, function_args, function_kwargs, workflow_args, workflow_kwargs):
+            """
+            Description of set_tasks
+            set_tasks sets and attaches tasks provided
+
+            Args:
+                function_ (undefined):
+                function_args (undefined):
+                function_kwargs (undefined):
+                workflow_args (undefined):
+                workflow_kwargs (undefined):
+
+            """
             # TODO: Add Logger
 
             # TODO: Add Authentication
@@ -192,6 +232,15 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
             return True
 
         def parse_tasks(task):
+            """
+            Description of parse_tasks
+            parse_tasks function checks if tasks or shared tasks are 1 or specific task or returns the task
+
+            Args:
+                task (undefined):
+
+            """
+            
             if task == "1" or task == 1:
                 return list(tasks.keys())
             if task == "shared:1":
@@ -202,6 +251,14 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
             return task
 
         def get_tasks(task=None):
+            """
+            Description of get_tasks
+            get_tasks function returns requested tasks 
+
+            Args:
+                task=None (undefined):
+
+            """
             shared = False
             if isinstance(task, str):
                 if len(task.split("shared:")) > 1:
@@ -215,8 +272,18 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
 
         return (get_ctx, set_ctx, get_attr, update_task, set_tasks, parse_tasks, get_tasks)
 
-    # Check before/after middlewares args and kwargs number and validity
     def clean_args(self, function_, function_args, function_kwargs):
+        """
+        Description of clean_args
+        Check before/after middlewares args and kwargs number and validity
+
+        Args:
+            self (undefined):
+            function_ (undefined):
+            function_args (undefined):
+            function_kwargs (undefined):
+
+        """
         arg_list = function_.__code__.co_varnames
         k_fn_kwa = function_kwargs.keys()
 
@@ -235,6 +302,16 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
         return False
 
     def reducer(self, result, task):
+        """
+        Description of reducer
+        reducer function that is being used for the reducer of tasks
+
+        Args:
+            self (undefined):
+            result (undefined):
+            task (undefined):
+
+        """
         # TODO: Add Logger
 
         # TODO: Add Authentication
@@ -302,6 +379,15 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
         return {"result": result.get("result")}
 
     def run_task(self, task):
+        """
+        Description of run_task
+        run_task function that runs the task and their before and after middleware
+
+        Args:
+            self (undefined):
+            task (undefined):
+
+        """
         # TODO: Add Logger
         if task == None:
             return
@@ -358,6 +444,18 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
         return functools.reduce(self.reducer, tasks_to_run_in_task)
 
     def merge_tasks(self, tasks, inst, shared=None, clash_prefix=None):
+        """
+        Description of merge_tasks
+        merge_tasks function merges tasks from task instance and their shared tasks
+
+        Args:
+            self (undefined):
+            tasks (undefined):
+            inst (undefined):
+            shared=None (undefined):
+            clash_prefix=None (undefined):
+
+        """
         # TODO: Add Logger
 
         # TODO: Add Authentication
