@@ -73,7 +73,7 @@ def workflow(*workflow_args, **workflow_kwargs):
         # print("get_decorator: ", function_)
         def order_tasks(*function_args, **function_kwargs):
             # print("Workflow order_tasks: Decorator init ", "function_args: ", function_args, "function_kwargs: ", function_kwargs)
-            # print((function_, function_args, function_kwargs, workflow_args, workflow_kwargs))
+            print((function_, function_args, function_kwargs, workflow_args, workflow_kwargs))
             t = workflow_kwargs.get("task_instance")
             if not t:
                 raise TypeError("Task instance not provided")
@@ -108,10 +108,11 @@ def workflow(*workflow_args, **workflow_kwargs):
                 kwargs.update(**function_kwargs)
 
             # TODO: NOT WORKING CLEANING WRITE UNITS - old
-            # args_normal = t.clean_args(
-            #     function_, function_args, function_kwargs)
-            # if not args_normal:
-            #     raise Exception("Args and KwArgs do not match")
+            args_normal = t.clean_args(
+                function_, workflow_kwargs["args"], workflow_kwargs["kwargs"])
+
+            if args_normal == None:
+                raise Exception("Args and Kwargs do not match")
             t.set_tasks(
                 function_, args, kwargs,
                 workflow_args, workflow_kwargs

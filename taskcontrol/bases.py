@@ -8,6 +8,8 @@ from .logger import LoggerBase
 from .plugin import PluginsBase
 
 # TODO: REDO THIS AFTER UNIT TESTS
+
+
 class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
 
     def __init__(self):
@@ -174,30 +176,23 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
 
         return (get_ctx, set_ctx, get_attr, update_task, set_tasks, parse_tasks, get_tasks)
 
-    # def __get_args(self, f, action, log_):
-        #     if action and isinstance(action, dict):
-        #         args, kwargs, err_obj = [], {}, {}
-        #         if isinstance(action.get("args"), list):
-        #             args = action.get("args")
-        #         if isinstance(action.get("kwargs"), dict):
-        #             kwargs = action.get("kwargs")
-        #         if isinstance(action.get("options"), dict):
-        #             err_obj = action.get("options")
-        #     # TODO: Do clean args here
-        #     return err_obj, args, kwargs
-
     # Check before/after middlewares args and kwargs number and validity
     def clean_args(self, function_, function_args, function_kwargs):
         arg_list = function_.__code__.co_varnames
         k_fn_kwa = function_kwargs.keys()
+        print(function_, arg_list, function_args, k_fn_kwa)
         l_tpl, l_fn_a, l_k_fn_kwa = len(arg_list), len(
             function_args), len(k_fn_kwa)
 
-        if (l_tpl == l_fn_a + l_k_fn_kwa):
-            for k in k_fn_kwa:
-                if not arg_list.index(k) >= l_fn_a:
-                    return False
-            return True
+        if arg_list[1] == "result" and arg_list[0] == "ctx":
+            if (l_tpl == l_fn_a + l_k_fn_kwa + 2):
+                for k in k_fn_kwa:
+                    if not arg_list.index(k) >= l_fn_a:
+                        return False
+                return True
+        else:
+            raise TypeError(
+                "First two args of a function/middleware has to be ctx and result")
         return False
 
     def reducer(self, result, task):
