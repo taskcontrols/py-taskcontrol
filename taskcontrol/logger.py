@@ -1,6 +1,12 @@
-# Logger Base
+# Logger and timer Base
 
 import logging
+import time
+
+
+class Timer():
+    pass
+
 
 class LoggerBase():
 
