@@ -37,7 +37,12 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
         plugins = {"pluginname": {"taskname": {}}}
 
         def get_ctx(keys=None):
-            # TODO: Add Auth & Logger
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
+
             if keys == 1 and type(keys) == int:
                 return ctx
             if type(keys) == str:
@@ -52,7 +57,12 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
             return
 
         def set_ctx(val=None):
-            # TODO: Add Auth & Logger
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
+
             if type(val) == dict:
                 for i in val.keys():
                     ctx[i] = val[i]
@@ -66,18 +76,44 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
             return False
 
         def get_config():
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
             pass
 
         def set_config():
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
             pass
 
         def get_plugins():
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
             pass
 
         def set_plugins():
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
             pass
 
         def get_attr(task, attr):
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
+
             if not task.get(attr):
                 if not task.get("shared"):
                     task[attr] = tasks.get(attr)
@@ -322,7 +358,6 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
         return functools.reduce(self.reducer, tasks_to_run_in_task)
 
     def merge_tasks(self, tasks, inst, shared=None, clash_prefix=None):
-
         # TODO: Add Logger
 
         # TODO: Add Authentication

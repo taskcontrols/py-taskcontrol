@@ -13,6 +13,12 @@ class Tasks(WorkflowBase, PluginsBase):
 
     # add plugin to instance or shared
     def plugin_register(self, plugin_instance):
+        # TODO: Add Logger
+
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
+
         if type(plugin_instance) != dict:
             raise TypeError("plugins definition has an issue")
         if type(plugin_instance) == dict:
@@ -29,6 +35,11 @@ class Tasks(WorkflowBase, PluginsBase):
             pass
 
     def merge(self, inst, shared=False, clash_prefix=None):
+        # TODO: Add Logger
+
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
         if shared == True:
             # Check this based on new closure ways
             # TODO: Tests pending
@@ -116,6 +127,13 @@ def workflow(*workflow_args, **workflow_kwargs):
 
             if args_normal == None:
                 raise Exception("Args and Kwargs do not match")
+
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
+
             t.set_tasks(
                 function_, args, kwargs,
                 workflow_args, workflow_kwargs

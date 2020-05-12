@@ -37,6 +37,11 @@ class SharedBase():
         plugins = {"pluginname": {"taskname": {}}}
 
         def get_shared_tasks(task_=None):
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
             if isinstance(task_, str):
                 if len(task_.split("shared:")) > 1:
                     task_ = task_.split("shared:")[1]
@@ -47,27 +52,62 @@ class SharedBase():
                 return None
 
         def set_shared_tasks(task=None):
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
             if type(task) == dict:
                 tasks.update(task)
                 return True
             return False
 
         def get_shared_ctx():
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
             pass
 
         def set_shared_ctx():
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
             pass
 
         def get_shared_config():
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
             pass
 
         def set_shared_config():
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
             pass
 
         def get_shared_plugins():
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
             pass
 
         def set_shared_plugins():
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
             pass
 
         return (get_shared_tasks, set_shared_tasks, get_shared_ctx, set_shared_ctx, get_shared_config, set_shared_config, get_shared_plugins, set_shared_plugins)
