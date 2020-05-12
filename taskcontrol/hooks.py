@@ -74,8 +74,18 @@ class HooksBase():
         pass
 
     def send(self):
+        # TODO: Add Logger
+
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
         pass
 
     def receive(self):
+        # TODO: Add Logger
+
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
         pass
 

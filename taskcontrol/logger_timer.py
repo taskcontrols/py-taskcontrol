@@ -56,11 +56,23 @@ class LoggerBase(TimerBase):
             self.logger.critical(message)
 
     def __del__(self):
+        # TODO: Add Logger
+
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
+
         # self.logger.config.stopListening()
         # self.delt(1)
         pass
 
     def __delete__(self, instance):
+        # TODO: Add Logger
+
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
+
         # self.logger = None
         # self.format = None
         # self.handler = None
