@@ -259,8 +259,6 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
         result["result"].append(r_)
 
         # Applying below for SharedBase Closure support
-        # Doesnt work without assigning keys, makes it immutable for dict props/keys
-        # Check implementation of getter and setter
         self.set_ctx({"result": result.get("result")})
 
         return {"result": result.get("result")}
