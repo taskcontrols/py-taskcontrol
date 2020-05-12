@@ -91,13 +91,6 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
 
         def update_task(task):
 
-            # # task_obj = self.create_task(task)
-            # self.ctx[task.get("name")]["log"] = self.get_attr(task, "log")
-            # self.ctx[task.get("name")]["workflow_args"] = self.get_attr(
-            #     task, "workflow_args")
-            # self.ctx[task.get("name")]["workflow_kwargs"] = self.get_attr(
-            #     task, "workflow_kwargs")
-
             task_obj = {
                 "task_order": get_attr(task, "task_order"),
                 "workflow_args": get_attr(task, "workflow_args"),
