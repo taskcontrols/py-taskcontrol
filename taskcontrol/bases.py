@@ -90,6 +90,11 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
             return task.get(attr)
 
         def update_task(task):
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
 
             task_obj = {
                 "task_order": get_attr(task, "task_order"),
@@ -110,6 +115,12 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
                 tasks.update(task.get("name"), task_obj)
 
         def set_tasks(function_, function_args, function_kwargs, workflow_args, workflow_kwargs):
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
+
             workflow_name = workflow_kwargs.get("name")
             print("Workflow task name to add: ", workflow_name)
             shared = workflow_kwargs.get("shared")
@@ -188,6 +199,12 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
         return False
 
     def reducer(self, result, task):
+        # TODO: Add Logger
+
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
+
         if isinstance(type(task), dict) or type(task) == dict:
             fn = task.get("function")
             args = task.get("args")
@@ -244,15 +261,19 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
                     "Error during middleware: flow[options[error]] value error")
 
         result["result"].append(r_)
-
         self.set_ctx({"result": result.get("result")})
 
         return {"result": result.get("result")}
 
     def run_task(self, task):
-        # TODO: Add Auth & Logger
+        # TODO: Add Logger
         if task == None:
             return
+
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
+
         if len(task.keys()) == 0:
             return
 
@@ -301,6 +322,13 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
         return functools.reduce(self.reducer, tasks_to_run_in_task)
 
     def merge_tasks(self, tasks, inst, shared=None, clash_prefix=None):
+
+        # TODO: Add Logger
+
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
+
         for k in tasks.keys():
             for ik in inst.tasks.keys():
                 if k == ik:
