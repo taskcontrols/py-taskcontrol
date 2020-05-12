@@ -180,7 +180,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
     def clean_args(self, function_, function_args, function_kwargs):
         arg_list = function_.__code__.co_varnames
         k_fn_kwa = function_kwargs.keys()
-        print(function_, arg_list, function_args, k_fn_kwa)
+
         l_tpl, l_fn_a, l_k_fn_kwa = len(arg_list), len(
             function_args), len(k_fn_kwa)
 
