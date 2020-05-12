@@ -109,7 +109,6 @@ def workflow(*workflow_args, **workflow_kwargs):
             if len(function_args):
                 kwargs.update(**function_kwargs)
 
-            # TODO: NOT WORKING CLEANING WRITE UNITS - old
             args_normal = t.clean_args(
                 function_, workflow_kwargs["args"], workflow_kwargs["kwargs"])
 
