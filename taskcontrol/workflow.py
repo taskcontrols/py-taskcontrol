@@ -3,7 +3,7 @@
 
 from sys import path
 path.append('./')
-from .logger import LoggerBase
+from .logger_timer import LoggerBase
 from .hooks import HooksBase
 from .bases import WorkflowBase, PluginsBase
 
