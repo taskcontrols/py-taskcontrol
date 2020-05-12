@@ -172,7 +172,6 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
                     return self.shared.get_shared_tasks(task)
                 elif not shared:
                     return tasks.get(task)
-            return
 
         return (get_ctx, set_ctx, get_attr, update_task, set_tasks, parse_tasks, get_tasks)
 
