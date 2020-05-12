@@ -1,11 +1,10 @@
 # # Project Workflow
 
+from .logger import LoggerBase
+from .hooks import HooksBase
+from .bases import WorkflowBase, PluginsBase
 from sys import path
 path.append('./')
-
-from .bases import WorkflowBase, PluginsBase
-from .hooks import HooksBase
-from .logger import LoggerBase
 
 
 class Tasks(WorkflowBase, PluginsBase):
@@ -71,9 +70,13 @@ def workflow(*workflow_args, **workflow_kwargs):
 
     def get_decorator(function_):
         # print("get_decorator: ", function_)
-        def order_tasks(*function_args, **function_kwargs):
-            # print("Workflow order_tasks: Decorator init ", "function_args: ", function_args, "function_kwargs: ", function_kwargs)
-            print((function_, function_args, function_kwargs, workflow_args, workflow_kwargs))
+        def add_tasks(*function_args, **function_kwargs):
+            # print("Workflow add_tasks: Decorator init ", "function_args: ", function_args, "function_kwargs: ", function_kwargs)
+            print((function_, function_args, function_kwargs,
+                   workflow_args, workflow_kwargs))
+            workflow_kwargs.update({"function_args": function_args})
+            workflow_kwargs.update({"function_kwargs": function_kwargs})
+
             t = workflow_kwargs.get("task_instance")
             if not t:
                 raise TypeError("Task instance not provided")
@@ -118,9 +121,9 @@ def workflow(*workflow_args, **workflow_kwargs):
                 workflow_args, workflow_kwargs
             )
 
-            print("Workflow order_tasks - Task added: ",
+            print("Workflow add_tasks - Task added: ",
                   workflow_kwargs.get("name"))
-        return order_tasks()
+        return add_tasks()
     return get_decorator
 
 
