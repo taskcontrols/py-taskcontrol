@@ -72,8 +72,7 @@ def workflow(*workflow_args, **workflow_kwargs):
         # print("get_decorator: ", function_)
         def add_tasks(*function_args, **function_kwargs):
             # print("Workflow add_tasks: Decorator init ", "function_args: ", function_args, "function_kwargs: ", function_kwargs)
-            print((function_, function_args, function_kwargs,
-                   workflow_args, workflow_kwargs))
+            # print((function_, function_args, function_kwargs, workflow_args, workflow_kwargs))
             workflow_kwargs.update({"function_args": function_args})
             workflow_kwargs.update({"function_kwargs": function_kwargs})
 
