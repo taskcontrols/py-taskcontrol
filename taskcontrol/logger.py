@@ -4,11 +4,16 @@ import logging
 import time
 
 
-class Timer():
-    pass
+class TimerBase():
+
+    def __init__(self):
+        pass
+    
+    def time(self):
+        pass
 
 
-class LoggerBase():
+class LoggerBase(TimerBase):
 
     def __init__(self, name, config):
         self.create(name, config)
