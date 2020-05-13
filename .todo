@@ -9,5 +9,6 @@
 * Add cleaner logging system for monitoring with
         - memory/console, file, server logging
 * Consider adding concurrent suport: multithreading, multiprocessing, async/await options 
+* Add support for async-await in base (just need tests for async await for current single task flow logic)
 * Add support for multi-threading, multiprocessing in base  (test current single task flow logic)
-* Add support for async-await in base (test async await for current single task flow logic)
+* Check impact of self on closure
