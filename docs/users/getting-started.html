@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<!--Converted via md-to-html-->
+<html>
+ <head>
+ </head>
+ <body>
+  <h1>
+   taskcontrol
+  </h1>
+  <pre><code>Create named shared / isolated workflow task controls, and run them with respective before/after middlewares. taskcontrols also supports plugins, concurrency, and authentication  
+</code></pre>
+  <h1>
+   Features Details
+  </h1>
+  <ul>
+   <li>
+    Create Named task controls (tasks) using a Workflow decorator with simple options to setup workflow
+   </li>
+  </ul>
+  <ul>
+   <li>
+    Allows middlewares before each task (data fetch, auth, etc)
+   </li>
+  </ul>
+  <ul>
+   <li>
+    Allows middlewares after each task (data save, logging, logout, cleanup, etc)
+   </li>
+  </ul>
+  <ul>
+   <li>
+    Allows context (currently read-only) for each set of tasks run accessible by any function
+   </li>
+  </ul>
+  <ul>
+   <li>
+    Allows accessing returns/results of runs by each task or their middlewares
+   </li>
+  </ul>
+  <ul>
+   <li>
+    Allows creating isolated instance tasks or common/shared tasks based on shared keyword argument
+   </li>
+  </ul>
+  <ul>
+   <li>
+    Allows creating and merging two instances of task controls with namespace clash handling
+   </li>
+  </ul>
+  <ul>
+   <li>
+    Allows running single or multiple isolated, shared, or mixed tasks for each set of tasks run
+   </li>
+  </ul>
+  &lt;!-- * In-Development: Allows creating, registering, and using a set of task controls as a plugin --&gt;&lt;!-- * In-Development: Allows  --&gt;&lt;!-- # Feature Details --&gt;
+  <h1>
+   Demo Usage
+  </h1>
+  <ul>
+   <li>
+    Import workflow and Tasks object from workflow module in taskcontrol package
+   </li>
+  </ul>
+  <ul>
+   <li>
+    Create a Task instance
+   </li>
+  </ul>
+  <ul>
+   <li>
+    Create a workflow definition using
+    <code>
+     @workflow
+    </code>
+    decorator
+   </li>
+  </ul>
+  <pre><code>- Usage: 
+</code></pre>
+  <pre><code>    - `@workflow(name, task_order, task_instance, args, kwargs, before, after, shared, log)`
+</code></pre>
+  <pre><code>    - `def function(...){...}`
+</code></pre>
+  <pre><code>- `name`, `task_instance` keys definitions are compulsary
+</code></pre>
+  <pre><code>- `args`, `kwargs`, optional for function arguments - throws `TypeError` if wrong args provided
+</code></pre>
+  <pre><code>- `before` and `after` keys are optional and provides before and after middlewares for a specific task
+</code></pre>
+  <pre><code>- `shared` key is optional and defaults to `False`
+</code></pre>
+  <pre><code>- `log` key is optional and default to `False`
+</code></pre>
+  <ul>
+   <li>
+    Run the task when needed using
+    <code>
+     .run(tasks=['taskname'])
+    </code>
+    invocation
+   </li>
+  </ul>
+  <h2>
+   Demo Usage
+  </h2>
+  <p>
+   ```python
+  </p>
+  <h1>
+   for package
+  </h1>
+  <p>
+   from taskcontrol.workflow import workflow, Tasks
+  </p>
+  <h1>
+   Create an instance of the task you are creating
+  </h1>
+  <p>
+   sparrow = Tasks()
+  </p>
+  <h1>
+   Middleware that we are running
+  </h1>
+  <h1>
+   Use any middleware that runs with or withour returning results
+  </h1>
+  <h1>
+   Demo uses common middleware for all. Please use you own middlewares
+  </h1>
+  <p>
+   def nesttree(ctx, result, k, c, d, **kwargs):
+  </p>
+  <pre><code>print("Running my Middleware Function: nesttree - task items", k, c, d, kwargs)
+</code></pre>
+  <h1>
+   workflow decorator
+  </h1>
+  <p>
+   @workflow(
+  </p>
+  <pre><code># Task name
+</code></pre>
+  <pre><code>name="taskname",
+</code></pre>
+  <pre><code># Order of the task function when all tasks are run (Not functional yet)
+</code></pre>
+  <pre><code>task_order=1,
+</code></pre>
+  <pre><code># Task instance whic is used for creating tasks
+</code></pre>
+  <pre><code># Tasks are isolated to this task instance
+</code></pre>
+  <pre><code>task_instance=sparrow,
+</code></pre>
+  <pre><code># Whether the Task is a shared task or instance isolated task
+</code></pre>
+  <pre><code># Shared Task is sharable and accessable across the app
+</code></pre>
+  <pre><code>shared=False,
+</code></pre>
+  <pre><code># Arguments that should be provided to the task function the decorator is applied on
+</code></pre>
+  <pre><code>args=[1, 2],
+</code></pre>
+  <pre><code># Keyword arguments for the function the decorator is applied on
+</code></pre>
+  <pre><code>kwargs={},
+</code></pre>
+  <pre><code># before middleware order followed will be of the list sequence
+</code></pre>
+  <pre><code>before=[
+</code></pre>
+  <pre><code>    {
+</code></pre>
+  <pre><code>        "function": nesttree,
+</code></pre>
+  <pre><code>        "args": [11, 12],
+</code></pre>
+  <pre><code>        "kwargs": {"d": "Before Testing message Middleware "},
+</code></pre>
+  <pre><code>        "options": {"error": "next", "error_next_value": ""}
+</code></pre>
+  <pre><code>    }
+</code></pre>
+  <pre><code>],
+</code></pre>
+  <pre><code># after middleware order followed will be of the list sequence
+</code></pre>
+  <pre><code>after=[
+</code></pre>
+  <pre><code>    {
+</code></pre>
+  <pre><code>        "function": nesttree,
+</code></pre>
+  <pre><code>        "args": [13, 14],
+</code></pre>
+  <pre><code>        "kwargs": {"d": "After Middleware Testing message"},
+</code></pre>
+  <pre><code>        "options": {
+</code></pre>
+  <pre><code>            "error": "error_handler",
+</code></pre>
+  <pre><code>            "error_next_value": "value",
+</code></pre>
+  <pre><code>            "error_handler": lambda err, value: (err, None)
+</code></pre>
+  <pre><code>        }
+</code></pre>
+  <pre><code>    }
+</code></pre>
+  <pre><code>],
+</code></pre>
+  <pre><code># Whether logging should be allowed or not (Not functional yet)
+</code></pre>
+  <pre><code>log=False
+</code></pre>
+  <p>
+   )
+  </p>
+  <h1>
+   Main function for the task
+  </h1>
+  <p>
+   def taskone(ctx, result, a, b):
+  </p>
+  <pre><code>print("Running my task function: taskone", a, b)
+</code></pre>
+  <p>
+   sparrow.run(tasks="taskname")
+  </p>
+  <p>
+   ```
+  </p>
+ </body>
+</html>

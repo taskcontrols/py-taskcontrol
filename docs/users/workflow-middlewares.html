@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<!--Converted via md-to-html-->
+<html>
+ <head>
+ </head>
+ <body>
+  <h1>
+   taskcontrol
+  </h1>
+  <p>
+   ```python
+  </p>
+  <h1>
+   for git development repo
+  </h1>
+  <h1>
+   from taskcontrol.workflow import workflow, Tasks
+  </h1>
+  <h1>
+   for package
+  </h1>
+  <p>
+   from taskcontrol.workflow import workflow, Tasks
+  </p>
+  <h1>
+   Instance of tasks and apis object
+  </h1>
+  <h1>
+   Every instance will store it own list of tasks
+  </h1>
+  <h1>
+   with their before/after middlewares
+  </h1>
+  <p>
+   sparrow = Tasks()
+  </p>
+  <p>
+   def nesttree(ctx, result, k, c, d, **kwargs):
+  </p>
+  <pre><code>print("Running my Middleware Function: nesttree - task items", k, c, d, kwargs)
+</code></pre>
+  <p>
+   @workflow(
+  </p>
+  <pre><code>name="taskname",
+</code></pre>
+  <pre><code>task_order=1,
+</code></pre>
+  <pre><code>task_instance=sparrow,
+</code></pre>
+  <pre><code>shared=False,
+</code></pre>
+  <pre><code>args=[1, 2],
+</code></pre>
+  <pre><code>kwargs={},
+</code></pre>
+  <pre><code>before=[
+</code></pre>
+  <pre><code>    # before middleware order followed will be of the list sequence
+</code></pre>
+  <pre><code>    {
+</code></pre>
+  <pre><code>        "function": nesttree,
+</code></pre>
+  <pre><code>        "args": [11, 12],
+</code></pre>
+  <pre><code>        "kwargs": {"d": "Before Testing message Middleware "},
+</code></pre>
+  <pre><code>        # options { error : str,  error_next_value: Object, error_handler: function }
+</code></pre>
+  <pre><code>        #
+</code></pre>
+  <pre><code>        # error { str }: [next, error_handler, exit]
+</code></pre>
+  <pre><code>        # error_handler { function }
+</code></pre>
+  <pre><code>        # error_next_value { object }
+</code></pre>
+  <pre><code>        #
+</code></pre>
+  <pre><code>        # Usage:
+</code></pre>
+  <pre><code>        # "options": {"error": "next", "error_next_value": "value"}
+</code></pre>
+  <pre><code>        # "options": {"error": "exit"}
+</code></pre>
+  <pre><code>        # "options": {
+</code></pre>
+  <pre><code>        #    "error": "error_handler", error_handler: func, "error_next_value": "value"
+</code></pre>
+  <pre><code>        #    }
+</code></pre>
+  <pre><code>        "options": {"error": "next", "error_next_value": ""}
+</code></pre>
+  <pre><code>    }
+</code></pre>
+  <pre><code>],
+</code></pre>
+  <pre><code>after=[
+</code></pre>
+  <pre><code>    # after middleware order followed will be of the list sequence
+</code></pre>
+  <pre><code>    {
+</code></pre>
+  <pre><code>        "function": nesttree,
+</code></pre>
+  <pre><code>        "args": [13, 14],
+</code></pre>
+  <pre><code>        "kwargs": {"d": "After Middleware Testing message"},
+</code></pre>
+  <pre><code>        "options": {
+</code></pre>
+  <pre><code>            "error": "error_handler",
+</code></pre>
+  <pre><code>            "error_next_value": "value",
+</code></pre>
+  <pre><code>            #
+</code></pre>
+  <pre><code>            # Default error_handler implementation used internally, if no
+</code></pre>
+  <pre><code>            #           error_handler is provided
+</code></pre>
+  <pre><code>            #
+</code></pre>
+  <pre><code>            # Implementation One:
+</code></pre>
+  <pre><code>            #   if error_next_value defined
+</code></pre>
+  <pre><code>            #       lambda err, value: (err, error_next_value)
+</code></pre>
+  <pre><code>            # Implementation Two:
+</code></pre>
+  <pre><code>            #   if error_next_value not defined
+</code></pre>
+  <pre><code>            #       lambda err, value: (err, None)
+</code></pre>
+  <pre><code>            #
+</code></pre>
+  <pre><code>            # Returning the two value tuple in error_handler implementation is compulsary
+</code></pre>
+  <pre><code>            #       err is the error that occurred
+</code></pre>
+  <pre><code>            #       error_next_value is error_next_value provided in options
+</code></pre>
+  <pre><code>            #
+</code></pre>
+  <pre><code>            "error_handler": lambda err, value: (err, None)
+</code></pre>
+  <pre><code>        }
+</code></pre>
+  <pre><code>    }
+</code></pre>
+  <pre><code>],
+</code></pre>
+  <pre><code>log=False
+</code></pre>
+  <p>
+   )
+  </p>
+  <p>
+   def taskone(ctx, result, a, b):
+  </p>
+  <pre><code>print("Running my task function: taskone", a, b)
+</code></pre>
+  <h1>
+   Invocation is needed to add the task with function arguments
+  </h1>
+  <h1>
+   Invoke this where needed
+  </h1>
+  <h1>
+   Example: Within some other function
+  </h1>
+  <h1>
+   taskone(3, 4)
+  </h1>
+  <h1>
+   Example two for decorator usage
+  </h1>
+  <p>
+   @workflow(name="tasktwo",
+  </p>
+  <pre><code>      task_instance=t,
+</code></pre>
+  <pre><code>      task_order=2,
+</code></pre>
+  <pre><code>      shared=False,
+</code></pre>
+  <pre><code>      args=[1, 2],
+</code></pre>
+  <pre><code>      kwargs={},
+</code></pre>
+  <pre><code>      # Declare before/after as an list or an object (if single middleware function)
+</code></pre>
+  <pre><code>      before={
+</code></pre>
+  <pre><code>          "function": nesttree,
+</code></pre>
+  <pre><code>          "args": [21, 22],
+</code></pre>
+  <pre><code>          "kwargs": {"d": "Before Testing message"},
+</code></pre>
+  <pre><code>          "options": {"error": "next", "error_next_value": ""}
+</code></pre>
+  <pre><code>      },
+</code></pre>
+  <pre><code>      after=[],
+</code></pre>
+  <pre><code>      log=False
+</code></pre>
+  <pre><code>      )
+</code></pre>
+  <p>
+   def tasktwo(ctx, result, a, b):
+  </p>
+  <pre><code>print("Running my task function: tasktwo", a, b)
+</code></pre>
+  <pre><code>return a, b
+</code></pre>
+  <h1>
+   Invoke this where needed
+  </h1>
+  <h1>
+   Example: Within some other function
+  </h1>
+  <h1>
+   TODO: Run all tasks
+  </h1>
+  <h1>
+   Multiple Workflow Tasks run
+  </h1>
+  <p>
+   sparrow.run(tasks=["1"])
+  </p>
+  <p>
+   sparrow.run(tasks="1")
+  </p>
+  <h1>
+   TODO: Run all shared tasks
+  </h1>
+  <h1>
+   Shared Workflow Tasks run
+  </h1>
+  <p>
+   sparrow.run(tasks=["shared:1"])
+  </p>
+  <p>
+   sparrow.run(tasks="shared:1")
+  </p>
+  <h1>
+   Multiple Workflow Tasks run
+  </h1>
+  <p>
+   run_1 = sparrow.run(tasks=["shared:taskname", "tasktwo"])
+  </p>
+  <h1>
+   print("sparrow.ctx ",sparrow.ctx)
+  </h1>
+  <p>
+   print("run_1", run_1)
+  </p>
+  <h1>
+   TODO: Run Tasks run with mix of shared
+  </h1>
+  <h1>
+   Multiple Workflow Tasks run with mix of shared
+  </h1>
+  <p>
+   sparrow.run(tasks=["taskname", "tasktwo", "shared:taskname"])
+  </p>
+  <h1>
+   Single Workflow Tasks run
+  </h1>
+  <p>
+   run_2 = sparrow.run(tasks="shared:taskname")
+  </p>
+  <p>
+   print("run_2", run_2)
+  </p>
+  <h1>
+   TODO: Run Tasks run with shared task
+  </h1>
+  <h1>
+   Single Workflow Tasks run for shared task
+  </h1>
+  <p>
+   sparrow.run(tasks="shared:taskname")
+  </p>
+  <p>
+   ```
+  </p>
+ </body>
+</html>
