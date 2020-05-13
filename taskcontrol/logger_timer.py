@@ -7,15 +7,16 @@ import time
 class TimerBase():
 
     def __init__(self):
-        
         pass
     
     def time(self):
-        
+        pass
+    
+    def log(self, file):
         pass
 
 
-class LoggerBase(TimerBase):
+class LoggerBase():
 
     def __init__(self, name, config):
 
