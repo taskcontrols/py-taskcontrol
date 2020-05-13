@@ -7,8 +7,9 @@ import sqlite3
 # https://docs.python.org/3/library/sqlite3.html
 # https://docs.python.org/3/library/pickle.html
 
-# TODO: Consider making this an interface that can be extended later
-
+# TODO
+# Consider making this an interface that can be extended later
+# Which will make it compatible to any DB and Authentication ways
 
 class AuthenticationBase():
     """
