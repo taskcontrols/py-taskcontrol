@@ -120,13 +120,11 @@ def tasktwo(ctx, result, a, b):
 # Example: Within some other function
 
 
-# TODO: Run all tasks
 # Multiple Workflow Tasks run
 sparrow.run(tasks=["1"])
 sparrow.run(tasks="1")
 
 
-# TODO: Run all shared tasks
 # Shared Workflow Tasks run
 sparrow.run(tasks=["shared:1"])
 sparrow.run(tasks="shared:1")
@@ -137,8 +135,6 @@ run_1 = sparrow.run(tasks=["shared:taskname", "tasktwo"])
 # print("sparrow.ctx ",sparrow.ctx)
 print("run_1", run_1)
 
-
-# TODO: Run Tasks run with mix of shared
 # Multiple Workflow Tasks run with mix of shared
 sparrow.run(tasks=["taskname", "tasktwo", "shared:taskname"])
 
