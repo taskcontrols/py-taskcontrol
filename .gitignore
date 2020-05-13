@@ -142,3 +142,5 @@ dist/
 lib64
 t.spec
 source/
+Makefile
+make.bat
