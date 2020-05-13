@@ -24,7 +24,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
         PluginsBase:
 
     """
-    
+
     def __init__(self):
         """
         Description of __init__
@@ -176,7 +176,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
                 self.shared.set_shared_tasks(
                     {task.get("name"): task_obj})
             elif task.get("shared") == False:
-                tasks.update(task.get("name"), task_obj)
+                tasks.update({task.get("name"): task_obj})
 
         def set_tasks(function_, function_args, function_kwargs, workflow_args, workflow_kwargs):
             """
@@ -240,7 +240,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
                 task (undefined):
 
             """
-            
+
             if task == "1" or task == 1:
                 return list(tasks.keys())
             if task == "shared:1":

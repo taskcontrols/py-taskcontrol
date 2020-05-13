@@ -6,7 +6,6 @@ class SharedBase():
     __instance = None
 
     def __init__(self):
-        
         """middleware_task_ Structure: name, function, args, kwargs, options"""
         """workflow_kwargs: name, task_instance, task_order, shared, args, kwargs, before, after, log"""
         self.get_shared_tasks, self.set_shared_tasks, self.get_shared_ctx, self.set_shared_ctx, self.get_shared_config, self.set_shared_config, self.get_shared_plugins, self.set_shared_plugins = self.shared_closure()
@@ -16,13 +15,12 @@ class SharedBase():
             SharedBase.__instance = self
 
     def __new__(cls):
-        
+
         if cls.__instance is None:
             cls.__instance = super(SharedBase, cls).__new__(cls)
         return cls.__instance
 
     def shared_closure(self):
-        
         """middleware_task_ Structure: name, function, args, kwargs, options"""
         """workflow_kwargs: name, task_instance, task_order, shared, args, kwargs, before, after, log"""
         # Allow instance tasks
@@ -40,7 +38,7 @@ class SharedBase():
         plugins = {"pluginname": {"taskname": {}}}
 
         def get_shared_tasks(task_=None):
-            
+
             # TODO: Add Logger
 
             # TODO: Add Authentication
@@ -56,7 +54,7 @@ class SharedBase():
                 return None
 
         def set_shared_tasks(task=None):
-            
+
             # TODO: Add Logger
 
             # TODO: Add Authentication
@@ -68,7 +66,7 @@ class SharedBase():
             return False
 
         def get_shared_ctx():
-            
+
             # TODO: Add Logger
 
             # TODO: Add Authentication
@@ -77,7 +75,7 @@ class SharedBase():
             pass
 
         def set_shared_ctx():
-            
+
             # TODO: Add Logger
 
             # TODO: Add Authentication
@@ -86,7 +84,7 @@ class SharedBase():
             pass
 
         def get_shared_config():
-            
+
             # TODO: Add Logger
 
             # TODO: Add Authentication
@@ -95,7 +93,7 @@ class SharedBase():
             pass
 
         def set_shared_config():
-            
+
             # TODO: Add Logger
 
             # TODO: Add Authentication
@@ -104,7 +102,7 @@ class SharedBase():
             pass
 
         def get_shared_plugins():
-            
+
             # TODO: Add Logger
 
             # TODO: Add Authentication
@@ -113,7 +111,7 @@ class SharedBase():
             pass
 
         def set_shared_plugins():
-            
+
             # TODO: Add Logger
 
             # TODO: Add Authentication
