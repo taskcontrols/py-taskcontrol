@@ -23,29 +23,29 @@ class AuthenticationBase():
     def __init__(self):
         self.get_conn, self.set_conn, self.get_pconn, self.set_pconn = self.auth_closure()
 
+    def init_db(self, path, name):
+        c = sqlite3.connect(path + name + '.db')
+        return c
+
+    def init_tables(self, conn):
+        pass
+
+    def init_superuser(self, conn):
+        pass
+
+    def init_pickle(self, path, name):
+        out = open(path + name + ".pickle", "wb")
+        return out
+
+    def init_ptables(self, conn):
+        pass
+
+    def init_psuperuser(self, conn):
+        pass
+
     def auth_closure(self):
         db_connections = {}
         pickle_connections = {}
-
-        def init_db(self, path, name):
-            c = sqlite3.connect(path + name + '.db')
-            return c
-
-        def init_tables(self, conn):
-            pass
-
-        def init_superuser(self, conn):
-            pass
-
-        def init_pickle(self, path, name):
-            out = open(path + name + ".pickle", "wb")
-            return out
-
-        def init_ptables(self, conn):
-            pass
-
-        def init_psuperuser(self, conn):
-            pass
 
         def get_dbconn(names):
             if type(names) == str:
