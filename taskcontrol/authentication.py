@@ -1,5 +1,6 @@
 # decide package
 import sqlite3
+import pickle
 
 # Inherit shared and logging
 
@@ -22,8 +23,7 @@ class AuthenticationBase():
     """
 
     def __init__(self):
-        self.get_dbconn, self.set_dbconn, self.db_execute, self.db_close,
-        self.get_pconn, self.set_pconn, self.p_dump, self.p_close = self.auth_closure()
+        self.get_dbconn, self.set_dbconn, self.db_execute, self.db_close, self.get_pconn, self.set_pconn, self.p_dump, self.p_close = self.auth_closure()
 
     def init_db(self, path, name):
         c = sqlite3.connect(path + name + '.db')
