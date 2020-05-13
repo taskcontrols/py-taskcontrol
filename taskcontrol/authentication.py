@@ -3,9 +3,11 @@ import sqlite3
 
 # Inherit shared and logging
 
-# TODO: Do later
+# RESOURCES for later
 # https://docs.python.org/3/library/sqlite3.html
 # https://docs.python.org/3/library/pickle.html
+
+# TODO: Consider making this an interface that can be extended later
 
 
 class AuthenticationBase():
@@ -93,14 +95,15 @@ class AuthenticationBase():
             pass
 
         return {
-            "get_conn": get_dbconn,
-            "set_conn": set_dbconn,
+            "get_dbconn": get_dbconn,
+            "set_dbconn": set_dbconn,
+            "db_execute": db_execute,
+            "db_close": db_close,
             "get_pconn": get_pconn,
-            "set_pconn": set_pconn
+            "set_pconn": set_pconn,
+            "p_dump": p_dump,
+            "p_close": p_close
         }
-
-    def is_authenticated(self):
-        pass
 
     def create_user(self):
         pass
@@ -111,5 +114,42 @@ class AuthenticationBase():
     def delete_user(self):
         pass
 
-    def change_pass(self):
+    def get_user(self):
+        pass
+
+    def change_password(self):
+        pass
+
+    def create_permissions(self, options):
+        # user/role, action, permissions
+        pass
+
+    def update_permissions(self, options):
+        pass
+
+    def delete_permissions(self, options):
+        pass
+
+    def get_permissions(self, options):
+        pass
+
+    def create_role(self, options):
+        # role
+        pass
+
+    def update_role(self, options):
+        pass
+
+    def delete_role(self, options):
+        pass
+
+    def get_role(self):
+        pass
+
+    def get_user_permissions(self, user):
+        # user, role, action, permissions
+        pass
+
+    def is_authenticated(self):
+        # true/false
         pass
