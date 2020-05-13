@@ -3,13 +3,14 @@
 from sys import path
 path.append('./')
 
-
-from .bases import WorkflowBase, PluginsBase
-from .hooks import HooksBase
 from .logger_timer import LoggerBase
+from .concurrency import ConcurencyBase
+from .authentication import AuthenticationBase, AuthBase
+from .hooks import SocketsBase, HooksBase
+from .bases import WorkflowBase, PluginsBase
 
 
-class Tasks(WorkflowBase, PluginsBase):
+class Tasks(WorkflowBase):
 
     # add plugin to instance or shared
     def plugin_register(self, plugin_instance):
@@ -36,7 +37,7 @@ class Tasks(WorkflowBase, PluginsBase):
             pass
 
     def merge(self, inst, shared=False, clash_prefix=None):
-        
+
         # TODO: Add Logger
 
         # TODO: Add Authentication
@@ -56,7 +57,7 @@ class Tasks(WorkflowBase, PluginsBase):
             )
 
     def run(self, tasks):
-        
+
         # print("Workflow task list provided being instantiated: ", str(tasks))
         # add this to context (shared/local check design)
         result = []
@@ -82,7 +83,7 @@ class Tasks(WorkflowBase, PluginsBase):
 
 
 def workflow(*workflow_args, **workflow_kwargs):
-    
+
     # print("get_decorator: Decorator init ", "workflow_args: ", workflow_args, "workflow_kwargs: ", workflow_kwargs)
 
     def get_decorator(function_):
@@ -151,4 +152,4 @@ def workflow(*workflow_args, **workflow_kwargs):
     return get_decorator
 
 
-__all__ = ["Tasks", "workflow"]
+__all__ = ["Tasks", "workflow", "AuthenticationBase", "SocketsBase"]

@@ -4,6 +4,8 @@
 from .sharedbase import SharedBase
 from .concurrency import ConcurencyBase
 from .actions import ActionsBase
+from .hooks import Sockets, Hooks
+from .authentication import AuthBase
 from .logger_timer import LoggerBase
 from .plugin import PluginsBase
 
@@ -472,3 +474,5 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
                 tasks[ik] = inst.tasks.get(ik)
 
         return tasks
+
+__all__ = ["WorkflowBase", "PluginsBase"]

@@ -10,11 +10,9 @@ import abc
 @dataclass(frozen=True)
 class SocketsBase(metaclass=abc.ABCMeta):
 
-    @classmethod
     def __init__(self):
         self.get_sockets, self.set_sockets = self.sockets_closure()
 
-    @classmethod
     def sockets_closure(self):
         sockets = []
 
@@ -47,11 +45,61 @@ class SocketsBase(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
 
-class Sockets(SocketsBase):
+@dataclass(frozen=True)
+class HooksBase(metaclass=abc.ABCMeta):
+
+    @classmethod
+    def __init__(cls):
+        cls.get_hooks, cls.set_hooks = cls.hooks_closure()
+
+    @classmethod
+    def hooks_closure(self):
+
+        # list of registered web hooks
+        hooks = []
+
+        def get_hooks():
+            pass
+
+        def set_hooks():
+            pass
+
+        return {"get_hooks": get_hooks, "set_hooks": set_hooks}
+
+    @abc.abstractmethod
+    def hook_state(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def service_run(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def service_stop(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def register_hook(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def register_receiver(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def send(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def receive(self):
+        raise NotImplementedError
+
+
+class Sockets():
     pass
 
 
-class HooksBase():
+class Hooks(HooksBase):
 
     def __init__(self):
         self.get_hooks, self.set_hooks = self.hooks_closure()
@@ -142,4 +190,5 @@ class HooksBase():
         #     raise Exception("Not authenticated")
         pass
 
+__all__ = ["SocketsBase", "Sockets", "Hooks", "HooksBase"]
 
