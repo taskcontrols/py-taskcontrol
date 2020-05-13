@@ -171,7 +171,7 @@ class AuthenticationBase(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
 
-class Authentication(AuthenticationBase):
+class AuthBase(AuthenticationBase):
     """
     Description of AuthenticationBase
 
