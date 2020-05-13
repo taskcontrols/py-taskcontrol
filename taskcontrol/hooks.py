@@ -45,12 +45,45 @@ class SocketsBase(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
 
+class Sockets(SocketsBase):
+    
+    def __init__(self):
+        self.get_sockets, self.set_sockets = self.sockets_closure()
+
+    def sockets_closure(self):
+        sockets = []
+
+        def get_sockets():
+            pass
+
+        def set_sockets():
+            pass
+
+        return (get_sockets, set_sockets)
+
+    def socket_create(self):
+        pass
+
+    def socket_delete(self):
+        pass
+
+    def socket_listen(self):
+        pass
+
+    def socket_message(self):
+        pass
+
+    def socket_receive(self):
+        pass
+
+
 @dataclass(frozen=True)
 class HooksBase(metaclass=abc.ABCMeta):
 
     @classmethod
-    def __init__(cls):
+    def __init__(cls, socketsbase=Sockets):
         cls.get_hooks, cls.set_hooks = cls.hooks_closure()
+        cls.sockets = socketsbase
 
     @classmethod
     def hooks_closure(self):
@@ -95,14 +128,11 @@ class HooksBase(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
 
-class Sockets():
-    pass
-
-
 class Hooks(HooksBase):
 
-    def __init__(self):
+    def __init__(self, socketsbase=Sockets):
         self.get_hooks, self.set_hooks = self.hooks_closure()
+        self.sockets = socketsbase
 
     def hooks_closure(self):
 

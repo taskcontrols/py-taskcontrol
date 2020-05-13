@@ -19,6 +19,11 @@ import abc
 @dataclass(frozen=True)
 class AuthenticationBase(metaclass=abc.ABCMeta):
 
+    def __init__(self, get_dbconn=None, set_dbconn=None, db_execute=None, db_close=None,
+                 get_pconn=None, set_pconn=None, p_dump=None, p_close=None):
+        self.get_dbconn, self.set_dbconn, self.db_execute, self.db_close, self.get_pconn, self.set_pconn, self.p_dump, self.p_close = self.auth_closure(get_dbconn=None, set_dbconn=None, db_execute=None, db_close=None,
+                                                                                                                                                        get_pconn=None, set_pconn=None, p_dump=None, p_close=None)
+
     @abc.abstractmethod
     def init_db(self, path, name):
         raise NotImplementedError
@@ -31,75 +36,35 @@ class AuthenticationBase(metaclass=abc.ABCMeta):
     def init_superuser(self, conn):
         raise NotImplementedError
 
-    @classmethod
+    # Testing passing functions to get closure with self-implementation
     def auth_closure(self, get_dbconn=None, set_dbconn=None, db_execute=None, db_close=None,
                      get_pconn=None, set_pconn=None, p_dump=None, p_close=None):
         db_connections = {}
         pickle_connections = {}
 
         if get_dbconn != None and type(get_dbconn) == callable:
-            def fn_1(conn, names):
-                if type(names) == str:
-                    cdb = sqlite3.connect(db_connections.get(names))
-                    conn = cdb.cursor()
-                    return conn
-                if type(names) == list:
-                    conn = {}
-                    for name in names:
-                        if name in db_connections:
-                            cdb = sqlite3.connect(db_connections.get(name))
-                            conn = cdb.cursor()
-                            conn.update({name: conn})
-                    return conn
-                return None
-            get_dbconn = fn_1
+            raise TypeError("AuthenticationBase: get_dbconn not set error")
 
         if set_dbconn != None and type(set_dbconn) == callable:
-            def fn_2(name, options):
-                # options
-                #
-                if type(name) == str and type(options) == dict:
-                    db_connections.update({name: options})
-                    return {name: options}
-                return None
-            set_dbconn = fn_2
+            raise TypeError("AuthenticationBase: set_dbconn not set error")
 
         if db_execute != None and type(db_execute) == callable:
-            def fn_3(query):
-                pass
-            db_execute = fn_3
+            raise TypeError("AuthenticationBase: db_execute not set error")
 
         if db_close != None and type(db_close) == callable:
-            def fn_4(conn):
-                conn.close()
-            db_close = fn_4
+            raise TypeError("AuthenticationBase: db_close not set error")
 
         if get_pconn != None and type(get_pconn) == callable:
-            def fn_5(names):
-                # pickle_connections
-                # example_dict = pickle.load(pickle_in)
-                pass
-            get_pconn = fn_5
+            raise TypeError("AuthenticationBase: get_pconn not set error")
 
         if set_pconn != None and type(set_pconn) == callable:
-            def fn_6(name, options):
-                # options
-                #
-                # pickle_connections
-                pass
-            set_pconn = fn_6
+            raise TypeError("AuthenticationBase: set_pconn not set error")
 
         if p_dump != None and type(p_dump) == callable:
-            def fn_7(query):
-                # pickle.dump(example_dict, pickle_out)
-                pass
-            p_dump = fn_7
+            raise TypeError("AuthenticationBase: p_dump not set error")
 
         if p_close != None and type(p_close) == callable:
-            def fn_8(conn):
-                # pickle_out.close()
-                pass
-            p_close = fn_8
+            raise TypeError("AuthenticationBase: p_close not set error")
 
         return (
             get_dbconn, set_dbconn, db_execute, db_close,
@@ -180,8 +145,10 @@ class AuthBase(AuthenticationBase):
 
     """
 
-    def __init__(self):
-        self.get_dbconn, self.set_dbconn, self.db_execute, self.db_close, self.get_pconn, self.set_pconn, self.p_dump, self.p_close = self.auth_closure()
+    def __init__(self, get_dbconn=None, set_dbconn=None, db_execute=None, db_close=None,
+                 get_pconn=None, set_pconn=None, p_dump=None, p_close=None):
+        self.get_dbconn, self.set_dbconn, self.db_execute, self.db_close, self.get_pconn, self.set_pconn, self.p_dump, self.p_close = self.auth_closure(get_dbconn=None, set_dbconn=None, db_execute=None, db_close=None,
+                                                                                                                                                        get_pconn=None, set_pconn=None, p_dump=None, p_close=None)
 
     def init_db(self, path, name):
         c = sqlite3.connect(path + name + '.db')
@@ -203,57 +170,74 @@ class AuthBase(AuthenticationBase):
     def init_psuperuser(self, conn):
         pass
 
-    def auth_closure(self):
+    def auth_closure(self, get_dbconn=None, set_dbconn=None, db_execute=None, db_close=None,
+                     get_pconn=None, set_pconn=None, p_dump=None, p_close=None):
         db_connections = {}
         pickle_connections = {}
 
-        def get_dbconn(names):
-            if type(names) == str:
-                cdb = sqlite3.connect(db_connections.get(names))
-                conn = cdb.cursor()
-                return conn
-            if type(names) == list:
-                conn = {}
-                for name in names:
-                    if name in db_connections:
-                        cdb = sqlite3.connect(db_connections.get(name))
-                        conn = cdb.cursor()
-                        conn.update({name: conn})
-                return conn
-            return None
+        if get_dbconn != None and type(get_dbconn) == callable:
+            def fn_1(conn, names):
+                if type(names) == str:
+                    cdb = sqlite3.connect(db_connections.get(names))
+                    conn = cdb.cursor()
+                    return conn
+                if type(names) == list:
+                    conn = {}
+                    for name in names:
+                        if name in db_connections:
+                            cdb = sqlite3.connect(db_connections.get(name))
+                            conn = cdb.cursor()
+                            conn.update({name: conn})
+                    return conn
+                return None
+            get_dbconn = fn_1
 
-        def set_dbconn(name, options):
-            # options
-            #
-            if type(name) == str and type(options) == dict:
-                db_connections.update({name: options})
-                return {name: options}
-            return None
+        if set_dbconn != None and type(set_dbconn) == callable:
+            def fn_2(name, options):
+                # options
+                #
+                if type(name) == str and type(options) == dict:
+                    db_connections.update({name: options})
+                    return {name: options}
+                return None
+            set_dbconn = fn_2
 
-        def db_execute(query):
-            pass
+        if db_execute != None and type(db_execute) == callable:
+            def fn_3(query):
+                pass
+            db_execute = fn_3
 
-        def db_close(conn):
-            conn.close()
+        if db_close != None and type(db_close) == callable:
+            def fn_4(conn):
+                conn.close()
+            db_close = fn_4
 
-        def get_pconn(names):
-            # pickle_connections
-            # example_dict = pickle.load(pickle_in)
-            pass
+        if get_pconn != None and type(get_pconn) == callable:
+            def fn_5(names):
+                # pickle_connections
+                # example_dict = pickle.load(pickle_in)
+                pass
+            get_pconn = fn_5
 
-        def set_pconn(name, options):
-            # options
-            #
-            # pickle_connections
-            pass
+        if set_pconn != None and type(set_pconn) == callable:
+            def fn_6(name, options):
+                # options
+                #
+                # pickle_connections
+                pass
+            set_pconn = fn_6
 
-        def p_dump(query):
-            # pickle.dump(example_dict, pickle_out)
-            pass
+        if p_dump != None and type(p_dump) == callable:
+            def fn_7(query):
+                # pickle.dump(example_dict, pickle_out)
+                pass
+            p_dump = fn_7
 
-        def p_close(conn):
-            # pickle_out.close()
-            pass
+        if p_close != None and type(p_close) == callable:
+            def fn_8(conn):
+                # pickle_out.close()
+                pass
+            p_close = fn_8
 
         return (
             get_dbconn, set_dbconn, db_execute, db_close,
@@ -308,4 +292,3 @@ class AuthBase(AuthenticationBase):
     def is_authenticated(self):
         # true/false
         pass
-
