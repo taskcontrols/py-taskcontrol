@@ -1,646 +1,262 @@
-<!DOCTYPE html>
-<!--Converted via md-to-html-->
-<html>
- <head>
- </head>
- <body>
-  <h1>
-   taskcontrol
-  </h1>
-  <h1>
-   Workflow decorator argument usage
-  </h1>
-  <p>
-   All Decorator arguments that can be used are are below. The only compulsory arguments are
-   <code>
-    name
-   </code>
-   and
-   <code>
-    task_instance
-   </code>
-   .
-   <code>
-    args
-   </code>
-   ,
-   <code>
-    kwargs
-   </code>
-   key used for the function args and keyword args are not compulsory but the function will throw errors if there is a number of arguments mismatch.
-  </p>
-  <h4>
-   name
-  </h4>
-  <ul>
-   <li>
-    <code>
-     name
-    </code>
-    key takes a string for the name of task instance
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <code>
-     &lt;str&gt;
-    </code>
-    type
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Usage:
-   </li>
-  </ul>
-  <pre><code>```python
-</code></pre>
-  <pre><code>from taskcontrol.workflow import workflow, Tasks
-</code></pre>
-  <pre><code>sparrow = Tasks()
-</code></pre>
-  <pre><code>@workflow( name="taskname", task_instance=sparrow )
-</code></pre>
-  <pre><code>def taskone(ctx, result, a, b):
-</code></pre>
-  <pre><code>    print("Running my task function: taskone", a, b)
-</code></pre>
-  <pre><code>    return a,b
-</code></pre>
-  <pre><code>```
-</code></pre>
-  <h4>
-   task_instance
-  </h4>
-  <ul>
-   <li>
-    <code>
-     task_instance
-    </code>
-    key takes instance of the Tasks object imported
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Task instance which is used for creating tasks
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Tasks are isolated to this task instance
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <code>
-     &lt;object&gt;
-    </code>
-    instance type
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Usage:
-   </li>
-  </ul>
-  <pre><code>```python
-</code></pre>
-  <pre><code>from taskcontrol.workflow import workflow, Tasks
-</code></pre>
-  <pre><code>sparrow = Tasks()
-</code></pre>
-  <pre><code>@workflow( name="taskname", task_instance=sparrow )
-</code></pre>
-  <pre><code>def taskone(ctx, result, a, b):
-</code></pre>
-  <pre><code>    print("Running my task function: taskone", a, b)
-</code></pre>
-  <pre><code>    return a,b
-</code></pre>
-  <pre><code>```
-</code></pre>
-  <h4>
-   log
-  </h4>
-  <ul>
-   <li>
-    <code>
-     log
-    </code>
-    key takes a boolean to allow logging or not
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Whether logging should be allowed or not (Not functional yet)
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <code>
-     &lt;boolean&gt;
-    </code>
-    type
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Usage:
-   </li>
-  </ul>
-  <pre><code>```python
-</code></pre>
-  <pre><code>from taskcontrol.workflow import workflow, Tasks
-</code></pre>
-  <pre><code>sparrow = Tasks()
-</code></pre>
-  <pre><code>@workflow( name="taskname", task_instance=sparrow, log=False )
-</code></pre>
-  <pre><code>def taskone(ctx, result, a, b):
-</code></pre>
-  <pre><code>    print("Running my task function: taskone", a, b)
-</code></pre>
-  <pre><code>    return a,b
-</code></pre>
-  <pre><code>```
-</code></pre>
-  <h4>
-   after
-  </h4>
-  <ul>
-   <li>
-    <code>
-     after
-    </code>
-    key takes definitions of a list of dict / dict definitions
-   </li>
-  </ul>
-  <ul>
-   <li>
-    after middleware order followed will be of the list sequence
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <code>
-     &lt;list&gt;
-    </code>
-    type or
-    <code>
-     &lt;dict&gt;
-    </code>
-    type
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Usage:
-   </li>
-  </ul>
-  <pre><code>- Using as an single dictionary definition
-</code></pre>
-  <pre><code>    ```python
-</code></pre>
-  <pre><code>    from taskcontrol.workflow import workflow, Tasks
-</code></pre>
-  <pre><code>    sparrow = Tasks()
-</code></pre>
-  <pre><code>    def nesttree(ctx, result, k, c, d, **kwargs):
-</code></pre>
-  <pre><code>        print("Running my Middleware Function: nesttree - task items", k, c, d, kwargs)
-</code></pre>
-  <pre><code>    @workflow(
-</code></pre>
-  <pre><code>        name="taskname", task_instance=sparrow,
-</code></pre>
-  <pre><code>        after = {
-</code></pre>
-  <pre><code>            "function": nesttree,
-</code></pre>
-  <pre><code>            "args": [11, 12],
-</code></pre>
-  <pre><code>            "kwargs": {"d": "Before Testing message Middleware "},
-</code></pre>
-  <pre><code>            "options": {"error": "next", "error_next_value": ""}
-</code></pre>
-  <pre><code>        }
-</code></pre>
-  <pre><code>    )
-</code></pre>
-  <pre><code>    def taskone(ctx, result, a, b):
-</code></pre>
-  <pre><code>        print("Running my task function: taskone", a, b)
-</code></pre>
-  <pre><code>        return a,b
-</code></pre>
-  <pre><code>    ```
-</code></pre>
-  <pre><code>- Using as a list definition
-</code></pre>
-  <pre><code>    ```python
-</code></pre>
-  <pre><code>    from taskcontrol.workflow import workflow, Tasks
-</code></pre>
-  <pre><code>    def nesttree(ctx, result, k, c, d, **kwargs):
-</code></pre>
-  <pre><code>        print("Running my Middleware Function: nesttree - task items", k, c, d, kwargs)
-</code></pre>
-  <pre><code>    sparrow = Tasks()
-</code></pre>
-  <pre><code>    @workflow(
-</code></pre>
-  <pre><code>        name="taskname", task_instance=sparrow,
-</code></pre>
-  <pre><code>        after = [{
-</code></pre>
-  <pre><code>            "function": nesttree,
-</code></pre>
-  <pre><code>            "args": [11, 12],
-</code></pre>
-  <pre><code>            "kwargs": {"d": "Before Testing message Middleware "},
-</code></pre>
-  <pre><code>            "options": {"error": "next", "error_next_value": ""}
-</code></pre>
-  <pre><code>        }]
-</code></pre>
-  <pre><code>    )
-</code></pre>
-  <pre><code>    def taskone(ctx, result, a, b):
-</code></pre>
-  <pre><code>        print("Running my task function: taskone", a, b)
-</code></pre>
-  <pre><code>        return a,b
-</code></pre>
-  <pre><code>    ```
-</code></pre>
-  <h4>
-   before
-  </h4>
-  <ul>
-   <li>
-    <code>
-     before
-    </code>
-    key takes definitions of a list of dict / dict
-   </li>
-  </ul>
-  <ul>
-   <li>
-    before middleware order followed will be of the list sequence
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <code>
-     &lt;list&gt;
-    </code>
-    type or
-    <code>
-     &lt;dict&gt;
-    </code>
-    type
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Usage:
-   </li>
-  </ul>
-  <pre><code>- Using as an dictionary
-</code></pre>
-  <pre><code>    ```python
-</code></pre>
-  <pre><code>    from taskcontrol.workflow import workflow, Tasks
-</code></pre>
-  <pre><code>    sparrow = Tasks()
-</code></pre>
-  <pre><code>    def nesttree(ctx, result, k, c, d, **kwargs):
-</code></pre>
-  <pre><code>        print("Running my Middleware Function: nesttree - task items", k, c, d, kwargs)
-</code></pre>
-  <pre><code>    @workflow(
-</code></pre>
-  <pre><code>        name="taskname", task_instance=sparrow,
-</code></pre>
-  <pre><code>        before = {
-</code></pre>
-  <pre><code>            "function": nesttree,
-</code></pre>
-  <pre><code>            "args": [11, 12],
-</code></pre>
-  <pre><code>            "kwargs": {"d": "Before Testing message Middleware "},
-</code></pre>
-  <pre><code>            "options": {"error": "next", "error_next_value": ""}
-</code></pre>
-  <pre><code>        }
-</code></pre>
-  <pre><code>    )
-</code></pre>
-  <pre><code>    def taskone(ctx, result, a, b):
-</code></pre>
-  <pre><code>        print("Running my task function: taskone", a, b)
-</code></pre>
-  <pre><code>        return a,b
-</code></pre>
-  <pre><code>    ```
-</code></pre>
-  <pre><code>- Using as a list
-</code></pre>
-  <pre><code>    ```python
-</code></pre>
-  <pre><code>    from taskcontrol.workflow import workflow, Tasks
-</code></pre>
-  <pre><code>    sparrow = Tasks()
-</code></pre>
-  <pre><code>    def nesttree(ctx, result, k, c, d, **kwargs):
-</code></pre>
-  <pre><code>        print("Running my Middleware Function: nesttree - task items", k, c, d, kwargs)
-</code></pre>
-  <pre><code>    @workflow(
-</code></pre>
-  <pre><code>        name="taskname", task_instance=sparrow,
-</code></pre>
-  <pre><code>        before = [{
-</code></pre>
-  <pre><code>            "function": nesttree,
-</code></pre>
-  <pre><code>            "args": [11, 12],
-</code></pre>
-  <pre><code>            "kwargs": {"d": "Before Testing message Middleware "},
-</code></pre>
-  <pre><code>            "options": {"error": "next", "error_next_value": ""}
-</code></pre>
-  <pre><code>        }]
-</code></pre>
-  <pre><code>    )
-</code></pre>
-  <pre><code>    def taskone(ctx, result, a, b):
-</code></pre>
-  <pre><code>        print("Running my task function: taskone", a, b)
-</code></pre>
-  <pre><code>        return a,b
-</code></pre>
-  <pre><code>    ```
-</code></pre>
-  <h4>
-   args
-  </h4>
-  <ul>
-   <li>
-    <code>
-     args
-    </code>
-    key takes a list of definitions
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Arguments that should be provided to the task function the decorator is applied on
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <code>
-     &lt;list&gt;
-    </code>
-    type
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Usage:
-   </li>
-  </ul>
-  <pre><code>```python
-</code></pre>
-  <pre><code>from taskcontrol.workflow import workflow, Tasks
-</code></pre>
-  <pre><code>sparrow = Tasks()
-</code></pre>
-  <pre><code>@workflow( name="taskname", task_instance=sparrow, args=[11, 12] )
-</code></pre>
-  <pre><code>def taskone(ctx, result, a, b):
-</code></pre>
-  <pre><code>    print("Running my task function: taskone", a, b)
-</code></pre>
-  <pre><code>    return a,b
-</code></pre>
-  <pre><code>```
-</code></pre>
-  <h4>
-   kwargs
-  </h4>
-  <ul>
-   <li>
-    <code>
-     kwargs
-    </code>
-    key takes a list of definitions
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Keyword arguments for the function the decorator is applied on
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <code>
-     &lt;dict&gt;
-    </code>
-    type
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Usage:
-   </li>
-  </ul>
-  <pre><code>```python
-</code></pre>
-  <pre><code>from taskcontrol.workflow import workflow, Tasks
-</code></pre>
-  <pre><code>sparrow = Tasks()
-</code></pre>
-  <pre><code>@workflow( name="taskname", task_instance=sparrow, kwargs={"a":11, "b":12} )
-</code></pre>
-  <pre><code>def taskone(ctx, result, a, b):
-</code></pre>
-  <pre><code>    print("Running my task function: taskone", a, b)
-</code></pre>
-  <pre><code>    return a,b
-</code></pre>
-  <pre><code>```
-</code></pre>
-  <h4>
-   shared
-  </h4>
-  <ul>
-   <li>
-    <code>
-     shared
-    </code>
-    key takes a boolean whether to create a shared task or not
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Whether the Task is a shared task or instance isolated task
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Shared Task is sharable and accessable across the app
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <code>
-     &lt;boolean&gt;
-    </code>
-    type
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Usage:
-   </li>
-  </ul>
-  <pre><code>```python
-</code></pre>
-  <pre><code>from taskcontrol.workflow import workflow, Tasks
-</code></pre>
-  <pre><code>sparrow = Tasks()
-</code></pre>
-  <pre><code>@workflow( name="taskname", task_instance=sparrow, shared=True )
-</code></pre>
-  <pre><code>def taskone(ctx, result, a, b):
-</code></pre>
-  <pre><code>    print("Running my task function: taskone", a, b)
-</code></pre>
-  <pre><code>    return a,b
-</code></pre>
-  <pre><code>```
-</code></pre>
-  <h4>
-   task_order
-  </h4>
-  <ul>
-   <li>
-    <code>
-     task_order
-    </code>
-    key takes an ordering number / integer
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Order of the task function when all tasks are run (Not functional yet)
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <code>
-     &lt;int&gt;
-    </code>
-    type
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Usage:
-   </li>
-  </ul>
-  <pre><code>```python
-</code></pre>
-  <pre><code>from taskcontrol.workflow import workflow, Tasks
-</code></pre>
-  <pre><code>sparrow = Tasks()
-</code></pre>
-  <pre><code>@workflow( name="taskname", task_instance=sparrow, task_order=1 )
-</code></pre>
-  <pre><code>def taskone(ctx, result, a, b):
-</code></pre>
-  <pre><code>    print("Running my task function: taskone", a, b)
-</code></pre>
-  <pre><code>    return a,b
-</code></pre>
-  <pre><code>```
-</code></pre>
-  <h2>
-   Entire Usage:
-  </h2>
-  <p>
-   ```python
-  </p>
-  <p>
-   from taskcontrol.workflow import workflow, Tasks
-  </p>
-  <p>
-   sparrow = Tasks()
-  </p>
-  <p>
-   def nesttree(ctx, result, k, c, d, **kwargs):
-  </p>
-  <pre><code>print("Running my Middleware Function: nesttree - task items", k, c, d, kwargs)
-</code></pre>
-  <p>
-   @workflow(
-  </p>
-  <pre><code>name="taskname",  # task name 
-</code></pre>
-  <pre><code>task_order=1,  # task order when to run when all runs are used 
-</code></pre>
-  <pre><code>task_instance=sparrow,  # instance of Task 
-</code></pre>
-  <pre><code>shared=False,  # boolean whether a shared task 
-</code></pre>
-  <pre><code>args=[1, 2],  # list of args 
-</code></pre>
-  <pre><code>kwargs={},  # dict of kwargs 
-</code></pre>
-  <pre><code>before=[  # before middleware definition
-</code></pre>
-  <pre><code>    {
-</code></pre>
-  <pre><code>        "function": nesttree,  # middleware function definition
-</code></pre>
-  <pre><code>        "args": [11, 12],  # list of args 
-</code></pre>
-  <pre><code>        "kwargs": {"d": "Before Testing message Middleware "},  # dict of kwargs 
-</code></pre>
-  <pre><code>        "options": {"error": "next", "error_next_value": ""}  # dict options
-</code></pre>
-  <pre><code>    }
-</code></pre>
-  <pre><code>],
-</code></pre>
-  <pre><code>after={  # after middleware definition
-</code></pre>
-  <pre><code>        "function": nesttree,  # list of args 
-</code></pre>
-  <pre><code>        "args": [11, 12],  # list of args 
-</code></pre>
-  <pre><code>        "kwargs": {"d": "Before Testing message Middleware "},  # dict of kwargs
-</code></pre>
-  <pre><code>        "options": {"error": "next", "error_next_value": ""}  # dict options
-</code></pre>
-  <pre><code>    },
-</code></pre>
-  <pre><code>log=False  # log enabled or not
-</code></pre>
-  <p>
-   )
-  </p>
-  <p>
-   def taskone(ctx, result, a, b):
-  </p>
-  <pre><code>print("Running my task function: taskone", a, b)
-</code></pre>
-  <pre><code>return a, b
-</code></pre>
-  <p>
-   ```
-  </p>
- </body>
-</html>
+<h1>taskcontrol</h1>
+<h1>Workflow decorator argument usage</h1>
+<p>All Decorator arguments that can be used are are below. The only compulsory arguments are <code>name</code> and <code>task_instance</code>. <code>args</code>, <code>kwargs</code> key used for the function args and keyword args are not compulsory but the function will throw errors if there is a number of arguments mismatch.</p>
+<h4>name</h4>
+<ul>
+<li><code>name</code> key takes a string for the name of task instance</li>
+<li><code>&lt;str&gt;</code> type</li>
+<li>
+<p>Usage:
+    ```python</p>
+<p>from taskcontrol.workflow import workflow, Tasks</p>
+<p>sparrow = Tasks()
+@workflow( name="taskname", task_instance=sparrow )
+def taskone(ctx, result, a, b):
+    print("Running my task function: taskone", a, b)
+    return a,b</p>
+<p>```</p>
+</li>
+</ul>
+<h4>task_instance</h4>
+<ul>
+<li><code>task_instance</code> key takes instance of the Tasks object imported</li>
+<li>Task instance which is used for creating tasks</li>
+<li>Tasks are isolated to this task instance</li>
+<li><code>&lt;object&gt;</code> instance type</li>
+<li>
+<p>Usage:
+    ```python</p>
+<p>from taskcontrol.workflow import workflow, Tasks</p>
+<p>sparrow = Tasks()
+@workflow( name="taskname", task_instance=sparrow )
+def taskone(ctx, result, a, b):
+    print("Running my task function: taskone", a, b)
+    return a,b</p>
+<p>```</p>
+</li>
+</ul>
+<h4>log</h4>
+<ul>
+<li><code>log</code> key takes a boolean to allow logging or not</li>
+<li>Whether logging should be allowed or not (Not functional yet)</li>
+<li><code>&lt;boolean&gt;</code> type</li>
+<li>
+<p>Usage:
+    ```python</p>
+<p>from taskcontrol.workflow import workflow, Tasks</p>
+<p>sparrow = Tasks()
+@workflow( name="taskname", task_instance=sparrow, log=False )
+def taskone(ctx, result, a, b):
+    print("Running my task function: taskone", a, b)
+    return a,b</p>
+<p>```</p>
+</li>
+</ul>
+<h4>after</h4>
+<ul>
+<li><code>after</code> key takes definitions of a list of dict / dict definitions</li>
+<li>after middleware order followed will be of the list sequence</li>
+<li><code>&lt;list&gt;</code> type or <code>&lt;dict&gt;</code> type</li>
+<li>
+<p>Usage:</p>
+<ul>
+<li>
+<p>Using as an single dictionary definition</p>
+<p>```python</p>
+<p>from taskcontrol.workflow import workflow, Tasks</p>
+<p>sparrow = Tasks()</p>
+<p>def nesttree(ctx, result, k, c, d, **kwargs):
+    print("Running my Middleware Function: nesttree - task items", k, c, d, kwargs)</p>
+<p>@workflow(
+    name="taskname", task_instance=sparrow,
+    after = {
+        "function": nesttree,
+        "args": [11, 12],
+        "kwargs": {"d": "Before Testing message Middleware "},
+        "options": {"error": "next", "error_next_value": ""}
+    }
+)
+def taskone(ctx, result, a, b):
+    print("Running my task function: taskone", a, b)
+    return a,b</p>
+<p>```</p>
+</li>
+<li>
+<p>Using as a list definition</p>
+<p>```python</p>
+<p>from taskcontrol.workflow import workflow, Tasks</p>
+<p>def nesttree(ctx, result, k, c, d, **kwargs):
+    print("Running my Middleware Function: nesttree - task items", k, c, d, kwargs)</p>
+<p>sparrow = Tasks()</p>
+<p>@workflow(
+    name="taskname", task_instance=sparrow,
+    after = [{
+        "function": nesttree,
+        "args": [11, 12],
+        "kwargs": {"d": "Before Testing message Middleware "},
+        "options": {"error": "next", "error_next_value": ""}
+    }]
+)
+def taskone(ctx, result, a, b):
+    print("Running my task function: taskone", a, b)
+    return a,b</p>
+<p>```</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4>before</h4>
+<ul>
+<li><code>before</code> key takes definitions of a list of dict / dict</li>
+<li>before middleware order followed will be of the list sequence</li>
+<li><code>&lt;list&gt;</code> type or <code>&lt;dict&gt;</code> type</li>
+<li>
+<p>Usage:</p>
+<ul>
+<li>
+<p>Using as an dictionary</p>
+<p>```python</p>
+<p>from taskcontrol.workflow import workflow, Tasks</p>
+<p>sparrow = Tasks()</p>
+<p>def nesttree(ctx, result, k, c, d, **kwargs):
+    print("Running my Middleware Function: nesttree - task items", k, c, d, kwargs)</p>
+<p>@workflow(
+    name="taskname", task_instance=sparrow,
+    before = {
+        "function": nesttree,
+        "args": [11, 12],
+        "kwargs": {"d": "Before Testing message Middleware "},
+        "options": {"error": "next", "error_next_value": ""}
+    }
+)
+def taskone(ctx, result, a, b):
+    print("Running my task function: taskone", a, b)
+    return a,b</p>
+<p>```</p>
+</li>
+<li>
+<p>Using as a list</p>
+<p>```python</p>
+<p>from taskcontrol.workflow import workflow, Tasks</p>
+<p>sparrow = Tasks()</p>
+<p>def nesttree(ctx, result, k, c, d, **kwargs):
+    print("Running my Middleware Function: nesttree - task items", k, c, d, kwargs)</p>
+<p>@workflow(
+    name="taskname", task_instance=sparrow,
+    before = [{
+        "function": nesttree,
+        "args": [11, 12],
+        "kwargs": {"d": "Before Testing message Middleware "},
+        "options": {"error": "next", "error_next_value": ""}
+    }]
+)
+def taskone(ctx, result, a, b):
+    print("Running my task function: taskone", a, b)
+    return a,b</p>
+<p>```</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4>args</h4>
+<ul>
+<li><code>args</code> key takes a list of definitions</li>
+<li>Arguments that should be provided to the task function the decorator is applied on</li>
+<li><code>&lt;list&gt;</code> type</li>
+<li>
+<p>Usage:
+    ```python</p>
+<p>from taskcontrol.workflow import workflow, Tasks</p>
+<p>sparrow = Tasks()
+@workflow( name="taskname", task_instance=sparrow, args=[11, 12] )
+def taskone(ctx, result, a, b):
+    print("Running my task function: taskone", a, b)
+    return a,b</p>
+<p>```</p>
+</li>
+</ul>
+<h4>kwargs</h4>
+<ul>
+<li><code>kwargs</code> key takes a list of definitions</li>
+<li>Keyword arguments for the function the decorator is applied on</li>
+<li><code>&lt;dict&gt;</code> type</li>
+<li>
+<p>Usage:
+    ```python</p>
+<p>from taskcontrol.workflow import workflow, Tasks</p>
+<p>sparrow = Tasks()
+@workflow( name="taskname", task_instance=sparrow, kwargs={"a":11, "b":12} )
+def taskone(ctx, result, a, b):
+    print("Running my task function: taskone", a, b)
+    return a,b</p>
+<p>```</p>
+</li>
+</ul>
+<h4>shared</h4>
+<ul>
+<li><code>shared</code> key takes a boolean whether to create a shared task or not</li>
+<li>Whether the Task is a shared task or instance isolated task</li>
+<li>Shared Task is sharable and accessable across the app</li>
+<li><code>&lt;boolean&gt;</code> type</li>
+<li>
+<p>Usage:
+    ```python</p>
+<p>from taskcontrol.workflow import workflow, Tasks</p>
+<p>sparrow = Tasks()
+@workflow( name="taskname", task_instance=sparrow, shared=True )
+def taskone(ctx, result, a, b):
+    print("Running my task function: taskone", a, b)
+    return a,b</p>
+<p>```</p>
+</li>
+</ul>
+<h4>task_order</h4>
+<ul>
+<li><code>task_order</code> key takes an ordering number / integer</li>
+<li>Order of the task function when all tasks are run (Not functional yet)</li>
+<li><code>&lt;int&gt;</code> type</li>
+<li>
+<p>Usage:
+    ```python</p>
+<p>from taskcontrol.workflow import workflow, Tasks</p>
+<p>sparrow = Tasks()
+@workflow( name="taskname", task_instance=sparrow, task_order=1 )
+def taskone(ctx, result, a, b):
+    print("Running my task function: taskone", a, b)
+    return a,b</p>
+<p>```</p>
+</li>
+</ul>
+<h2>Entire Usage:</h2>
+<p>```python</p>
+<p>from taskcontrol.workflow import workflow, Tasks</p>
+<p>sparrow = Tasks()
+def nesttree(ctx, result, k, c, d, **kwargs):
+    print("Running my Middleware Function: nesttree - task items", k, c, d, kwargs)</p>
+<p>@workflow(
+    name="taskname",  # task name 
+    task_order=1,  # task order when to run when all runs are used 
+    task_instance=sparrow,  # instance of Task 
+    shared=False,  # boolean whether a shared task 
+    args=[1, 2],  # list of args 
+    kwargs={},  # dict of kwargs 
+    before=[  # before middleware definition
+        {
+            "function": nesttree,  # middleware function definition
+            "args": [11, 12],  # list of args 
+            "kwargs": {"d": "Before Testing message Middleware "},  # dict of kwargs 
+            "options": {"error": "next", "error_next_value": ""}  # dict options
+        }
+    ],
+    after={  # after middleware definition
+            "function": nesttree,  # list of args 
+            "args": [11, 12],  # list of args 
+            "kwargs": {"d": "Before Testing message Middleware "},  # dict of kwargs
+            "options": {"error": "next", "error_next_value": ""}  # dict options
+        },
+    log=False  # log enabled or not
+)
+def taskone(ctx, result, a, b):
+    print("Running my task function: taskone", a, b)
+    return a, b</p>
+<p>```</p>

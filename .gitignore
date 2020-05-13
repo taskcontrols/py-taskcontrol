@@ -144,4 +144,4 @@ t.spec
 source/
 Makefile
 make.bat
-
+node_modules/

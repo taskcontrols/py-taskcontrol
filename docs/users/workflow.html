@@ -1,367 +1,96 @@
-<!DOCTYPE html>
-<!--Converted via md-to-html-->
-<html>
- <head>
- </head>
- <body>
-  <h1>
-   taskcontrol
-  </h1>
-  <h2>
-   workflow decorator arguments
-  </h2>
-  <ul>
-   <li>
-    Usage:
-   </li>
-  </ul>
-  <pre><code>```python
-</code></pre>
-  <pre><code>@workflow(
-</code></pre>
-  <pre><code>    name = &lt;str&gt;,
-</code></pre>
-  <pre><code>    task_order = &lt;int&gt;,
-</code></pre>
-  <pre><code>    task_instance = &lt;object_instance&gt;,
-</code></pre>
-  <pre><code>    shared = &lt;boolean&gt;,
-</code></pre>
-  <pre><code>    args = &lt;list&gt;,
-</code></pre>
-  <pre><code>    kwargs = &lt;dict&gt;,
-</code></pre>
-  <pre><code>    before = &lt;list[&lt;dict&gt;]&gt; or &lt;dict&gt; [
-</code></pre>
-  <pre><code>        {
-</code></pre>
-  <pre><code>            "function": &lt;function&gt;,
-</code></pre>
-  <pre><code>            "args": &lt;list[&lt;object&gt;]&gt;,
-</code></pre>
-  <pre><code>            "kwargs": &lt;dict&gt;,
-</code></pre>
-  <pre><code>            "options": &lt;dict&gt; {"error": &lt;str&gt;, "error_next_value": &lt;object&gt; or &lt;any&gt;}
-</code></pre>
-  <pre><code>        }
-</code></pre>
-  <pre><code>    ],
-</code></pre>
-  <pre><code>    after = &lt;list[&lt;dict&gt;]&gt; or &lt;dict&gt;  [ {
-</code></pre>
-  <pre><code>            "function": &lt;function&gt;,
-</code></pre>
-  <pre><code>            "args": &lt;list&gt;,
-</code></pre>
-  <pre><code>            "kwargs": &lt;dict&gt;,
-</code></pre>
-  <pre><code>            "options": { "error":&lt;str&gt;, "error_next_value":&lt;object&gt; or &lt;any&gt;, "error_handler":&lt;function&gt;}
-</code></pre>
-  <pre><code>        }
-</code></pre>
-  <pre><code>    ],
-</code></pre>
-  <pre><code>    log = &lt;boolean&gt;
-</code></pre>
-  <pre><code>)
-</code></pre>
-  <pre><code>def function: &lt;function&gt; (ctx, result, args, ..., kwargs):
-</code></pre>
-  <pre><code>    &lt;code_here&gt;
-</code></pre>
-  <pre><code>```
-</code></pre>
-  <h4>
-   name
-  </h4>
-  <ul>
-   <li>
-    <code>
-     name
-    </code>
-    key takes a string for the name of task instance
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <code>
-     &lt;str&gt;
-    </code>
-    type
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <a href="">
-     more
-    </a>
-   </li>
-  </ul>
-  <h4>
-   log
-  </h4>
-  <ul>
-   <li>
-    <code>
-     log
-    </code>
-    key takes a boolean to allow logging or not
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Whether logging should be allowed or not (Not functional yet)
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <code>
-     &lt;boolean&gt;
-    </code>
-    type
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <a href="">
-     more
-    </a>
-   </li>
-  </ul>
-  <h4>
-   after
-  </h4>
-  <ul>
-   <li>
-    <code>
-     after
-    </code>
-    key takes definitions of a list of dict / dict definitions
-   </li>
-  </ul>
-  <ul>
-   <li>
-    after middleware order followed will be of the list sequence
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <code>
-     &lt;list&gt;
-    </code>
-    type or
-    <code>
-     &lt;dict&gt;
-    </code>
-    type
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <a href="">
-     more
-    </a>
-   </li>
-  </ul>
-  <h4>
-   before
-  </h4>
-  <ul>
-   <li>
-    <code>
-     before
-    </code>
-    key takes definitions of a list of dict / dict
-   </li>
-  </ul>
-  <ul>
-   <li>
-    before middleware order followed will be of the list sequence
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <code>
-     &lt;list&gt;
-    </code>
-    type or
-    <code>
-     &lt;dict&gt;
-    </code>
-    type
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <a href="">
-     more
-    </a>
-   </li>
-  </ul>
-  <h4>
-   args
-  </h4>
-  <ul>
-   <li>
-    <code>
-     args
-    </code>
-    key takes a list of definitions
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Arguments that should be provided to the task function the decorator is applied on
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <code>
-     &lt;list&gt;
-    </code>
-    type
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <a href="">
-     more
-    </a>
-   </li>
-  </ul>
-  <h4>
-   kwargs
-  </h4>
-  <ul>
-   <li>
-    <code>
-     kwargs
-    </code>
-    key takes a list of definitions
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Keyword arguments for the function the decorator is applied on
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <code>
-     &lt;dict&gt;
-    </code>
-    type
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <a href="">
-     more
-    </a>
-   </li>
-  </ul>
-  <h4>
-   shared
-  </h4>
-  <ul>
-   <li>
-    <code>
-     shared
-    </code>
-    key takes a boolean whether to create a shared task or not
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Whether the Task is a shared task or instance isolated task
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Shared Task is sharable and accessable across the app
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <code>
-     &lt;boolean&gt;
-    </code>
-    type
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <a href="">
-     more
-    </a>
-   </li>
-  </ul>
-  <h4>
-   task_instance
-  </h4>
-  <ul>
-   <li>
-    <code>
-     task_instance
-    </code>
-    key takes instance of the Tasks object imported
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Task instance which is used for creating tasks
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Tasks are isolated to this task instance
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <code>
-     &lt;object&gt;
-    </code>
-    instance type
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <a href="">
-     more
-    </a>
-   </li>
-  </ul>
-  <h4>
-   task_order
-  </h4>
-  <ul>
-   <li>
-    <code>
-     task_order
-    </code>
-    key takes an ordering number / integer
-   </li>
-  </ul>
-  <ul>
-   <li>
-    Order of the task function when all tasks are run (Not functional yet)
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <code>
-     &lt;int&gt;
-    </code>
-    type
-   </li>
-  </ul>
-  <ul>
-   <li>
-    <a href="">
-     more
-    </a>
-   </li>
-  </ul>
- </body>
-</html>
+<h1>taskcontrol</h1>
+<h2>workflow decorator arguments</h2>
+<ul>
+<li>Usage:
+    <code>python
+    @workflow(
+        name = &lt;str&gt;,
+        task_order = &lt;int&gt;,
+        task_instance = &lt;object_instance&gt;,
+        shared = &lt;boolean&gt;,
+        args = &lt;list&gt;,
+        kwargs = &lt;dict&gt;,
+        before = &lt;list[&lt;dict&gt;]&gt; or &lt;dict&gt; [
+            {
+                "function": &lt;function&gt;,
+                "args": &lt;list[&lt;object&gt;]&gt;,
+                "kwargs": &lt;dict&gt;,
+                "options": &lt;dict&gt; {"error": &lt;str&gt;, "error_next_value": &lt;object&gt; or &lt;any&gt;}
+            }
+        ],
+        after = &lt;list[&lt;dict&gt;]&gt; or &lt;dict&gt;  [ {
+                "function": &lt;function&gt;,
+                "args": &lt;list&gt;,
+                "kwargs": &lt;dict&gt;,
+                "options": { "error":&lt;str&gt;, "error_next_value":&lt;object&gt; or &lt;any&gt;, "error_handler":&lt;function&gt;}
+            }
+        ],
+        log = &lt;boolean&gt;
+    )
+    def function: &lt;function&gt; (ctx, result, args, ..., kwargs):
+        &lt;code_here&gt;</code></li>
+</ul>
+<h4>name</h4>
+<ul>
+<li><code>name</code> key takes a string for the name of task instance</li>
+<li><code>&lt;str&gt;</code> type</li>
+<li><a href="">more</a></li>
+</ul>
+<h4>log</h4>
+<ul>
+<li><code>log</code> key takes a boolean to allow logging or not</li>
+<li>Whether logging should be allowed or not (Not functional yet)</li>
+<li><code>&lt;boolean&gt;</code> type</li>
+<li><a href="">more</a></li>
+</ul>
+<h4>after</h4>
+<ul>
+<li><code>after</code> key takes definitions of a list of dict / dict definitions</li>
+<li>after middleware order followed will be of the list sequence</li>
+<li><code>&lt;list&gt;</code> type or <code>&lt;dict&gt;</code> type</li>
+<li><a href="">more</a></li>
+</ul>
+<h4>before</h4>
+<ul>
+<li><code>before</code> key takes definitions of a list of dict / dict</li>
+<li>before middleware order followed will be of the list sequence</li>
+<li><code>&lt;list&gt;</code> type or <code>&lt;dict&gt;</code> type</li>
+<li><a href="">more</a></li>
+</ul>
+<h4>args</h4>
+<ul>
+<li><code>args</code> key takes a list of definitions</li>
+<li>Arguments that should be provided to the task function the decorator is applied on</li>
+<li><code>&lt;list&gt;</code> type</li>
+<li><a href="">more</a></li>
+</ul>
+<h4>kwargs</h4>
+<ul>
+<li><code>kwargs</code> key takes a list of definitions</li>
+<li>Keyword arguments for the function the decorator is applied on</li>
+<li><code>&lt;dict&gt;</code> type</li>
+<li><a href="">more</a></li>
+</ul>
+<h4>shared</h4>
+<ul>
+<li><code>shared</code> key takes a boolean whether to create a shared task or not</li>
+<li>Whether the Task is a shared task or instance isolated task</li>
+<li>Shared Task is sharable and accessable across the app</li>
+<li><code>&lt;boolean&gt;</code> type</li>
+<li><a href="">more</a></li>
+</ul>
+<h4>task_instance</h4>
+<ul>
+<li><code>task_instance</code> key takes instance of the Tasks object imported</li>
+<li>Task instance which is used for creating tasks</li>
+<li>Tasks are isolated to this task instance</li>
+<li><code>&lt;object&gt;</code> instance type</li>
+<li><a href="">more</a></li>
+</ul>
+<h4>task_order</h4>
+<ul>
+<li><code>task_order</code> key takes an ordering number / integer</li>
+<li>Order of the task function when all tasks are run (Not functional yet)</li>
+<li><code>&lt;int&gt;</code> type</li>
+<li><a href="">more</a></li>
+</ul>
