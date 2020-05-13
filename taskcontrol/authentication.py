@@ -292,3 +292,4 @@ class AuthBase(AuthenticationBase):
     def is_authenticated(self):
         # true/false
         pass
+

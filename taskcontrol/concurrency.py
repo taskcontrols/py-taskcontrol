@@ -88,3 +88,4 @@ class ConcurencyBase():
         if options.get("needs_join"):
             result = worker.join()
         return {"worker": worker, "result": result}
+

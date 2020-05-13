@@ -37,3 +37,4 @@ class PluginsBase():
                     "tasks": task_instance.get("tasks")
                 }
             }
+
