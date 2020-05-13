@@ -34,8 +34,10 @@ class LoggerBase():
     def logger_closure(self):
 
         logger = []
+        
         def get_logger(self):
             pass
+
         def set_logger(self):
             pass
 
