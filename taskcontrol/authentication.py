@@ -11,6 +11,7 @@ import sqlite3
 # Consider making this an interface that can be extended later
 # Which will make it compatible to any DB and Authentication ways
 
+
 class AuthenticationBase():
     """
     Description of AuthenticationBase
@@ -21,7 +22,8 @@ class AuthenticationBase():
     """
 
     def __init__(self):
-        self.get_conn, self.set_conn, self.get_pconn, self.set_pconn = self.auth_closure()
+        self.get_dbconn, self.set_dbconn, self.db_execute, self.db_close,
+        self.get_pconn, self.set_pconn, self.p_dump, self.p_close = self.auth_closure()
 
     def init_db(self, path, name):
         c = sqlite3.connect(path + name + '.db')
@@ -95,16 +97,10 @@ class AuthenticationBase():
             # pickle_out.close()
             pass
 
-        return {
-            "get_dbconn": get_dbconn,
-            "set_dbconn": set_dbconn,
-            "db_execute": db_execute,
-            "db_close": db_close,
-            "get_pconn": get_pconn,
-            "set_pconn": set_pconn,
-            "p_dump": p_dump,
-            "p_close": p_close
-        }
+        return (
+            get_dbconn, set_dbconn, db_execute, db_close,
+            get_pconn, set_pconn, p_dump, p_close
+        )
 
     def create_user(self):
         pass
