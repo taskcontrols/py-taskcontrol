@@ -448,7 +448,7 @@ class TestDecorator():
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-            return 14
+            return 114
 
         @workflow(
             name="taskname", task_order=1, task_instance=t,
@@ -463,7 +463,7 @@ class TestDecorator():
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 14
+            return 114
 
         result = t.run(tasks="taskname")
 
@@ -475,14 +475,14 @@ class TestDecorator():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 14
+            assert i == 114
 
     def test_1_15_doesnot_create_instance_task(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-            return 15
+            return 115
 
         @workflow(
             name="taskname", task_order=1, task_instance=t,
@@ -497,7 +497,7 @@ class TestDecorator():
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 15
+            return 115
 
         result = t.run(tasks="taskname")
         assert type(result) == list
@@ -509,7 +509,7 @@ class TestDecorator():
             assert type(result[0].get("result")) == list
             assert len(result[0].get("result")) == 3
             for i in result[0].get("result"):
-                assert i == 15 or i == None
+                assert i == 115 or i == None
 
         t.shared.delete_shared_tasks('shared:taskname')
 
@@ -518,7 +518,7 @@ class TestDecorator():
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-            return 16
+            return 116
 
         @workflow(
             name="taskname", task_order=1, task_instance=t,
@@ -533,7 +533,7 @@ class TestDecorator():
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 16
+            return 116
 
         result = t.run(tasks="shared:taskname")
 
@@ -545,7 +545,7 @@ class TestDecorator():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 16
+            assert i == 116
 
         t.shared.delete_shared_tasks('shared:taskname')
 
@@ -555,7 +555,7 @@ class TestDecorator():
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-            return 17
+            return 117
 
         @workflow(
             name="taskname", task_order=1, task_instance=t,
@@ -570,7 +570,7 @@ class TestDecorator():
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 17
+            return 117
 
         result = t.run(tasks="taskname")
         assert type(result) == list
@@ -581,7 +581,7 @@ class TestDecorator():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 17
+            assert i == 117
 
         result = t.run(tasks="shared:tasktwo")
 
@@ -653,7 +653,7 @@ class TestDecorator():
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items",
                   k, c, d, kwargs)
-            return 20
+            return 120
 
         @workflow(
             name="taskname", task_instance=t,
@@ -668,7 +668,7 @@ class TestDecorator():
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 20
+            return 120
 
         result = t.run(tasks="taskname")
         assert type(result) == list
@@ -679,14 +679,14 @@ class TestDecorator():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 20
+            assert i == 120
 
     def test_1_21_creates_task_without_before(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-            return 21
+            return 121
 
         @workflow(
             name="taskname", task_order=1, task_instance=t,
@@ -697,7 +697,7 @@ class TestDecorator():
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 21
+            return 121
 
         result = t.run(tasks="taskname")
         assert type(result) == list
@@ -708,14 +708,14 @@ class TestDecorator():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 2
         for i in result[0].get("result"):
-            assert i == 21
+            assert i == 121
 
     def test_1_22_creates_task_without_after(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-            return 22
+            return 122
 
         @workflow(
             name="taskname", task_order=1, task_instance=t,
@@ -726,7 +726,7 @@ class TestDecorator():
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 22
+            return 122
 
         result = t.run(tasks="taskname")
         assert type(result) == list
@@ -737,14 +737,14 @@ class TestDecorator():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 2
         for i in result[0].get("result"):
-            assert i == 22
+            assert i == 122
 
     def test_1_23_creates_task_without_log(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-            return 23
+            return 123
 
         @workflow(
             name="taskname", task_order=1, task_instance=t,
@@ -759,7 +759,7 @@ class TestDecorator():
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 23
+            return 123
 
         result = t.run(tasks="taskname")
         assert type(result) == list
@@ -770,7 +770,7 @@ class TestDecorator():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 23
+            assert i == 123
 
 
 # decorator runs instance single tasks
@@ -788,7 +788,7 @@ class TestTaskRunner():
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-            return 21
+            return 201
 
         @workflow(
             name="taskname", task_order=1, task_instance=t,
@@ -805,7 +805,7 @@ class TestTaskRunner():
         )
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 21
+            return 201
 
         result = t.run(tasks="taskname")
         assert type(result) == list
@@ -816,14 +816,14 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 21
+            assert i == 201
 
     def test_2_2_run_doesnot_single_instance_task(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-            return 22
+            return 202
 
         @workflow(
             name="taskname", task_order=1, task_instance=t,
@@ -840,7 +840,7 @@ class TestTaskRunner():
         )
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 22
+            return 202
 
         result = t.run(tasks="taskname")
         assert type(result) == list
@@ -855,7 +855,7 @@ class TestTaskRunner():
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-            return 23
+            return 203
 
         @workflow(
             name="taskname", task_order=1, task_instance=t,
@@ -872,7 +872,7 @@ class TestTaskRunner():
         )
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 23
+            return 203
 
         result = t.run(tasks="taskname")
 
@@ -884,7 +884,7 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 23
+            assert i == 203
 
         t = Tasks()
 
@@ -903,7 +903,7 @@ class TestTaskRunner():
         )
         def tasktwo(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 23
+            return 203
 
         result = t.run(tasks="tasktwo")
 
@@ -915,7 +915,7 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 23
+            assert i == 203
 
         @workflow(
             name="taskname", task_order=1, task_instance=t,
@@ -932,7 +932,7 @@ class TestTaskRunner():
         )
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 23
+            return 203
 
         result = t.run(tasks=["tasktwo", "taskname"])
 
@@ -946,19 +946,19 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 23
+            assert i == 203
 
         assert type(result[1].get("result")) == list
         assert len(result[1].get("result")) == 3
         for i in result[1].get("result"):
-            assert i == 23
+            assert i == 203
 
     def test_2_4_doesnot_run_multiple_instance_task(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-            return 24
+            return 204
 
         @workflow(
             name="taskname", task_order=1, task_instance=t,
@@ -975,7 +975,7 @@ class TestTaskRunner():
         )
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 24
+            return 204
 
         result = t.run(tasks="taskname")
 
@@ -987,7 +987,7 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 24
+            assert i == 204
 
         t = Tasks()
 
@@ -1006,7 +1006,7 @@ class TestTaskRunner():
         )
         def tasktwo(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 24
+            return 204
 
         result = t.run(tasks="tasktwo")
 
@@ -1018,7 +1018,7 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 24
+            assert i == 204
 
         result = t.run(tasks=["taskname", "tasktwo"])
 
@@ -1032,12 +1032,12 @@ class TestTaskRunner():
         assert type(result[1].get("result")) == list
         assert len(result[1].get("result")) == 3
         for i in result[1].get("result"):
-            assert i == 24
+            assert i == 204
 
     def test_2_5_doesnot_run_single_instance_multiple_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-            return 25
+            return 205
 
         t = Tasks()
 
@@ -1056,7 +1056,7 @@ class TestTaskRunner():
         )
         def taskname(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 25
+            return 205
 
         @workflow(
             name="tasktwo", task_order=1, task_instance=t,
@@ -1073,7 +1073,7 @@ class TestTaskRunner():
         )
         def tasktwo(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 25
+            return 205
 
         result = t.run(tasks="taskname")
 
@@ -1085,7 +1085,7 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 25
+            assert i == 205
 
         result = t.run(tasks="tasktwo")
 
@@ -1097,7 +1097,7 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 25
+            assert i == 205
 
         result = t.run(tasks=["taskname", "tasktwo"])
 
@@ -1111,17 +1111,17 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 25
+            assert i == 205
 
         assert type(result[1].get("result")) == list
         assert len(result[1].get("result")) == 3
         for i in result[1].get("result"):
-            assert i == 25
+            assert i == 205
 
     def test_2_6_doesnot_run_single_instance_multiple_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-            return 26
+            return 206
 
         t = Tasks()
 
@@ -1140,7 +1140,7 @@ class TestTaskRunner():
         )
         def taskname(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 26
+            return 206
 
         @workflow(
             name="tasktwo", task_order=1, task_instance=t,
@@ -1157,7 +1157,7 @@ class TestTaskRunner():
         )
         def tasktwo(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 26
+            return 206
 
         result = t.run(tasks="taskname")
 
@@ -1169,7 +1169,7 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 26
+            assert i == 206
 
         result = t.run(tasks="tasktwo")
 
@@ -1181,7 +1181,7 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 26
+            assert i == 206
         
         result = t.run(tasks="taskname")
 
@@ -1193,7 +1193,7 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 26
+            assert i == 206
 
         result = t.run(tasks=["shared:taskname", "shared:tasktwo"])
 
@@ -1205,7 +1205,7 @@ class TestTaskRunner():
     def test_2_7_run_all_instance_task(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-            return 27
+            return 207
 
         t = Tasks()
 
@@ -1224,7 +1224,7 @@ class TestTaskRunner():
         )
         def taskname(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 27
+            return 207
 
         @workflow(
             name="tasktwo", task_order=1, task_instance=t,
@@ -1241,7 +1241,7 @@ class TestTaskRunner():
         )
         def tasktwo(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 27
+            return 207
 
         result = t.run(tasks="taskname")
 
@@ -1253,7 +1253,7 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 27
+            assert i == 207
 
         result = t.run(tasks="tasktwo")
 
@@ -1265,7 +1265,7 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 27
+            assert i == 207
         
         result = t.run(tasks="taskname")
 
@@ -1277,7 +1277,7 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 27
+            assert i == 207
 
         result = t.run(tasks=["taskname", "tasktwo"])
 
@@ -1290,12 +1290,12 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 27
+            assert i == 207
 
         assert type(result[1].get("result")) == list
         assert len(result[1].get("result")) == 3
         for i in result[1].get("result"):
-            assert i == 27
+            assert i == 207
 
         result = t.run(tasks=1)
 
@@ -1308,12 +1308,12 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 27
+            assert i == 207
 
         assert type(result[1].get("result")) == list
         assert len(result[1].get("result")) == 3
         for i in result[1].get("result"):
-            assert i == 27
+            assert i == 207
         
         result = t.run(tasks="1")
 
@@ -1326,17 +1326,17 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 27
+            assert i == 207
 
         assert type(result[1].get("result")) == list
         assert len(result[1].get("result")) == 3
         for i in result[1].get("result"):
-            assert i == 27
+            assert i == 207
 
     def test_2_8_run_doesnot_all_instance_task(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-            return 28
+            return 208
 
         t = Tasks()
 
@@ -1355,7 +1355,7 @@ class TestTaskRunner():
         )
         def taskname(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 28
+            return 208
 
         @workflow(
             name="tasktwo", task_order=1, task_instance=t,
@@ -1372,7 +1372,7 @@ class TestTaskRunner():
         )
         def tasktwo(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 28
+            return 208
 
         result = t.run(tasks="taskname")
 
@@ -1384,7 +1384,7 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 28
+            assert i == 208
 
         result = t.run(tasks="tasktwo")
 
@@ -1396,7 +1396,7 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 28
+            assert i == 208
         
         result = t.run(tasks="taskname")
 
@@ -1408,7 +1408,7 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 28
+            assert i == 208
 
         result = t.run(tasks=["taskname", "tasktwo"])
 
@@ -1421,12 +1421,12 @@ class TestTaskRunner():
         assert type(result[0].get("result")) == list
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
-            assert i == 28
+            assert i == 208
 
         assert type(result[1].get("result")) == list
         assert len(result[1].get("result")) == 3
         for i in result[1].get("result"):
-            assert i == 28
+            assert i == 208
 
         result = t.run(tasks=["shared:taskname", "shared:tasktwo"])
 
