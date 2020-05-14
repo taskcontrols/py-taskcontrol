@@ -1,9 +1,13 @@
 from taskcontrol.workflow import workflow, Tasks
+
+
 def middleware(ctx, result, k, c, d, **kwargs):
-            print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-            return 26
+    print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+    return 26
+
 
 t = Tasks()
+
 
 @workflow(
     name="taskname", task_order=1, task_instance=t,
@@ -22,6 +26,7 @@ def taskname(ctx, result, a, b):
     print("Running my task function: taskone", a, b)
     return 26
 
+
 @workflow(
     name="tasktwo", task_order=1, task_instance=t,
     shared=True, args=[1, 2], kwargs={},
@@ -39,8 +44,8 @@ def tasktwo(ctx, result, a, b):
     print("Running my task function: taskone", a, b)
     return 26
 
+
 result = t.run(tasks=["taskname", "tasktwo"])
 print(result)
 t.shared.delete_shared_tasks("shared:tasktwo")
 print(t.shared.get_shared_tasks(1))
-
