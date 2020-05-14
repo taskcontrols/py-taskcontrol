@@ -9,15 +9,16 @@ setuptools.setup(
      name='taskcontrol',
      version='1.2.1',
      scripts=[],
-     author="Ganesh B",
-     author_email="ganeshsurfs@gmail.com",
+     author="taskcontrols",
+     author_email="taskcontrols@gmail.com",
      description="Create named isolated/shared workflow task controls and run the tasks with respective before and after middlewares in ordered manner",
      long_description=long_description,
      long_description_content_type="text/markdown",
-     url="https://github.com/ganeshkbhat/taskcontrol",
+     url="https://github.com/taskcontrols/taskcontrol",
      packages=setuptools.find_packages(),
      install_requires=[
           'tornado=6.0.4',
+          'pytest=5.4.2'
       ],
      license='MIT',
      classifiers=[
