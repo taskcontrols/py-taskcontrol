@@ -36,7 +36,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
 
         """
         self.shared = SharedBase.getInstance()
-        self.get_ctx, self.set_ctx, self.get_attr, self.update_task, self.set_tasks, self.parse_tasks, self.get_tasks = self.wf_closure()
+        self.get_ctx, self.set_ctx, self.get_attr, self.update_task, self.set_tasks, self.parse_tasks, self.get_tasks, self.delete_tasks = self.wf_closure()
 
     def wf_closure(self):
         """middleware_task_ Structure: name, function, args, kwargs, options"""
@@ -233,6 +233,23 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
             print("Workflow set_tasks: Adding Task: ", workflow_name)
             return True
 
+        def delete_tasks(task):
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
+            if (task == 1 and type(task) == int) or (type(task) == str and task == "1"):
+                for t in tasks:
+                    tasks.pop(t, None)
+            if type(task) == list and len(task) > 0:
+                for t in task:
+                    if type(t) == str and t in tasks:
+                        tasks.pop(t, None)
+            if type(task) == str:
+                if type(task) == str and task in tasks:
+                    tasks.pop(task, None)
+
         def parse_tasks(task):
             """
             Description of parse_tasks
@@ -272,7 +289,7 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
                 elif not shared:
                     return tasks.get(task)
 
-        return (get_ctx, set_ctx, get_attr, update_task, set_tasks, parse_tasks, get_tasks)
+        return (get_ctx, set_ctx, get_attr, update_task, set_tasks, parse_tasks, get_tasks, delete_tasks)
 
     def clean_args(self, function_, function_args, function_kwargs):
         """

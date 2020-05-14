@@ -500,6 +500,18 @@ class TestDecorator():
             return 15
 
         result = t.run(tasks="taskname")
+        assert type(result) == list
+        assert not hasattr(result, "result")
+        assert len(result) > 0
+        assert type(result[0]) == type(None) or type(result[0]) == dict
+
+        if type(result[0]) == dict: 
+            assert type(result[0].get("result")) == list
+            assert len(result[0].get("result")) == 3
+            for i in result[0].get("result"):
+                assert i == 15 or i == None
+
+        t.shared.delete_shared_tasks('shared:taskname')
 
     def test_1_16_creates_shared_task(self):
         t = Tasks()
@@ -534,13 +546,18 @@ class TestDecorator():
         assert len(result[0].get("result")) == 3
         for i in result[0].get("result"):
             assert i == 16
-            # pass
+        
+        # not working
+        t.shared.delete_shared_tasks('shared:taskname')
+        
 
     def test_1_17_doesnot_create_shared_task(self):
+                
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+            return 17
 
         @workflow(
             name="taskname", task_order=1, task_instance=t,
@@ -555,8 +572,30 @@ class TestDecorator():
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
+            return 17
 
         result = t.run(tasks="taskname")
+        assert type(result) == list
+        assert not hasattr(result, "result")
+        assert len(result) > 0
+        assert type(result[0]) == dict
+
+        assert type(result[0].get("result")) == list
+        assert len(result[0].get("result")) == 3
+        for i in result[0].get("result"):
+            assert i == 17
+
+        result = t.run(tasks="shared:tasktwo")
+
+        assert type(result) == list
+        assert not hasattr(result, "result")
+        assert len(result) >= 0
+        if not len(result) == 0:
+            assert type(result[0]) == dict
+            assert not hasattr(result[0], "result")
+
+            assert len(result) == 1
+            assert result[0] == None
 
     def test_1_18_does_not_create_task_without_name_throws_TypeError(self):
         with pytest.raises(TypeError) as e:
@@ -611,12 +650,12 @@ class TestDecorator():
         assert e.type is TypeError
 
     def test_1_20_creates_task_without_taskorder(self):
-        # with pytest.raises(Exception) as e:
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items",
                   k, c, d, kwargs)
+            return 20
 
         @workflow(
             name="taskname", task_instance=t,
@@ -631,16 +670,26 @@ class TestDecorator():
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
+            return 20
 
         result = t.run(tasks="taskname")
+        assert type(result) == list
+        assert not hasattr(result, "result")
+        assert len(result) > 0
+        assert type(result[0]) == dict
 
-        # assert e.type is Exception
+        assert type(result[0].get("result")) == list
+        assert len(result[0].get("result")) == 3
+        for i in result[0].get("result"):
+            assert i == 20
+
 
     def test_1_21_creates_task_without_before(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+            return 21
 
         @workflow(
             name="taskname", task_order=1, task_instance=t,
@@ -651,14 +700,25 @@ class TestDecorator():
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
+            return 21
 
         result = t.run(tasks="taskname")
+        assert type(result) == list
+        assert not hasattr(result, "result")
+        assert len(result) > 0
+        assert type(result[0]) == dict
+
+        assert type(result[0].get("result")) == list
+        assert len(result[0].get("result")) == 2
+        for i in result[0].get("result"):
+            assert i == 21
 
     def test_1_22_creates_task_without_after(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+            return 22
 
         @workflow(
             name="taskname", task_order=1, task_instance=t,
@@ -669,14 +729,25 @@ class TestDecorator():
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
+            return 22
 
         result = t.run(tasks="taskname")
+        assert type(result) == list
+        assert not hasattr(result, "result")
+        assert len(result) > 0
+        assert type(result[0]) == dict
+
+        assert type(result[0].get("result")) == list
+        assert len(result[0].get("result")) == 2
+        for i in result[0].get("result"):
+            assert i == 22
 
     def test_1_23_creates_task_without_log(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+            return 23
 
         @workflow(
             name="taskname", task_order=1, task_instance=t,
@@ -691,8 +762,18 @@ class TestDecorator():
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
+            return 23
 
         result = t.run(tasks="taskname")
+        assert type(result) == list
+        assert not hasattr(result, "result")
+        assert len(result) > 0
+        assert type(result[0]) == dict
+
+        assert type(result[0].get("result")) == list
+        assert len(result[0].get("result")) == 3
+        for i in result[0].get("result"):
+            assert i == 23
 
 
 # decorator runs instance single tasks
