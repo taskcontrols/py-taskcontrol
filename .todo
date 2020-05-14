@@ -12,3 +12,4 @@
 * Add support for async-await in base (just need tests for async await for current single task flow logic)
 * Add support for multi-threading, multiprocessing in base  (test current single task flow logic)
 * Check impact of self on closure
+* Project Size should not be more than 500KB
