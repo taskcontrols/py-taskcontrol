@@ -72,7 +72,8 @@ class ConcurencyBase():
         result = None
 
         # # Check need here. Create a common one outside by user
-        # # Consider if you want to handle this
+        # # Consider if you want to handle this (Negative currently)
+
         # # share_value, share_array, share_queue, share_pipe, share_lock, share_rlock,
         # # share_manager, share_pool, share_connection, share_event,
         # # share_semaphore, share_bounded_semaphore

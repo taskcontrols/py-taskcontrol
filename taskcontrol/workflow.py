@@ -1,14 +1,14 @@
 # # Project Workflow
 
-
 from sys import path
 path.append('./')
 
+from .interfaces import AuthenticationBase, SocketsBase, HooksBase
 from .bases import WorkflowBase, PluginsBase
-from .hooks import SocketsBase, HooksBase
-from .authentication import AuthenticationBase, AuthBase
+from .authentication import AuthBase
 from .concurrency import ConcurencyBase
 from .logger_timer import LoggerBase, TimerBase
+
 
 
 class Tasks(WorkflowBase):
@@ -155,4 +155,3 @@ def workflow(*workflow_args, **workflow_kwargs):
 
 __all__ = ["Tasks", "workflow", "AuthenticationBase",
            "SocketsBase", "TimerBase", "LoggerBase"]
-
