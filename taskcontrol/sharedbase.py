@@ -71,18 +71,19 @@ class SharedBase():
             # TODO: Add Authentication
             # if not is_authenticated():
             #     raise Exception("Not authenticated")
-            if isinstance(task_, str):
+            if type(task_) == str:
                 if len(task_.split("shared:")) > 1:
                     task = task_.split("shared:")[1]
-            task = task_
+                else:
+                    task = task_
             if task == 1 or task == "1":
                 for t in tasks:
                     tasks.pop(t, None)
-            if type(task) == str:
+            if type(task) == str and task != "1":
                 tasks.pop(task, None)
             if type(task) == list and len(task) > 0:
                 for t in task:
-                    if type(t) == str and t in tasks:
+                    if type(t) == str and t in tasks.keys():
                         tasks.pop(t, None)
 
         def get_shared_ctx():
