@@ -24,20 +24,61 @@ class AuthBase(AuthenticationBase):
 
     """
 
-    def __init__(self, get_dbconn=None, set_dbconn=None, db_execute=None, db_close=None,
-                 get_pconn=None, set_pconn=None, p_dump=None, p_close=None):
-        self.get_dbconn, self.set_dbconn, self.db_execute, self.db_close, self.get_pconn, self.set_pconn, self.p_dump, self.p_close = self.auth_closure(get_dbconn=None, set_dbconn=None, db_execute=None, db_close=None,
-                                                                                                                                                        get_pconn=None, set_pconn=None, p_dump=None, p_close=None)
+   def __init__(self, **kwargs):
+        if self.verify_structure(**kwargs):
+            self.get_dbconn, self.set_dbconn, self.db_execute, self.db_close, self.get_pconn, self.set_pconn, self.p_dump, self.p_close = self.auth_closure(
+                **kwargs)
+
+    def verify_structure(self, **kwargs):
+        if not kwargs.get("get_dbconn") or not kwargs.get("set_dbconn") or not kwargs.get("db_execute") or not kwargs.get("db_close") or not kwargs.get("get_pconn") or not kwargs.get("set_pconn") or not kwargs.get("p_dump") or not kwargs.get("p_close"):
+            return False
+        return True
 
     def init_db(self, path, name):
         c = sqlite3.connect(path + name + '.db')
         return c
 
     def init_tables(self, conn):
-        pass
+        try:
+            sql = '''
+                CREATE TABLE users (
+                    id INT AUTOINCREMENT NOT NULL PRIMARY KEY,
+                    username NOT NULL VARCHAR(255),
+                    password NOT NULL VARCHAR(255),
+                );
+                CREATE TABLE roles (
+                    id INT AUTOINCREMENT PRIMARY KEY,
+                    user_id NOT NULL VARCHAR(255),
+                    role NOT NULL VARCHAR(255),
+                    activity NOT NULL VARCHAR(255),
+                    permission NOT NULL VARCHAR(255),
+                );
+            '''
+            conn.execute(sql)
+            print("Tables created successfully")
+            conn.commit()
+        except:
+            return False
+        return True
 
-    def init_superuser(self, conn):
-        pass
+    def init_superuser(self, conn, username, password, role, activity, permission):
+        try:
+            sql = '''
+                insert into users (username, password) values (str({0}), str({1}));
+            '''.format(str(username), str(password))
+            conn.execute(sql)
+            print("User created successfully")
+            conn.commit()
+
+            rolesql = '''
+                insert into roles (user_id, role, activity, permission) values ({0}, {1}, {2}, {3});
+            '''.format(str(user_id), str(role), str(activity), str(permission))
+            conn.execute(rolesql)
+            print("Role created successfully")
+            conn.commit()
+        except:
+            return False
+        return True
 
     def init_pickle(self, path, name):
         out = open(path + name + ".pickle", "wb")
@@ -171,4 +212,3 @@ class AuthBase(AuthenticationBase):
     def is_authenticated(self):
         # true/false
         pass
-
