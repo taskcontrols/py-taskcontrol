@@ -16,13 +16,6 @@ from .interfaces import AuthenticationBase
 
 
 class AuthBase(AuthenticationBase):
-    """
-    Description of AuthenticationBase
-
-    Attributes:
-        attr1 (str): Description of 'attr1'
-
-    """
 
    def __init__(self, **kwargs):
         if self.verify_structure(**kwargs):
@@ -70,13 +63,16 @@ class AuthBase(AuthenticationBase):
             print("User created successfully")
             conn.commit()
             # get user_id
-            
-            rolesql = '''
-                insert into roles (user_id, role, activity, permission) values ({0}, {1}, {2}, {3});
-            '''.format(str(user_id), str(role), str(activity), str(permission))
-            conn.execute(rolesql)
-            print("Role created successfully")
-            conn.commit()
+            conn.execute("""SELECT user_id FROM tasks WHERE username = {0} AND password = {1}""".format(str(username), str(password)))
+            rows = conn.fetchall()
+            if len(rows) == 1:
+                for row in rows:
+                    rolesql = '''
+                        insert into roles (user_id, role, activity, permission) values ({0}, {1}, {2}, {3});
+                    '''.format(str(row), str(role), str(activity), str(permission))
+                    conn.execute(rolesql)
+                    print("Role created successfully")
+                    conn.commit()
         except:
             return False
         return True
