@@ -69,7 +69,8 @@ class AuthBase(AuthenticationBase):
             conn.execute(sql)
             print("User created successfully")
             conn.commit()
-
+            # get user_id
+            
             rolesql = '''
                 insert into roles (user_id, role, activity, permission) values ({0}, {1}, {2}, {3});
             '''.format(str(user_id), str(role), str(activity), str(permission))
