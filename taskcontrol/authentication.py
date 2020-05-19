@@ -33,28 +33,51 @@ class AuthBase(AuthenticationBase):
 
     def init_tables(self, conn):
         try:
-            sql = """
-                CREATE TABLE users (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    username VARCHAR(255) UNIQUE,
-                    password VARCHAR(255) NOT NULL
-                );
-            """
-            conn.execute(sql)
-            print("Table users created successfully")
-            conn.commit()
-            sql = """
-                CREATE TABLE roles (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    user_id VARCHAR(255) NOT NULL,
-                    role VARCHAR(255) NOT NULL,
-                    activity VARCHAR(255) NOT NULL,
-                    permission VARCHAR(255) NOT NULL
-                );
-            """
-            conn.execute(sql)
-            print("Table roles created successfully")
-            conn.commit()
+            try:
+                sql = """
+                    CREATE TABLE users (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        username VARCHAR(255) UNIQUE,
+                        password VARCHAR(255) NOT NULL
+                    );
+                """
+                conn.execute(sql)
+                print("Table users created successfully")
+                conn.commit()
+            except:
+                raise Exception("Unable to create Users Table")
+            
+            try:
+                sql = """
+                    CREATE TABLE roles (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        userid VARCHAR(255) NOT NULL,
+                        role VARCHAR(255) NOT NULL,
+                        activity VARCHAR(255) NOT NULL,
+                        permission VARCHAR(255) NOT NULL
+                    );
+                """
+                conn.execute(sql)
+                print("Table roles created successfully")
+                conn.commit()
+            except:
+                raise Exception("Unable to create Roles Table")
+            try:
+                sql = """
+                    CREATE TABLE sessions (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        userid VARCHAR(255) NOT NULL,
+                        sessionid VARCHAR(255) NOT NULL,
+                        time VARCHAR(255) NOT NULL,
+                        loggedin BOOLEAN NOT NULL
+                    );
+                """
+                conn.execute(sql)
+                print("Table sessions created successfully")
+                conn.commit()
+            except:
+                raise Exception("Unable to create Roles Table")
+            
         except:
             return False
         return True
@@ -75,13 +98,13 @@ class AuthBase(AuthenticationBase):
             else:
                 raise ValueError("Username, Password not provided")
             
-            # get user_id
-            # conn.execute("""SELECT user_id FROM tasks WHERE username = {0} AND password = {1}""".format(str(username), str(password)))
+            # get userid
+            # conn.execute("""SELECT userid FROM tasks WHERE username = {0} AND password = {1}""".format(str(username), str(password)))
             # rows = conn.fetchall()
             # if len(rows) == 1:
             #     for row in rows:
             #         rolesql = '''
-            #             insert into roles (user_id, role, activity, permission) values ({0}, {1}, {2}, {3});
+            #             insert into roles (userid, role, activity, permission) values ({0}, {1}, {2}, {3});
             #         '''.format(str(row), str(role), str(activity), str(permission))
             #         conn.execute(rolesql)
             #         print("Role created successfully")
@@ -219,15 +242,23 @@ class AuthBase(AuthenticationBase):
         # user, role, action, permissions
         return False
 
-    def is_loggedin(self, options):
-        # username, password
+    def has_permissions(self, options):
+        # get_user_permissions
         return False
 
-    def is_authenticated(self, options):
-        # true/false
+    def is_loggedin(self, options):
+        # id or username, password
         id = options.get("id")
         username = options.get("username")
         password = options.get("password")
+        # check loggedin
+        return False
+
+    def is_authenticated(self, options):
+        # returns true/false
         # is_loggedin
-        # get_user_permissions
+        if self.is_loggedin(options):
+            # has_permissions
+            if self.has_permissions(options):
+                return True
         return False
