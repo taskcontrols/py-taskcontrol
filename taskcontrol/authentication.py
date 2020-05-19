@@ -28,8 +28,9 @@ class AuthBase(AuthenticationBase):
         return True
 
     def init_db(self, path, name):
-        c = sqlite3.connect(path + name + '.db')
-        return c
+        conn = sqlite3.connect(path + name + '.db')
+        # add connection to db_connections
+        return conn
 
     def init_tables(self, conn):
         try:
