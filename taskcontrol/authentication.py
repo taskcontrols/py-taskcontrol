@@ -124,15 +124,62 @@ class AuthBase(AuthenticationBase):
             print(options.get("table"), " created successfully")
         except Exception as e:
             raise Exception("Error with options provided", e)
+        return True
 
     def find(self, conn, options):
-        pass
+        try:
+            sql = """SELECT """
+            for i in options.get("columns"):
+                sql += str(i) + """, """
+            sql += """ FROM """ + str(options.get("table")) + """ WHERE """
+            filters = options.get("filters")
+            if type(filters) == str:
+                sql += filters + """;"""
+            elif type(filters) == dict:
+                # Make this nested for joins, nested statements, and with all operators
+                # Currently keeping it only for string and single statements
+                pass
+            conn.execute(sql)
+            conn.commit()
+            print(options.get("table"), " find successfully")
+        except Exception as e:
+            raise Exception("Error with options provided", e)
+        return True
 
     def update(self, conn, options):
-        pass
+        try:
+            sql = """UPDATE """ + options.get("table")
+            sql += """ SET """
+            # UPDATE STATEMENTS
+
+            sql += """ WHERE """
+            # UPDATE CONDITION STATEMENTS
+
+            sql += """;"""
+            conn.execute(sql)
+            conn.commit()
+            print(options.get("table"), " updated successfully")
+        except Exception as e:
+            raise Exception("Error with options provided", e)
+        return True
 
     def delete(self, conn, options):
-        pass
+        try:
+            sql = """DELETE FROM """
+            sql += str(options.get("table")) + """ WHERE """
+            filters = options.get("filters")
+            if type(filters) == str:
+                sql += filters + """;"""
+            elif type(filters) == dict:
+                # Make this nested for joins, nested statements, and with all operators
+                # Currently keeping it only for string and single statements
+                pass
+            conn.execute(sql)
+            conn.commit()
+            print(options.get("table"), " deleted successfully")
+        except Exception as e:
+            raise Exception("Error with options provided", e)
+        return True
 
     def init_db(self, path, name):
         conn = sqlite3.connect(path + name + '.db')
