@@ -196,56 +196,57 @@ class AuthBase(AuthenticationBase):
             get_pconn, set_pconn, p_dump, p_close
         )
 
-    def create_user(self, options):
+    def create_user(self, conn, options):
         pass
 
-    def update_user(self, options):
+    def update_user(self, conn, options):
         pass
 
-    def delete_user(self, options):
+    def delete_user(self, conn, options):
         pass
 
-    def get_user(self, options):
+    def get_user(self, conn, options):
         pass
 
-    def change_password(self, options):
+    def change_password(self, conn, options):
         pass
 
-    def create_permissions(self, options):
+    def create_permissions(self, conn, options):
         # user/role, action, permissions
         pass
 
-    def update_permissions(self, options):
+    def update_permissions(self, conn, options):
         pass
 
-    def delete_permissions(self, options):
+    def delete_permissions(self, conn, options):
         pass
 
-    def get_permissions(self, options):
+    def get_permissions(self, conn, options):
         pass
 
-    def create_role(self, options):
+    def create_role(self, conn, options):
         # role
         pass
 
-    def update_role(self, options):
+    def update_role(self, conn, options):
         pass
 
-    def delete_role(self, options):
+    def delete_role(self, conn, options):
         pass
 
-    def get_role(self, options):
+    def get_role(self, conn, options):
         pass
 
-    def get_user_permissions(self, options):
+    def get_user_permissions(self, conn, options):
         # user, role, action, permissions
         return False
 
-    def has_permissions(self, options):
+    def has_permissions(self, conn, options):
+        # user, role, action, permissions for action/user
         # get_user_permissions
         return False
 
-    def is_loggedin(self, options):
+    def is_loggedin(self, conn, options):
         # id or username, password
         id = options.get("id")
         username = options.get("username")
@@ -253,11 +254,11 @@ class AuthBase(AuthenticationBase):
         # check loggedin
         return False
 
-    def is_authenticated(self, options):
+    def is_authenticated(self, conn, options):
         # returns true/false
         # is_loggedin
-        if self.is_loggedin(options):
+        if self.is_loggedin(conn, options):
             # has_permissions
-            if self.has_permissions(options):
+            if self.has_permissions(conn, options):
                 return True
         return False
