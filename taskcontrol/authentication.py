@@ -27,6 +27,13 @@ class AuthBase(AuthenticationBase):
             return False
         return True
 
+    def verify_options_structure(self, options):
+        # id or username, password
+        # action, user
+        if type(options) != dict:
+            raise TypeError("Options structure wrong")
+        return True
+
     def auth_closure(self, get_dbconn=None, set_dbconn=None, db_execute=None, db_close=None,
                      get_pconn=None, set_pconn=None, p_dump=None, p_close=None):
         db_connections = {}
@@ -100,6 +107,18 @@ class AuthBase(AuthenticationBase):
             get_dbconn, set_dbconn, db_execute, db_close,
             get_pconn, set_pconn, p_dump, p_close
         )
+
+    def create(self, conn, options):
+        pass
+
+    def find(self, conn, options):
+        pass
+
+    def update(self, conn, options):
+        pass
+
+    def delete(self, conn, options):
+        pass
 
     def init_db(self, path, name):
         conn = sqlite3.connect(path + name + '.db')
@@ -210,13 +229,6 @@ class AuthBase(AuthenticationBase):
     def init_psuperuser(self, conn):
         pass
 
-    def verify_options_structure(self, options):
-        # id or username, password
-        # action, user
-        if type(options) != dict:
-            raise TypeError("Options structure wrong")
-        return True
-
     def create_user(self, conn, options):
         self.verify_options_structure(options)
 
@@ -283,8 +295,8 @@ class AuthBase(AuthenticationBase):
     def is_authenticated(self, conn, options):
         # id or username, password
         # action, user
-
         self.verify_options_structure(options)
+
         # is_loggedin
         role = self.is_loggedin(conn, options)
         if role:
