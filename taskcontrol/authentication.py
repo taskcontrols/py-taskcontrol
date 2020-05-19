@@ -109,7 +109,21 @@ class AuthBase(AuthenticationBase):
         )
 
     def create(self, conn, options):
-        pass
+        try:
+            sql = """INSERT INTO """ + str(options.get("table"))
+            for i in options.get("columns"):
+                sql += """ (""" + str(i) + """, """
+            sql += """) VALUES ( """
+
+            for j in options.get("values"):
+                sql += str(j) + """, """
+
+            sql += """);"""
+            conn.execute(sql)
+            conn.commit()
+            print(options.get("table"), " created successfully")
+        except Exception as e:
+            raise Exception("Error with options provided", e)
 
     def find(self, conn, options):
         pass
@@ -188,8 +202,8 @@ class AuthBase(AuthenticationBase):
             p = options.get("password")
             if u and p:
                 conn.execute(sql, (u, p))
-                print("User created successfully")
                 conn.commit()
+                print("User created successfully")
             else:
                 raise ValueError("Username, Password not provided")
 
@@ -199,9 +213,9 @@ class AuthBase(AuthenticationBase):
             rows = conn.fetchall()
             if len(rows) == 1:
                 for row in rows:
-                    rolesql = '''
+                    rolesql = """
                         INSERT INTO roles (userid, role, activity, permission) values ({0}, {1}, {2}, {3}, {4});
-                    '''
+                    """
                     role = options.get("role")
                     name = options.get("name")
                     type = options.get("type")
@@ -210,13 +224,13 @@ class AuthBase(AuthenticationBase):
                     if role or name or type or activity or permission:
                         conn.execute(
                             rolesql, (role, name, type, activity, permission))
-                        print("Role created successfully")
                         conn.commit()
+                        print("Role created successfully")
                     else:
                         raise ValueError("Issue with roles entry values")
             else:
-                raise ValueError("Too many related ids.")
-        except:
+                raise ValueError("Too many related ids")
+        except Exception as e:
             return False
         return True
 
