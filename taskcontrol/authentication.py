@@ -100,16 +100,28 @@ class AuthBase(AuthenticationBase):
                 raise ValueError("Username, Password not provided")
 
             # get userid
-            # conn.execute("""SELECT userid FROM tasks WHERE username = {0} AND password = {1}""".format(str(username), str(password)))
-            # rows = conn.fetchall()
-            # if len(rows) == 1:
-            #     for row in rows:
-            #         rolesql = '''
-            #             insert into roles (userid, role, activity, permission) values ({0}, {1}, {2}, {3});
-            #         '''.format(str(row), str(role), str(activity), str(permission))
-            #         conn.execute(rolesql)
-            #         print("Role created successfully")
-            #         conn.commit()
+            conn.execute(
+                """SELECT userid FROM tasks WHERE username = {0} AND password = {1}""", (u, p))
+            rows = conn.fetchall()
+            if len(rows) == 1:
+                for row in rows:
+                    rolesql = '''
+                        INSERT INTO roles (userid, role, activity, permission) values ({0}, {1}, {2}, {3}, {4});
+                    '''
+                    role = options.get("role")
+                    name = options.get("name")
+                    type = options.get("type")
+                    activity = options.get("activity")
+                    permission = options.get("permission")
+                    if role or name or type or activity or permission:
+                        conn.execute(
+                            rolesql, (role, name, type, activity, permission))
+                        print("Role created successfully")
+                        conn.commit()
+                    else:
+                        raise ValueError("Issue with roles entry values")
+            else:
+                raise ValueError("Too many related ids.")
         except:
             return False
         return True
@@ -243,7 +255,7 @@ class AuthBase(AuthenticationBase):
         # user, role, action, permissions
         return False
 
-    def has_permissions(self, conn, options):
+    def has_permissions(self, conn, options, role):
         # user, role, action, permissions for action/user
         # get_user_permissions
         return False
@@ -257,10 +269,12 @@ class AuthBase(AuthenticationBase):
         return False
 
     def is_authenticated(self, conn, options):
-        # returns true/false
+        # id or username, password
+        # action, user
         # is_loggedin
-        if self.is_loggedin(conn, options):
+        role = self.is_loggedin(conn, options)
+        if role:
             # has_permissions
-            if self.has_permissions(conn, options):
+            if self.has_permissions(conn, options, role):
                 return True
         return False
