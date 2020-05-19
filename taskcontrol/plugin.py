@@ -5,7 +5,7 @@ class PluginsBase():
 
     # return plugin instance/module
     def plugin_create(self, name, task_instance):
-
+        
         # TODO: Apply multiple instances (Allow seperate and merged instances)
         # Low priority
         if type(task_instance) != dict:

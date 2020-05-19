@@ -27,6 +27,80 @@ class AuthBase(AuthenticationBase):
             return False
         return True
 
+    def auth_closure(self, get_dbconn=None, set_dbconn=None, db_execute=None, db_close=None,
+                     get_pconn=None, set_pconn=None, p_dump=None, p_close=None):
+        db_connections = {}
+        pickle_connections = {}
+
+        if get_dbconn != None and type(get_dbconn) == callable:
+            def fn_1(conn, names):
+                if type(names) == str:
+                    cdb = sqlite3.connect(db_connections.get(names))
+                    conn = cdb.cursor()
+                    return conn
+                if type(names) == list:
+                    conn = {}
+                    for name in names:
+                        if name in db_connections:
+                            cdb = sqlite3.connect(db_connections.get(name))
+                            conn = cdb.cursor()
+                            conn.update({name: conn})
+                    return conn
+                return None
+            get_dbconn = fn_1
+
+        if set_dbconn != None and type(set_dbconn) == callable:
+            def fn_2(name, options):
+                # options
+                #
+                if type(name) == str and type(options) == dict:
+                    db_connections.update({name: options})
+                    return {name: options}
+                return None
+            set_dbconn = fn_2
+
+        if db_execute != None and type(db_execute) == callable:
+            def fn_3(query):
+                pass
+            db_execute = fn_3
+
+        if db_close != None and type(db_close) == callable:
+            def fn_4(conn):
+                conn.close()
+            db_close = fn_4
+
+        if get_pconn != None and type(get_pconn) == callable:
+            def fn_5(names):
+                # pickle_connections
+                # example_dict = pickle.load(pickle_in)
+                pass
+            get_pconn = fn_5
+
+        if set_pconn != None and type(set_pconn) == callable:
+            def fn_6(name, options):
+                # options
+                #
+                # pickle_connections
+                pass
+            set_pconn = fn_6
+
+        if p_dump != None and type(p_dump) == callable:
+            def fn_7(query):
+                # pickle.dump(example_dict, pickle_out)
+                pass
+            p_dump = fn_7
+
+        if p_close != None and type(p_close) == callable:
+            def fn_8(conn):
+                # pickle_out.close()
+                pass
+            p_close = fn_8
+
+        return (
+            get_dbconn, set_dbconn, db_execute, db_close,
+            get_pconn, set_pconn, p_dump, p_close
+        )
+
     def init_db(self, path, name):
         conn = sqlite3.connect(path + name + '.db')
         # add connection to db_connections
@@ -39,8 +113,7 @@ class AuthBase(AuthenticationBase):
                     CREATE TABLE users (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         username VARCHAR(255) UNIQUE,
-                        password VARCHAR(255) NOT NULL,
-                        roleid VARCHAR(255) NOT NULL
+                        password VARCHAR(255) NOT NULL
                     );
                 """
                 conn.execute(sql)
@@ -52,6 +125,7 @@ class AuthBase(AuthenticationBase):
                 sql = """
                     CREATE TABLE roles (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        userid VARCHAR(255) NOT NULL,
                         role VARCHAR(255) NOT NULL,
                         name VARCHAR(255) NOT NULL,
                         type VARCHAR(255) NOT NULL,
@@ -136,145 +210,86 @@ class AuthBase(AuthenticationBase):
     def init_psuperuser(self, conn):
         pass
 
-    def auth_closure(self, get_dbconn=None, set_dbconn=None, db_execute=None, db_close=None,
-                     get_pconn=None, set_pconn=None, p_dump=None, p_close=None):
-        db_connections = {}
-        pickle_connections = {}
-
-        if get_dbconn != None and type(get_dbconn) == callable:
-            def fn_1(conn, names):
-                if type(names) == str:
-                    cdb = sqlite3.connect(db_connections.get(names))
-                    conn = cdb.cursor()
-                    return conn
-                if type(names) == list:
-                    conn = {}
-                    for name in names:
-                        if name in db_connections:
-                            cdb = sqlite3.connect(db_connections.get(name))
-                            conn = cdb.cursor()
-                            conn.update({name: conn})
-                    return conn
-                return None
-            get_dbconn = fn_1
-
-        if set_dbconn != None and type(set_dbconn) == callable:
-            def fn_2(name, options):
-                # options
-                #
-                if type(name) == str and type(options) == dict:
-                    db_connections.update({name: options})
-                    return {name: options}
-                return None
-            set_dbconn = fn_2
-
-        if db_execute != None and type(db_execute) == callable:
-            def fn_3(query):
-                pass
-            db_execute = fn_3
-
-        if db_close != None and type(db_close) == callable:
-            def fn_4(conn):
-                conn.close()
-            db_close = fn_4
-
-        if get_pconn != None and type(get_pconn) == callable:
-            def fn_5(names):
-                # pickle_connections
-                # example_dict = pickle.load(pickle_in)
-                pass
-            get_pconn = fn_5
-
-        if set_pconn != None and type(set_pconn) == callable:
-            def fn_6(name, options):
-                # options
-                #
-                # pickle_connections
-                pass
-            set_pconn = fn_6
-
-        if p_dump != None and type(p_dump) == callable:
-            def fn_7(query):
-                # pickle.dump(example_dict, pickle_out)
-                pass
-            p_dump = fn_7
-
-        if p_close != None and type(p_close) == callable:
-            def fn_8(conn):
-                # pickle_out.close()
-                pass
-            p_close = fn_8
-
-        return (
-            get_dbconn, set_dbconn, db_execute, db_close,
-            get_pconn, set_pconn, p_dump, p_close
-        )
+    def verify_options_structure(self, options):
+        # id or username, password
+        # action, user
+        if type(options) != dict:
+            raise TypeError("Options structure wrong")
+        return True
 
     def create_user(self, conn, options):
-        pass
+        self.verify_options_structure(options)
 
     def update_user(self, conn, options):
-        pass
+        self.verify_options_structure(options)
 
     def delete_user(self, conn, options):
-        pass
+        self.verify_options_structure(options)
 
     def get_user(self, conn, options):
-        pass
+        self.verify_options_structure(options)
 
     def change_password(self, conn, options):
-        pass
+        self.verify_options_structure(options)
 
     def create_permissions(self, conn, options):
         # user/role, action, permissions
-        pass
+        self.verify_options_structure(options)
 
     def update_permissions(self, conn, options):
-        pass
+        self.verify_options_structure(options)
 
     def delete_permissions(self, conn, options):
-        pass
+        self.verify_options_structure(options)
 
     def get_permissions(self, conn, options):
-        pass
+        self.verify_options_structure(options)
 
     def create_role(self, conn, options):
+        self.verify_options_structure(options)
         # role
-        pass
 
     def update_role(self, conn, options):
-        pass
+        self.verify_options_structure(options)
 
     def delete_role(self, conn, options):
-        pass
+        self.verify_options_structure(options)
 
     def get_role(self, conn, options):
-        pass
+        self.verify_options_structure(options)
 
     def get_user_permissions(self, conn, options):
         # user, role, action, permissions
+        self.verify_options_structure(options)
         return False
 
-    def has_permissions(self, conn, options, role):
+    def has_permissions(self, conn, options):
         # user, role, action, permissions for action/user
+        self.verify_options_structure(options)
         # get_user_permissions
         return False
 
     def is_loggedin(self, conn, options):
         # id or username, password
+        self.verify_options_structure(options)
+
         id = options.get("id")
         username = options.get("username")
         password = options.get("password")
+
         # check loggedin
         return False
 
     def is_authenticated(self, conn, options):
         # id or username, password
         # action, user
+
+        self.verify_options_structure(options)
         # is_loggedin
         role = self.is_loggedin(conn, options)
         if role:
+            options.update({"role": role})
             # has_permissions
-            if self.has_permissions(conn, options, role):
+            if self.has_permissions(conn, options):
                 return True
         return False
