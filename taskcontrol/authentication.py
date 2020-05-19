@@ -17,7 +17,7 @@ from .interfaces import AuthenticationBase
 
 class AuthBase(AuthenticationBase):
 
-   def __init__(self, **kwargs):
+    def __init__(self, **kwargs):
         if self.verify_structure(**kwargs):
             self.get_dbconn, self.set_dbconn, self.db_execute, self.db_close, self.get_pconn, self.set_pconn, self.p_dump, self.p_close = self.auth_closure(
                 **kwargs)
@@ -36,7 +36,7 @@ class AuthBase(AuthenticationBase):
             sql = '''
                 CREATE TABLE users (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    username VARCHAR(255) NOT NULL,
+                    username VARCHAR(255) UNIQUE,
                     password VARCHAR(255) NOT NULL
                 );
             '''
@@ -59,13 +59,14 @@ class AuthBase(AuthenticationBase):
             return False
         return True
 
-    def init_superuser(self, conn, username, password, role, activity, permission):
+    def init_superuser(self, conn, options):
+        # username, password, role, activity, permission
         try:
             # error here on string format?
-            sql = '''
-                insert into users (username, password) values (str({0}), str({1}));
-            '''.format(str(username), str(password))
-            conn.execute(sql)
+            sql = """
+                INSERT INTO users (username, password) VALUES (?, ?);
+            """
+            
             print("User created successfully")
             conn.commit()
             # get user_id
