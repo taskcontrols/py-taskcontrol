@@ -38,7 +38,8 @@ class AuthBase(AuthenticationBase):
                     CREATE TABLE users (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         username VARCHAR(255) UNIQUE,
-                        password VARCHAR(255) NOT NULL
+                        password VARCHAR(255) NOT NULL,
+                        roleid VARCHAR(255) NOT NULL
                     );
                 """
                 conn.execute(sql)
@@ -46,13 +47,13 @@ class AuthBase(AuthenticationBase):
                 conn.commit()
             except:
                 raise Exception("Unable to create Users Table")
-            
             try:
                 sql = """
                     CREATE TABLE roles (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        userid VARCHAR(255) NOT NULL,
                         role VARCHAR(255) NOT NULL,
+                        name VARCHAR(255) NOT NULL,
+                        type VARCHAR(255) NOT NULL,
                         activity VARCHAR(255) NOT NULL,
                         permission VARCHAR(255) NOT NULL
                     );
