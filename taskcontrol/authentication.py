@@ -33,17 +33,17 @@ class AuthBase(AuthenticationBase):
 
     def init_tables(self, conn):
         try:
-            sql = '''
+            sql = """
                 CREATE TABLE users (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     username VARCHAR(255) UNIQUE,
                     password VARCHAR(255) NOT NULL
                 );
-            '''
+            """
             conn.execute(sql)
             print("Table users created successfully")
             conn.commit()
-            sql = '''
+            sql = """
                 CREATE TABLE roles (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     user_id VARCHAR(255) NOT NULL,
@@ -51,7 +51,7 @@ class AuthBase(AuthenticationBase):
                     activity VARCHAR(255) NOT NULL,
                     permission VARCHAR(255) NOT NULL
                 );
-            '''
+            """
             conn.execute(sql)
             print("Table roles created successfully")
             conn.commit()
@@ -66,20 +66,26 @@ class AuthBase(AuthenticationBase):
             sql = """
                 INSERT INTO users (username, password) VALUES (?, ?);
             """
+            u = options.get("username")
+            p = options.get("password")
+            if u and p:
+                conn.execute(sql, (u, p))
+                print("User created successfully")
+                conn.commit()
+            else:
+                raise ValueError("Username, Password not provided")
             
-            print("User created successfully")
-            conn.commit()
             # get user_id
-            conn.execute("""SELECT user_id FROM tasks WHERE username = {0} AND password = {1}""".format(str(username), str(password)))
-            rows = conn.fetchall()
-            if len(rows) == 1:
-                for row in rows:
-                    rolesql = '''
-                        insert into roles (user_id, role, activity, permission) values ({0}, {1}, {2}, {3});
-                    '''.format(str(row), str(role), str(activity), str(permission))
-                    conn.execute(rolesql)
-                    print("Role created successfully")
-                    conn.commit()
+            # conn.execute("""SELECT user_id FROM tasks WHERE username = {0} AND password = {1}""".format(str(username), str(password)))
+            # rows = conn.fetchall()
+            # if len(rows) == 1:
+            #     for row in rows:
+            #         rolesql = '''
+            #             insert into roles (user_id, role, activity, permission) values ({0}, {1}, {2}, {3});
+            #         '''.format(str(row), str(role), str(activity), str(permission))
+            #         conn.execute(rolesql)
+            #         print("Role created successfully")
+            #         conn.commit()
         except:
             return False
         return True
