@@ -167,19 +167,19 @@ class AuthBase(AuthenticationBase):
             get_pconn, set_pconn, p_dump, p_close
         )
 
-    def create_user(self):
+    def create_user(self, options):
         pass
 
-    def update_user(self):
+    def update_user(self, options):
         pass
 
-    def delete_user(self):
+    def delete_user(self, options):
         pass
 
-    def get_user(self):
+    def get_user(self, options):
         pass
 
-    def change_password(self):
+    def change_password(self, options):
         pass
 
     def create_permissions(self, options):
@@ -205,13 +205,22 @@ class AuthBase(AuthenticationBase):
     def delete_role(self, options):
         pass
 
-    def get_role(self):
+    def get_role(self, options):
         pass
 
-    def get_user_permissions(self, user):
+    def get_user_permissions(self, options):
         # user, role, action, permissions
-        pass
+        return False
 
-    def is_authenticated(self):
+    def is_loggedin(self, options):
+        # username, password
+        return False
+
+    def is_authenticated(self, options):
         # true/false
-        pass
+        id = options.get("id")
+        username = options.get("username")
+        password = options.get("password")
+        # is_loggedin
+        # get_user_permissions
+        return False
