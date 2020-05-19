@@ -96,7 +96,7 @@ class AuthBase(AuthenticationBase):
                 conn.commit()
             else:
                 raise ValueError("Username, Password not provided")
-            
+
             # get userid
             # conn.execute("""SELECT userid FROM tasks WHERE username = {0} AND password = {1}""".format(str(username), str(password)))
             # rows = conn.fetchall()
