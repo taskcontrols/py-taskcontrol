@@ -18,11 +18,11 @@ from .interfaces import AuthenticationBase
 class AuthBase(AuthenticationBase):
 
     def __init__(self, **kwargs):
-        if self.verify_structure(**kwargs):
+        if self.verify_kwargs_structure(**kwargs):
             self.get_dbconn, self.set_dbconn, self.db_execute, self.db_close, self.get_pconn, self.set_pconn, self.p_dump, self.p_close = self.auth_closure(
                 **kwargs)
 
-    def verify_structure(self, **kwargs):
+    def verify_kwargs_structure(self, **kwargs):
         if not kwargs.get("get_dbconn") or not kwargs.get("set_dbconn") or not kwargs.get("db_execute") or not kwargs.get("db_close") or not kwargs.get("get_pconn") or not kwargs.get("set_pconn") or not kwargs.get("p_dump") or not kwargs.get("p_close"):
             return False
         return True
