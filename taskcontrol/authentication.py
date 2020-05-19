@@ -35,20 +35,25 @@ class AuthBase(AuthenticationBase):
         try:
             sql = '''
                 CREATE TABLE users (
-                    id INT AUTOINCREMENT NOT NULL PRIMARY KEY,
-                    username NOT NULL VARCHAR(255),
-                    password NOT NULL VARCHAR(255),
-                );
-                CREATE TABLE roles (
-                    id INT AUTOINCREMENT PRIMARY KEY,
-                    user_id NOT NULL VARCHAR(255),
-                    role NOT NULL VARCHAR(255),
-                    activity NOT NULL VARCHAR(255),
-                    permission NOT NULL VARCHAR(255),
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username VARCHAR(255) NOT NULL,
+                    password VARCHAR(255) NOT NULL
                 );
             '''
             conn.execute(sql)
-            print("Tables created successfully")
+            print("Table users created successfully")
+            conn.commit()
+            sql = '''
+                CREATE TABLE roles (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id VARCHAR(255) NOT NULL,
+                    role VARCHAR(255) NOT NULL,
+                    activity VARCHAR(255) NOT NULL,
+                    permission VARCHAR(255) NOT NULL
+                );
+            '''
+            conn.execute(sql)
+            print("Table roles created successfully")
             conn.commit()
         except:
             return False
@@ -56,6 +61,7 @@ class AuthBase(AuthenticationBase):
 
     def init_superuser(self, conn, username, password, role, activity, permission):
         try:
+            # error here on string format?
             sql = '''
                 insert into users (username, password) values (str({0}), str({1}));
             '''.format(str(username), str(password))
