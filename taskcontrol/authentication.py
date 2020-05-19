@@ -141,13 +141,14 @@ class AuthBase(AuthenticationBase):
             except:
                 raise Exception("Unable to create Users Table")
             try:
+                #  pType      TEXT CHECK( pType IN ('M','R','H') )   NOT NULL DEFAULT 'M',
                 sql = """
                     CREATE TABLE roles (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         userid VARCHAR(255) NOT NULL,
                         role VARCHAR(255) NOT NULL,
                         name VARCHAR(255) NOT NULL,
-                        type VARCHAR(255) NOT NULL,
+                        type VARCHAR(255) CHECK( type IN ('PLUGIN', 'TASK', 'MIDDLEWARE') ) NOT NULL DEFAULT 'TASK',
                         activity VARCHAR(255) NOT NULL,
                         permission VARCHAR(255) NOT NULL
                     );
