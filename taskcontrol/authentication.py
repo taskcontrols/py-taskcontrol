@@ -76,8 +76,7 @@ class AuthBase(AuthenticationBase):
                 print("Table sessions created successfully")
                 conn.commit()
             except:
-                raise Exception("Unable to create Roles Table")
-            
+                raise Exception("Unable to create Sessions Table")
         except:
             return False
         return True
