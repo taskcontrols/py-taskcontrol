@@ -136,8 +136,18 @@ class AuthBase(AuthenticationBase):
             if type(filters) == str:
                 sql += filters + """;"""
             elif type(filters) == dict:
+                # TODO:
                 # Make this nested for joins, nested statements, and with all operators
                 # Currently keeping it only for string and single statements
+                # 
+                # Not priority
+                # Reason:
+                # Let users work on their own DB based systems 
+                #       for other activities in plugin by extending
+                # Handle only user authentication for small 
+                #       apps and let users scale with their db
+                # Put SQLITE and Pickle data into memory for every instance
+                # Make writes to memory and DB to persist
                 pass
             conn.execute(sql)
             conn.commit()
@@ -171,8 +181,18 @@ class AuthBase(AuthenticationBase):
             if type(filters) == str:
                 sql += filters + """;"""
             elif type(filters) == dict:
+                # TODO:
                 # Make this nested for joins, nested statements, and with all operators
                 # Currently keeping it only for string and single statements
+                # 
+                # Not priority
+                # Reason:
+                # Let users work on their own DB based systems 
+                #       for other activities in plugin by extending
+                # Handle only user authentication for small 
+                #       apps and let users scale with their db
+                # Put SQLITE and Pickle data into memory for every instance
+                # Make writes to memory and DB to persist
                 pass
             conn.execute(sql)
             conn.commit()
