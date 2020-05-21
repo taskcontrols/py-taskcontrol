@@ -15,7 +15,103 @@ import pickle
 from .interfaces import AuthenticationBase
 
 
-class AuthBase(AuthenticationBase):
+class SQLBase():
+
+    def create(self, conn, options):
+        try:
+            sql = """INSERT INTO """ + str(options.get("table"))
+            for i in options.get("columns"):
+                sql += """ (""" + str(i) + """, """
+            sql += """) VALUES ( """
+
+            for j in options.get("values"):
+                sql += str(j) + """, """
+
+            sql += """);"""
+            conn.execute(sql)
+            conn.commit()
+            print(options.get("table"), " created successfully")
+        except Exception as e:
+            raise Exception("Error with options provided", e)
+        return True
+    
+    def find(self, conn, options):
+        try:
+            sql = """SELECT """
+            for i in options.get("columns"):
+                sql += str(i) + """, """
+            sql += """ FROM """ + str(options.get("table")) + """ WHERE """
+            filters = options.get("filters")
+            if type(filters) == str:
+                sql += filters + """;"""
+            elif type(filters) == dict:
+                # TODO:
+                # Make this nested for joins, nested statements, and with all operators
+                # Currently keeping it only for string and single statements
+                #
+                # Not priority
+                # Reason:
+                # Let users work on their own DB based systems
+                #       for other activities in plugin by extending
+                # Handle only user authentication for small
+                #       apps and let users scale with their db
+                # Put SQLITE and Pickle data into memory for every instance
+                # Make writes to memory and DB to persist
+                pass
+            conn.execute(sql)
+            conn.commit()
+            print(options.get("table"), " find successfully")
+        except Exception as e:
+            raise Exception("Error with options provided", e)
+        return True
+    
+    def update(self, conn, options):
+        try:
+            sql = """UPDATE """ + options.get("table")
+            sql += """ SET """
+            # UPDATE STATEMENTS
+
+            sql += """ WHERE """
+            # UPDATE CONDITION STATEMENTS
+
+            sql += """;"""
+            conn.execute(sql)
+            conn.commit()
+            print(options.get("table"), " updated successfully")
+        except Exception as e:
+            raise Exception("Error with options provided", e)
+        return True
+    
+    def delete(self, conn, options):
+        try:
+            sql = """DELETE FROM """
+            sql += str(options.get("table")) + """ WHERE """
+            filters = options.get("filters")
+            if type(filters) == str:
+                sql += filters + """;"""
+            elif type(filters) == dict:
+                # TODO:
+                # Make this nested for joins, nested statements, and with all operators
+                # Currently keeping it only for string and single statements
+                #
+                # Not priority
+                # Reason:
+                # Let users work on their own DB based systems
+                #       for other activities in plugin by extending
+                # Handle only user authentication for small
+                #       apps and let users scale with their db
+                # Put SQLITE and Pickle data into memory for every instance
+                # Make writes to memory and DB to persist
+                pass
+            conn.execute(sql)
+            conn.commit()
+            print(options.get("table"), " deleted successfully")
+        except Exception as e:
+            raise Exception("Error with options provided", e)
+        return True
+
+
+class AuthBase(AuthenticationBase, SQLBase):
 
     def __init__(self, **kwargs):
         if self.verify_kwargs_structure(**kwargs):
@@ -36,7 +132,7 @@ class AuthBase(AuthenticationBase):
 
     def auth_closure(self, get_dbconn=None, set_dbconn=None, db_execute=None, db_close=None,
                      get_pconn=None, set_pconn=None, p_dump=None, p_close=None):
-        
+
         # Pickle connections also in db_connections (type: pickle)
         # Add pickle in type
         db_connections = {}
@@ -109,99 +205,6 @@ class AuthBase(AuthenticationBase):
             get_dbconn, set_dbconn, db_execute, db_close,
             get_pconn, set_pconn, p_dump, p_close
         )
-
-    def create(self, conn, options):
-        try:
-            sql = """INSERT INTO """ + str(options.get("table"))
-            for i in options.get("columns"):
-                sql += """ (""" + str(i) + """, """
-            sql += """) VALUES ( """
-
-            for j in options.get("values"):
-                sql += str(j) + """, """
-
-            sql += """);"""
-            conn.execute(sql)
-            conn.commit()
-            print(options.get("table"), " created successfully")
-        except Exception as e:
-            raise Exception("Error with options provided", e)
-        return True
-
-    def find(self, conn, options):
-        try:
-            sql = """SELECT """
-            for i in options.get("columns"):
-                sql += str(i) + """, """
-            sql += """ FROM """ + str(options.get("table")) + """ WHERE """
-            filters = options.get("filters")
-            if type(filters) == str:
-                sql += filters + """;"""
-            elif type(filters) == dict:
-                # TODO:
-                # Make this nested for joins, nested statements, and with all operators
-                # Currently keeping it only for string and single statements
-                #
-                # Not priority
-                # Reason:
-                # Let users work on their own DB based systems
-                #       for other activities in plugin by extending
-                # Handle only user authentication for small
-                #       apps and let users scale with their db
-                # Put SQLITE and Pickle data into memory for every instance
-                # Make writes to memory and DB to persist
-                pass
-            conn.execute(sql)
-            conn.commit()
-            print(options.get("table"), " find successfully")
-        except Exception as e:
-            raise Exception("Error with options provided", e)
-        return True
-
-    def update(self, conn, options):
-        try:
-            sql = """UPDATE """ + options.get("table")
-            sql += """ SET """
-            # UPDATE STATEMENTS
-
-            sql += """ WHERE """
-            # UPDATE CONDITION STATEMENTS
-
-            sql += """;"""
-            conn.execute(sql)
-            conn.commit()
-            print(options.get("table"), " updated successfully")
-        except Exception as e:
-            raise Exception("Error with options provided", e)
-        return True
-
-    def delete(self, conn, options):
-        try:
-            sql = """DELETE FROM """
-            sql += str(options.get("table")) + """ WHERE """
-            filters = options.get("filters")
-            if type(filters) == str:
-                sql += filters + """;"""
-            elif type(filters) == dict:
-                # TODO:
-                # Make this nested for joins, nested statements, and with all operators
-                # Currently keeping it only for string and single statements
-                #
-                # Not priority
-                # Reason:
-                # Let users work on their own DB based systems
-                #       for other activities in plugin by extending
-                # Handle only user authentication for small
-                #       apps and let users scale with their db
-                # Put SQLITE and Pickle data into memory for every instance
-                # Make writes to memory and DB to persist
-                pass
-            conn.execute(sql)
-            conn.commit()
-            print(options.get("table"), " deleted successfully")
-        except Exception as e:
-            raise Exception("Error with options provided", e)
-        return True
 
     def init_db(self, path, name):
         conn = sqlite3.connect(path + name + '.db')
