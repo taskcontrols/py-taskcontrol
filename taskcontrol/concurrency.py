@@ -90,3 +90,13 @@ class ConcurencyBase():
             result = worker.join()
         return {"worker": worker, "result": result}
 
+    def run_concurrently(self, function, options):
+        mode = options.get("mode")
+        if mode:
+            if mode == "process":
+                return self.mprocess_run(function, options)
+            if mode == "thread":
+                return self.mthread_run(function, options)
+            if mode == "async":
+                pass
+        return None
