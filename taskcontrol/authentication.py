@@ -265,8 +265,10 @@ class AuthBase(AuthenticationBase):
             sql = """
                 INSERT INTO users (username, password) VALUES (?, ?);
             """
+            # encryption needed here
             u = options.get("username")
             p = options.get("password")
+
             if u and p:
                 conn.execute(sql, (u, p))
                 conn.commit()

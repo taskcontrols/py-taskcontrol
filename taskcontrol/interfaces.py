@@ -26,16 +26,16 @@ class AuthenticationBase(metaclass=abc.ABCMeta):
 
     # Testing passing functions to get closure with self-implementation
     def auth_closure(
-        self,
-        get_dbconn=None,
-        set_dbconn=None,
-        db_execute=None,
-        db_close=None,
-        get_pconn=None,
-        set_pconn=None,
-        p_dump=None,
-        p_close=None
-    ):
+            self,
+            get_dbconn=None,
+            set_dbconn=None,
+            db_execute=None,
+            db_close=None,
+            get_pconn=None,
+            set_pconn=None,
+            p_dump=None,
+            p_close=None
+        ):
         db_connections = {}
         pickle_connections = {}
 
@@ -220,4 +220,3 @@ class HooksBase(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def receive(self):
         raise NotImplementedError
-
