@@ -14,10 +14,10 @@ class TimerBase():
             # do timer instantiation
             # get all function assignations
             timer = None
-            self.times = self.timer_closure(options, timer)
+            self.get_timer, self.set_timer = self.timer_closure(options, timer)
         else:
             # get all function assignations
-            self.times = self.timer_closure(options, timer)
+            self.get_timer, self.set_timer = self.timer_closure(options, timer)
 
     def timer_closure(self, options, timer):
         timers = {}
@@ -27,9 +27,13 @@ class TimerBase():
 
         return times
 
-    def time(self):
-        pass
-
+    def time(self, options):
+        logger = options.get("logger")
+        timer = self.get_timer(options.get("name"))
+        t = timer.perf_counter()
+        if logger:
+            logger.log(t)
+        return t
 
 class LoggerBase():
 
@@ -49,7 +53,7 @@ class LoggerBase():
     def logger_closure(self):
 
         logger = []
-        
+
         def get_logger(self):
             pass
 
@@ -102,7 +106,6 @@ class LoggerBase():
         # self.logger = None
         # self.format = None
         # self.handler = None
-        
+
         # self.delete(1)
         pass
-
