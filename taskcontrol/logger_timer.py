@@ -22,10 +22,13 @@ class TimerBase():
     def timer_closure(self, options, timer):
         timers = {}
 
-        def times():
+        def get_timer():
             pass
 
-        return times
+        def set_timer():
+            pass
+
+        return (get_timer, set_timer)
 
     def time(self, options):
         logger = options.get("logger")
