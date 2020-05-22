@@ -28,7 +28,7 @@ class TimerBase():
         def set_timer():
             pass
 
-        return (get_timer, set_timer)
+        return {"get_timer": get_timer, "set_timer": set_timer}
 
     def time(self, options):
         logger = options.get("logger")
@@ -37,6 +37,7 @@ class TimerBase():
         if logger:
             logger.log(t)
         return t
+
 
 class LoggerBase():
 
