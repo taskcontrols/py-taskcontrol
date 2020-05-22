@@ -2,19 +2,19 @@
 
 
 from threading import Thread
-from multiprocessing import Process
+from multiprocessing import Process, Array, Value
 
 
 class ConcurencyBase():
 
     # consider adding concurrency futures
     def futures_run(self):
-        
+
         pass
 
     # consider adding asyncio lib
     def asyncio_run(self):
-        
+
         pass
 
     # asynchronous, needs_join
@@ -40,16 +40,20 @@ class ConcurencyBase():
         daemon = options.get("daemon")
         if type(daemon) != bool:
             daemon = True
+
         worker = Thread(
             target=function,
             daemon=daemon,
             args=(*options.get("args"), ),
-            kwargs={**options.get("kwargs")}
+            kwargs={"result": result, **options.get("kwargs")}
         )
         worker.setDaemon(True)
         worker.start()
+
         if options.get("needs_join"):
             worker.join()
+            return {"result": result}
+
         return {"worker": worker, "result": result}
 
     # asynchronous, needs_join
@@ -78,16 +82,40 @@ class ConcurencyBase():
         # # share_manager, share_pool, share_connection, share_event,
         # # share_semaphore, share_bounded_semaphore
 
-        # sv = options.get("share_value")
+        if type(options) == dict:
+            share_value = options.get("share_value")
+            if share_value:
+                value = share_value
+            share_array = options.get("share_array")
+            if share_array and type(share_array) == dict:
+                arrays = Array(share_array.get("type"),
+                               share_array.get("value"))
+            if share_array and type(share_array) == list:
+                arrays = []
+                for s in share_array:
+                    arrays.push(Array(s.get("type"), s.get("value")))
+
+        daemon = options.get("daemon")
+        if type(daemon) != bool:
+            daemon = True
 
         worker = Process(
             target=function,
             args=(*options.get("args"), ),
             kwargs={**options.get("kwargs")}
         )
+        worker.daemon = daemon
         worker.start()
+
         if options.get("needs_join"):
             result = worker.join()
+            return {"result": result}
+
+        terminate = options.get("terminate")
+        if type(terminate) != bool and terminate == True:
+            worker.terminate()
+            return {"result": result}
+
         return {"worker": worker, "result": result}
 
     def run_concurrently(self, function, options):
