@@ -6,13 +6,28 @@ import time
 
 class TimerBase():
 
-    def __init__(self):
-        pass
-    
+    def __init__(self, options, timer=None):
+        if not options and type(options) != dict:
+            raise TypeError("Options not provided")
+
+        if not timer:
+            # do timer instantiation
+            # get all function assignations
+            timer = None
+            self.times = self.timer_closure(options, timer)
+        else:
+            # get all function assignations
+            self.times = self.timer_closure(options, timer)
+
+    def timer_closure(self, options, timer):
+        timers = {}
+
+        def times():
+            pass
+
+        return times
+
     def time(self):
-        pass
-    
-    def log(self, file):
         pass
 
 
