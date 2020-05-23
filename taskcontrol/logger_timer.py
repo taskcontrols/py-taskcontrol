@@ -99,7 +99,7 @@ class LoggerBase():
         #     raise Exception("Not authenticated")
 
         # self.logger.config.stopListening()
-        # self.delt(1)
+        # self.del(1)
         pass
 
     def __delete__(self, instance):

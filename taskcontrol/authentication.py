@@ -126,7 +126,7 @@ class SQLORM(SQLBase):
         except Exception as e:
             raise Exception("Error with options provided", e)
         return True
-    
+
 
 class AuthBase(AuthenticationBase):
 

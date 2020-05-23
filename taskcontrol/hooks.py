@@ -5,7 +5,7 @@
 from .interfaces import SocketsBase, HooksBase
 
 class Sockets(SocketsBase):
-    
+
     def __init__(self):
         self.get_sockets, self.set_sockets = self.sockets_closure()
 
@@ -13,26 +13,61 @@ class Sockets(SocketsBase):
         sockets = []
 
         def get_sockets():
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
             pass
 
         def set_sockets():
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
             pass
 
         return (get_sockets, set_sockets)
 
     def socket_create(self):
+        # TODO: Add Logger
+
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
         pass
 
     def socket_delete(self):
+        # TODO: Add Logger
+
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
         pass
 
     def socket_listen(self):
+        # TODO: Add Logger
+
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
         pass
 
     def socket_message(self):
+        # TODO: Add Logger
+
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
         pass
 
     def socket_receive(self):
+        # TODO: Add Logger
+
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
         pass
 
 
