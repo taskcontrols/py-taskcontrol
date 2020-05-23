@@ -128,12 +128,16 @@ class SQLORM(SQLBase):
         return True
 
 
-class AuthBase(AuthenticationBase, SQLORM):
+class AuthBase(AuthenticationBase):
 
     def __init__(self, **kwargs):
         if self.verify_kwargs_structure(**kwargs):
             self.get_dbconn, self.set_dbconn, self.db_execute, self.db_close, self.get_pconn, self.set_pconn, self.p_dump, self.p_close = self.auth_closure(
                 **kwargs)
+        if kwargs.get("sql_orm"):
+            self.sql = kwargs.get("sql_orm")()
+        else:
+            self.sql = SQLORM()
 
     def verify_kwargs_structure(self, **kwargs):
         if not kwargs.get("get_dbconn") or not kwargs.get("set_dbconn") or not kwargs.get("db_execute") or not kwargs.get("db_close") or not kwargs.get("get_pconn") or not kwargs.get("set_pconn") or not kwargs.get("p_dump") or not kwargs.get("p_close"):
