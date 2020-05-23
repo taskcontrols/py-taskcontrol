@@ -36,9 +36,9 @@ class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
 
         """
         self.shared = SharedBase.getInstance()
-        self.get_ctx, self.set_ctx, self.get_attr, self.update_task, self.set_tasks, self.parse_tasks, self.get_tasks, self.delete_tasks = self.wf_closure()
+        self.get_ctx, self.set_ctx, self.get_attr, self.update_task, self.set_tasks, self.parse_tasks, self.get_tasks, self.delete_tasks = self.workflow_closure()
 
-    def wf_closure(self):
+    def workflow_closure(self):
         """middleware_task_ Structure: name, function, args, kwargs, options"""
         """workflow_kwargs: name, task_instance, task_order, shared, args, kwargs, before, after, log"""
 
