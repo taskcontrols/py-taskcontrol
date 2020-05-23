@@ -20,6 +20,7 @@ class SharedBase():
             cls.__instance = super(SharedBase, cls).__new__(cls)
         return cls.__instance
 
+    # TODO: Refactor getters and setters and make code simpler
     def shared_closure(self):
         """middleware_task_ Structure: name, function, args, kwargs, options"""
         """workflow_kwargs: name, task_instance, task_order, shared, args, kwargs, before, after, log"""
