@@ -13,7 +13,7 @@ from .plugin import PluginsBase
 
 
 class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
-    """
+    """ 
     Description of WorkflowBase
 
     Attributes:
