@@ -25,10 +25,13 @@ class TimerBase():
         def get_timer():
             pass
 
+        def update_timer():
+            pass
+
         def set_timer():
             pass
 
-        return {"get_timer": get_timer, "set_timer": set_timer}
+        return {"get_timer": get_timer, "set_timer": set_timer, "update_timer": update_timer}
 
     def time(self, options):
         logger = options.get("logger")
