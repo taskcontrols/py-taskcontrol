@@ -8,7 +8,7 @@ class SharedBase():
     def __init__(self):
         """middleware_task_ Structure: name, function, args, kwargs, options"""
         """workflow_kwargs: name, task_instance, task_order, shared, args, kwargs, before, after, log"""
-        self.get_shared_tasks, self.set_shared_tasks, self.delete_shared_tasks, self.get_shared_ctx, self.set_shared_ctx, self.get_shared_config, self.set_shared_config, self.get_shared_plugins, self.set_shared_plugins = self.shared_closure()
+        self.get_shared_tasks, self.set_shared_tasks, self.delete_shared_tasks, self.get_shared_ctx, self.set_shared_ctx, self.get_shared_config, self.set_shared_config, self.get_shared_plugins, self.set_shared_plugins, self.get_shared_workflows, self.set_shared_workflows, self.disable_shared_workflows = self.shared_closure()
         if SharedBase.__instance != None:
             pass
         else:
@@ -26,6 +26,11 @@ class SharedBase():
         # Allow instance tasks
         tasks = {"taskname": {}}
 
+        # Allow instance tasks
+        workflows = {
+            "workflowname": {"tasks": [], "auth_exceptions": []}
+        }
+
         """ Results of task runs (shared) """
         # Access results from tasks, shared tasks during a task run
         ctx = {"result": []}
@@ -36,6 +41,33 @@ class SharedBase():
 
         # TODO: Plugins features
         plugins = {"pluginname": {"taskname": {}}}
+
+        def get_shared_workflows():
+
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
+            pass
+
+        def set_shared_workflows():
+
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
+            pass
+
+        def disable_shared_workflows():
+
+            # TODO: Add Logger
+
+            # TODO: Add Authentication
+            # if not is_authenticated():
+            #     raise Exception("Not authenticated")
+            pass
 
         def get_shared_tasks(task_=None):
 
@@ -140,7 +172,7 @@ class SharedBase():
             #     raise Exception("Not authenticated")
             pass
 
-        return (get_shared_tasks, set_shared_tasks, delete_shared_tasks, get_shared_ctx, set_shared_ctx, get_shared_config, set_shared_config, get_shared_plugins, set_shared_plugins)
+        return (get_shared_tasks, set_shared_tasks, delete_shared_tasks, get_shared_ctx, set_shared_ctx, get_shared_config, set_shared_config, get_shared_plugins, set_shared_plugins, get_shared_workflows, set_shared_workflows, disable_shared_workflows)
 
     @staticmethod
     def getInstance():

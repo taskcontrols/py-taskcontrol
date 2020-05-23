@@ -57,7 +57,7 @@ class Tasks(WorkflowBase):
                 self.tasks, inst, shared, clash_prefix
             )
 
-    def create_workflows(self):
+    def create_workflow(self, name, workflows, options):
         # add workflow list
         # add authentication exception list
         # add logger
