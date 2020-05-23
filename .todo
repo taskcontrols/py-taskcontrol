@@ -10,6 +10,7 @@
 * [W] Consider adding concurrent support:
         - multithreading, multiprocessing, async/await options
 * [W] Services+Hooks, Actions support
+* [T] Run PreCreated Tasks
 * [T] Check impact of self on closure (Low priority)
 
 ** [W] Add Tests
