@@ -1,5 +1,6 @@
 # SHARED BASE
 
+# TODO: Refactor getters and setters and make code simpler
 
 class SharedBase():
 

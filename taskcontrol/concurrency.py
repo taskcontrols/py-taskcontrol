@@ -4,6 +4,7 @@
 from threading import Thread
 from multiprocessing import Process, Array, Value
 
+# TODO: Refactor getters and setters and make code simpler
 
 class ConcurencyBase():
 

@@ -10,7 +10,7 @@ from .logger_timer import LoggerBase
 from .plugin import PluginsBase
 
 # TODO: REDO THIS AFTER UNIT TESTS
-
+# TODO: Refactor getters and setters and make code simpler
 
 class WorkflowBase(SharedBase, ConcurencyBase, LoggerBase, PluginsBase):
     """ 

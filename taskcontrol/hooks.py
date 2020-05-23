@@ -1,5 +1,6 @@
 # Hooks Base
 
+# TODO: Refactor getters and setters and make code simpler
 
 # Inherit shared and logging
 from .interfaces import SocketsBase, HooksBase

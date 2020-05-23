@@ -3,7 +3,7 @@
 # Inherit shared and logging
 
 # TODO: Check impact of self on closure
-
+# TODO: Refactor getters and setters and make code simpler
 
 class ActionsBase():
     """

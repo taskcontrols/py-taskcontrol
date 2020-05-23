@@ -3,6 +3,7 @@
 import logging
 import time
 
+# TODO: Refactor getters and setters and make code simpler
 
 class TimerBase():
 
@@ -41,6 +42,8 @@ class TimerBase():
             logger.log(t)
         return t
 
+
+# TODO: Refactor getters and setters and make code simpler
 
 class LoggerBase():
 
