@@ -57,6 +57,12 @@ class Tasks(WorkflowBase):
                 self.tasks, inst, shared, clash_prefix
             )
 
+    def create_workflows(self):
+        # add workflow list
+        # add authentication exception list
+        # add logger
+        pass
+
     def run(self, tasks):
 
         # print("Workflow task list provided being instantiated: ", str(tasks))
