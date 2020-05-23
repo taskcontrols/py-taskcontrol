@@ -27,8 +27,11 @@ class SharedBase():
         tasks = {"taskname": {}}
 
         # Allow instance tasks
+        # Consider persisting this to DB
+        # DB Persistance for Pugins? Managed how?
+        # TODO: Allow running tasks as ordered runs
         workflows = {
-            "workflowname": {"tasks": [], "auth_exceptions": []}
+            "workflowname": {"tasks": [], "auth_exceptions": [], "disabled": True}
         }
 
         """ Results of task runs (shared) """
