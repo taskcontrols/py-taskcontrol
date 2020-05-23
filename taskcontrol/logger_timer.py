@@ -55,8 +55,8 @@ class LoggerBase():
         # self.format = None
         # implement handlers and LoggerAdapters
         # self.handler = None
-        # del implementation fn (get from config)
-        self.delt = lambda x: x
+        # _del implementation fn (get from config)
+        self._del = lambda x: x
         # delete implementation fn (get from config)
         self.delete = lambda x: x
 
