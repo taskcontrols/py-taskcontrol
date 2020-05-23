@@ -22,6 +22,8 @@ class PluginsBase():
             #     raise ValueError("shared definition has an issue")
             # if not task_instance.get("tasks"):
             #     raise ValueError("tasks definition has an issue")
+            # if not task_instance.get("workflows"):
+            #     raise ValueError("workflows definition has an issue")
             pass
 
         if type(name) == str:
@@ -31,7 +33,8 @@ class PluginsBase():
                     "ctx": task_instance.get("ctx"),
                     "plugins": task_instance.get("plugins"),
                     "shared": task_instance.get("shared"),
-                    "tasks": task_instance.get("tasks")
+                    "tasks": task_instance.get("tasks"),
+                    "workflows": task_instance.get("workflows")
                 }
             }
 
