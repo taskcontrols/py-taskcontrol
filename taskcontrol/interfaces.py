@@ -220,3 +220,23 @@ class HooksBase(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def receive(self):
         raise NotImplementedError
+
+
+@dataclass(frozen=True)
+class SQLBase(metaclass=abc.ABCMeta):
+
+    @abc.abstractmethod
+    def create(self, conn, options):
+        pass
+    
+    @abc.abstractmethod
+    def find(self, conn, options):
+        pass
+    
+    @abc.abstractmethod
+    def update(self, conn, options):
+        pass
+
+    @abc.abstractmethod
+    def delete(self, conn, options):
+        pass

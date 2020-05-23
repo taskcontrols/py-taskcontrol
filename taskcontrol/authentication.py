@@ -12,10 +12,9 @@ import pickle
 # Consider making this an interface that can be extended later
 # Which will make it compatible to any DB and Authentication ways
 
-from .interfaces import AuthenticationBase
+from .interfaces import AuthenticationBase, SQLBase
 
-
-class SQLBase():
+class SQLORM(SQLBase):
 
     def create(self, conn, options):
         try:
@@ -129,7 +128,7 @@ class SQLBase():
         return True
 
 
-class AuthBase(AuthenticationBase, SQLBase):
+class AuthBase(AuthenticationBase, SQLORM):
 
     def __init__(self, **kwargs):
         if self.verify_kwargs_structure(**kwargs):
