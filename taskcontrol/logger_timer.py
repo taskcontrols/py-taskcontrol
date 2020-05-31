@@ -8,16 +8,12 @@ from .sharedbase import ClosureBase
 
 class TimerBase(ClosureBase):
 
-    def __init__(self, options, timers=None):
+    def __init__(self, options, timers={}):
         super()
 
         if not options and type(options) != dict:
             raise TypeError("Options not provided")
 
-        if not timers:
-            # do timer instantiation
-            # get all function assignations
-            timers = {}
         self.getter, self.setter, self.deleter = self.class_closure(
             timers=timers)
 
