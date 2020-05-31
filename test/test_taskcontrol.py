@@ -39,20 +39,20 @@ class TestDecorator():
         result = t.run(tasks="taskname")
         print(result)
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
+        # assert type(result) == list
+        # assert not hasattr(result, "result")
+        # assert len(result) > 0
+        # assert type(result[0]) == dict
 
-        for i in result:
-            assert type(i) == dict
-            assert len(i) == 1
-            assert len(i.keys()) == 1
+        # for i in result:
+        #     assert type(i) == dict
+        #     assert len(i) == 1
+        #     assert len(i.keys()) == 1
 
-            for j in i:
-                assert type(j) == str
-                assert len(i[j]) == 3
-                assert type(i[j]) == list
+        #     for j in i:
+        #         assert type(j) == str
+        #         assert len(i[j]) == 3
+        #         assert type(i[j]) == list
 
     def test_1_2_creates_task_before_as_dict(self):
         t = Tasks()
@@ -76,20 +76,7 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        for i in result:
-            assert type(i) == dict
-            assert len(i) == 1
-            assert len(i.keys()) == 1
-
-            for j in i:
-                assert type(j) == str
-                assert len(i[j]) == 3
-                assert type(i[j]) == list
+        
 
     def test_1_3_creates_task_after_as_list(self):
         t = Tasks()
@@ -113,20 +100,7 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        for i in result:
-            assert type(i) == dict
-            assert len(i) == 1
-            assert len(i.keys()) == 1
-
-            for j in i:
-                assert type(j) == str
-                assert len(i[j]) == 3
-                assert type(i[j]) == list
+        
 
     def test_1_4_creates_task_after_as_dict(self):
         t = Tasks()
@@ -150,20 +124,7 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        for i in result:
-            assert type(i) == dict
-            assert len(i) == 1
-            assert len(i.keys()) == 1
-
-            for j in i:
-                assert type(j) == str
-                assert len(i[j]) == 3
-                assert type(i[j]) == list
+        
 
     def test_1_5_creates_task_after_and_before_as_dict(self):
         t = Tasks()
@@ -187,20 +148,7 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        for i in result:
-            assert type(i) == dict
-            assert len(i) == 1
-            assert len(i.keys()) == 1
-
-            for j in i:
-                assert type(j) == str
-                assert len(i[j]) == 3
-                assert type(i[j]) == list
+        
 
     def test_1_6_creates_task_after_and_before_as_list(self):
         t = Tasks()
@@ -224,20 +172,7 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        for i in result:
-            assert type(i) == dict
-            assert len(i) == 1
-            assert len(i.keys()) == 1
-
-            for j in i:
-                assert type(j) == str
-                assert len(i[j]) == 3
-                assert type(i[j]) == list
+        
 
     def test_1_7_creates_task_with_before_list_with_right_args(self):
         t = Tasks()
@@ -261,20 +196,6 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        for i in result:
-            assert type(i) == dict
-            assert len(i) == 1
-            assert len(i.keys()) == 1
-
-            for j in i:
-                assert type(j) == str
-                assert len(i[j]) == 3
-                assert type(i[j]) == list
 
     def test_1_8_creates_task_with_after_list_with_right_args(self):
         t = Tasks()
@@ -298,20 +219,7 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        for i in result:
-            assert type(i) == dict
-            assert len(i) == 1
-            assert len(i.keys()) == 1
-
-            for j in i:
-                assert type(j) == str
-                assert len(i[j]) == 3
-                assert type(i[j]) == list
+        
 
     def test_1_9_doesnot_creates_task_with_before_list_with_wrong_args_throws_Exception(self):
         with pytest.raises(Exception) as e:
@@ -467,15 +375,7 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 114
+        
 
     def test_1_15_doesnot_create_instance_task(self):
         t = Tasks()
@@ -500,18 +400,10 @@ class TestDecorator():
             return 115
 
         result = t.run(tasks="taskname")
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == type(None) or type(result[0]) == dict
+        
 
-        if type(result[0]) == dict:
-            assert type(result[0].get("result")) == list
-            assert len(result[0].get("result")) == 3
-            for i in result[0].get("result"):
-                assert i == 115 or i == None
 
-        t.shared.delete_shared_tasks('shared:taskname')
+        t.shared.deleter("tasks", 'taskname')
 
     def test_1_16_creates_shared_task(self):
         t = Tasks()
@@ -537,17 +429,10 @@ class TestDecorator():
 
         result = t.run(tasks="shared:taskname")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
+        
+        
 
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 116
-
-        t.shared.delete_shared_tasks('shared:taskname')
+        t.shared.deleter("tasks", 'taskname')
 
     def test_1_17_doesnot_create_shared_task(self):
 
@@ -573,27 +458,13 @@ class TestDecorator():
             return 117
 
         result = t.run(tasks="taskname")
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
+        
+        
 
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 117
 
         result = t.run(tasks="shared:tasktwo")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) >= 0
-        if not len(result) == 0:
-            assert type(result[0]) == dict
-            assert not hasattr(result[0], "result")
-
-            assert len(result) == 1
-            assert result[0] == None
+        
 
     def test_1_18_does_not_create_task_without_name_throws_TypeError(self):
         with pytest.raises(TypeError) as e:
@@ -671,15 +542,8 @@ class TestDecorator():
             return 120
 
         result = t.run(tasks="taskname")
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 120
+        
+        
 
     def test_1_21_creates_task_without_before(self):
         t = Tasks()
@@ -700,15 +564,8 @@ class TestDecorator():
             return 121
 
         result = t.run(tasks="taskname")
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 2
-        for i in result[0].get("result"):
-            assert i == 121
+        
+        
 
     def test_1_22_creates_task_without_after(self):
         t = Tasks()
@@ -729,15 +586,8 @@ class TestDecorator():
             return 122
 
         result = t.run(tasks="taskname")
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 2
-        for i in result[0].get("result"):
-            assert i == 122
+        
+        
 
     def test_1_23_creates_task_without_log(self):
         t = Tasks()
@@ -762,15 +612,8 @@ class TestDecorator():
             return 123
 
         result = t.run(tasks="taskname")
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 123
+        
+        
 
 
 # decorator runs instance single tasks
@@ -808,15 +651,9 @@ class TestTaskRunner():
             return 201
 
         result = t.run(tasks="taskname")
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
+        
+        
 
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 201
 
     def test_2_2_run_doesnot_single_instance_task(self):
         t = Tasks()
@@ -843,12 +680,10 @@ class TestTaskRunner():
             return 202
 
         result = t.run(tasks="taskname")
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) >= 0
-        assert type(result[0]) != dict or type(result[0]) == type(None)
+        
+        
 
-        t.shared.delete_shared_tasks('taskname')
+        t.shared.deleter("tasks", 'taskname')
 
     def test_2_3_run_multiple_instance_task(self):
         t = Tasks()
@@ -876,15 +711,8 @@ class TestTaskRunner():
 
         result = t.run(tasks="taskname")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 203
+        
+        
 
         t = Tasks()
 
@@ -907,15 +735,8 @@ class TestTaskRunner():
 
         result = t.run(tasks="tasktwo")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 203
+        
+        
 
         @workflow(
             name="taskname", task_order=1, task_instance=t,
@@ -936,22 +757,8 @@ class TestTaskRunner():
 
         result = t.run(tasks=["tasktwo", "taskname"])
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert len(result) == 2
-        assert type(result[0]) == dict
-        assert type(result[1]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 203
-
-        assert type(result[1].get("result")) == list
-        assert len(result[1].get("result")) == 3
-        for i in result[1].get("result"):
-            assert i == 203
+        
+        
 
     def test_2_4_doesnot_run_multiple_instance_task(self):
         t = Tasks()
@@ -979,15 +786,8 @@ class TestTaskRunner():
 
         result = t.run(tasks="taskname")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 204
+        
+        
 
         t = Tasks()
 
@@ -1010,29 +810,13 @@ class TestTaskRunner():
 
         result = t.run(tasks="tasktwo")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 204
+        
+        
 
         result = t.run(tasks=["taskname", "tasktwo"])
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert len(result) == 2
-        assert type(result[0]) == type(None)
-        assert type(result[1]) == dict
-
-        assert type(result[1].get("result")) == list
-        assert len(result[1].get("result")) == 3
-        for i in result[1].get("result"):
-            assert i == 204
+        
+        
 
     def test_2_5_doesnot_run_single_instance_multiple_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1077,46 +861,17 @@ class TestTaskRunner():
 
         result = t.run(tasks="taskname")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 205
+        
+        
 
         result = t.run(tasks="tasktwo")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 205
+        
 
         result = t.run(tasks=["taskname", "tasktwo"])
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert len(result) == 2
-        assert type(result[0]) == dict
-        assert type(result[1]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 205
-
-        assert type(result[1].get("result")) == list
-        assert len(result[1].get("result")) == 3
-        for i in result[1].get("result"):
-            assert i == 205
+        
+        
 
     def test_2_6_doesnot_run_single_instance_multiple_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1161,46 +916,25 @@ class TestTaskRunner():
 
         result = t.run(tasks="taskname")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 206
+        
+        
 
         result = t.run(tasks="tasktwo")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 206
         
+        
+
         result = t.run(tasks="taskname")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 206
+        
+        
 
         result = t.run(tasks=["shared:taskname", "shared:tasktwo"])
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) == 0
+       
         
+        t.shared.deleter("tasks", 'taskname')
+        t.shared.deleter("tasks", 'tasktwo')
 
     def test_2_7_run_all_instance_task(self):
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1245,93 +979,33 @@ class TestTaskRunner():
 
         result = t.run(tasks="taskname")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 207
+        
+        
 
         result = t.run(tasks="tasktwo")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 207
         
+        
+
         result = t.run(tasks="taskname")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 207
+        
+        
 
         result = t.run(tasks=["taskname", "tasktwo"])
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert len(result) == 2
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 207
-
-        assert type(result[1].get("result")) == list
-        assert len(result[1].get("result")) == 3
-        for i in result[1].get("result"):
-            assert i == 207
+        
+        
 
         result = t.run(tasks=1)
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert len(result) == 2
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 207
-
-        assert type(result[1].get("result")) == list
-        assert len(result[1].get("result")) == 3
-        for i in result[1].get("result"):
-            assert i == 207
         
+        
+
         result = t.run(tasks="1")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert len(result) == 2
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 207
-
-        assert type(result[1].get("result")) == list
-        assert len(result[1].get("result")) == 3
-        for i in result[1].get("result"):
-            assert i == 207
+        
+        
 
     def test_2_8_run_doesnot_all_instance_task(self):
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1376,81 +1050,43 @@ class TestTaskRunner():
 
         result = t.run(tasks="taskname")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 208
+        
+        
 
         result = t.run(tasks="tasktwo")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 208
         
+        
+
         result = t.run(tasks="taskname")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 208
+        
+        
 
         result = t.run(tasks=["taskname", "tasktwo"])
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) > 0
-        assert len(result) == 2
-        assert type(result[0]) == dict
-
-        assert type(result[0].get("result")) == list
-        assert len(result[0].get("result")) == 3
-        for i in result[0].get("result"):
-            assert i == 208
-
-        assert type(result[1].get("result")) == list
-        assert len(result[1].get("result")) == 3
-        for i in result[1].get("result"):
-            assert i == 208
+        
+        
 
         result = t.run(tasks=["shared:taskname", "shared:tasktwo"])
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) == 0
+        
+        
 
         result = t.run(tasks=["tasknam", "shared:taskto"])
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) == 0
+        
+        
 
         result = t.run(tasks=["shared:1"])
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) == 0
+        
+        
 
         result = t.run(tasks="shared:1")
 
-        assert type(result) == list
-        assert not hasattr(result, "result")
-        assert len(result) == 0
+        
+        
 
 
 # decorator runs shared single task
