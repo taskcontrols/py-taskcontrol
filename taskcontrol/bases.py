@@ -10,7 +10,7 @@ from .logger_timer import LoggerBase
 from .plugin import PluginsBase
 
 
-class WorkflowBase(ClosureBase, ConcurencyBase, LoggerBase, PluginsBase):
+class WorkflowBase(ClosureBase, ConcurencyBase, PluginsBase):
 
     def __init__(self):
         self.shared = SharedBase.getInstance()

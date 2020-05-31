@@ -2,42 +2,34 @@
 
 import logging
 import time
-
+from .sharedbase import ClosureBase
 # TODO: Refactor getters and setters and make code simpler
 
-class TimerBase():
 
-    def __init__(self, options, timer=None):
+class TimerBase(ClosureBase):
+
+    def __init__(self, options, timers=None):
+        super()
+
         if not options and type(options) != dict:
             raise TypeError("Options not provided")
 
-        if not timer:
+        if not timers:
             # do timer instantiation
             # get all function assignations
-            timer = None
-            self.get_timer, self.set_timer = self.timer_closure(options, timer)
-        else:
-            # get all function assignations
-            self.get_timer, self.set_timer = self.timer_closure(options, timer)
-
-    def timer_closure(self, options, timer):
-        timers = {}
-
-        def get_timer():
-            pass
-
-        def update_timer():
-            pass
-
-        def set_timer():
-            pass
-
-        return {"get_timer": get_timer, "set_timer": set_timer, "update_timer": update_timer}
+            timers = {}
+        self.getter, self.setter, self.deleter = self.class_closure(
+            timers=timers)
 
     def time(self, options):
         logger = options.get("logger")
-        timer = self.get_timer(options.get("name"))
-        t = timer.perf_counter()
+        timer = self.getter("timers", options.get("name"))
+        if len(timer) == 1:
+            t = timer[0].perf_counter()
+        else:
+            raise TypeError("Wrong timer name provided. No such timer or multiple names matched")
+        if not t:
+            raise ValueError("Did not find timer")
         if logger:
             logger.log(t)
         return t
@@ -45,13 +37,13 @@ class TimerBase():
 
 # TODO: Refactor getters and setters and make code simpler
 
-class LoggerBase():
+class LoggerBase(ClosureBase):
 
     def __init__(self, name, config):
 
-        self.get_logger, self.set_logger = self.logger_closure()
+        self.getter, self.setter, self.deleter = self.class_closure(loggers={})
 
-        self.create(name, config)
+        # self.setter("loggers", config, self)
         # self.format = None
         # implement handlers and LoggerAdapters
         # self.handler = None
@@ -60,21 +52,10 @@ class LoggerBase():
         # delete implementation fn (get from config)
         self.delete = lambda x: x
 
-    def logger_closure(self):
+    def create(self, config):
 
-        logger = []
-
-        def get_logger(self):
-            pass
-
-        def set_logger(self):
-            pass
-
-        return {"get_logger": get_logger, "set_logger": set_logger}
-
-    def create(self, name, config):
-
-        self.logger = logging.Logger(name)
+        self.setter("loggers", config, self)
+        self.logger = self.getter("loggers", config.get("name"))
         # use config here
         # config contains network info if logging needed to network
         # self.logger.setLevel(logging.DEBUG)
@@ -92,30 +73,3 @@ class LoggerBase():
             self.logger.error(message)
         if level == "critical":
             self.logger.critical(message)
-
-    def __del__(self):
-
-        # TODO: Add Logger
-
-        # TODO: Add Authentication
-        # if not is_authenticated():
-        #     raise Exception("Not authenticated")
-
-        # self.logger.config.stopListening()
-        # self.del(1)
-        pass
-
-    def __delete__(self, instance):
-
-        # TODO: Add Logger
-
-        # TODO: Add Authentication
-        # if not is_authenticated():
-        #     raise Exception("Not authenticated")
-
-        # self.logger = None
-        # self.format = None
-        # self.handler = None
-
-        # self.delete(1)
-        pass

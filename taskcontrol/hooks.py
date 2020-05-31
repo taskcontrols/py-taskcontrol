@@ -1,35 +1,16 @@
 # Hooks Base
 
 # TODO: Refactor getters and setters and make code simpler
-
+from .sharedbase import ClosureBase
 # Inherit shared and logging
 from .interfaces import SocketsBase, HooksBase
 
-class Sockets(SocketsBase):
+
+class Sockets(SocketsBase, ClosureBase):
 
     def __init__(self):
-        self.get_sockets, self.set_sockets = self.sockets_closure()
-
-    def sockets_closure(self):
-        sockets = []
-
-        def get_sockets():
-            # TODO: Add Logger
-
-            # TODO: Add Authentication
-            # if not is_authenticated():
-            #     raise Exception("Not authenticated")
-            pass
-
-        def set_sockets():
-            # TODO: Add Logger
-
-            # TODO: Add Authentication
-            # if not is_authenticated():
-            #     raise Exception("Not authenticated")
-            pass
-
-        return (get_sockets, set_sockets)
+        super()
+        self.getter, self.setter, self.deleter = self.class_closure(sockets={})
 
     def socket_create(self):
         # TODO: Add Logger
@@ -72,34 +53,12 @@ class Sockets(SocketsBase):
         pass
 
 
-class Hooks(HooksBase):
+class Hooks(HooksBase, ClosureBase):
 
     def __init__(self, socketsbase=Sockets):
-        self.get_hooks, self.set_hooks = self.hooks_closure()
+        super()
+        self.getter, self.setter, self.deleter = self.class_closure(hooks={})
         self.sockets = socketsbase
-
-    def hooks_closure(self):
-
-        # list of registered web hooks
-        hooks = []
-
-        def get_hooks():
-            # TODO: Add Logger
-
-            # TODO: Add Authentication
-            # if not is_authenticated():
-            #     raise Exception("Not authenticated")
-            pass
-
-        def set_hooks():
-            # TODO: Add Logger
-
-            # TODO: Add Authentication
-            # if not is_authenticated():
-            #     raise Exception("Not authenticated")
-            pass
-
-        return {"get_hooks": get_hooks, "set_hooks": set_hooks}
 
     def hook_state(self):
 
@@ -164,5 +123,5 @@ class Hooks(HooksBase):
         #     raise Exception("Not authenticated")
         pass
 
-__all__ = ["Sockets", "Hooks"]
 
+__all__ = ["Sockets", "Hooks"]

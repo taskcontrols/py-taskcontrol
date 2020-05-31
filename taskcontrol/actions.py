@@ -1,11 +1,14 @@
 # Actions Base
 
+from .sharedbase import ClosureBase
+
 # Inherit shared and logging
 
 # TODO: Check impact of self on closure
 # TODO: Refactor getters and setters and make code simpler
 
-class ActionsBase():
+
+class ActionsBase(ClosureBase):
     """
     Description of ActionsBase
 
@@ -16,104 +19,96 @@ class ActionsBase():
     """
 
     def __init__(self):
-        self.action_state, self.register_event, self.register_listener, self.unregister_listener, self.message, self.listen = self.actions_closure()
+        super()
+        self.getter, self.setter, self.deleter = self.class_closure(
+            actions=[], action_listeners=[])
 
-    def actions_closure(self):
+    def action_state(self):
+        """
+        Description of action_state
 
-        # list of registered actions/events
-        actions = []
-        # list of actions/events listeners
-        action_listeners = []
+        Args:
+            self (undefined):
 
-        def action_state(self):
-            """
-            Description of action_state
+        """
+        # TODO: Add Logger
 
-            Args:
-                self (undefined):
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
+        pass
 
-            """
-            # TODO: Add Logger
+    def register_event(self):
+        """
+        Description of register_event
 
-            # TODO: Add Authentication
-            # if not is_authenticated():
-            #     raise Exception("Not authenticated")
-            pass
+        Args:
+            self (undefined):
 
-        def register_event(self):
-            """
-            Description of register_event
+        """
+        # TODO: Add Logger
 
-            Args:
-                self (undefined):
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
+        pass
 
-            """
-            # TODO: Add Logger
+    def register_listener(self):
+        """
+        Description of register_listener
 
-            # TODO: Add Authentication
-            # if not is_authenticated():
-            #     raise Exception("Not authenticated")
-            pass
+        Args:
+            self (undefined):
 
-        def register_listener(self):
-            """
-            Description of register_listener
+        """
+        # TODO: Add Logger
 
-            Args:
-                self (undefined):
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
+        pass
 
-            """
-            # TODO: Add Logger
+    def unregister_listener(self):
+        """
+        Description of unregister_listener
 
-            # TODO: Add Authentication
-            # if not is_authenticated():
-            #     raise Exception("Not authenticated")
-            pass
+        Args:
+            self (undefined):
 
-        def unregister_listener(self):
-            """
-            Description of unregister_listener
+        """
+        # TODO: Add Logger
 
-            Args:
-                self (undefined):
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
+        pass
 
-            """
-            # TODO: Add Logger
+    def message(self):
+        """
+        Description of message
 
-            # TODO: Add Authentication
-            # if not is_authenticated():
-            #     raise Exception("Not authenticated")
-            pass
+        Args:
+            self (undefined):
 
-        def message(self):
-            """
-            Description of message
+        """
+        # TODO: Add Logger
 
-            Args:
-                self (undefined):
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
+        pass
 
-            """
-            # TODO: Add Logger
+    def listen(self):
+        """
+        Description of listen
 
-            # TODO: Add Authentication
-            # if not is_authenticated():
-            #     raise Exception("Not authenticated")
-            pass
+        Args:
+            self (undefined):
 
-        def listen(self):
-            """
-            Description of listen
+        """
+        # TODO: Add Logger
 
-            Args:
-                self (undefined):
-
-            """
-            # TODO: Add Logger
-
-            # TODO: Add Authentication
-            # if not is_authenticated():
-            #     raise Exception("Not authenticated")
-            pass
-
-        return (action_state, register_event, register_listener, unregister_listener, message, listen)
-
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
+        pass
