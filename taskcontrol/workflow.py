@@ -52,11 +52,13 @@ class Tasks(WorkflowBase):
     def run(self, tasks):
         # "1", 1, "shared:1", "shared:task", "task"
         result = []
-        print("tasks", tasks)
+        # Debug code
+        # print("tasks", tasks)
         tsk = self.get_all_tasks(tasks, [])
-        print("tsks", len(tsk))
-        for i in tsk:
-            print("tsk", i.get("name"))
+        # Debug code
+        # print("tsks", len(tsk))
+        # for i in tsk:
+        #     print("tsk", i.get("name"))
         if len(tsk) > 0:
             for tk in tsk:
                 if type(tsk) == dict:
