@@ -100,7 +100,8 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginsBase):
                 raise TypeError(
                     "Error during middleware: flow[options[error]] value error")
 
-        result["result"].append({"result": r_, "function": fn.__name__})
+        result["result"].append(
+            {"result": r_, "function": fn.__name__, "name": task.get("name")})
 
         return {"result": result.get("result")}
 
@@ -114,12 +115,14 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginsBase):
             t_before = []
 
         if isinstance(t_before, dict) or type(t_before) == dict:
+            t_before.update({"name": task.get("name")})
             t_before.update({"workflow_args": task.get("workflow_args")})
             t_before.update(
                 {"workflow_kwargs": task.get("workflow_kwargs")})
             before = [t_before]
         elif isinstance(t_before, list) or type(t_before) == list:
             for idx, item in enumerate(t_before):
+                t_before[idx].update({"name": task.get("name")})
                 t_before[idx].update(
                     {"workflow_args": task.get("workflow_args")})
                 t_before[idx].update(
@@ -146,12 +149,14 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginsBase):
             t_after = []
 
         if isinstance(t_after, dict) or type(t_after) == dict:
+            t_after.update({"name": task.get("name")})
             t_after.update({"workflow_args": task.get("workflow_args")})
             t_after.update(
                 {"workflow_kwargs": task.get("workflow_kwargs")})
             after = [t_after]
         elif isinstance(t_after, list) or type(t_after) == list:
             for idx, item in enumerate(t_after):
+                t_after[idx].update({"name": task.get("name")})
                 t_after[idx].update(
                     {"workflow_args": task.get("workflow_args")})
                 t_after[idx].update(
