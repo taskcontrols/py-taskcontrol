@@ -22,7 +22,6 @@ class Tasks(WorkflowBase):
         pass
 
     def get_all_tasks(self, tasks, tsk=[]):
-
         if type(tasks) == int:
             if tasks == 1:
                 l = self.getter("tasks", 1)
@@ -54,8 +53,10 @@ class Tasks(WorkflowBase):
         # "1", 1, "shared:1", "shared:task", "task"
         result = []
         print("tasks", tasks)
-        tsk = self.get_all_tasks(tasks)
+        tsk = self.get_all_tasks(tasks, [])
         print("tsks", len(tsk))
+        for i in tsk:
+            print("tsk", i.get("name"))
         if len(tsk) > 0:
             for tk in tsk:
                 if type(tsk) == dict:
@@ -66,7 +67,6 @@ class Tasks(WorkflowBase):
                     return result
         else:
             print("No workflow or task available to run")
-        
         return result
 
 def workflow(*workflow_args, **workflow_kwargs):
