@@ -96,6 +96,8 @@ def workflow(*workflow_args, **workflow_kwargs):
                 workflow_kwargs["before"] = []
             if not workflow_kwargs.get("after"):
                 workflow_kwargs["after"] = []
+            if not workflow_kwargs.get("shared"):
+                workflow_kwargs["shared"] = False
             if not workflow_kwargs.get("options"):
                 workflow_kwargs["options"] = {}
             if not workflow_kwargs.get("log"):

@@ -16,6 +16,34 @@ from taskcontrol.workflow import workflow, Tasks
 
 class TestDecorator():
 
+    def test_1_0_creates_task_with_bare_minimals(self):
+        t = Tasks()
+
+        @workflow(
+            name="taskname",
+            task_instance=t,
+            args=[1, 2], kwargs={}
+            )
+        def taskone(ctx, result, a, b):
+            print("Running my task function: taskone", a, b)
+
+        result = t.run(tasks="taskname")
+
+        assert type(result) == list
+        assert len(result) > 0
+        # assert not hasattr(result, "result")
+        # assert type(result[0]) == dict
+
+        # for i in result:
+        #     assert type(i) == dict
+        #     assert len(i) == 1
+        #     assert len(i.keys()) == 1
+
+        #     for j in i:
+        #         assert type(j) == str
+        #         assert len(i[j]) == 3
+        #         assert type(i[j]) == list
+
     def test_1_1_creates_task_before_as_list(self):
         t = Tasks()
 
@@ -37,11 +65,10 @@ class TestDecorator():
             print("Running my task function: taskone", a, b)
 
         result = t.run(tasks="taskname")
-        print(result)
 
-        # assert type(result) == list
+        assert type(result) == list
+        assert len(result) > 0
         # assert not hasattr(result, "result")
-        # assert len(result) > 0
         # assert type(result[0]) == dict
 
         # for i in result:
@@ -76,8 +103,6 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
-        
-
     def test_1_3_creates_task_after_as_list(self):
         t = Tasks()
 
@@ -99,8 +124,6 @@ class TestDecorator():
             print("Running my task function: taskone", a, b)
 
         result = t.run(tasks="taskname")
-
-        
 
     def test_1_4_creates_task_after_as_dict(self):
         t = Tasks()
@@ -124,8 +147,6 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
-        
-
     def test_1_5_creates_task_after_and_before_as_dict(self):
         t = Tasks()
 
@@ -147,8 +168,6 @@ class TestDecorator():
             print("Running my task function: taskone", a, b)
 
         result = t.run(tasks="taskname")
-
-        
 
     def test_1_6_creates_task_after_and_before_as_list(self):
         t = Tasks()
@@ -172,8 +191,6 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
-        
-
     def test_1_7_creates_task_with_before_list_with_right_args(self):
         t = Tasks()
 
@@ -196,7 +213,6 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
-
     def test_1_8_creates_task_with_after_list_with_right_args(self):
         t = Tasks()
 
@@ -218,8 +234,6 @@ class TestDecorator():
             print("Running my task function: taskone", a, b)
 
         result = t.run(tasks="taskname")
-
-        
 
     def test_1_9_doesnot_creates_task_with_before_list_with_wrong_args_throws_Exception(self):
         with pytest.raises(Exception) as e:
@@ -375,8 +389,6 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
-        
-
     def test_1_15_doesnot_create_instance_task(self):
         t = Tasks()
 
@@ -400,8 +412,6 @@ class TestDecorator():
             return 115
 
         result = t.run(tasks="taskname")
-        
-
 
         t.shared.deleter("tasks", 'taskname')
 
@@ -429,9 +439,6 @@ class TestDecorator():
 
         result = t.run(tasks="shared:taskname")
 
-        
-        
-
         t.shared.deleter("tasks", 'taskname')
 
     def test_1_17_doesnot_create_shared_task(self):
@@ -458,13 +465,8 @@ class TestDecorator():
             return 117
 
         result = t.run(tasks="taskname")
-        
-        
-
 
         result = t.run(tasks="shared:tasktwo")
-
-        
 
     def test_1_18_does_not_create_task_without_name_throws_TypeError(self):
         with pytest.raises(TypeError) as e:
@@ -542,8 +544,6 @@ class TestDecorator():
             return 120
 
         result = t.run(tasks="taskname")
-        
-        
 
     def test_1_21_creates_task_without_before(self):
         t = Tasks()
@@ -564,8 +564,6 @@ class TestDecorator():
             return 121
 
         result = t.run(tasks="taskname")
-        
-        
 
     def test_1_22_creates_task_without_after(self):
         t = Tasks()
@@ -586,8 +584,6 @@ class TestDecorator():
             return 122
 
         result = t.run(tasks="taskname")
-        
-        
 
     def test_1_23_creates_task_without_log(self):
         t = Tasks()
@@ -612,8 +608,6 @@ class TestDecorator():
             return 123
 
         result = t.run(tasks="taskname")
-        
-        
 
 
 # decorator runs instance single tasks
@@ -651,9 +645,6 @@ class TestTaskRunner():
             return 201
 
         result = t.run(tasks="taskname")
-        
-        
-
 
     def test_2_2_run_doesnot_single_instance_task(self):
         t = Tasks()
@@ -680,8 +671,6 @@ class TestTaskRunner():
             return 202
 
         result = t.run(tasks="taskname")
-        
-        
 
         t.shared.deleter("tasks", 'taskname')
 
@@ -711,9 +700,6 @@ class TestTaskRunner():
 
         result = t.run(tasks="taskname")
 
-        
-        
-
         t = Tasks()
 
         @workflow(
@@ -735,9 +721,6 @@ class TestTaskRunner():
 
         result = t.run(tasks="tasktwo")
 
-        
-        
-
         @workflow(
             name="taskname", task_order=1, task_instance=t,
             shared=False, args=[1, 2], kwargs={},
@@ -756,9 +739,6 @@ class TestTaskRunner():
             return 203
 
         result = t.run(tasks=["tasktwo", "taskname"])
-
-        
-        
 
     def test_2_4_doesnot_run_multiple_instance_task(self):
         t = Tasks()
@@ -786,9 +766,6 @@ class TestTaskRunner():
 
         result = t.run(tasks="taskname")
 
-        
-        
-
         t = Tasks()
 
         @workflow(
@@ -810,13 +787,7 @@ class TestTaskRunner():
 
         result = t.run(tasks="tasktwo")
 
-        
-        
-
         result = t.run(tasks=["taskname", "tasktwo"])
-
-        
-        
 
     def test_2_5_doesnot_run_single_instance_multiple_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -861,17 +832,9 @@ class TestTaskRunner():
 
         result = t.run(tasks="taskname")
 
-        
-        
-
         result = t.run(tasks="tasktwo")
 
-        
-
         result = t.run(tasks=["taskname", "tasktwo"])
-
-        
-        
 
     def test_2_6_doesnot_run_single_instance_multiple_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -916,23 +879,12 @@ class TestTaskRunner():
 
         result = t.run(tasks="taskname")
 
-        
-        
-
         result = t.run(tasks="tasktwo")
-
-        
-        
 
         result = t.run(tasks="taskname")
 
-        
-        
-
         result = t.run(tasks=["shared:taskname", "shared:tasktwo"])
 
-       
-        
         t.shared.deleter("tasks", 'taskname')
         t.shared.deleter("tasks", 'tasktwo')
 
@@ -979,33 +931,15 @@ class TestTaskRunner():
 
         result = t.run(tasks="taskname")
 
-        
-        
-
         result = t.run(tasks="tasktwo")
-
-        
-        
 
         result = t.run(tasks="taskname")
 
-        
-        
-
         result = t.run(tasks=["taskname", "tasktwo"])
-
-        
-        
 
         result = t.run(tasks=1)
 
-        
-        
-
         result = t.run(tasks="1")
-
-        
-        
 
     def test_2_8_run_doesnot_all_instance_task(self):
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1050,43 +984,19 @@ class TestTaskRunner():
 
         result = t.run(tasks="taskname")
 
-        
-        
-
         result = t.run(tasks="tasktwo")
-
-        
-        
 
         result = t.run(tasks="taskname")
 
-        
-        
-
         result = t.run(tasks=["taskname", "tasktwo"])
-
-        
-        
 
         result = t.run(tasks=["shared:taskname", "shared:tasktwo"])
 
-        
-        
-
         result = t.run(tasks=["tasknam", "shared:taskto"])
-
-        
-        
 
         result = t.run(tasks=["shared:1"])
 
-        
-        
-
         result = t.run(tasks="shared:1")
-
-        
-        
 
 
 # decorator runs shared single task
@@ -1407,6 +1317,7 @@ class TestMiddlewares():
 # TODO: Write result asserts for all
 
 class TestFunctions():
+
     def test_6_1_function_invocation_with_args(self):
         t = Tasks()
 
@@ -1562,6 +1473,7 @@ class TestFunctions():
         result = t.run(tasks="taskname")
 
     # TODO: THIS TEST IS NOT COMPLETE FOR ITS ARGUMENTS
+
     def test_6_13_function_invocation_error_returns_completes_flow(self):
         t = Tasks()
 
@@ -1575,6 +1487,7 @@ class TestFunctions():
         result = t.run(tasks="taskname")
 
     # TODO: THIS TEST IS NOT COMPLETE FOR ITS ARGUMENTS
+
     def test_6_14_function_doesnot_invoke_error_returns_completes_flow_with_handler(self):
         t = Tasks()
 
