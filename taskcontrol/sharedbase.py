@@ -50,6 +50,10 @@ class ClosureBase():
                     raise TypeError("Problem with " + key +
                                     " Value deleting " + value)
                 return True
+            elif type(value) == int:
+                if value == 1:
+                    for v in value:
+                        closure_val[key].pop(v)
             return False
 
         return (getter, setter, deleter)
