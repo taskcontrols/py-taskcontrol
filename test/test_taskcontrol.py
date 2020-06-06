@@ -635,7 +635,7 @@ class TestDecorator():
                 assert type(r[i]) == list
                 for j in r[i]:
                     assert type(j.get("result")) == int
-                    assert j.get("result") == 115
+                    assert j.get("result") == 116
                     assert (j.get("function") == "taskone" or j.get(
                         "function") == "middleware")
                     assert j.get("name") == "taskname"
