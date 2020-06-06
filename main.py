@@ -103,6 +103,30 @@ def tasktwo(ctx, result, a, b):
     print("Running my task function: tasktwo", a, b)
     return a, b
 
+
+
+# Example two for decorator usage
+@workflow(name="taskthree",
+          task_instance=sparrow,
+          task_order=2,
+          shared=True,
+          args=[1, 2],
+          kwargs={},
+          # Declare before/after as an list or an object (if single middleware function)
+          before={
+              "function": nesttree,
+              "args": [21, 22],
+              "kwargs": {"d": "Before Testing message"},
+              "options": {"error": "next", "error_next_value": ""}
+          },
+          after=[],
+          log=False
+          )
+def taskthree(ctx, result, a, b):
+    print("Running my task function: taskthree", a, b)
+    return a, b
+
+
 # print(sparrow.get_tasks(task="tasktwo"))
 
 # INVOKE BELOW WHERE NEEDED
@@ -143,6 +167,11 @@ print("run_6 2 Tasks [2I,1S]", run_6)
 # # Single Workflow Tasks run
 run_7 = sparrow.run(tasks="shared:taskname")
 print("run_7 0 Tasks [1S]", run_7)
+
+
+# # Single Workflow Tasks run
+run_8 = sparrow.run(tasks="shared:taskthree")
+print("run_8 0 Tasks [1S]", run_8)
 
 
 # TODO:

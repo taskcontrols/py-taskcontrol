@@ -31,8 +31,10 @@ class ClosureBase():
 
         def setter(key, value=None, inst=None):
             if type(value) == dict and inst != None:
-                if value.get("workflow_kwargs").get("shared") == True:
-                    inst.shared.closure_val[key].update({value.get("name"): value})
+                if inst.__class__.__name__ == "SharedBase":
+                    closure_val[key].update({value.get("name"): value})
+                elif value.get("workflow_kwargs").get("shared") == True:
+                    inst.shared.setter(key, value, inst.shared)
                 elif value.get("workflow_kwargs").get("shared") == False:
                     closure_val[key].update({value.get("name"): value})
 
@@ -64,6 +66,7 @@ class SharedBase(ClosureBase):
     __instance = None
 
     def __init__(self):
+        super().__init__()
         self.getter, self.setter, self.deleter = self.class_closure(
             tasks={}, ctx={}, plugins={}, config={}, workflow={}
         )
@@ -73,7 +76,6 @@ class SharedBase(ClosureBase):
             SharedBase.__instance = self
 
     def __new__(cls):
-
         if cls.__instance is None:
             cls.__instance = super(SharedBase, cls).__new__(cls)
         return cls.__instance
@@ -81,6 +83,6 @@ class SharedBase(ClosureBase):
     @staticmethod
     def getInstance():
         if not SharedBase.__instance:
-            SharedBase()
+            return SharedBase()
         return SharedBase.__instance
 

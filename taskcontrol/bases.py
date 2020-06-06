@@ -13,6 +13,9 @@ from .plugin import PluginsBase
 class WorkflowBase(ClosureBase, ConcurencyBase, PluginsBase):
 
     def __init__(self):
+        super().__init__()
+        # ConcurencyBase.__init__(self)
+        # PluginsBase.__init__(self)
         self.shared = SharedBase.getInstance()
         self.getter, self.setter, self.deleter = self.class_closure(
             tasks={}, plugins={}, ctx={})
@@ -175,3 +178,4 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginsBase):
 
 
 __all__ = ["WorkflowBase", "PluginsBase"]
+

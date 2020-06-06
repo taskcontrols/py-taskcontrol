@@ -12,6 +12,10 @@ from .interfaces import AuthenticationBase, SocketsBase, HooksBase
 
 class Tasks(WorkflowBase):
 
+    def __init__(self):
+        super().__init__()
+    #     print(self.shared.getter("tasks", 1))
+
     def plugin_register(self, plugin_instance):
         pass
 
@@ -52,13 +56,9 @@ class Tasks(WorkflowBase):
     def run(self, tasks):
         # "1", 1, "shared:1", "shared:task", "task"
         result = []
-        # Debug code
-        # print("tasks", tasks)
+        
         tsk = self.get_all_tasks(tasks, [])
-        # Debug code
-        # print("tsks", len(tsk))
-        # for i in tsk:
-        #     print("tsk", i.get("name"))
+        
         if len(tsk) > 0:
             for tk in tsk:
                 if type(tsk) == dict:
@@ -135,7 +135,7 @@ def workflow(*workflow_args, **workflow_kwargs):
             fn_task["workflow_kwargs"] = workflow_kwargs
             fn_task["log"] = workflow_kwargs.get("log")
 
-            t.setter("tasks", fn_task, workflow_kwargs.get("task_instance"))
+            t.setter("tasks", fn_task, t)
 
             # print("Workflow add_tasks - Task added: ",
             #       workflow_kwargs.get("name"))
