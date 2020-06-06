@@ -566,6 +566,11 @@ class TestDecorator():
         result = t.run(tasks="taskname")
 
         assert type(result) == list
+        assert len(result) == 0
+
+        result = t.run(tasks="shared:taskname")
+
+        assert type(result) == list
         assert len(result) > 0
         assert len(result) == 1
 
@@ -576,20 +581,18 @@ class TestDecorator():
                 assert type(i) == str
                 assert type(r[i]) == list
                 for j in r[i]:
-                    assert type(j.get("result")) == tuple
+                    assert type(j.get("result")) == int
                     assert j.get("result") == 115
                     assert (j.get("function") == "taskone" or j.get(
                         "function") == "middleware")
                     assert j.get("name") == "taskname"
 
-        # ERROR WITH ASSERTS GETTING CLOSURE_VAL
-        # assert t.get_all_tasks("taskname", []) == []
-        # assert t.get_all_tasks("shared:taskname", []) == []
-        # assert type(t.getter("tasks", "taskname")) == list
-        # assert t.getter("tasks", "shared:taskname")[0].get("name") == "taskname"
-        # assert type(t.getter("tasks", "shared:taskname")[0].get("name")) == str
+        assert type(t.getter("tasks", "taskname")) == list
+        assert t.get_all_tasks("taskname", []) == []
+        assert len(t.get_all_tasks("taskname", [])) == 0
+        assert t.get_all_tasks("shared:taskname", []) != []
 
-        # t.shared.deleter("tasks", 'shared:taskname')
+        t.shared.deleter("tasks", 'taskname')
 
     def test_1_16_creates_shared_task(self):
         t = Tasks()
@@ -613,6 +616,11 @@ class TestDecorator():
             print("Running my task function: taskone", a, b)
             return 116
 
+        result = t.run(tasks="taskname")
+
+        assert type(result) == list
+        assert len(result) == 0
+
         result = t.run(tasks="shared:taskname")
 
         assert type(result) == list
@@ -626,23 +634,18 @@ class TestDecorator():
                 assert type(i) == str
                 assert type(r[i]) == list
                 for j in r[i]:
-                    assert type(j.get("result")) == tuple
-                    assert j.get("result") == 116
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 115
                     assert (j.get("function") == "taskone" or j.get(
                         "function") == "middleware")
                     assert j.get("name") == "taskname"
 
-        # ERROR WITH ASSERTS GETTING CLOSURE_VAL
-        # assert t.shared.getter("tasks", "shared:taskname")[
-        #     0].get("name") == "taskname"
-        # assert type(t.shared.getter("tasks", "shared:taskname")[0]) == dict
-        # assert type(t.shared.getter("tasks", "shared:taskname")) == list
-        # assert type(t.shared.getter("tasks", "shared:taskname")
-        #             [0].get("name")) == str
-        # assert t.getter("tasks", "taskname") == []
-        # assert type(t.getter("tasks", "taskname")) == list
+        assert type(t.getter("tasks", "taskname")) == list
+        assert t.get_all_tasks("taskname", []) == []
+        assert len(t.get_all_tasks("taskname", [])) == 0
+        assert t.get_all_tasks("shared:taskname", []) != []
 
-        # t.shared.deleter("tasks", 'taskname')
+        t.shared.deleter("tasks", 'taskname')
 
     def test_1_17_doesnot_create_shared_task(self):
 
