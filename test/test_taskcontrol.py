@@ -647,8 +647,89 @@ class TestDecorator():
 
         t.shared.deleter("tasks", 'taskname')
 
-    def test_1_17_doesnot_create_shared_task(self):
+    def test_1_17_1_doesnot_create_shared_task(self):
+        with pytest.raises(Exception) as e:
+            t = Tasks()
 
+            def middleware(ctx, result, k, c, d, **kwargs):
+                print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+                return 117
+
+            @workflow(
+                name="taskname", task_order=1, task_instance=t,
+                shared=False, args=[1], kwargs={}, log=False,
+                before=[{
+                    "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                    "options": {"error": "next", "error_next_value": ""}
+                }],
+                after=[{
+                    "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
+                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
+                }])
+            def taskone(ctx, result, a, b):
+                print("Running my task function: taskone", a, b)
+                return 117
+
+            result = t.run(tasks="taskname")
+        
+        assert e.type is Exception
+
+    def test_1_17_2_doesnot_create_shared_task(self):
+        with pytest.raises(Exception) as e:
+            t = Tasks()
+
+            def middleware(ctx, result, k, c, d, **kwargs):
+                print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+                return 117
+
+            @workflow(
+                name="taskname", task_order=1, task_instance=t,
+                shared=False, args=[1], kwargs={}, log=False,
+                before=[{
+                    "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                    "options": {"error": "next", "error_next_value": ""}
+                }],
+                after=[{
+                    "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
+                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
+                }])
+            def taskone(ctx, result, a, b):
+                print("Running my task function: taskone", a, b)
+                return 117
+
+            result = t.run(tasks="shared:tasktwo")
+        
+        assert e.type is Exception
+
+    def test_1_17_3_doesnot_create_shared_task(self):
+        with pytest.raises(Exception) as e:
+            t = Tasks()
+
+            def middleware(ctx, result, k, c, d, **kwargs):
+                print("Running my Middleware Function: test - task items", k, c, d, kwargs)
+                return 117
+
+            @workflow(
+                name="taskname", task_order=1, task_instance=t,
+                shared=False, args=[1], kwargs={}, log=False,
+                before=[{
+                    "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
+                    "options": {"error": "next", "error_next_value": ""}
+                }],
+                after=[{
+                    "function": middleware, "args": [13, 14], "kwargs": {"d": "After Middleware Testing message"},
+                    "options": {"error": "error_handler", "error_next_value": "value", "error_handler": lambda err, value: (err, value)}
+                }])
+            def taskone(ctx, result, a, b):
+                print("Running my task function: taskone", a, b)
+                return 117
+
+            result = t.run(tasks="taskname")
+
+        assert e.type is Exception
+
+    def test_1_17_4_doesnot_create_shared_task(self):
+        
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -672,7 +753,29 @@ class TestDecorator():
 
         result = t.run(tasks="taskname")
 
-        result = t.run(tasks="shared:tasktwo")
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 1
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 117
+                    assert (j.get("function") == "taskone" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "taskname"
+
+        assert type(t.getter("tasks", "taskname")) == list
+        assert t.get_all_tasks("taskname", []) != []
+        assert len(t.get_all_tasks("taskname", [])) == 1
+        assert len(t.get_all_tasks("shared:taskname", [])) == 0
+        assert type(t.get_all_tasks("shared:taskname", [])) == list
+        assert t.get_all_tasks("shared:taskname", []) == []
 
     def test_1_18_does_not_create_task_without_name_throws_TypeError(self):
         with pytest.raises(TypeError) as e:
