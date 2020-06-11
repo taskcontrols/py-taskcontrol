@@ -213,19 +213,19 @@ class SQLBase(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def create(self, conn, options):
-        pass
+        raise NotImplementedError
     
     @abc.abstractmethod
     def find(self, conn, options):
-        pass
+        raise NotImplementedError
     
     @abc.abstractmethod
     def update(self, conn, options):
-        pass
+        raise NotImplementedError
 
     @abc.abstractmethod
     def delete(self, conn, options):
-        pass
+        raise NotImplementedError
 
 
 @dataclass(frozen=True)
@@ -233,11 +233,11 @@ class LoggerBase(metaclass=abc.ABCMeta):
     
     @abc.abstractmethod
     def create(self, config):
-        pass
+        raise NotImplementedError
 
     @abc.abstractmethod
     def log(self, logger_options):
-        pass
+        raise NotImplementedError
 
 
 @dataclass(frozen=True)
@@ -245,5 +245,5 @@ class PluginBase(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def plugin_create(self, name, task_instance):
-        pass
+        raise NotImplementedError
 
