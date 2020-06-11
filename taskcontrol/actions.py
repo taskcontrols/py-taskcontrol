@@ -13,8 +13,9 @@ class ActionsBase(ClosureBase):
     Description of ActionsBase
 
     Attributes:
-        attr1 (str): Description of 'attr1' 
-        attr2 (str): Description of 'attr1' 
+        getter (fn): Description of 'getter' 
+        setter (fn): Description of 'setter'
+        deleter (fn): Description of 'deleter'
 
     """
 
@@ -36,7 +37,10 @@ class ActionsBase(ClosureBase):
         # TODO: Add Authentication
         # if not is_authenticated():
         #     raise Exception("Not authenticated")
-        return self.getter("actions", key)
+        state = self.getter("actions", key)
+        if state:
+            return state
+        return False
 
     def register_event(self, event_object):
         """
@@ -54,7 +58,7 @@ class ActionsBase(ClosureBase):
         if self.setter("actions", event_object):
             return True
         return False
-    
+
     def unregister_event(self, event_object):
         """
         Description of unregister_listener
