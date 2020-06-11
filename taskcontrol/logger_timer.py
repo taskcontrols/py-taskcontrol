@@ -72,6 +72,8 @@ class LoggerBase(ClosureBase):
                 logger.error(message)
             if level == "critical" and logger:
                 logger.critical(message)
+            return True
         except Exception as e:
             logger.raise_error(e, level, message)
+            return False
 
