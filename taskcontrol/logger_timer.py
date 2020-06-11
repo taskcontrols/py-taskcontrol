@@ -51,24 +51,27 @@ class LoggerBase(ClosureBase):
     def create(self, config):
 
         self.setter("loggers", config, self)
-        self.logger = self.getter("loggers", config.get("name"))
+        logger = self.getter("loggers", config.get("name"))
         # use config here
         # config contains network info if logging needed to network
-        # self.logger.setLevel(logging.DEBUG)
-        # self.logger.setLevel(logging.DEBUG)
+        # logger.setLevel(config.get("level"))
+        # logger.setLevel(config.get("level"))
 
-    def log(self, level, message):
+    def log(self, logger_options):
+        logger = self.getter("loggers", logger_options.get("name"))
+        level = logger_options.get("level")
+        message = logger_options.get("message")
         try:
-            if level == "debug":
-                self.logger.debug(message)
-            if level == "info":
-                self.logger.info(message)
-            if level == "info":
-                self.logger.warning(message)
-            if level == "error":
-                self.logger.error(message)
-            if level == "critical":
-                self.logger.critical(message)
+            if level == "debug" and logger:
+                logger.debug(message)
+            if level == "info" and logger:
+                logger.info(message)
+            if level == "info" and logger:
+                logger.warning(message)
+            if level == "error" and logger:
+                logger.error(message)
+            if level == "critical" and logger:
+                logger.critical(message)
         except Exception as e:
-            self.logger.raise_error(e, level, message)
+            logger.raise_error(e, level, message)
 
