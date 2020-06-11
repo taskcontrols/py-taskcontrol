@@ -76,3 +76,4 @@ class LoggerBase(ClosureBase):
         except Exception as e:
             logger.raise_error(e, level, message)
             return False
+
