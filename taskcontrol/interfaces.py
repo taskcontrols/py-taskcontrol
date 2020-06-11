@@ -179,20 +179,6 @@ class HooksBase(metaclass=abc.ABCMeta):
         cls.get_hooks, cls.set_hooks = cls.hooks_closure()
         cls.sockets = socketsbase
 
-    @classmethod
-    def hooks_closure(self):
-
-        # list of registered web hooks
-        hooks = []
-
-        def get_hooks():
-            pass
-
-        def set_hooks():
-            pass
-
-        return {"get_hooks": get_hooks, "set_hooks": set_hooks}
-
     @abc.abstractmethod
     def hook_state(self):
         raise NotImplementedError
@@ -240,3 +226,24 @@ class SQLBase(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def delete(self, conn, options):
         pass
+
+
+@dataclass(frozen=True)
+class LoggerBase(metaclass=abc.ABCMeta):
+    
+    @abc.abstractmethod
+    def create(self, config):
+        pass
+
+    @abc.abstractmethod
+    def log(self, logger_options):
+        pass
+
+
+@dataclass(frozen=True)
+class PluginBase(metaclass=abc.ABCMeta):
+
+    @abc.abstractmethod
+    def plugin_create(self, name, task_instance):
+        pass
+
