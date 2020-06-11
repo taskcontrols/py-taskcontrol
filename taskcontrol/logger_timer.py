@@ -58,14 +58,17 @@ class LoggerBase(ClosureBase):
         # self.logger.setLevel(logging.DEBUG)
 
     def log(self, level, message):
+        try:
+            if level == "debug":
+                self.logger.debug(message)
+            if level == "info":
+                self.logger.info(message)
+            if level == "info":
+                self.logger.warning(message)
+            if level == "error":
+                self.logger.error(message)
+            if level == "critical":
+                self.logger.critical(message)
+        except Exception as e:
+            self.logger.raise_error(e, level, message)
 
-        if level == "debug":
-            self.logger.debug(message)
-        if level == "info":
-            self.logger.info(message)
-        if level == "info":
-            self.logger.warning(message)
-        if level == "error":
-            self.logger.error(message)
-        if level == "critical":
-            self.logger.critical(message)

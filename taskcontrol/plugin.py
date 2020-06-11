@@ -12,19 +12,19 @@ class PluginsBase():
             raise TypeError("plugins definition has an issue")
 
         if type(task_instance) == dict:
-            # if not task_instance.get("config"):
-            #     raise ValueError("config definition has an issue")
-            # if not task_instance.get("ctx"):
-            #     raise ValueError("ctx definition has an issue")
-            # if not task_instance.get("plugins"):
-            #     raise ValueError("internal plugins definition has an issue")
-            # if not task_instance.get("shared"):
-            #     raise ValueError("shared definition has an issue")
-            # if not task_instance.get("tasks"):
-            #     raise ValueError("tasks definition has an issue")
-            # if not task_instance.get("workflows"):
-            #     raise ValueError("workflows definition has an issue")
-            pass
+            if not task_instance.get("config"):
+                raise ValueError("config definition has an issue")
+            if not task_instance.get("ctx"):
+                raise ValueError("ctx definition has an issue")
+            if not task_instance.get("plugins"):
+                raise ValueError("internal plugins definition has an issue")
+            if not task_instance.get("shared"):
+                raise ValueError("shared definition has an issue")
+            if not task_instance.get("tasks"):
+                raise ValueError("tasks definition has an issue")
+            if not task_instance.get("workflows"):
+                raise ValueError("workflows definition has an issue")
+            # pass
 
         if type(name) == str:
             return {
