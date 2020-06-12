@@ -172,7 +172,7 @@ class SQLBase(metaclass=abc.ABCMeta):
 
 
 @dataclass(frozen=True)
-class LoggerBase(metaclass=abc.ABCMeta):
+class LogBase(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def create(self, config):
@@ -188,5 +188,13 @@ class PluginBase(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def plugin_create(self, name, task_instance):
+        raise NotImplementedError
+
+
+@dataclass(frozen=True)
+class TimeBase(metaclass=abc.ABCMeta):
+
+    @abc.abstractmethod
+    def time(self, name, task_instance):
         raise NotImplementedError
 

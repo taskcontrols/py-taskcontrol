@@ -3,10 +3,11 @@
 import logging
 import time
 from .sharedbase import ClosureBase
+from .interfaces import TimeBase, LogBase
 # TODO: Refactor getters and setters and make code simpler
 
 
-class TimerBase(ClosureBase):
+class TimerBase(TimeBase, ClosureBase):
 
     def __init__(self, options, timers={}):
         super()
@@ -33,7 +34,7 @@ class TimerBase(ClosureBase):
 
 # TODO: Refactor getters and setters and make code simpler
 
-class LoggerBase(ClosureBase):
+class LoggerBase(LogBase, ClosureBase):
 
     def __init__(self, name, config):
 
