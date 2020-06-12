@@ -6,11 +6,9 @@ import abc
 @dataclass(frozen=True)
 class AuthenticationBase(metaclass=abc.ABCMeta):
 
+    @abc.abstractmethod
     def __init__(self, **kwargs):
-        # get_dbconn=None, set_dbconn=None, db_execute=None, db_close=None,get_pconn=None, set_pconn=None, p_dump=None, p_close=None
-
-        self.get_dbconn, self.set_dbconn, self.db_execute, self.db_close, self.get_pconn, self.set_pconn, self.p_dump, self.p_close = self.auth_closure(
-            **kwargs)
+        raise NotImplementedError
 
     @abc.abstractmethod
     def init_db(self, path, name):
@@ -136,20 +134,10 @@ class AuthenticationBase(metaclass=abc.ABCMeta):
 @dataclass(frozen=True)
 class SocketsBase(metaclass=abc.ABCMeta):
 
-    def __init__(self):
-        self.get_sockets, self.set_sockets = self.sockets_closure()
-
-    def sockets_closure(self):
-        sockets = []
-
-        def get_sockets():
-            pass
-
-        def set_sockets():
-            pass
-
-        return (get_sockets, set_sockets)
-
+    @abc.abstractmethod
+    def __init__(self, **kwargs):
+        raise NotImplementedError
+        
     @abc.abstractmethod
     def socket_create(self):
         raise NotImplementedError
@@ -174,10 +162,9 @@ class SocketsBase(metaclass=abc.ABCMeta):
 @dataclass(frozen=True)
 class HooksBase(metaclass=abc.ABCMeta):
 
-    @classmethod
-    def __init__(cls, socketsbase):
-        cls.get_hooks, cls.set_hooks = cls.hooks_closure()
-        cls.sockets = socketsbase
+    @abc.abstractmethod
+    def __init__(self, **kwargs):
+        raise NotImplementedError
 
     @abc.abstractmethod
     def hook_state(self):
@@ -230,7 +217,7 @@ class SQLBase(metaclass=abc.ABCMeta):
 
 @dataclass(frozen=True)
 class LoggerBase(metaclass=abc.ABCMeta):
-    
+
     @abc.abstractmethod
     def create(self, config):
         raise NotImplementedError
