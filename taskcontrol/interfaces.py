@@ -22,50 +22,6 @@ class AuthenticationBase(metaclass=abc.ABCMeta):
     def init_superuser(self, conn):
         raise NotImplementedError
 
-    # Testing passing functions to get closure with self-implementation
-    def auth_closure(
-            self,
-            get_dbconn=None,
-            set_dbconn=None,
-            db_execute=None,
-            db_close=None,
-            get_pconn=None,
-            set_pconn=None,
-            p_dump=None,
-            p_close=None
-        ):
-        db_connections = {}
-        pickle_connections = {}
-
-        if get_dbconn != None and type(get_dbconn) == callable:
-            raise TypeError("AuthenticationBase: get_dbconn not set error")
-
-        if set_dbconn != None and type(set_dbconn) == callable:
-            raise TypeError("AuthenticationBase: set_dbconn not set error")
-
-        if db_execute != None and type(db_execute) == callable:
-            raise TypeError("AuthenticationBase: db_execute not set error")
-
-        if db_close != None and type(db_close) == callable:
-            raise TypeError("AuthenticationBase: db_close not set error")
-
-        if get_pconn != None and type(get_pconn) == callable:
-            raise TypeError("AuthenticationBase: get_pconn not set error")
-
-        if set_pconn != None and type(set_pconn) == callable:
-            raise TypeError("AuthenticationBase: set_pconn not set error")
-
-        if p_dump != None and type(p_dump) == callable:
-            raise TypeError("AuthenticationBase: p_dump not set error")
-
-        if p_close != None and type(p_close) == callable:
-            raise TypeError("AuthenticationBase: p_close not set error")
-
-        return (
-            get_dbconn, set_dbconn, db_execute, db_close,
-            get_pconn, set_pconn, p_dump, p_close
-        )
-
     @abc.abstractmethod
     def create_user(self):
         raise NotImplementedError
