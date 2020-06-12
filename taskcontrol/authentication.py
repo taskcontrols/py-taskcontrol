@@ -144,7 +144,7 @@ class AuthBase(AuthenticationBase, ClosureBase):
 
     def verify_kwargs_structure(self, **kwargs):
         if not kwargs.get("get_dbconn") or not kwargs.get("set_dbconn") or not kwargs.get("db_execute") or not kwargs.get("db_close") or not kwargs.get("get_pconn") or not kwargs.get("set_pconn") or not kwargs.get("p_dump") or not kwargs.get("p_close"):
-            raise Exception("Authentication Base Arguments Not Correct")
+            raise TypeError("Authentication Base Arguments Not Correct")
         return True
 
     def verify_options_structure(self, options):
