@@ -489,7 +489,7 @@ class TestDecorator():
                 }])
             def taskone(ctx, result, a):
                 print("Running my task function: taskone", a)
-                return a
+                return 1, 2
 
             result = t.run(tasks="taskname")
 
@@ -647,7 +647,7 @@ class TestDecorator():
 
         t.shared.deleter("tasks", 'taskname')
 
-    def test_1_17_1_doesnot_create_shared_task(self):
+    def test_1_17_doesnot_create_shared_task(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -674,13 +674,13 @@ class TestDecorator():
         
         assert e.type is Exception
 
-    def test_1_17_2_doesnot_create_shared_task(self):
+    def test_1_18_doesnot_create_shared_task(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
             def middleware(ctx, result, k, c, d, **kwargs):
                 print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-                return 117
+                return 118
 
             @workflow(
                 name="taskname", task_order=1, task_instance=t,
@@ -695,19 +695,19 @@ class TestDecorator():
                 }])
             def taskone(ctx, result, a, b):
                 print("Running my task function: taskone", a, b)
-                return 117
+                return 118
 
             result = t.run(tasks="shared:tasktwo")
         
         assert e.type is Exception
 
-    def test_1_17_3_doesnot_create_shared_task(self):
+    def test_1_19_doesnot_create_shared_task(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
             def middleware(ctx, result, k, c, d, **kwargs):
                 print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-                return 117
+                return 119
 
             @workflow(
                 name="taskname", task_order=1, task_instance=t,
@@ -722,19 +722,19 @@ class TestDecorator():
                 }])
             def taskone(ctx, result, a, b):
                 print("Running my task function: taskone", a, b)
-                return 117
+                return 119
 
             result = t.run(tasks="taskname")
 
         assert e.type is Exception
 
-    def test_1_17_4_doesnot_create_shared_task(self):
+    def test_1_20_doesnot_create_shared_task(self):
         
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-            return 117
+            return 120
 
         @workflow(
             name="taskname", task_order=1, task_instance=t,
@@ -749,7 +749,7 @@ class TestDecorator():
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 117
+            return 120
 
         result = t.run(tasks="taskname")
 
@@ -765,7 +765,7 @@ class TestDecorator():
                 assert type(r[i]) == list
                 for j in r[i]:
                     assert type(j.get("result")) == int
-                    assert j.get("result") == 117
+                    assert j.get("result") == 120
                     assert (j.get("function") == "taskone" or j.get(
                         "function") == "middleware")
                     assert j.get("name") == "taskname"
@@ -777,13 +777,14 @@ class TestDecorator():
         assert type(t.get_all_tasks("shared:taskname", [])) == list
         assert t.get_all_tasks("shared:taskname", []) == []
 
-    def test_1_18_does_not_create_task_without_name_throws_TypeError(self):
+    def test_1_21_does_not_create_task_without_name_throws_TypeError(self):
         with pytest.raises(TypeError) as e:
             t = Tasks()
 
             def middleware(ctx, result, k, c, d, **kwargs):
                 print("Running my Middleware Function: test - task items",
                       k, c, d, kwargs)
+                return 121
 
             @workflow(
                 task_order=1, task_instance=t,
@@ -798,18 +799,20 @@ class TestDecorator():
                 }])
             def taskone(ctx, result, a, b):
                 print("Running my task function: taskone", a, b)
+                return 121
 
             result = t.run(tasks="taskname")
 
         assert e.type is TypeError
 
-    def test_1_19_does_not_create_task_without_task_instance_throws_TypeError(self):
+    def test_1_22_does_not_create_task_without_task_instance_throws_TypeError(self):
         with pytest.raises(TypeError) as e:
             t = Tasks()
 
             def middleware(ctx, result, k, c, d, **kwargs):
                 print("Running my Middleware Function: test - task items",
                       k, c, d, kwargs)
+                return 122
 
             @workflow(
                 name="taskname", task_order=1,
@@ -824,18 +827,19 @@ class TestDecorator():
                 }])
             def taskone(ctx, result, a, b):
                 print("Running my task function: taskone", a, b)
+                return 122
 
             result = t.run(tasks="taskname")
 
         assert e.type is TypeError
 
-    def test_1_20_creates_task_without_taskorder(self):
+    def test_1_23_creates_task_without_taskorder(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items",
                   k, c, d, kwargs)
-            return 120
+            return 123
 
         @workflow(
             name="taskname", task_instance=t,
@@ -850,16 +854,38 @@ class TestDecorator():
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 120
+            return 123
 
         result = t.run(tasks="taskname")
 
-    def test_1_21_creates_task_without_before(self):
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 1
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 123
+                    assert (j.get("function") == "taskone" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "taskname"
+
+        assert t.getter("tasks", "taskname")[0].get("name") == "taskname"
+        assert type(t.getter("tasks", "taskname")[0].get("name")) == str
+        assert t.getter("tasks", "shared:taskname") == []
+        assert type(t.getter("tasks", "shared:taskname")) == list
+
+    def test_1_24_creates_task_without_before(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-            return 121
+            return 124
 
         @workflow(
             name="taskname", task_order=1, task_instance=t,
@@ -870,16 +896,38 @@ class TestDecorator():
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 121
+            return 124
 
         result = t.run(tasks="taskname")
 
-    def test_1_22_creates_task_without_after(self):
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 1
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 124
+                    assert (j.get("function") == "taskone" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "taskname"
+
+        assert t.getter("tasks", "taskname")[0].get("name") == "taskname"
+        assert type(t.getter("tasks", "taskname")[0].get("name")) == str
+        assert t.getter("tasks", "shared:taskname") == []
+        assert type(t.getter("tasks", "shared:taskname")) == list
+
+    def test_1_25_creates_task_without_after(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-            return 122
+            return 125
 
         @workflow(
             name="taskname", task_order=1, task_instance=t,
@@ -890,16 +938,38 @@ class TestDecorator():
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 122
+            return 125
 
         result = t.run(tasks="taskname")
 
-    def test_1_23_creates_task_without_log(self):
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 1
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 125
+                    assert (j.get("function") == "taskone" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "taskname"
+
+        assert t.getter("tasks", "taskname")[0].get("name") == "taskname"
+        assert type(t.getter("tasks", "taskname")[0].get("name")) == str
+        assert t.getter("tasks", "shared:taskname") == []
+        assert type(t.getter("tasks", "shared:taskname")) == list
+
+    def test_1_26_creates_task_without_log(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
-            return 123
+            return 126
 
         @workflow(
             name="taskname", task_order=1, task_instance=t,
@@ -914,9 +984,31 @@ class TestDecorator():
             }])
         def taskone(ctx, result, a, b):
             print("Running my task function: taskone", a, b)
-            return 123
+            return 126
 
         result = t.run(tasks="taskname")
+
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 1
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 126
+                    assert (j.get("function") == "taskone" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "taskname"
+
+        assert t.getter("tasks", "taskname")[0].get("name") == "taskname"
+        assert type(t.getter("tasks", "taskname")[0].get("name")) == str
+        assert t.getter("tasks", "shared:taskname") == []
+        assert type(t.getter("tasks", "shared:taskname")) == list
 
 
 # decorator runs instance single tasks
