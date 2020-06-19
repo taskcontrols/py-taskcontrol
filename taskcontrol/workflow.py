@@ -58,7 +58,7 @@ class Tasks(WorkflowBase):
         result = []
         
         tsk = self.get_all_tasks(tasks, [])
-        
+
         if len(tsk) > 0:
             for tk in tsk:
                 if type(tsk) == dict:

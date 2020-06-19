@@ -1047,6 +1047,28 @@ class TestTaskRunner():
 
         result = t.run(tasks="taskname")
 
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 1
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 201
+                    assert (j.get("function") == "taskone" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "taskname"
+
+        assert t.getter("tasks", "taskname")[0].get("name") == "taskname"
+        assert type(t.getter("tasks", "taskname")[0].get("name")) == str
+        assert t.getter("tasks", "shared:taskname") == []
+        assert type(t.getter("tasks", "shared:taskname")) == list
+
     def test_2_2_run_doesnot_single_instance_task(self):
         t = Tasks()
 
@@ -1072,6 +1094,14 @@ class TestTaskRunner():
             return 202
 
         result = t.run(tasks="taskname")
+
+        assert type(result) == list
+        assert len(result) == 0
+
+        assert t.shared.getter("tasks", "taskname")[0].get("name") == "taskname"
+        assert type(t.shared.getter("tasks", "taskname")[0].get("name")) == str
+        assert type(t.shared.getter("tasks", "taskname")) == list
+        assert len(t.shared.getter("tasks", "taskname")) == 1
 
         t.shared.deleter("tasks", 'taskname')
 
@@ -1101,7 +1131,28 @@ class TestTaskRunner():
 
         result = t.run(tasks="taskname")
 
-        t = Tasks()
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 1
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 203
+                    assert (j.get("function") == "taskone" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "taskname"
+
+        assert t.getter("tasks", "taskname")[0].get("name") == "taskname"
+        assert type(t.getter("tasks", "taskname")[0].get("name")) == str
+        assert t.getter("tasks", "shared:taskname") == []
+        assert type(t.getter("tasks", "shared:taskname")) == list
+
 
         @workflow(
             name="tasktwo", task_order=1, task_instance=t,
@@ -1122,8 +1173,30 @@ class TestTaskRunner():
 
         result = t.run(tasks="tasktwo")
 
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 1
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 203
+                    assert (j.get("function") == "tasktwo" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "tasktwo"
+
+        assert t.getter("tasks", "tasktwo")[0].get("name") == "tasktwo"
+        assert type(t.getter("tasks", "tasktwo")[0].get("name")) == str
+        assert t.getter("tasks", "shared:tasktwo") == []
+        assert type(t.getter("tasks", "shared:tasktwo")) == list
+
         @workflow(
-            name="taskname", task_order=1, task_instance=t,
+            name="taskthree", task_order=1, task_instance=t,
             shared=False, args=[1, 2], kwargs={},
             before=[{
                 "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
@@ -1135,11 +1208,61 @@ class TestTaskRunner():
             }],
             log=False
         )
-        def taskone(ctx, result, a, b):
-            print("Running my task function: taskone", a, b)
+        def taskthree(ctx, result, a, b):
+            print("Running my task function: taskthree", a, b)
             return 203
 
-        result = t.run(tasks=["tasktwo", "taskname"])
+        result = t.run(tasks=["taskthree"])
+
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 1
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 203
+                    assert (j.get("function") == "taskthree" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "taskthree"
+
+        assert t.getter("tasks", "taskthree")[0].get("name") == "taskthree"
+        assert type(t.getter("tasks", "taskthree")[0].get("name")) == str
+        assert t.getter("tasks", "shared:taskthree") == []
+        assert type(t.getter("tasks", "shared:taskthree")) == list
+
+        result = t.run(tasks=["tasktwo", "taskname", "taskthree"])
+
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 3
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 203
+                    assert (j.get("function") == "taskone" or j.get("function") == "tasktwo" or j.get("function") == "taskthree" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "tasktwo" or j.get("name") == "taskname" or j.get("name") == "taskthree"
+
+        assert t.getter("tasks", "tasktwo")[0].get("name") == "tasktwo"
+        assert type(t.getter("tasks", "tasktwo")[0].get("name")) == str
+        assert t.getter("tasks", "taskname")[0].get("name") == "taskname"
+        assert type(t.getter("tasks", "taskname")[0].get("name")) == str
+        assert t.getter("tasks", "taskthree")[0].get("name") == "taskthree"
+        assert type(t.getter("tasks", "taskthree")[0].get("name")) == str
+        assert t.getter("tasks", "shared:taskname") == []
+        assert type(t.getter("tasks", "shared:taskname")) == list
 
     def test_2_4_doesnot_run_multiple_instance_task(self):
         t = Tasks()
@@ -1167,11 +1290,32 @@ class TestTaskRunner():
 
         result = t.run(tasks="taskname")
 
-        t = Tasks()
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 1
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 204
+                    assert (j.get("function") == "taskone" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "taskname"
+
+        assert t.getter("tasks", "taskname")[0].get("name") == "taskname"
+        assert type(t.getter("tasks", "taskname")[0].get("name")) == str
+        assert t.getter("tasks", "shared:taskname") == []
+        assert type(t.getter("tasks", "shared:taskname")) == list
+
 
         @workflow(
             name="tasktwo", task_order=1, task_instance=t,
-            shared=False, args=[1, 2], kwargs={},
+            shared=True, args=[1, 2], kwargs={},
             before=[{
                 "function": middleware, "args": [11, 12], "kwargs": {"d": "Before Testing message Middleware "},
                 "options": {"error": "next", "error_next_value": ""}
@@ -1183,12 +1327,59 @@ class TestTaskRunner():
             log=False
         )
         def tasktwo(ctx, result, a, b):
-            print("Running my task function: taskone", a, b)
+            print("Running my task function: tasktwo", a, b)
             return 204
 
-        result = t.run(tasks="tasktwo")
+        result = t.run(tasks="shared:tasktwo")
 
-        result = t.run(tasks=["taskname", "tasktwo"])
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 1
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 204
+                    assert (j.get("function") == "tasktwo" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "tasktwo"
+
+        assert t.shared.getter("tasks", "tasktwo")[0].get("name") == "tasktwo"
+        assert type(t.shared.getter("tasks", "tasktwo")[0].get("name")) == str
+        assert t.getter("tasks", "tasktwo") == []
+        assert type(t.getter("tasks", "tasktwo")) == list
+
+        result = t.run(tasks=["taskname", "shared:tasktwo"])
+
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 2
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 204
+                    assert (j.get("function") == "taskone" or j.get("function") == "tasktwo" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "taskname" or j.get("name") == "tasktwo"
+
+        assert t.getter("tasks", "taskname")[0].get("name") == "taskname" 
+        assert t.shared.getter("tasks", "tasktwo")[0].get("name") == "tasktwo"
+        assert type(t.getter("tasks", "taskname")[0].get("name")) == str
+        assert len(t.shared.getter("tasks", "tasktwo")) == 1
+        assert type(t.shared.getter("tasks", "tasktwo")) == list
+
+        t.shared.deleter("tasks", "tasktwo")
 
     def test_2_5_doesnot_run_single_instance_multiple_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1211,7 +1402,7 @@ class TestTaskRunner():
             log=False
         )
         def taskname(ctx, result, a, b):
-            print("Running my task function: taskone", a, b)
+            print("Running my task function: taskname", a, b)
             return 205
 
         @workflow(
@@ -1228,14 +1419,81 @@ class TestTaskRunner():
             log=False
         )
         def tasktwo(ctx, result, a, b):
-            print("Running my task function: taskone", a, b)
+            print("Running my task function: tasktwo", a, b)
             return 205
 
         result = t.run(tasks="taskname")
 
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 1
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 205
+                    assert (j.get("function") == "taskname" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "taskname"
+
+        assert t.getter("tasks", "taskname")[0].get("name") == "taskname"
+        assert type(t.getter("tasks", "taskname")[0].get("name")) == str
+        assert t.getter("tasks", "shared:taskname") == []
+        assert type(t.getter("tasks", "shared:taskname")) == list
+
         result = t.run(tasks="tasktwo")
 
-        result = t.run(tasks=["taskname", "tasktwo"])
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 1
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 205
+                    assert (j.get("function") == "tasktwo" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "tasktwo"
+
+        assert t.getter("tasks", "tasktwo")[0].get("name") == "tasktwo"
+        assert type(t.getter("tasks", "tasktwo")[0].get("name")) == str
+        assert t.getter("tasks", "shared:tasktwo") == []
+        assert type(t.getter("tasks", "shared:tasktwo")) == list
+
+        result = t.run(tasks=["taskname", "shared:tasktwo"])
+
+        assert type(result) == list
+        assert len(result) > 0
+        # Running two tasks, but result is one
+        assert len(result) != 2
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 205
+                    assert (j.get("function") == "taskname" or j.get("function") == "tasktwo" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "taskname" or j.get("name") == "tasktwo"
+
+        assert t.getter("tasks", "taskname")[0].get("name") == "taskname"
+        assert type(t.getter("tasks", "taskname")[0].get("name")) == str
+        assert t.shared.getter("tasks", "taskname") == []
+        assert type(t.shared.getter("tasks", "taskname")) == list
 
     def test_2_6_doesnot_run_single_instance_multiple_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
