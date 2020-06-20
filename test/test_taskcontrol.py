@@ -1795,15 +1795,187 @@ class TestTaskRunner():
 
         result = t.run(tasks="taskname")
 
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 1
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 208
+                    assert (j.get("function") == "taskname" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "taskname"
+
+        assert t.getter("tasks", "taskname")[0].get("name") == "taskname"
+        assert type(t.getter("tasks", "taskname")[0].get("name")) == str
+        assert t.getter("tasks", "shared:taskname") == []
+        assert type(t.getter("tasks", "shared:taskname")) == list
+
         result = t.run(tasks="tasktwo")
 
-        result = t.run(tasks="taskname")
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 1
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 208
+                    assert (j.get("function") == "tasktwo" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "tasktwo"
+
+        assert t.getter("tasks", "tasktwo")[0].get("name") == "tasktwo"
+        assert type(t.getter("tasks", "tasktwo")[0].get("name")) == str
+        assert t.getter("tasks", "shared:tasktwo") == []
+        assert type(t.getter("tasks", "shared:tasktwo")) == list
+
+        result = t.run(tasks=["taskname"])
+
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 1
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 208
+                    assert (j.get("function") == "taskname" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "taskname"
+
+        assert t.getter("tasks", "taskname")[0].get("name") == "taskname"
+        assert type(t.getter("tasks", "taskname")[0].get("name")) == str
+        assert t.getter("tasks", "shared:taskname") == []
+        assert type(t.getter("tasks", "shared:taskname")) == list
 
         result = t.run(tasks=["taskname", "tasktwo"])
 
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 2
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 208
+                    assert (j.get("function") == "taskname" or j.get("function") == "tasktwo" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "taskname" or j.get("name") == "tasktwo"
+
+        assert t.getter("tasks", "taskname")[0].get("name") == "taskname"
+        assert type(t.getter("tasks", "taskname")[0].get("name")) == str
+        assert t.getter("tasks", "tasktwo")[0].get("name") == "tasktwo"
+        assert type(t.getter("tasks", "tasktwo")[0].get("name")) == str
+        assert t.getter("tasks", "shared:taskname") == []
+        assert type(t.getter("tasks", "shared:taskname")) == list
+        assert t.getter("tasks", "shared:tasktwo") == []
+        assert type(t.getter("tasks", "shared:tasktwo")) == list
+
         result = t.run(tasks=1)
 
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 2
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 208
+                    assert (j.get("function") == "taskname" or j.get("function") == "tasktwo" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "taskname" or j.get("name") == "tasktwo"
+
+        assert t.getter("tasks", "taskname")[0].get("name") == "taskname"
+        assert type(t.getter("tasks", "taskname")[0].get("name")) == str
+        assert t.getter("tasks", "tasktwo")[0].get("name") == "tasktwo"
+        assert type(t.getter("tasks", "tasktwo")[0].get("name")) == str
+        assert t.getter("tasks", "shared:taskname") == []
+        assert type(t.getter("tasks", "shared:taskname")) == list
+        assert t.getter("tasks", "shared:tasktwo") == []
+        assert type(t.getter("tasks", "shared:tasktwo")) == list
+
         result = t.run(tasks="1")
+
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 2
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 208
+                    assert (j.get("function") == "taskname" or j.get("function") == "tasktwo" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "taskname" or j.get("name") == "tasktwo"
+
+        assert t.getter("tasks", "taskname")[0].get("name") == "taskname"
+        assert type(t.getter("tasks", "taskname")[0].get("name")) == str
+        assert t.getter("tasks", "tasktwo")[0].get("name") == "tasktwo"
+        assert type(t.getter("tasks", "tasktwo")[0].get("name")) == str
+        assert t.getter("tasks", "shared:taskname") == []
+        assert type(t.getter("tasks", "shared:taskname")) == list
+        assert t.getter("tasks", "shared:tasktwo") == []
+        assert type(t.getter("tasks", "shared:tasktwo")) == list
+
+        result = t.run(tasks=["1"])
+
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 2
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 208
+                    assert (j.get("function") == "taskname" or j.get("function") == "tasktwo" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "taskname" or j.get("name") == "tasktwo"
+
+        assert t.getter("tasks", "taskname")[0].get("name") == "taskname"
+        assert type(t.getter("tasks", "taskname")[0].get("name")) == str
+        assert t.getter("tasks", "tasktwo")[0].get("name") == "tasktwo"
+        assert type(t.getter("tasks", "tasktwo")[0].get("name")) == str
+        assert t.getter("tasks", "shared:taskname") == []
+        assert type(t.getter("tasks", "shared:taskname")) == list
+        assert t.getter("tasks", "shared:tasktwo") == []
+        assert type(t.getter("tasks", "shared:tasktwo")) == list
 
     def test_2_9_run_doesnot_all_instance_task(self):
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1846,21 +2018,101 @@ class TestTaskRunner():
             print("Running my task function: taskone", a, b)
             return 209
 
-        result = t.run(tasks="taskname")
-
         result = t.run(tasks="tasktwo")
 
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 1
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 209
+                    assert (j.get("function") == "tasktwo" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "tasktwo"
+
+        assert t.getter("tasks", "tasktwo")[0].get("name") == "tasktwo"
+        assert type(t.getter("tasks", "tasktwo")[0].get("name")) == str
+        assert t.getter("tasks", "shared:tasktwo") == []
+        assert type(t.getter("tasks", "shared:tasktwo")) == list
+
         result = t.run(tasks="taskname")
+
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 1
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 209
+                    assert (j.get("function") == "taskname" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "taskname"
+
+        assert t.getter("tasks", "taskname")[0].get("name") == "taskname"
+        assert type(t.getter("tasks", "taskname")[0].get("name")) == str
+        assert t.getter("tasks", "shared:taskname") == []
+        assert type(t.getter("tasks", "shared:taskname")) == list
 
         result = t.run(tasks=["taskname", "tasktwo"])
 
+        assert type(result) == list
+        assert len(result) > 0
+        assert len(result) == 2
+
+        for r in result:
+            assert type(r) == dict
+            assert len(r) == 1
+            for i in r.keys():
+                assert type(i) == str
+                assert type(r[i]) == list
+                for j in r[i]:
+                    assert type(j.get("result")) == int
+                    assert j.get("result") == 209
+                    assert (j.get("function") == "taskname" or j.get("function") == "tasktwo" or j.get(
+                        "function") == "middleware")
+                    assert j.get("name") == "taskname" or j.get("name") == "tasktwo"
+
+        assert t.getter("tasks", "taskname")[0].get("name") == "taskname"
+        assert type(t.getter("tasks", "taskname")[0].get("name")) == str
+        assert t.getter("tasks", "tasktwo")[0].get("name") == "tasktwo"
+        assert type(t.getter("tasks", "tasktwo")[0].get("name")) == str
+        assert t.getter("tasks", "shared:taskname") == []
+        assert type(t.getter("tasks", "shared:taskname")) == list
+        assert t.getter("tasks", "shared:tasktwo") == []
+        assert type(t.getter("tasks", "shared:tasktwo")) == list
+
         result = t.run(tasks=["shared:taskname", "shared:tasktwo"])
+
+        assert type(result) == list
+        assert len(result) == 0
 
         result = t.run(tasks=["tasknam", "shared:taskto"])
 
+        assert type(result) == list
+        assert len(result) == 0
+
         result = t.run(tasks=["shared:1"])
 
+        assert type(result) == list
+        assert len(result) == 0
+
         result = t.run(tasks="shared:1")
+
+        assert type(result) == list
+        assert len(result) == 0
 
 
 # decorator runs shared single task
