@@ -1011,7 +1011,6 @@ class TestDecorator():
         assert type(t.getter("tasks", "shared:taskname")) == list
 
 
-
 ## decorator error scenarios of instance tasks
 
 
@@ -1047,7 +1046,6 @@ class TestInstanceErrorScenarios():
     def test_2_13_runs_wrong_taskname_and_returns_no_result(self):
         pass
     
-
 
 ## decorator error scenarios of shared tasks
 
@@ -7411,7 +7409,6 @@ class TestAnyTaskRunner():
         assert len(result) == 2
 
 
-
 ## middlewares can be invoked with arguments and keyword arguments
 ## middlewares can be invoked and returns (error or next value) after invocation
 ## middlewares can be invoked and returns (error or next value) after invocation
@@ -8016,6 +8013,7 @@ class TestBeforeMiddlewaresResultReturns():
 
         result = t.run(tasks="taskname")
 
+
 # middlewares return results
 
 
@@ -8051,6 +8049,7 @@ class TestAfterMiddlewaresResultReturns():
 
 # task runs return results and correct numbers
 
+
 class TestTaskResultReturns():
 
     def test_9_1_task_returns_results(self):
@@ -8083,6 +8082,7 @@ class TestTaskResultReturns():
 
 # middlewares can be invoked and can access results context of all previously invoked functions
 
+
 class TestMiddlewareAccessContext():
 
     def test_10_1_middlewares_can_access_context(self):
@@ -8093,6 +8093,7 @@ class TestMiddlewareAccessContext():
 
 
 # functions can be invoked and can access results context of all previously invoked functions
+
 
 class TestFunctionsAccessContext():
 
@@ -8155,3 +8156,4 @@ class TestMiddlewareBeforeForMultiProcessing:
 
     def test_14_6_Middleware_function_for_multiProcess_with_Join(self):
         pass
+
