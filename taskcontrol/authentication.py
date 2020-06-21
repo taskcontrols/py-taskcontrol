@@ -342,3 +342,4 @@ class AuthBase(AuthenticationBase, ClosureBase):
             if self.has_permissions(conn, options):
                 return True
         return False
+

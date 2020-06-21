@@ -124,7 +124,7 @@ class ActionsBase(ClosureBase):
         # if not is_authenticated():
         #     raise Exception("Not authenticated")
         action = self.getter("actions", msg_object.get("key"))
-        action.send(msg_object.get("message"))
+        action[0].send(msg_object.get("message"))
 
     def listen(self, options):
         """
@@ -140,5 +140,4 @@ class ActionsBase(ClosureBase):
         # if not is_authenticated():
         #     raise Exception("Not authenticated")
         action = self.getter("actions", options.get("key"))
-        action.listen(options)
-
+        action[0].listen(options)
