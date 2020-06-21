@@ -7355,7 +7355,7 @@ class TestAnyTaskRunner():
         result = t.run(tasks=["taskname", "shared:taskone"])
 
         assert type(result) == list
-        assert len(result) == 0
+        assert len(result) == 2
 
 
 ## decorator error scenarios of instance tasks
