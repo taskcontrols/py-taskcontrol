@@ -7333,27 +7333,29 @@ class TestAnyTaskRunner():
 
         result = t.run(tasks=["taskname", "shared:taskone"])
 
-    def test_4_6_doesnot_any_type_task_shared_and_instance_throws_Error(self):
-        with pytest.raises(Exception) as e:
-            t = Tasks()
+    def test_4_6_doesnot_run_any_type_task_shared_and_instance(self):
+        t = Tasks()
 
-            @workflow(
-                name="taskname", task_instance=t,
-                shared=False
-            )
-            def taskname(ctx, result):
-                print("Running my task function: taskname")
-                return "taskname"
+        @workflow(
+            name="taskname", task_instance=t,
+            shared=False
+        )
+        def taskname(ctx, result):
+            print("Running my task function: taskname")
+            return "taskname"
 
-            @workflow(
-                name="taskone", task_instance=t,
-                shared=True
-            )
-            def taskone(ctx, result):
-                print("Running my task function: taskone")
-                return "taskone"
+        @workflow(
+            name="taskone", task_instance=t,
+            shared=True
+        )
+        def taskone(ctx, result):
+            print("Running my task function: taskone")
+            return "taskone"
 
-            result = t.run(tasks=["taskname", "shared:taskone"])
+        result = t.run(tasks=["taskname", "shared:taskone"])
+
+        assert type(result) == list
+        assert len(result) == 0
 
 
 ## decorator error scenarios of instance tasks
