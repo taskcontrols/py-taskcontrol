@@ -1011,6 +1011,59 @@ class TestDecorator():
         assert type(t.getter("tasks", "shared:taskname")) == list
 
 
+
+## decorator error scenarios of instance tasks
+
+
+# IMPORTANT:
+# Maintain the results of all tests even with change of flow
+# These are functionality tests for running of decorator created tasks or shared tasks
+
+class TestInstanceErrorScenarios():
+    def test_2_1_throws_error_without_name(self):
+        pass
+    def test_2_2_throws_error_without_instance(self):
+        pass
+    def test_2_3_runs_doesnot_throw_error_without_shared(self):
+        pass
+    def test_2_4_runs_default_shared_is_False(self):
+        pass
+    def test_2_5_runs_doesnot_throw_error_without_order(self):
+        pass
+    def test_2_6_runs_default_order_is_FIFO(self):
+        pass
+    def test_2_7_runs_doesnot_throw_error_without_before(self):
+        pass
+    def test_2_8_runs_default_before_empty_list(self):
+        pass
+    def test_2_9_runs_doesnot_throw_error_without_after(self):
+        pass
+    def test_2_10_runs_default_after_empty_list(self):
+        pass
+    def test_2_11_runs_doesnot_throw_error_without_log(self):
+        pass
+    def test_2_12_runs_default_log_is_false(self):
+        pass
+    def test_2_13_runs_wrong_taskname_and_returns_no_result(self):
+        pass
+    
+
+
+## decorator error scenarios of shared tasks
+
+# IMPORTANT:
+# Maintain the results of all tests even with change of flow
+# These are functionality tests for running of decorator created tasks or shared tasks
+
+class TestSharedErrorScenarios():
+    def test_3_1_runs_doesnot_throw_error_without_shared(self):
+        pass
+    def test_3_2_runs_default_shared_is_False(self):
+        pass
+    def test_3_3_runs_wrong_shared_taskname_and_returns_no_result(self):
+        pass
+
+
 # decorator runs instance single tasks
 # decorator runs instance multiple tasks
 # decorator runs all instance tasks
@@ -1021,7 +1074,7 @@ class TestDecorator():
 
 class TestTaskRunner():
 
-    def test_2_1_run_single_instance_task(self):
+    def test_4_1_run_single_instance_task(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1069,7 +1122,7 @@ class TestTaskRunner():
         assert t.getter("tasks", "shared:taskname") == []
         assert type(t.getter("tasks", "shared:taskname")) == list
 
-    def test_2_2_run_doesnot_single_instance_task(self):
+    def test_4_2_run_doesnot_single_instance_task(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1105,7 +1158,7 @@ class TestTaskRunner():
 
         t.shared.deleter("tasks", 'taskname')
 
-    def test_2_3_run_multiple_instance_task(self):
+    def test_4_3_run_multiple_instance_task(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1264,7 +1317,7 @@ class TestTaskRunner():
         assert t.getter("tasks", "shared:taskname") == []
         assert type(t.getter("tasks", "shared:taskname")) == list
 
-    def test_2_4_doesnot_run_multiple_instance_task(self):
+    def test_4_4_doesnot_run_multiple_instance_task(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1381,7 +1434,7 @@ class TestTaskRunner():
 
         t.shared.deleter("tasks", "tasktwo")
 
-    def test_2_5_run_single_instance_multiple_tasks(self):
+    def test_4_5_run_single_instance_multiple_tasks(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1497,7 +1550,7 @@ class TestTaskRunner():
 
         t.shared.deleter("tasks", "tasktwo")
 
-    def test_2_6_doesnot_run_single_instance_multiple_tasks(self):
+    def test_4_6_doesnot_run_single_instance_multiple_tasks(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -1638,7 +1691,7 @@ class TestTaskRunner():
 
         t.shared.deleter("tasks", "tasktwo")
 
-    def test_2_7_doesnot_run_single_instance_multiple_tasks(self):
+    def test_4_7_doesnot_run_single_instance_multiple_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 207
@@ -1752,7 +1805,7 @@ class TestTaskRunner():
         assert t.shared.getter("tasks", "taskname") == []
         assert type(t.shared.getter("tasks", "taskname")) == list
 
-    def test_2_8_run_all_instance_task(self):
+    def test_4_8_run_all_instance_task(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 208
@@ -1977,7 +2030,7 @@ class TestTaskRunner():
         assert t.getter("tasks", "shared:tasktwo") == []
         assert type(t.getter("tasks", "shared:tasktwo")) == list
 
-    def test_2_9_run_doesnot_all_instance_task(self):
+    def test_3_9_run_doesnot_all_instance_task(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 209
@@ -2126,7 +2179,7 @@ class TestTaskRunner():
 
 class TestSharedTaskRunner():
 
-    def test_3_1_run_single_shared_from_single_tasks(self):
+    def test_5_1_run_single_shared_from_single_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 301
@@ -2200,7 +2253,7 @@ class TestSharedTaskRunner():
 
         t.shared.deleter("tasks", 'taskname')
 
-    def test_3_2_doesnot_run_single_shared_from_instance_tasks(self):
+    def test_5_2_doesnot_run_single_shared_from_instance_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 302
@@ -2244,7 +2297,7 @@ class TestSharedTaskRunner():
         assert t.getter("tasks", "shared:taskname") == []
         assert type(t.getter("tasks", "shared:taskname")) == list
 
-    def test_3_3_doesnot_run_single_shared_from_shared_tasks(self):
+    def test_5_3_doesnot_run_single_shared_from_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 303
@@ -2290,7 +2343,7 @@ class TestSharedTaskRunner():
 
         t.shared.deleter("tasks", 'taskname')
 
-    def test_3_4_doesnot_run_single_instance_task_from_shared_tasks(self):
+    def test_5_4_doesnot_run_single_instance_task_from_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 304
@@ -2326,7 +2379,7 @@ class TestSharedTaskRunner():
 
         t.shared.deleter("tasks", 'taskname')
 
-    def test_3_5_doesnot_run_single_instance_task_from_instance_tasks(self):
+    def test_5_5_doesnot_run_single_instance_task_from_instance_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 305
@@ -2360,7 +2413,7 @@ class TestSharedTaskRunner():
         assert type(result) == list
         assert len(result) == 0
 
-    def test_3_6_doesnot_run_single_shared_task_from_multiple_instance_tasks(self):
+    def test_5_6_doesnot_run_single_shared_task_from_multiple_instance_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 306
@@ -2443,7 +2496,7 @@ class TestSharedTaskRunner():
         assert s.getter("tasks", "shared:taskname") == []
         assert type(s.getter("tasks", "shared:taskname")) == list
 
-    def test_3_7_doesnot_run_single_instance_task_from_multiple_instance_tasks(self):
+    def test_5_7_doesnot_run_single_instance_task_from_multiple_instance_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 307
@@ -2526,7 +2579,7 @@ class TestSharedTaskRunner():
         assert s.getter("tasks", "shared:taskname") == []
         assert type(s.getter("tasks", "shared:taskname")) == list
 
-    def test_3_8_doesnot_run_single_shared_task_from_multiple_shared_tasks(self):
+    def test_5_8_doesnot_run_single_shared_task_from_multiple_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 308
@@ -2630,7 +2683,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskthree')
         t.shared.deleter("tasks", 'tasktwo')
 
-    def test_3_9_doesnot_run_single_instance_task_from_multiple_shared_tasks(self):
+    def test_5_9_doesnot_run_single_instance_task_from_multiple_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 309
@@ -2750,7 +2803,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskthree')
         t.shared.deleter("tasks", 'tasktwo')
 
-    def test_3_10_doesnot_run_single_shared_from_mixed_tasks(self):
+    def test_5_10_doesnot_run_single_shared_from_mixed_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 310
@@ -2817,7 +2870,7 @@ class TestSharedTaskRunner():
 
         t.shared.deleter("tasks", 'tasktwo')
 
-    def test_3_11_doesnot_run_single_instance_task_from_mixed_tasks(self):
+    def test_5_11_doesnot_run_single_instance_task_from_mixed_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 311
@@ -2884,7 +2937,7 @@ class TestSharedTaskRunner():
 
         t.shared.deleter("tasks", 'tasktwo')
 
-    def test_3_12_run_single_shared_from_instance_tasks(self):
+    def test_5_12_run_single_shared_from_instance_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 312
@@ -2948,7 +3001,7 @@ class TestSharedTaskRunner():
         assert t.getter("tasks", "shared:sharedtaskname") == []
         assert type(t.getter("tasks", "shared:sharedtaskname")) == list
 
-    def test_3_13_run_single_shared_from_shared_tasks(self):
+    def test_5_13_run_single_shared_from_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 313
@@ -3022,7 +3075,7 @@ class TestSharedTaskRunner():
 
         t.shared.deleter("tasks", 'taskname')
 
-    def test_3_14_run_single_instance_task_from_shared_tasks(self):
+    def test_5_14_run_single_instance_task_from_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 314
@@ -3072,7 +3125,7 @@ class TestSharedTaskRunner():
 
         t.shared.deleter("tasks", 'sharedtaskname')
 
-    def test_3_15_run_single_instance_task_from_instance_tasks(self):
+    def test_5_15_run_single_instance_task_from_instance_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 315
@@ -3149,7 +3202,7 @@ class TestSharedTaskRunner():
         assert t.getter("tasks", "shared:taskname") == []
         assert type(t.getter("tasks", "shared:taskname")) == list
 
-    def test_3_16_run_single_shared_from_mixed_tasks(self):
+    def test_5_16_run_single_shared_from_mixed_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 316
@@ -3268,7 +3321,7 @@ class TestSharedTaskRunner():
 
         t.shared.deleter("tasks", 'sharedtaskname')
 
-    def test_3_17_run_single_instance_task_from_mixed_tasks(self):
+    def test_5_17_run_single_instance_task_from_mixed_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 317
@@ -3387,7 +3440,7 @@ class TestSharedTaskRunner():
 
         t.shared.deleter("tasks", 'sharedtaskname')
 
-    def test_3_18_run_single_shared_task_from_multiple_instance_tasks(self):
+    def test_5_18_run_single_shared_task_from_multiple_instance_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 318
@@ -3460,7 +3513,7 @@ class TestSharedTaskRunner():
         assert s.getter("tasks", "shared:taskname") == []
         assert type(s.getter("tasks", "shared:taskname")) == list
 
-    def test_3_19_run_single_instance_task_from_multiple_instance_tasks(self):
+    def test_5_19_run_single_instance_task_from_multiple_instance_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 319
@@ -3609,7 +3662,7 @@ class TestSharedTaskRunner():
         assert s.getter("tasks", "shared:taskname") == []
         assert type(s.getter("tasks", "shared:taskname")) == list
 
-    def test_3_20_run_single_shared_task_from_multiple_shared_tasks(self):
+    def test_5_20_run_single_shared_task_from_multiple_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 320
@@ -3769,7 +3822,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskname')
         t.shared.deleter("tasks", 'tasktwo')
 
-    def test_3_21_run_single_instance_task_from_multiple_shared_tasks(self):
+    def test_5_21_run_single_instance_task_from_multiple_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 321
@@ -3837,7 +3890,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskname')
         t.shared.deleter("tasks", 'tasktwo')
 
-    def test_3_22_doesnot_run_multiple_shared_from_multiple_instance_tasks(self):
+    def test_5_22_doesnot_run_multiple_shared_from_multiple_instance_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 322
@@ -3900,7 +3953,7 @@ class TestSharedTaskRunner():
         assert s.getter("tasks", "shared:taskname") == []
         assert type(s.getter("tasks", "shared:taskname")) == list
 
-    def test_3_23_doesnot_run_multiple_shared_from_multiple_shared_tasks(self):
+    def test_5_23_doesnot_run_multiple_shared_from_multiple_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 323
@@ -4002,7 +4055,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskname')
         t.shared.deleter("tasks", 'tasktwo')
 
-    def test_3_24_doesnot_run_multiple_instance_from_multiple_instance_tasks(self):
+    def test_5_24_doesnot_run_multiple_instance_from_multiple_instance_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 324
@@ -4065,7 +4118,7 @@ class TestSharedTaskRunner():
         assert s.getter("tasks", "shared:tasktwo") == []
         assert type(s.getter("tasks", "shared:tasktwo")) == list
 
-    def test_3_25_doesnot_run_multiple_instance_from_multiple_shared_tasks(self):
+    def test_5_25_doesnot_run_multiple_instance_from_multiple_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 325
@@ -4135,7 +4188,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskname')
         t.shared.deleter("tasks", 'tasktwo')
 
-    def test_3_26_doesnot_run_multiple_shared_from_mixed_tasks(self):
+    def test_5_26_doesnot_run_multiple_shared_from_mixed_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 326
@@ -4199,7 +4252,7 @@ class TestSharedTaskRunner():
 
         t.shared.deleter("tasks", 'taskname')
 
-    def test_3_27_doesnot_run_multiple_instance_from_mixed_tasks(self):
+    def test_5_27_doesnot_run_multiple_instance_from_mixed_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 327
@@ -4272,7 +4325,7 @@ class TestSharedTaskRunner():
 
         t.shared.deleter("tasks", 'taskname')
 
-    def test_3_28_doesnot_run_multiple_instance_from_multiple_instance_multiple_shared_tasks(self):
+    def test_5_28_doesnot_run_multiple_instance_from_multiple_instance_multiple_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 328
@@ -4356,7 +4409,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskname')
         t.shared.deleter("tasks", 'tasktwo')
 
-    def test_3_29_doesnot_run_multiple_shared_from_multiple_instance_multiple_shared_tasks(self):
+    def test_5_29_doesnot_run_multiple_shared_from_multiple_instance_multiple_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 329
@@ -4456,7 +4509,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskname')
         t.shared.deleter("tasks", 'taskthree')
 
-    def test_3_30_run_multiple_shared_from_multiple_instance_tasks(self):
+    def test_5_30_run_multiple_shared_from_multiple_instance_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 330
@@ -4610,7 +4663,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskfour')
         t.shared.deleter("tasks", 'taskthree')
 
-    def test_3_31_run_multiple_shared_from_multiple_shared_tasks(self):
+    def test_5_31_run_multiple_shared_from_multiple_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 331
@@ -4763,7 +4816,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskfour')
         t.shared.deleter("tasks", 'taskthree')
 
-    def test_3_32_run_multiple_instance_from_multiple_instance_tasks(self):
+    def test_5_32_run_multiple_instance_from_multiple_instance_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 332
@@ -4901,7 +4954,7 @@ class TestSharedTaskRunner():
         assert s.getter("tasks", "shared:tasktwo") == []
         assert type(s.getter("tasks", "shared:tasktwo")) == list
 
-    def test_3_33_run_multiple_instance_from_multiple_shared_tasks(self):
+    def test_5_33_run_multiple_instance_from_multiple_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 333
@@ -5051,7 +5104,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskname')
         t.shared.deleter("tasks", 'taskthree')
 
-    def test_3_34_run_multiple_shared_from_mixed_tasks(self):
+    def test_5_34_run_multiple_shared_from_mixed_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 334
@@ -5206,7 +5259,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskname')
         t.shared.deleter("tasks", 'taskthree')
 
-    def test_3_35_run_multiple_instance_from_mixed_tasks(self):
+    def test_5_35_run_multiple_instance_from_mixed_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 335
@@ -5363,7 +5416,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskname')
         t.shared.deleter("tasks", 'taskthree')
 
-    def test_3_36_run_multiple_instance_from_multiple_instance_multiple_shared_tasks(self):
+    def test_5_36_run_multiple_instance_from_multiple_instance_multiple_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 336
@@ -5499,7 +5552,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskname')
         t.shared.deleter("tasks", 'taskthree')
 
-    def test_3_37_run_multiple_shared_from_multiple_instance_multiple_shared_tasks(self):
+    def test_5_37_run_multiple_shared_from_multiple_instance_multiple_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 337
@@ -5673,7 +5726,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskname')
         t.shared.deleter("tasks", 'taskthree')
 
-    def test_3_38_doesnot_run_all_from_multiple_instance_multiple_shared_tasks(self):
+    def test_5_38_doesnot_run_all_from_multiple_instance_multiple_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 338
@@ -5995,7 +6048,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskname')
         t.shared.deleter("tasks", 'taskthree')
     
-    def test_3_39_run_all_from_multiple_instance_multiple_shared_tasks(self):
+    def test_5_39_run_all_from_multiple_instance_multiple_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 339
@@ -6164,7 +6217,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskname')
         t.shared.deleter("tasks", 'taskthree')
 
-    def test_3_40_run_all_shared_from_all_shared_tasks(self):
+    def test_5_40_run_all_shared_from_all_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 340
@@ -6333,7 +6386,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskname')
         t.shared.deleter("tasks", 'taskthree')
 
-    def test_3_41_run_all_instance_from_all_shared_tasks(self):
+    def test_5_41_run_all_instance_from_all_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 341
@@ -6578,7 +6631,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskname')
         t.shared.deleter("tasks", 'taskthree')
 
-    def test_3_42_run_multiple_mixed_from_mixed_tasks(self):
+    def test_5_42_run_multiple_mixed_from_mixed_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 342
@@ -6767,7 +6820,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskname')
         t.shared.deleter("tasks", 'taskthree')
     
-    def test_3_43_doesnot_run_all_shared_from_all_shared_tasks(self):
+    def test_5_43_doesnot_run_all_shared_from_all_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 343
@@ -6974,7 +7027,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskname')
         t.shared.deleter("tasks", 'taskthree')
 
-    def test_3_44_doesnot_run_all_instance_from_all_shared_tasks(self):
+    def test_5_44_doesnot_run_all_instance_from_all_shared_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 344
@@ -7105,7 +7158,7 @@ class TestSharedTaskRunner():
         t.shared.deleter("tasks", 'taskname')
         t.shared.deleter("tasks", 'taskthree')
 
-    def test_3_45_doesnot_run_multiple_mixed_from_mixed_tasks(self):
+    def test_5_45_doesnot_run_multiple_mixed_from_mixed_tasks(self):
         def middleware(ctx, result, k, c, d, **kwargs):
             print("Running my Middleware Function: test - task items", k, c, d, kwargs)
             return 345
@@ -7258,7 +7311,7 @@ class TestSharedTaskRunner():
 
 class TestAnyTaskRunner():
 
-    def test_4_1_any_type_task_shared_task(self):
+    def test_6_1_any_type_task_shared_task(self):
         t = Tasks()
 
         @workflow(
@@ -7271,7 +7324,7 @@ class TestAnyTaskRunner():
 
         result = t.run(tasks="shared:taskname")
 
-    def test_4_2_any_type_task_shared_task_doesnot_run_throws_Error(self):
+    def test_6_2_any_type_task_shared_task_doesnot_run_throws_Error(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -7285,7 +7338,7 @@ class TestAnyTaskRunner():
 
             result = t.run(tasks="shared:taskname")
 
-    def test_4_3_any_type_task_instance(self):
+    def test_6_3_any_type_task_instance(self):
         t = Tasks()
 
         @workflow(
@@ -7298,7 +7351,7 @@ class TestAnyTaskRunner():
 
         result = t.run(tasks="taskname")
 
-    def test_4_4_any_type_task_instance_doesnot_run_throws_Error(self):
+    def test_6_4_any_type_task_instance_doesnot_run_throws_Error(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -7312,7 +7365,7 @@ class TestAnyTaskRunner():
 
             result = t.run(tasks="taskname")
 
-    def test_4_5_any_type_task_shared_and_instance(self):
+    def test_6_5_any_type_task_shared_and_instance(self):
         t = Tasks()
 
         @workflow(
@@ -7333,7 +7386,7 @@ class TestAnyTaskRunner():
 
         result = t.run(tasks=["taskname", "shared:taskone"])
 
-    def test_4_6_doesnot_run_any_type_task_shared_and_instance(self):
+    def test_6_6_doesnot_run_any_type_task_shared_and_instance(self):
         t = Tasks()
 
         @workflow(
@@ -7358,26 +7411,6 @@ class TestAnyTaskRunner():
         assert len(result) == 2
 
 
-## decorator error scenarios of instance tasks
-
-
-# IMPORTANT:
-# Maintain the results of all tests even with change of flow
-# These are functionality tests for running of decorator created tasks or shared tasks
-
-class TestInstanceErrorScenarios():
-    pass
-
-
-## decorator error scenarios of shared tasks
-
-# IMPORTANT:
-# Maintain the results of all tests even with change of flow
-# These are functionality tests for running of decorator created tasks or shared tasks
-
-class TestSharedErrorScenarios():
-    pass
-
 
 ## middlewares can be invoked with arguments and keyword arguments
 ## middlewares can be invoked and returns (error or next value) after invocation
@@ -7391,7 +7424,7 @@ class TestSharedErrorScenarios():
 
 class TestMiddlewares():
 
-    def test_5_1_run_middlewares_before_middlewares(self):
+    def test_7_1_run_middlewares_before_middlewares(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -7409,7 +7442,7 @@ class TestMiddlewares():
 
         result = t.run(tasks="taskname")
 
-    def test_5_2_run_middlewares_after_middlewares(self):
+    def test_7_2_run_middlewares_after_middlewares(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -7428,7 +7461,7 @@ class TestMiddlewares():
 
         result = t.run(tasks="taskname")
 
-    def test_5_3_run_doesnot_middlewares_before_middleware(self):
+    def test_7_3_run_doesnot_middlewares_before_middleware(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -7450,7 +7483,7 @@ class TestMiddlewares():
 
         assert e.type == TypeError
 
-    def test_5_4_run_doesnot_middlewares_after_middleware(self):
+    def test_7_4_run_doesnot_middlewares_after_middleware(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -7472,7 +7505,7 @@ class TestMiddlewares():
 
         assert e.type == TypeError
 
-    def test_5_5_run_single_middleware_before_middleware(self):
+    def test_7_5_run_single_middleware_before_middleware(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -7490,7 +7523,7 @@ class TestMiddlewares():
 
         result = t.run(tasks="taskname")
 
-    def test_5_6_run_single_middleware_after_middleware(self):
+    def test_7_6_run_single_middleware_after_middleware(self):
         t = Tasks()
 
         def middleware(ctx, result, k, c, d, **kwargs):
@@ -7508,7 +7541,7 @@ class TestMiddlewares():
 
         result = t.run(tasks="taskname")
 
-    def test_5_7_run_doesnot_single_middleware_before_middleware(self):
+    def test_7_7_run_doesnot_single_middleware_before_middleware(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -7528,7 +7561,7 @@ class TestMiddlewares():
 
             result = t.run(tasks="taskname")
 
-    def test_5_8_run_doesnot_single_middleware_after_middleware(self):
+    def test_7_8_run_doesnot_single_middleware_after_middleware(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -7561,7 +7594,7 @@ class TestMiddlewares():
 
 class TestFunctions():
 
-    def test_6_1_function_invocation_with_args(self):
+    def test_8_1_function_invocation_with_args(self):
         t = Tasks()
 
         @workflow(
@@ -7573,7 +7606,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_6_2_function_invocation_with_no_args_in_def(self):
+    def test_8_2_function_invocation_with_no_args_in_def(self):
         t = Tasks()
 
         @workflow(
@@ -7585,7 +7618,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_6_3_creates_task_without_args(self):
+    def test_8_3_creates_task_without_args(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -7600,7 +7633,7 @@ class TestFunctions():
 
         assert e.type is Exception
 
-    def test_6_4_creates_task_with_kwargs(self):
+    def test_8_4_creates_task_with_kwargs(self):
         t = Tasks()
 
         @workflow(
@@ -7612,7 +7645,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_6_5_creates_task_without_kwargs(self):
+    def test_8_5_creates_task_without_kwargs(self):
         t = Tasks()
 
         @workflow(
@@ -7624,7 +7657,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_6_6_doesnot_create_task_without_args_without_kwargs(self):
+    def test_8_6_doesnot_create_task_without_args_without_kwargs(self):
         with pytest.raises(Exception) as e:
             t = Tasks()
 
@@ -7639,7 +7672,7 @@ class TestFunctions():
 
         assert e.type == Exception
 
-    def test_6_7_function_invocation_returns_1_None(self):
+    def test_8_7_function_invocation_returns_1_None(self):
         t = Tasks()
 
         @workflow(
@@ -7651,7 +7684,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_6_8_function_invocation_returns_2_None(self):
+    def test_8_8_function_invocation_returns_2_None(self):
         t = Tasks()
 
         @workflow(
@@ -7663,7 +7696,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_6_9_function_invocation_returns_1_value(self):
+    def test_8_9_function_invocation_returns_1_value(self):
         t = Tasks()
 
         @workflow(
@@ -7676,7 +7709,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_6_10_function_invocation_returns_2_values(self):
+    def test_8_10_function_invocation_returns_2_values(self):
         t = Tasks()
 
         @workflow(
@@ -7689,7 +7722,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_6_11_function_invocation_returns_3_value(self):
+    def test_8_11_function_invocation_returns_3_value(self):
         t = Tasks()
 
         @workflow(
@@ -7702,7 +7735,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_6_12_unction_doesnot_invoke_returns_throws_Error(self):
+    def test_8_12_unction_doesnot_invoke_returns_throws_Error(self):
         t = Tasks()
 
         @workflow(
@@ -7717,7 +7750,7 @@ class TestFunctions():
 
     # TODO: THIS TEST IS NOT COMPLETE FOR ITS ARGUMENTS
 
-    def test_6_13_function_invocation_error_returns_completes_flow(self):
+    def test_8_13_function_invocation_error_returns_completes_flow(self):
         t = Tasks()
 
         @workflow(
@@ -7731,7 +7764,7 @@ class TestFunctions():
 
     # TODO: THIS TEST IS NOT COMPLETE FOR ITS ARGUMENTS
 
-    def test_6_14_function_doesnot_invoke_error_returns_completes_flow_with_handler(self):
+    def test_8_14_function_doesnot_invoke_error_returns_completes_flow_with_handler(self):
         t = Tasks()
 
         @workflow(
@@ -7743,7 +7776,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_6_15_functions_returns_results(self):
+    def test_8_15_functions_returns_results(self):
         t = Tasks()
 
         @workflow(
@@ -7755,7 +7788,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_6_16_functions_doesnot_return_results(self):
+    def test_8_16_functions_doesnot_return_results(self):
         t = Tasks()
 
         @workflow(
@@ -7767,7 +7800,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_6_17_functions_returns_right_results(self):
+    def test_8_17_functions_returns_right_results(self):
         t = Tasks()
 
         @workflow(
@@ -7779,7 +7812,7 @@ class TestFunctions():
 
         result = t.run(tasks="taskname")
 
-    def test_6_18_functions_doesnot_return_right_results(self):
+    def test_8_18_functions_doesnot_return_right_results(self):
         t = Tasks()
 
         @workflow(
