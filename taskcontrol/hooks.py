@@ -12,7 +12,7 @@ class Sockets(SocketsBase, ClosureBase):
         super()
         self.getter, self.setter, self.deleter = self.class_closure(sockets={})
 
-    def socket_create(self):
+    def socket_create(self, config):
         # TODO: Add Logger
 
         # TODO: Add Authentication
@@ -20,7 +20,7 @@ class Sockets(SocketsBase, ClosureBase):
         #     raise Exception("Not authenticated")
         pass
 
-    def socket_delete(self):
+    def socket_delete(self, config):
         # TODO: Add Logger
 
         # TODO: Add Authentication
@@ -28,7 +28,7 @@ class Sockets(SocketsBase, ClosureBase):
         #     raise Exception("Not authenticated")
         pass
 
-    def socket_listen(self):
+    def socket_listen(self, config):
         # TODO: Add Logger
 
         # TODO: Add Authentication
@@ -36,7 +36,7 @@ class Sockets(SocketsBase, ClosureBase):
         #     raise Exception("Not authenticated")
         pass
 
-    def socket_message(self):
+    def socket_message(self, config):
         # TODO: Add Logger
 
         # TODO: Add Authentication
@@ -44,7 +44,7 @@ class Sockets(SocketsBase, ClosureBase):
         #     raise Exception("Not authenticated")
         pass
 
-    def socket_receive(self):
+    def socket_receive(self, config):
         # TODO: Add Logger
 
         # TODO: Add Authentication
@@ -60,7 +60,7 @@ class Hooks(HooksBase, ClosureBase):
         self.getter, self.setter, self.deleter = self.class_closure(hooks={})
         self.sockets = socketsbase
 
-    def hook_state(self):
+    def hook_state(self, config):
 
         # TODO: Add Logger
 
@@ -69,7 +69,7 @@ class Hooks(HooksBase, ClosureBase):
         #     raise Exception("Not authenticated")
         pass
 
-    def service_run(self):
+    def service_run(self, config):
 
         # TODO: Add Logger
 
@@ -78,7 +78,7 @@ class Hooks(HooksBase, ClosureBase):
         #     raise Exception("Not authenticated")
         pass
 
-    def service_stop(self):
+    def service_stop(self, config):
 
         # TODO: Add Logger
 
@@ -87,7 +87,7 @@ class Hooks(HooksBase, ClosureBase):
         #     raise Exception("Not authenticated")
         pass
 
-    def register_hook(self):
+    def register_hook(self, config):
 
         # TODO: Add Logger
 
@@ -96,7 +96,7 @@ class Hooks(HooksBase, ClosureBase):
         #     raise Exception("Not authenticated")
         pass
 
-    def register_receiver(self):
+    def register_receiver(self, config):
 
         # TODO: Add Logger
 
@@ -105,7 +105,7 @@ class Hooks(HooksBase, ClosureBase):
         #     raise Exception("Not authenticated")
         pass
 
-    def send(self):
+    def send(self, config):
 
         # TODO: Add Logger
 
@@ -114,7 +114,7 @@ class Hooks(HooksBase, ClosureBase):
         #     raise Exception("Not authenticated")
         pass
 
-    def receive(self):
+    def receive(self, config):
 
         # TODO: Add Logger
 

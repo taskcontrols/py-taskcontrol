@@ -19,13 +19,18 @@ class TimerBase(TimeBase, ClosureBase):
             timers=timers)
 
     def time(self, options):
+        # options object expected
+        # {"name":"name", "logger": "", "format": ""}
+
         logger = options.get("logger")
         timer = self.getter("timers", options.get("name"))
+
         if len(timer) == 1:
             t = timer[0].perf_counter()
         else:
             raise TypeError(
                 "Wrong timer name provided. No such timer or multiple names matched")
+
         if not t:
             raise ValueError("Did not find timer")
         if logger:
@@ -47,18 +52,23 @@ class LoggerBase(LogBase, ClosureBase):
         # self.handler = None
         # _del implementation fn (get from config)
         self._del = lambda x: x
+
         # delete implementation fn (get from config)
         self.delete = lambda x: x
 
-    def create(self, config):
+    def create_logger(self, config):
+        # Config object expected
+        # {"name":"name", "handlers": {"handler": "", "value": ""}, "format": ""}
+
         self.setter("loggers", config, self)
         logger = self.getter("loggers", config.get("name"))
 
-        # use config here
+        # Use config here
         # config contains network info if logging needed to network
         if len(logger) == 0:
             logger[0] = logging.getLogger(config.get("name"))
         log = logger[0]
+
         if config.get("handlers") and type(config.get("handlers")) == list:
             for i in config.get("handlers"):
                 # {"handler": "FileHandler", "value": None}
@@ -70,7 +80,13 @@ class LoggerBase(LogBase, ClosureBase):
         log.setFormatter(log.Formatter(config.get("format")))
         self.setter(config.get("name"), log, self)
 
+    def delete_logger(self, key, value):
+        self.deleter(key, value=None)
+
     def log(self, logger_options):
+        # logger_options object expected
+        # {"name":"name", "level": "debug", "message": ""}
+
         logger = self.getter("loggers", logger_options.get("name"))
         level = logger_options.get("level")
         message = logger_options.get("message")

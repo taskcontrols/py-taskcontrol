@@ -34,6 +34,7 @@ class ConcurencyBase():
         # Test this instance of MThreading for lock and other params
 
         result = None
+        
         if type(options) == dict:
             share_value = options.get("share_value")
 
@@ -44,11 +45,11 @@ class ConcurencyBase():
         args = options.get("args")
         if not args:
             args = []
-        
+
         kwargs = options.get("kwargs")
         if not kwargs:
             kwargs = {}
-        
+
         need_lock = options.get("lock")
         if need_lock:
             lock = Lock()
@@ -109,7 +110,7 @@ class ConcurencyBase():
             kwargs = options.get("kwargs")
             if not kwargs:
                 kwargs = {}
-            
+
         daemon = options.get("daemon")
         if type(daemon) != bool:
             daemon = True

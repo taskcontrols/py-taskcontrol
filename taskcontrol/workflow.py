@@ -3,11 +3,12 @@
 from sys import path
 path.append('./')
 
-from .logger_timer import LoggerBase, TimerBase
-from .concurrency import ConcurencyBase
-from .authentication import AuthBase
-from .bases import WorkflowBase, PluginsBase
+
 from .interfaces import AuthenticationBase, SocketsBase, HooksBase
+from .bases import WorkflowBase, PluginsBase
+from .authentication import AuthBase
+from .concurrency import ConcurencyBase
+from .logger_timer import LoggerBase, TimerBase
 
 
 class Tasks(WorkflowBase):
@@ -56,7 +57,7 @@ class Tasks(WorkflowBase):
     def run(self, tasks):
         # "1", 1, "shared:1", "shared:task", "task"
         result = []
-        
+
         tsk = self.get_all_tasks(tasks, [])
 
         if len(tsk) > 0:
@@ -70,6 +71,7 @@ class Tasks(WorkflowBase):
         else:
             print("No workflow or task available to run")
         return result
+
 
 def workflow(*workflow_args, **workflow_kwargs):
 
@@ -147,4 +149,3 @@ def workflow(*workflow_args, **workflow_kwargs):
 
 __all__ = ["Tasks", "workflow", "AuthenticationBase",
            "SocketsBase", "TimerBase", "LoggerBase"]
-
