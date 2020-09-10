@@ -1,8 +1,8 @@
 # Concurrency Base
 
 
-from threading import Thread
-from multiprocessing import Process, Array, Value
+from threading import Thread, Lock
+from multiprocessing import Process, Array, Value, Manager
 
 # TODO: Refactor getters and setters and make code simpler
 
@@ -10,12 +10,10 @@ class ConcurencyBase():
 
     # consider adding concurrency futures
     def futures_run(self):
-
         pass
 
     # consider adding asyncio lib
     def asyncio_run(self):
-
         pass
 
     # asynchronous, needs_join
@@ -38,20 +36,37 @@ class ConcurencyBase():
         result = None
         if type(options) == dict:
             share_value = options.get("share_value")
+
         daemon = options.get("daemon")
         if type(daemon) != bool:
             daemon = True
 
+        args = options.get("args")
+        if not args:
+            args = []
+        
+        kwargs = options.get("kwargs")
+        if not kwargs:
+            kwargs = {}
+        
+        need_lock = options.get("lock")
+        if need_lock:
+            lock = Lock()
+
+        if lock:
+            args = (lock, *args)
+        else:
+            arg = (*args,)
+
         worker = Thread(
-            target=function,
-            daemon=daemon,
-            args=(*options.get("args"), ),
-            kwargs={"result": result, **options.get("kwargs")}
+            target=function, 
+            args=arg,
+            kwargs={"result": result, **kwargs}
         )
-        worker.setDaemon(True)
+        worker.setDaemon(daemon)
         worker.start()
 
-        if options.get("needs_join"):
+        if options.get("needs_join") or options.get("needs_join") == None:
             worker.join()
             return {"result": result}
 
@@ -85,47 +100,53 @@ class ConcurencyBase():
 
         if type(options) == dict:
             share_value = options.get("share_value")
-            if share_value:
-                value = share_value
             share_array = options.get("share_array")
-            if share_array and type(share_array) == dict:
-                arrays = Array(share_array.get("type"),
-                               share_array.get("value"))
-            if share_array and type(share_array) == list:
-                arrays = []
-                for s in share_array:
-                    arrays.push(Array(s.get("type"), s.get("value")))
-
+            
+            args = options.get("args")
+            if not args:
+                args = []
+            
+            kwargs = options.get("kwargs")
+            if not kwargs:
+                kwargs = {}
+            
         daemon = options.get("daemon")
         if type(daemon) != bool:
             daemon = True
 
         worker = Process(
             target=function,
-            args=(*options.get("args"), ),
-            kwargs={**options.get("kwargs")}
+            args=(*args,),
+            kwargs={**kwargs}
         )
         worker.daemon = daemon
         worker.start()
 
-        if options.get("needs_join"):
+        if options.get("needs_join") or options.get("needs_join") == None:
             result = worker.join()
             return {"result": result}
 
         terminate = options.get("terminate")
-        if type(terminate) != bool and terminate == True:
+        if type(terminate) != bool or terminate == True:
             worker.terminate()
             return {"result": result}
 
         return {"worker": worker, "result": result}
+
+    def mprocess_pool_run(self, function, options):
+        pass
 
     def run_concurrently(self, function, options):
         mode = options.get("mode")
         if mode:
             if mode == "process":
                 return self.mprocess_run(function, options)
+            if mode == "process_pool":
+                return self.mprocess_pool_run(function, options)
             if mode == "thread":
                 return self.mthread_run(function, options)
             if mode == "async":
+                pass
+            if mode == "futures":
                 pass
         return None

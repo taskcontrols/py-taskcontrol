@@ -285,37 +285,53 @@ class AuthBase(AuthenticationBase, ClosureBase):
         # user/role, action, permissions
         self.verify_options_structure(options)
 
+        return False
+
     def update_permissions(self, conn, options):
         self.verify_options_structure(options)
+
+        return False
 
     def delete_permissions(self, conn, options):
         self.verify_options_structure(options)
 
+        return False
+
     def get_permissions(self, conn, options):
         self.verify_options_structure(options)
 
+        return {}
+
     def create_role(self, conn, options):
         self.verify_options_structure(options)
-        # role
+        # create role from db
 
     def update_role(self, conn, options):
         self.verify_options_structure(options)
+        # update role from db
 
     def delete_role(self, conn, options):
         self.verify_options_structure(options)
+        # delete role from db
 
     def get_role(self, conn, options):
         self.verify_options_structure(options)
+        # get role from db
 
     def get_user_permissions(self, conn, options):
         # user, role, action, permissions
         self.verify_options_structure(options)
+        permissions = self.get_permissions(conn, options)
+        if permissions:
+            return permissions
         return False
 
     def has_permissions(self, conn, options):
         # user, role, action, permissions for action/user
         self.verify_options_structure(options)
         # get_user_permissions
+        if self.get_user_permissions(conn, options):
+            return True
         return False
 
     def is_loggedin(self, conn, options):
@@ -327,6 +343,8 @@ class AuthBase(AuthenticationBase, ClosureBase):
         password = options.get("password")
 
         # check loggedin
+        if self.get_user(conn, options):
+            return True
         return False
 
     def is_authenticated(self, conn, options):

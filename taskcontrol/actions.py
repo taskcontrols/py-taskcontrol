@@ -38,8 +38,8 @@ class ActionsBase(ClosureBase):
         # if not is_authenticated():
         #     raise Exception("Not authenticated")
         state = self.getter("actions", key)
-        if state:
-            return state
+        if state and len(state) == 1:
+            return state[0] # send back state
         return False
 
     def register_event(self, event_object):
@@ -55,8 +55,9 @@ class ActionsBase(ClosureBase):
         # TODO: Add Authentication
         # if not is_authenticated():
         #     raise Exception("Not authenticated")
-        if self.setter("actions", event_object):
-            return True
+        e = self.setter("actions", event_object)
+        if e:
+            return e
         return False
 
     def unregister_event(self, event_object):
@@ -72,8 +73,9 @@ class ActionsBase(ClosureBase):
         # TODO: Add Authentication
         # if not is_authenticated():
         #     raise Exception("Not authenticated")
-        if self.setter("actions", event_object):
-            return True
+        e = self.deleter("actions", event_object)
+        if e:
+            return e
         return False
 
     def register_listener(self, listener_object):
@@ -89,8 +91,9 @@ class ActionsBase(ClosureBase):
         # TODO: Add Authentication
         # if not is_authenticated():
         #     raise Exception("Not authenticated")
-        if self.setter("action_listeners", listener_object):
-            return True
+        e = self.setter("action_listeners", listener_object)
+        if e:
+            return e
         return False
 
     def unregister_listener(self, listener_object):
@@ -106,8 +109,9 @@ class ActionsBase(ClosureBase):
         # TODO: Add Authentication
         # if not is_authenticated():
         #     raise Exception("Not authenticated")
-        if self.setter("action_listeners", listener_object):
-            return True
+        e = self.setter("action_listeners", listener_object)
+        if e:
+            return e
         return False
 
     def message(self, msg_object):
@@ -124,7 +128,7 @@ class ActionsBase(ClosureBase):
         # if not is_authenticated():
         #     raise Exception("Not authenticated")
         action = self.getter("actions", msg_object.get("key"))
-        action[0].send(msg_object.get("message"))
+        action[0].send(msg_object.get("message")) # use send or related function TODO
 
     def listen(self, options):
         """
@@ -140,4 +144,4 @@ class ActionsBase(ClosureBase):
         # if not is_authenticated():
         #     raise Exception("Not authenticated")
         action = self.getter("actions", options.get("key"))
-        action[0].listen(options)
+        action[0].listen(options) # use listen or related function TODO

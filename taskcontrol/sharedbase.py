@@ -56,6 +56,7 @@ class ClosureBase():
                 if value == 1:
                     for v in value:
                         closure_val[key].pop(v)
+                return True
             return False
 
         return (getter, setter, deleter)
@@ -85,4 +86,3 @@ class SharedBase(ClosureBase):
         if not SharedBase.__instance:
             return SharedBase()
         return SharedBase.__instance
-

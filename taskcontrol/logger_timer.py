@@ -24,7 +24,8 @@ class TimerBase(TimeBase, ClosureBase):
         if len(timer) == 1:
             t = timer[0].perf_counter()
         else:
-            raise TypeError("Wrong timer name provided. No such timer or multiple names matched")
+            raise TypeError(
+                "Wrong timer name provided. No such timer or multiple names matched")
         if not t:
             raise ValueError("Did not find timer")
         if logger:
@@ -50,31 +51,42 @@ class LoggerBase(LogBase, ClosureBase):
         self.delete = lambda x: x
 
     def create(self, config):
-
         self.setter("loggers", config, self)
         logger = self.getter("loggers", config.get("name"))
+
         # use config here
         # config contains network info if logging needed to network
-        # logger.setLevel(config.get("level"))
-        # logger.setLevel(config.get("level"))
+        if len(logger) == 0:
+            logger[0] = logging.getLogger(config.get("name"))
+        log = logger[0]
+        if config.get("handlers") and type(config.get("handlers")) == list:
+            for i in config.get("handlers"):
+                # {"handler": "FileHandler", "value": None}
+                h = getattr(logging, config.get(
+                    i["handler"])(config.get(i["value"])))
+                h.setLevel(getattr(logging, config.get("level")))
+                log.addHandler(h)
+
+        log.setFormatter(log.Formatter(config.get("format")))
+        self.setter(config.get("name"), log, self)
 
     def log(self, logger_options):
         logger = self.getter("loggers", logger_options.get("name"))
         level = logger_options.get("level")
         message = logger_options.get("message")
+
         try:
             if level == "debug" and logger:
-                logger.debug(message)
+                logger[0].debug(message)
             if level == "info" and logger:
-                logger.info(message)
+                logger[0].info(message)
             if level == "info" and logger:
-                logger.warning(message)
+                logger[0].warning(message)
             if level == "error" and logger:
-                logger.error(message)
+                logger[0].error(message)
             if level == "critical" and logger:
-                logger.critical(message)
+                logger[0].critical(message)
             return True
         except Exception as e:
-            logger.raise_error(e, level, message)
+            logger[0].raise_error(e, level, message)
             return False
-
