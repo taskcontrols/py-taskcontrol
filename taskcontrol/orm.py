@@ -20,8 +20,7 @@ class SQLORM(SQLBase):
         if action == "check":
             if type(sql) == str and len(sql) > 0:
                 return True
-            else:
-                return False
+            return False
         else:
             if type(sql) == str and len(sql) > 0:
                 # TODO: Make this logger
