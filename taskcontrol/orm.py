@@ -33,7 +33,10 @@ class SQLORM(SQLBase):
 
             conn.execute(sql)
             conn.commit()
-            print(options.get("table"), " created successfully")
+            if type(sql) == str and len(sql) > 0:
+                print(options.get("sql"), " created successfully")
+            else:
+                print(options.get("table"), " created successfully")
         except Exception as e:
             raise Exception("Error with options provided", e)
         return True
@@ -74,7 +77,10 @@ class SQLORM(SQLBase):
 
             conn.execute(sql)
             conn.commit()
-            print(options.get("table"), " find successfully")
+            if type(sql) == str and len(sql) > 0:
+                print(options.get("sql"), " searched successfully")
+            else:
+                print(options.get("table"), " searched successfully")
         except Exception as e:
             raise Exception("Error with options provided", e)
         return True
@@ -101,7 +107,10 @@ class SQLORM(SQLBase):
                 sql += """;"""
             conn.execute(sql)
             conn.commit()
-            print(options.get("table"), " updated successfully")
+            if type(sql) == str and len(sql) > 0:
+                print(options.get("sql"), " updated successfully")
+            else:
+                print(options.get("table"), " updated successfully")
         except Exception as e:
             raise Exception("Error with options provided", e)
         return True
@@ -138,7 +147,10 @@ class SQLORM(SQLBase):
                 #     pass
             conn.execute(sql)
             conn.commit()
-            print(options.get("table"), " deleted successfully")
+            if type(sql) == str and len(sql) > 0:
+                print(options.get("sql"), " deleted successfully")
+            else:
+                print(options.get("table"), " deleted successfully")
         except Exception as e:
             raise Exception("Error with options provided", e)
         return True
