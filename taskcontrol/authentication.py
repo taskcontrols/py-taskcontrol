@@ -1,5 +1,6 @@
 # decide package
 import pickle
+import sqlite3
 
 # Inherit shared and logging
 

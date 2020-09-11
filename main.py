@@ -21,12 +21,16 @@ def nesttree(ctx, result, k, c, d, **kwargs):
     task_order=1,
     task_instance=sparrow,
     shared=False,
+    # TODO: Add authentication
+    # authenticated=True,
     args=[1, 2],
     kwargs={},
     before=[
         # before middleware order followed will be of the list sequence
         {
             "function": nesttree,
+            # TODO: Add authentication
+            # authenticated=True,
             "args": [11, 12],
             "kwargs": {"d": "Before Testing message Middleware "},
 
@@ -50,6 +54,8 @@ def nesttree(ctx, result, k, c, d, **kwargs):
         # after middleware order followed will be of the list sequence
         {
             "function": nesttree,
+            # TODO: Add authentication
+            # authenticated=True,
             "args": [13, 14],
             "kwargs": {"d": "After Middleware Testing message"},
             "options": {
@@ -102,7 +108,6 @@ def taskone(ctx, result, a, b):
 def tasktwo(ctx, result, a, b):
     print("Running my task function: tasktwo", a, b)
     return a, b
-
 
 
 # Example two for decorator usage
@@ -178,4 +183,3 @@ print("run_8 0 Tasks [1S]", run_8)
 # Run Precreated Tasks
 # run_9 = sparrow.run(tasks="workflow:workflowname")
 # print("run_9", run_9)
-
