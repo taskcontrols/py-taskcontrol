@@ -8,8 +8,9 @@ from .interfaces import AuthenticationBase, SocketsBase, HooksBase
 from .bases import WorkflowBase, PluginsBase
 from .authentication import AuthBase
 from .concurrency import ConcurencyBase
-from .timer import TimerBase
 from .logger import LoggerBase
+from .timer import TimerBase
+
 
 
 class Tasks(WorkflowBase):
