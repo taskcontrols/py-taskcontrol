@@ -13,6 +13,7 @@ class Sockets(SocketsBase, ClosureBase):
         self.getter, self.setter, self.deleter = self.class_closure(sockets={})
 
     def socket_create(self, config):
+
         # TODO: Add Logger
 
         # TODO: Add Authentication
@@ -20,7 +21,17 @@ class Sockets(SocketsBase, ClosureBase):
         #     raise Exception("Not authenticated")
         pass
 
-    def socket_delete(self, config):
+    def socket_bind(self, config):
+
+        # TODO: Add Logger
+
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
+        pass
+
+    def socket_accept(self, config):
+
         # TODO: Add Logger
 
         # TODO: Add Authentication
@@ -29,6 +40,16 @@ class Sockets(SocketsBase, ClosureBase):
         pass
 
     def socket_listen(self, config):
+
+        # TODO: Add Logger
+
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
+        pass
+
+    def socket_connect(self, config):
+
         # TODO: Add Logger
 
         # TODO: Add Authentication
@@ -37,6 +58,7 @@ class Sockets(SocketsBase, ClosureBase):
         pass
 
     def socket_message(self, config):
+
         # TODO: Add Logger
 
         # TODO: Add Authentication
@@ -45,6 +67,25 @@ class Sockets(SocketsBase, ClosureBase):
         pass
 
     def socket_receive(self, config):
+
+        # TODO: Add Logger
+
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
+        pass
+
+    def socket_close(self, config):
+
+        # TODO: Add Logger
+
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
+        pass
+
+    def socket_delete(self, config):
+
         # TODO: Add Logger
 
         # TODO: Add Authentication
