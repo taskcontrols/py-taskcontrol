@@ -8,7 +8,7 @@ from .sharedbase import ClosureBase
 # TODO: Refactor getters and setters and make code simpler
 
 
-class ActionsBase(ClosureBase):
+class Actions(ClosureBase):
     """
     Description of ActionsBase
 

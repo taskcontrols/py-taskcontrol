@@ -6,7 +6,7 @@ from .interfaces import TimeBase
 # TODO: Refactor getters and setters and make code simpler
 
 
-class TimerBase(TimeBase, ClosureBase):
+class Timer(TimeBase, ClosureBase):
 
     def __init__(self, options, timers={}):
         super()

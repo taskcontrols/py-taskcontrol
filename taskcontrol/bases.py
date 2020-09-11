@@ -3,11 +3,11 @@
 
 from .sharedbase import ClosureBase, SharedBase
 from .concurrency import ConcurencyBase
-from .actions import ActionsBase
+from .actions import Actions
 from .hooks import Sockets, Hooks
 from .authentication import AuthBase
-from .logger import LoggerBase
-from .timer import TimerBase
+from .logger import Logger
+from .timer import Timer
 from .plugin import PluginsBase
 
 
@@ -178,5 +178,10 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginsBase):
         return functools.reduce(self.reducer, tasks_to_run_in_task)
 
 
-__all__ = ["WorkflowBase", "PluginsBase"]
-
+__all__ = [
+    "WorkflowBase", "PluginsBase",
+    "ConcurencyBase", "Actions",
+    "Sockets", "Hooks",
+    "Logger", "Timer",
+    "AuthBase"
+]

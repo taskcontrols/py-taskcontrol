@@ -6,7 +6,7 @@ from .interfaces import LogBase
 # TODO: Refactor getters and setters and make code simpler
 
 
-class LoggerBase(LogBase, ClosureBase):
+class Logger(LogBase, ClosureBase):
 
     def __init__(self, name, config):
 
