@@ -3,13 +3,13 @@
 from sys import path
 path.append('./')
 
-
-from .interfaces import AuthenticationBase, SocketsBase, HooksBase
-from .bases import WorkflowBase, PluginsBase
-from .authentication import AuthBase
-from .concurrency import ConcurencyBase
-from .logger import LoggerBase
 from .timer import TimerBase
+from .logger import LoggerBase
+from .concurrency import ConcurencyBase
+from .authentication import AuthBase
+from .bases import WorkflowBase, PluginsBase
+from .interfaces import AuthenticationBase, SocketsBase, HooksBase
+
 
 class Tasks(WorkflowBase):
 
@@ -148,4 +148,4 @@ def workflow(*workflow_args, **workflow_kwargs):
 
 
 __all__ = ["Tasks", "workflow", "AuthenticationBase",
-           "SocketsBase", "TimerBase", "LoggerBase"]
+           "SocketsBase", "HooksBase", "TimerBase", "LoggerBase"]
