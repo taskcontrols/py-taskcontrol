@@ -19,6 +19,7 @@ class TimerBase(TimeBase, ClosureBase):
             timers=timers)
 
     def time(self, options):
+        
         # options object expected
         # {"name":"name", "logger": "", "format": ""}
 
@@ -57,6 +58,7 @@ class LoggerBase(LogBase, ClosureBase):
         self.delete = lambda x: x
 
     def create_logger(self, config):
+
         # Config object expected
         # {"name":"name", "handlers": {"handler": "", "value": ""}, "format": ""}
 
@@ -80,16 +82,21 @@ class LoggerBase(LogBase, ClosureBase):
         log.setFormatter(log.Formatter(config.get("format")))
         self.setter(config.get("name"), log, self)
 
-    def delete_logger(self, key, value):
-        self.deleter(key, value=None)
+    def delete_logger(self, options):
 
-    def log(self, logger_options):
-        # logger_options object expected
+        # options object expected
+        # {"key":"name", "value": ""}
+
+        self.deleter(options.get("key"), options.get("value"))
+
+    def log(self, options):
+
+        # options object expected
         # {"name":"name", "level": "debug", "message": ""}
 
-        logger = self.getter("loggers", logger_options.get("name"))
-        level = logger_options.get("level")
-        message = logger_options.get("message")
+        logger = self.getter("loggers", options.get("name"))
+        level = options.get("level")
+        message = options.get("message")
 
         try:
             if level == "debug" and logger:
