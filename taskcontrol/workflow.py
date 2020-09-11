@@ -11,8 +11,6 @@ from .concurrency import ConcurencyBase
 from .logger import LoggerBase
 from .timer import TimerBase
 
-
-
 class Tasks(WorkflowBase):
 
     def __init__(self):
