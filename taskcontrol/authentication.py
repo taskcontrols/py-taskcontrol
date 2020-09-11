@@ -28,6 +28,7 @@ class AuthBase(AuthenticationBase, ClosureBase):
             self.getter, self.setter, self.deleter = self.class_closure(
                 dbs={}, pickles={})
         if kwargs.get("sql_orm"):
+            # IMPORTANT: Custom ORM should adhere to SQLBase Interface
             self.sql = kwargs.get("sql_orm")()
         else:
             self.sql = SQLORM()
