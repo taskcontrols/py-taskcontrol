@@ -8,14 +8,17 @@ import sqlite3
 # https://docs.python.org/3/library/sqlite3.html
 # https://docs.python.org/3/library/pickle.html
 
-# TODO
-# Consider making this an interface that can be extended later
-# Which will make it compatible to any DB and Authentication ways
-# TODO: Refactor getters and setters and make code simpler
 
 from .interfaces import AuthenticationBase
 from .sharedbase import ClosureBase
 from .orm import SQLORM
+
+
+# TODO
+# Consider making this an interface that can be extended later
+# Which will make it compatible to any DB and Authentication ways
+# TODO: Refactor getters and setters and make code simpler
+# TODO: Make all AuthBase functions ORM based
 
 
 class AuthBase(AuthenticationBase, ClosureBase):
@@ -247,4 +250,3 @@ class AuthBase(AuthenticationBase, ClosureBase):
             if self.has_permissions(conn, options):
                 return True
         return False
-
