@@ -24,6 +24,7 @@ class SQLORM(SQLBase):
                 return False
         else:
             if type(sql) == str and len(sql) > 0:
+                # TODO: Make this logger
                 print(sql, " {0}ed successfully".format(action))
             else:
                 print(options.get("table"),
