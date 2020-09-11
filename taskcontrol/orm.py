@@ -16,16 +16,15 @@ from .sharedbase import ClosureBase
 class SQLORM(SQLBase):
 
     def has_sql(self, options, run="check", action="search"):
+        sql = options.get("sql")
         if action == "check":
-            sql = options.get("sql")
             if type(sql) == str and len(sql) > 0:
                 return True
             else:
                 return False
         else:
             if type(sql) == str and len(sql) > 0:
-                print(options.get("sql"),
-                      " {0}ed successfully".format(action))
+                print(sql, " {0}ed successfully".format(action))
             else:
                 print(options.get("table"),
                       " {0}ed successfully".format(action))
