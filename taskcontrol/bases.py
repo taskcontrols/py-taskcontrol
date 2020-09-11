@@ -6,7 +6,8 @@ from .concurrency import ConcurencyBase
 from .actions import ActionsBase
 from .hooks import Sockets, Hooks
 from .authentication import AuthBase
-from .logger_timer import LoggerBase
+from .logger import LoggerBase
+from .timer import TimerBase
 from .plugin import PluginsBase
 
 
