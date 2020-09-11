@@ -15,11 +15,25 @@ from .sharedbase import ClosureBase
 
 class SQLORM(SQLBase):
 
-    def create(self, conn, options):
-        try:
+    def has_sql(self, options, run="check", action="search"):
+        if action == "check":
             sql = options.get("sql")
             if type(sql) == str and len(sql) > 0:
-                pass
+                return True
+            else:
+                return False
+        else:
+            if type(sql) == str and len(sql) > 0:
+                print(options.get("sql"),
+                      " {0}ed successfully".format(action))
+            else:
+                print(options.get("table"),
+                      " {0}ed successfully".format(action))
+
+    def create(self, conn, options):
+        try:
+            if self.has_sql(options, run="check"):
+                sql = options.get("sql")
             else:
                 sql = """INSERT INTO """ + str(options.get("table"))
                 for i in options.get("columns"):
@@ -33,19 +47,15 @@ class SQLORM(SQLBase):
 
             conn.execute(sql)
             conn.commit()
-            if type(sql) == str and len(sql) > 0:
-                print(options.get("sql"), " created successfully")
-            else:
-                print(options.get("table"), " created successfully")
+            self.has_sql(options, run="print", action="create")
         except Exception as e:
             raise Exception("Error with options provided", e)
         return True
 
     def find(self, conn, options):
         try:
-            sql = options.get("sql")
-            if type(sql) == str and len(sql) > 0:
-                pass
+            if self.has_sql(options, run="check"):
+                sql = options.get("sql")
             else:
                 sql = """SELECT """
                 for i in options.get("columns"):
@@ -77,19 +87,15 @@ class SQLORM(SQLBase):
 
             conn.execute(sql)
             conn.commit()
-            if type(sql) == str and len(sql) > 0:
-                print(options.get("sql"), " searched successfully")
-            else:
-                print(options.get("table"), " searched successfully")
+            self.has_sql(options, run="print", action="search")
         except Exception as e:
             raise Exception("Error with options provided", e)
         return True
 
     def update(self, conn, options):
         try:
-            sql = options.get("sql")
-            if type(sql) == str and len(sql) > 0:
-                pass
+            if self.has_sql(options, run="check"):
+                sql = options.get("sql")
             else:
                 sql = """UPDATE """ + options.get("table")
                 sql += """ SET """
@@ -107,19 +113,15 @@ class SQLORM(SQLBase):
                 sql += """;"""
             conn.execute(sql)
             conn.commit()
-            if type(sql) == str and len(sql) > 0:
-                print(options.get("sql"), " updated successfully")
-            else:
-                print(options.get("table"), " updated successfully")
+            self.has_sql(options, run="print", action="update")
         except Exception as e:
             raise Exception("Error with options provided", e)
         return True
 
     def delete(self, conn, options):
         try:
-            sql = options.get("sql")
-            if type(sql) == str and len(sql) > 0:
-                pass
+            if self.has_sql(options, run="check"):
+                sql = options.get("sql")
             else:
                 sql = """DELETE FROM """
                 sql += str(options.get("table")) + """ WHERE """
@@ -147,10 +149,7 @@ class SQLORM(SQLBase):
                 #     pass
             conn.execute(sql)
             conn.commit()
-            if type(sql) == str and len(sql) > 0:
-                print(options.get("sql"), " deleted successfully")
-            else:
-                print(options.get("table"), " deleted successfully")
+            self.has_sql(options, run="print", action="delete")
         except Exception as e:
             raise Exception("Error with options provided", e)
         return True
