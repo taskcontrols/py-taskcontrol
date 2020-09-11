@@ -6,6 +6,7 @@ from multiprocessing import Process, Array, Value, Manager
 
 # TODO: Refactor getters and setters and make code simpler
 
+
 class ConcurencyBase():
 
     # consider adding concurrency futures
@@ -34,7 +35,7 @@ class ConcurencyBase():
         # Test this instance of MThreading for lock and other params
 
         result = None
-        
+
         if type(options) == dict:
             share_value = options.get("share_value")
 
@@ -60,7 +61,7 @@ class ConcurencyBase():
             arg = (*args,)
 
         worker = Thread(
-            target=function, 
+            target=function,
             args=arg,
             kwargs={"result": result, **kwargs}
         )
@@ -102,11 +103,11 @@ class ConcurencyBase():
         if type(options) == dict:
             share_value = options.get("share_value")
             share_array = options.get("share_array")
-            
+
             args = options.get("args")
             if not args:
                 args = []
-            
+
             kwargs = options.get("kwargs")
             if not kwargs:
                 kwargs = {}
