@@ -25,27 +25,42 @@ class Logger(LogBase, ClosureBase):
     def create_logger(self, config):
 
         # Config object expected
-        # {"name":"name", "handlers": {"handler": "", "value": ""}, "format": ""}
+        # {
+        #   "name":"name",
+        #   "logger":logger,
+        #   "level": "DEBUG",
+        #   "handlers": {"handler": ""},
+        #   "handlers": [{"handler": ""}],
+        #   "format": "",
+        # }
 
-        self.setter("loggers", config, self)
         logger = self.getter("loggers", config.get("name"))
 
         # Use config here
         # config contains network info if logging needed to network
-        if len(logger) == 0:
-            logger[0] = logging.getLogger(config.get("name"))
-        log = logger[0]
+        if len(logger) > 1:
+            raise ValueError(
+                "Number of logger items ({0}) incorrect. Check the logger registeration".format(len(logger)))
+        elif len(logger) == 1:
+            log = logger[0]
+        else:
+            log = logging.getLogger(config.get("name"))[0]
 
         if config.get("handlers") and type(config.get("handlers")) == list:
             for i in config.get("handlers"):
                 # {"handler": "FileHandler", "value": None}
-                h = getattr(logging, config.get(
-                    i["handler"])(config.get(i["value"])))
+                h = getattr(logging, config.get(i["handler"]))(
+                    config.get(i["value"]))
                 h.setLevel(getattr(logging, config.get("level")))
                 log.addHandler(h)
+        else:
+            h = getattr(logging, config.get("handler"))(config.get("value"))
+            h.setLevel(getattr(logging, config.get("level")))
+            log.addHandler(h)
 
         log.setFormatter(log.Formatter(config.get("format")))
-        self.setter(config.get("name"), log, self)
+        config["logger"] = log
+        self.setter("loggers", config, self)
 
     def delete_logger(self, options):
 
@@ -60,21 +75,25 @@ class Logger(LogBase, ClosureBase):
         # {"name":"name", "level": "debug", "message": ""}
 
         logger = self.getter("loggers", options.get("name"))
+        if len(logger) == 0 or len(logger) > 1:
+            raise ValueError(
+                "Logger items ({0}) incorrect. Check logger".format(len(logger)))
+        log = logger[0]
         level = options.get("level")
         message = options.get("message")
 
         try:
             if level == "debug" and logger:
-                logger[0].debug(message)
+                log.debug(message)
             if level == "info" and logger:
-                logger[0].info(message)
+                log.info(message)
             if level == "info" and logger:
-                logger[0].warning(message)
+                log.warning(message)
             if level == "error" and logger:
-                logger[0].error(message)
+                log.error(message)
             if level == "critical" and logger:
-                logger[0].critical(message)
+                log.critical(message)
             return True
         except Exception as e:
-            logger[0].raise_error(e, level, message)
+            log.raise_error(e, level, message)
             return False
