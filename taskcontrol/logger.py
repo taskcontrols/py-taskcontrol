@@ -29,8 +29,8 @@ class Logger(LogBase, ClosureBase):
         #   "name":"name",
         #   "logger":logger,
         #   "level": "debug",
-        #   "handlers": {"handler": ""},
-        #   "handlers": [{"handler": ""}],
+        #   "handlers": {"handler": "", "value": ""},
+        #   "handlers": [{"handler": "", "value": ""}],
         #   "format": "",
         # }
 
