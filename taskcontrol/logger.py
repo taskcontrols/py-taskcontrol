@@ -28,7 +28,7 @@ class Logger(LogBase, ClosureBase):
         # {
         #   "name":"name",
         #   "logger":logger,
-        #   "level": "DEBUG",
+        #   "level": "debug",
         #   "handlers": {"handler": ""},
         #   "handlers": [{"handler": ""}],
         #   "format": "",
@@ -83,15 +83,15 @@ class Logger(LogBase, ClosureBase):
         message = options.get("message")
 
         try:
-            if level == "debug" and logger:
+            if level == "debug" and log:
                 log.debug(message)
-            if level == "info" and logger:
+            if level == "info" and log:
                 log.info(message)
-            if level == "info" and logger:
+            if level == "info" and log:
                 log.warning(message)
-            if level == "error" and logger:
+            if level == "error" and log:
                 log.error(message)
-            if level == "critical" and logger:
+            if level == "critical" and log:
                 log.critical(message)
             return True
         except Exception as e:
