@@ -53,10 +53,12 @@ class Logger(LogBase, ClosureBase):
                     config.get(i["value"]))
                 h.setLevel(getattr(logging, config.get("level")))
                 log.addHandler(h)
-        else:
+        elif config.get("handlers") and type(config.get("handlers")) == dict:
             h = getattr(logging, config.get("handler"))(config.get("value"))
             h.setLevel(getattr(logging, config.get("level")))
             log.addHandler(h)
+        else:
+            raise TypeError("Config object handler key error")
 
         log.setFormatter(log.Formatter(config.get("format")))
         config["logger"] = log
