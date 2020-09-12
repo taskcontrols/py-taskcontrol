@@ -72,6 +72,8 @@ class Logger(LogBase, ClosureBase):
         self.deleter(options.get("key"), options.get("value"))
 
     def log(self, options):
+        # TODO: Concurrency can be added
+        # https://docs.python.org/3/howto/logging-cookbook.html
 
         # options object expected
         # {"name":"name", "level": "debug", "message": ""}
