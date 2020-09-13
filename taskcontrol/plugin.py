@@ -3,7 +3,7 @@
 
 class PluginsBase():
 
-    # return plugin instance/module
+    # return plugin instance/module (plugin_instance)
     def plugin_create(self, name, task_instance):
 
         # TODO: Apply multiple instances (Allow seperate and merged instances)
@@ -37,4 +37,3 @@ class PluginsBase():
                     "workflows": task_instance.get("workflows")
                 }
             }
-
