@@ -25,14 +25,8 @@ class Logger(LogBase, ClosureBase):
     def create_logger(self, config):
 
         # Config object expected
-        # {
-        #   "name":"name",
-        #   "logger":logger,
-        #   "level": "debug",
-        #   "handlers": {"handler": "", "value": ""},
-        #   "handlers": [{"handler": "", "value": ""}],
-        #   "format": "",
-        # }
+        # { "name":"name", "logger":logger, "level": "debug", "format": "",
+        #   "handlers": {"handler": "", "value": ""}, "handlers": [{"handler": "", "value": ""}] }
 
         logger = self.getter("loggers", config.get("name"))
 

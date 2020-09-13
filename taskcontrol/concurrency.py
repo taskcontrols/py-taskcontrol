@@ -37,7 +37,10 @@ class ConcurencyBase():
         result = None
 
         if type(options) == dict:
-            share_value = options.get("share_value")
+            # # Keeping following to be user responsibility
+            # # Check addition later
+            # share_value = options.get("share_value")
+            pass
 
         daemon = options.get("daemon")
         if type(daemon) != bool:
@@ -101,8 +104,10 @@ class ConcurencyBase():
         # # share_semaphore, share_bounded_semaphore
 
         if type(options) == dict:
-            share_value = options.get("share_value")
-            share_array = options.get("share_array")
+            # # Keeping following to be user responsibility
+            # # Check addition later
+            # share_value = options.get("share_value")
+            # share_array = options.get("share_array")
 
             args = options.get("args")
             if not args:
@@ -135,6 +140,7 @@ class ConcurencyBase():
 
         return {"worker": worker, "result": result}
 
+    # asynchronous, needs_join
     def mprocess_pool_run(self, function, options):
         pass
 
