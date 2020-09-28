@@ -37,3 +37,10 @@ class PluginsBase():
                     "workflows": task_instance.get("workflows")
                 }
             }
+
+
+if __name__ == "__main__":
+    plugin = PluginsBase()
+
+
+__all__ = ["PluginsBase"]
