@@ -158,3 +158,10 @@ class ConcurencyBase():
             if mode == "futures":
                 pass
         return None
+
+
+if __name__ == "__main__":
+    concurrency = ConcurencyBase()
+
+
+__all__ = ["ConcurencyBase"]

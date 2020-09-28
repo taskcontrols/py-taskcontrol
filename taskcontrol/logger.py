@@ -95,3 +95,10 @@ class Logger(LogBase, ClosureBase):
         except Exception as e:
             log.raise_error(e, level, message)
             return False
+
+
+if __name__ == "__main__":
+    l = Logger("Test", {})
+
+
+__all__ = ["Logger"]

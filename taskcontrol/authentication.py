@@ -251,3 +251,10 @@ class AuthBase(AuthenticationBase, ClosureBase):
             if self.has_permissions(conn, options):
                 return True
         return False
+
+
+if __name__ == "__main__":
+    auth = AuthBase()
+
+
+__all__ = ["AuthBase"]

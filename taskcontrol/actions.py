@@ -39,7 +39,7 @@ class Actions(ClosureBase):
         #     raise Exception("Not authenticated")
         state = self.getter("actions", key)
         if state and len(state) == 1:
-            return state[0] # send back state
+            return state[0]  # send back state
         return False
 
     def register_event(self, event_object):
@@ -128,7 +128,8 @@ class Actions(ClosureBase):
         # if not is_authenticated():
         #     raise Exception("Not authenticated")
         action = self.getter("actions", msg_object.get("key"))
-        action[0].send(msg_object.get("message")) # use send or related function TODO
+        # use send or related function TODO
+        action[0].send(msg_object.get("message"))
 
     def listen(self, options):
         """
@@ -144,4 +145,11 @@ class Actions(ClosureBase):
         # if not is_authenticated():
         #     raise Exception("Not authenticated")
         action = self.getter("actions", options.get("key"))
-        action[0].listen(options) # use listen or related function TODO
+        action[0].listen(options)  # use listen or related function TODO
+
+
+if __name__ == "__main__":
+    action = Actions()
+
+
+__all__ = ["Actions"]

@@ -18,7 +18,7 @@ class Timer(TimeBase, ClosureBase):
             timers=timers)
 
     def time(self, options):
-        
+
         # options object expected
         # {"name":"name", "logger": "", "format": ""}
 
@@ -35,5 +35,12 @@ class Timer(TimeBase, ClosureBase):
             raise ValueError("Did not find timer")
         if logger:
             logger.log(t)
+
         return t
 
+
+if __name__ == "__main__":
+    t = Timer({}, {})
+
+
+__all__ = ["Timer"]

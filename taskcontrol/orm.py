@@ -45,7 +45,8 @@ class SQLORM(SQLBase):
                 sql += """);"""
 
             conn.execute(sql)
-            if options.get("commit") == True: conn.commit()
+            if options.get("commit") == True:
+                conn.commit()
             self.has_sql(options, run="print", action="create")
         except Exception as e:
             raise Exception("Error with options provided", e)
@@ -85,7 +86,8 @@ class SQLORM(SQLBase):
                 #     pass
 
             conn.execute(sql)
-            if options.get("commit") == True: conn.commit()
+            if options.get("commit") == True:
+                conn.commit()
             self.has_sql(options, run="print", action="search")
         except Exception as e:
             raise Exception("Error with options provided", e)
@@ -111,7 +113,8 @@ class SQLORM(SQLBase):
                 # filters = options.get("filters")
                 sql += """;"""
             conn.execute(sql)
-            if options.get("commit") == True: conn.commit()
+            if options.get("commit") == True:
+                conn.commit()
             self.has_sql(options, run="print", action="update")
         except Exception as e:
             raise Exception("Error with options provided", e)
@@ -147,8 +150,40 @@ class SQLORM(SQLBase):
                 #     # Make writes to memory and DB to persist
                 #     pass
             conn.execute(sql)
-            if options.get("commit") == True: conn.commit()
+            if options.get("commit") == True:
+                conn.commit()
             self.has_sql(options, run="print", action="delete")
         except Exception as e:
             raise Exception("Error with options provided", e)
         return True
+
+    def db_create(self):
+        pass
+
+    def db_alter(self):
+        pass
+
+    def db_delete(self):
+        pass
+
+    def db_find(self):
+        pass
+
+    def table_create(self):
+        pass
+
+    def table_alter(self):
+        pass
+
+    def table_delete(self):
+        pass
+
+    def table_find(self):
+        pass
+
+
+if __name__ == "__main__":
+    orm = SQLORM()
+
+
+__all__ = ["SQLORM"]

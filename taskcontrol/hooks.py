@@ -165,4 +165,10 @@ class Hooks(HooksBase, ClosureBase):
         pass
 
 
+if __name__ == "__main__":
+    socket = Sockets()
+
+    hook = Hooks(socketsbase=Sockets)
+
+
 __all__ = ["Sockets", "Hooks"]
