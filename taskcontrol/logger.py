@@ -1,12 +1,12 @@
 # Logger and timer Base
 
 import logging
-from .sharedbase import ClosureBase
+from .sharedbase import ClosureBase, UtilsBase
 from .interfaces import LogBase
 # TODO: Refactor getters and setters and make code simpler
 
 
-class Logger(LogBase, ClosureBase):
+class Logger(LogBase, ClosureBase, UtilsBase):
 
     def __init__(self, name, config):
 

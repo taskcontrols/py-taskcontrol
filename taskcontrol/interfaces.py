@@ -152,6 +152,42 @@ class HooksBase(metaclass=abc.ABCMeta):
 
 
 @dataclass(frozen=True)
+class SshBase(metaclass=abc.ABCMeta):
+
+    @abc.abstractmethod
+    def __init__(self, **kwargs):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def add(self, servers):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def remove(self, servers):
+        raise NotImplementedError
+    
+    @abc.abstractmethod
+    def commands_add(self, commands):
+        raise NotImplementedError
+    
+    @abc.abstractmethod
+    def commands_remove(self, commands):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def connect(self, options):
+        raise NotImplementedError
+    
+    @abc.abstractmethod
+    def run(self, options):
+        raise NotImplementedError
+    
+    @abc.abstractmethod
+    def close(self, options):
+        raise NotImplementedError
+
+
+@dataclass(frozen=True)
 class SQLBase(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod

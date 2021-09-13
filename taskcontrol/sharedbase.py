@@ -1,5 +1,28 @@
 # SHARED BASE
 
+class UtilsBase():
+    def validate_object(self, event_object, values=[]):
+        keys = event_object.keys()
+        if len(keys) == len(values):
+            if type(values) == list:
+                for k in values:
+                    if k in keys:
+                        return True
+                    else:
+                        return False
+            elif type(values) == dict:
+                v_keys = values.keys()
+                for v in v_keys:
+                    if v in keys:
+                        for k in keys:
+                            if type(values.get(v)) == type(event_object.get(k)):
+                                continue
+                            else:
+                                return False
+                    else:
+                        return False
+        return False
+
 
 class ClosureBase():
     def class_closure(self, **kwargs):
@@ -42,7 +65,6 @@ class ClosureBase():
             else:
                 raise TypeError("Problem with " + key +
                                 " Value setting " + str(value))
-            return False
 
         def deleter(key, value=None):
             if type(value) == str:
@@ -86,3 +108,6 @@ class SharedBase(ClosureBase):
         if not SharedBase.__instance:
             return SharedBase()
         return SharedBase.__instance
+
+
+__all__ = ["SharedBase", "ClosureBase", "UtilsBase"]

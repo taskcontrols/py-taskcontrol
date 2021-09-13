@@ -10,7 +10,7 @@ import sqlite3
 
 
 from .interfaces import AuthenticationBase
-from .sharedbase import ClosureBase
+from .sharedbase import ClosureBase, UtilsBase
 from .orm import SQLORM
 
 
@@ -21,7 +21,7 @@ from .orm import SQLORM
 # TODO: Make all AuthBase functions ORM based
 
 
-class AuthBase(AuthenticationBase, ClosureBase):
+class AuthBase(AuthenticationBase, ClosureBase, UtilsBase):
 
     def __init__(self, **kwargs):
         if self.verify_kwargs_structure(**kwargs):

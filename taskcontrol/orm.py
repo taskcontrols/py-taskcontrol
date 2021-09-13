@@ -10,10 +10,10 @@
 # TODO: Refactor getters and setters and make code simpler
 
 from .interfaces import SQLBase
-from .sharedbase import ClosureBase
+from .sharedbase import ClosureBase, UtilsBase
 
 
-class SQLORM(SQLBase):
+class SQLORM(SQLBase, UtilsBase):
 
     def has_sql(self, options, run="check", action="search"):
         sql = options.get("sql")

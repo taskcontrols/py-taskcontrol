@@ -1,7 +1,7 @@
 # # Project Workflow
 # Add support for Concurrency
 
-from .sharedbase import ClosureBase, SharedBase
+from .sharedbase import ClosureBase, SharedBase, UtilsBase
 from .concurrency import ConcurencyBase
 from .actions import Actions
 from .hooks import Sockets, Hooks
@@ -11,7 +11,7 @@ from .timer import Timer
 from .plugin import PluginsBase
 
 
-class WorkflowBase(ClosureBase, ConcurencyBase, PluginsBase):
+class WorkflowBase(ClosureBase, ConcurencyBase, PluginsBase, UtilsBase):
 
     def __init__(self):
         super().__init__()
@@ -183,5 +183,5 @@ __all__ = [
     "ConcurencyBase", "Actions",
     "Sockets", "Hooks",
     "Logger", "Timer",
-    "AuthBase"
+    "AuthBase", "UtilsBase"
 ]

@@ -1,7 +1,8 @@
 # Plugins Base
 
+from .sharedbase import UtilsBase
 
-class PluginsBase():
+class PluginsBase(UtilsBase):
 
     # return plugin instance/module (plugin_instance)
     def plugin_create(self, name, task_instance):
@@ -24,7 +25,6 @@ class PluginsBase():
                 raise ValueError("tasks definition has an issue")
             if not task_instance.get("workflows"):
                 raise ValueError("workflows definition has an issue")
-            # pass
 
         if type(name) == str:
             return {

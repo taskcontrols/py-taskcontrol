@@ -1,5 +1,6 @@
 # for git development repo
 from taskcontrol.workflow import workflow, Tasks
+from taskcontrol.actions import Actions
 
 # for package
 # from taskcontrol.workflow import workflow, Tasks
@@ -183,3 +184,22 @@ print("run_8 0 Tasks [1S]", run_8)
 # Run Precreated Tasks
 # run_9 = sparrow.run(tasks="workflow:workflowname")
 # print("run_9", run_9)
+
+
+# Action Listeners
+
+print("Actions/Events: Demonstrating Event and Event Listeners")
+action = Actions()
+
+def run(data):
+    print("Run Event Handler", data)
+
+action.register_event({"name": "new", "event": run})
+action.register_listener({"name": "new", "action": "run", "listener": run})
+action.listen({"name": "new"})
+action.message({"name": "new", "message": "Testing message"})
+action.stop_listening({"name": "new"})
+action.unregister_listener({"name": "new", "action": "run"})
+action.unregister_event({"name": "new"})
+
+

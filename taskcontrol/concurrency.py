@@ -3,11 +3,10 @@
 
 from threading import Thread, Lock
 from multiprocessing import Process, Array, Value, Manager
+from .sharedbase import UtilsBase
 
-# TODO: Refactor getters and setters and make code simpler
 
-
-class ConcurencyBase():
+class ConcurencyBase(UtilsBase):
 
     # consider adding concurrency futures
     def futures_run(self):

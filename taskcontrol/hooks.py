@@ -1,12 +1,12 @@
 # Hooks Base
 
 # TODO: Refactor getters and setters and make code simpler
-from .sharedbase import ClosureBase
+from .sharedbase import ClosureBase, UtilsBase
 # Inherit shared and logging
 from .interfaces import SocketsBase, HooksBase
 
 
-class Sockets(SocketsBase, ClosureBase):
+class Sockets(SocketsBase, ClosureBase, UtilsBase):
 
     def __init__(self):
         super()
