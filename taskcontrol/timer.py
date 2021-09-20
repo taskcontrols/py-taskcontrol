@@ -22,20 +22,19 @@ class Timer(TimeBase, ClosureBase, UtilsBase):
         # {"name":"name", "logger": "", "format": ""}
 
         logger = options.get("logger")
-        timer = self.getter("timers", options.get("name"))
+        t = self.getter("timers", options.get("name"))
 
-        if len(timer) == 1:
-            t = timer[0].perf_counter()
+        if len(t) == 1:
+            timer = t[0].perf_counter()
         else:
             raise TypeError(
                 "Wrong timer name provided. No such timer or multiple names matched")
 
-        if not t:
+        if not timer:
             raise ValueError("Did not find timer")
         if logger:
-            logger.log(t)
-
-        return t
+            logger.log(timer)
+        return timer
 
 
 if __name__ == "__main__":
