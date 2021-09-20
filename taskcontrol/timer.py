@@ -3,7 +3,6 @@
 import time
 from .sharedbase import ClosureBase, UtilsBase
 from .interfaces import TimeBase
-# TODO: Refactor getters and setters and make code simpler
 
 
 class Timer(TimeBase, ClosureBase, UtilsBase):

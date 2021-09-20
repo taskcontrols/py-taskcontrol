@@ -60,7 +60,6 @@ class ClosureBase():
                     inst.shared.setter(key, value, inst.shared)
                 elif value.get("workflow_kwargs").get("shared") == False:
                     closure_val[key].update({value.get("name"): value})
-
                 return True
             else:
                 raise TypeError("Problem with " + key +

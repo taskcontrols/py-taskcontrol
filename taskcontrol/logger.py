@@ -3,7 +3,6 @@
 import logging
 from .sharedbase import ClosureBase, UtilsBase
 from .interfaces import LogBase
-# TODO: Refactor getters and setters and make code simpler
 
 
 class Logger(LogBase, ClosureBase, UtilsBase):

@@ -17,7 +17,7 @@ from .orm import SQLORM
 # TODO
 # Consider making this an interface that can be extended later
 # Which will make it compatible to any DB and Authentication ways
-# TODO: Refactor getters and setters and make code simpler
+
 # TODO: Make all AuthBase functions ORM based
 
 
