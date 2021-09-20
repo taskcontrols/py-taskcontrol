@@ -72,10 +72,12 @@ class Logger(LogBase, ClosureBase, UtilsBase):
         # {"name":"name", "level": "debug", "message": ""}
 
         logger = self.getter("loggers", options.get("name"))
-        if len(logger) == 0 or len(logger) > 1:
+        if (not len(logger) == 0 or not len(logger) > 1) and logger:
+            log = logger[0]
+        else:
             raise ValueError(
                 "Logger items ({0}) incorrect. Check logger".format(len(logger)))
-        log = logger[0]
+            
         level = options.get("level")
         message = options.get("message")
 
