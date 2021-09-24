@@ -252,30 +252,39 @@ class LogBase(LogsBase, ClosureBase, UtilsBase):
 
 
 class CommandsBase(CommandBase, ClosureBase, UtilsBase):
-    
+
     def __init__(self, options, commands={}):
         self.getter, self.setter, self.deleter = self.class_closure(
             commands=commands)
 
     def create(self, config):
         pass
-    
+
     def run(self, config):
         pass
 
     def close(self, config):
         pass
-    
+
     def delete(self, config):
         pass
-    
+
 
 if __name__ == "__main__":
-    l = LogBase("Test", {})
+    c = ClosureBase("Test", {})
 
+
+if __name__ == "__main__":
+    s = SharedBase("Test", {})
 
 if __name__ == "__main__":
     t = TimerBase({}, {})
+
+if __name__ == "__main__":
+    l = LogBase({}, {})
+
+if __name__ == "__main__":
+    c = CommandsBase({}, {})
 
 
 __all__ = [
