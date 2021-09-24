@@ -7,7 +7,7 @@ import socket
 import selectors
 from .sharedbase import ClosureBase, UtilsBase
 # Inherit shared and logging
-from .interfaces import SocketsBase, HooksBase
+from .interfaces import SocketsBase, HooksBase, SshBase
 
 
 class Sockets(SocketsBase, ClosureBase, UtilsBase):
@@ -298,6 +298,21 @@ class Hooks(HooksBase, ClosureBase, UtilsBase):
         pass
 
 
+class SSH(SshBase, ClosureBase, UtilsBase):
+
+    def create(self, options):
+        pass
+
+    def connect(self, options):
+        pass
+
+    def execute(self, options):
+        pass
+
+    def close(self, options):
+        pass
+
+
 if __name__ == "__main__":
     Socket = Sockets()
 
@@ -328,8 +343,11 @@ if __name__ == "__main__":
 
 
 if __name__ == "__main__":
-
     hook = Hooks(socketsbase=Sockets)
+
+
+if __name__ == "__main__":
+    ssh = SSH()
 
 
 __all__ = ["Sockets", "Hooks"]
