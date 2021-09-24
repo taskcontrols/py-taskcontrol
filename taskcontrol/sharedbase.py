@@ -277,11 +277,14 @@ if __name__ == "__main__":
 if __name__ == "__main__":
     s = SharedBase("Test", {})
 
+
 if __name__ == "__main__":
     t = TimerBase({}, {})
 
+
 if __name__ == "__main__":
     l = LogBase({}, {})
+
 
 if __name__ == "__main__":
     c = CommandsBase({}, {})

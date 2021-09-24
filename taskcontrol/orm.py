@@ -12,7 +12,12 @@ from .interfaces import SQLBase
 from .sharedbase import ClosureBase, UtilsBase
 
 
-class SQLORM(SQLBase, UtilsBase):
+class SQLORM(SQLBase, ClosureBase, UtilsBase):
+
+    def __init__(self, sockets={}):
+        super()
+        self.getter, self.setter, self.deleter = self.class_closure(
+            sockets=sockets)
 
     def has_sql(self, options, run="check", action="search"):
         sql = options.get("sql")
