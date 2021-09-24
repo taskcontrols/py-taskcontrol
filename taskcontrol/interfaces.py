@@ -233,3 +233,26 @@ class TimeBase(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def time(self, name, task_instance):
         raise NotImplementedError
+
+
+@dataclass(frozen=True)
+class CommandBase(metaclass=abc.ABCMeta):
+    
+    @abc.abstractmethod
+    def create(self, config):
+        pass
+    
+    @abc.abstractmethod
+    def execute(self, config):
+        pass
+    
+    @abc.abstractmethod
+    def close(self, config):
+        pass
+    
+    @abc.abstractmethod
+    def delete(self, config):
+        pass
+
+    
+

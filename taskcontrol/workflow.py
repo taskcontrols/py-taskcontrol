@@ -4,8 +4,8 @@ from sys import path
 path.append('./')
 
 
-from .interfaces import AuthenticationBase, SocketsBase, HooksBase, SQLBase, LogsBase, TimeBase
-from .bases import WorkflowBase, PluginsBase, LogBase, TimerBase, ConcurencyBase, AuthBase, UtilsBase, Queue, Action, Event, Hooks, Sockets
+from .interfaces import AuthenticationBase, SocketsBase, HooksBase, SQLBase, LogsBase, TimeBase, CommandBase
+from .bases import WorkflowBase, PluginsBase, LogBase, TimerBase, ConcurencyBase, AuthBase, UtilsBase, Queue, Action, Event, Hooks, Sockets, CommandsBase
 
 
 class Tasks(WorkflowBase):

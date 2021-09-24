@@ -2,7 +2,7 @@
 
 import time
 import logging
-from .interfaces import TimeBase, LogsBase
+from .interfaces import TimeBase, LogsBase, CommandBase
 
 
 class UtilsBase():
@@ -251,6 +251,24 @@ class LogBase(LogsBase, ClosureBase, UtilsBase):
             return False
 
 
+class CommandsBase(CommandBase, ClosureBase, UtilsBase):
+    
+    def __init__(self, options, commands={}):
+        self.getter, self.setter, self.deleter = self.class_closure(
+            commands=commands)
+
+    def create(self, config):
+        pass
+    
+    def run(self, config):
+        pass
+
+    def close(self, config):
+        pass
+    
+    def delete(self, config):
+        pass
+    
 
 if __name__ == "__main__":
     l = LogBase("Test", {})
@@ -263,5 +281,5 @@ if __name__ == "__main__":
 __all__ = [
     "SharedBase", "ClosureBase",
     "UtilsBase", "TimerBase",
-    "LogBase"
+    "LogBase", "CommandsBase"
 ]
