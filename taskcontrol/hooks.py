@@ -1,8 +1,10 @@
 # Hooks Base
 
-import socket
 import ast
-import sys
+# import sys
+
+import socket
+import selectors
 from .sharedbase import ClosureBase, UtilsBase
 # Inherit shared and logging
 from .interfaces import SocketsBase, HooksBase
@@ -17,19 +19,30 @@ class Sockets(SocketsBase, ClosureBase, UtilsBase):
     def socket_create(self, config):
 
         # TODO: Add Logger
+        # self.log(config)
 
         # TODO: Add Authentication
         # if not is_authenticated():
         #     raise Exception("Not authenticated")
         try:
-            if self.validate_object(config, values=["name", "protocol", "streammode", "host", "port", "numbers", "handler"]):
+            if "workflow_kwargs" not in config:
+                config["workflow_kwargs"] = {}
+            if "shared" not in config["workflow_kwargs"]:
+                config["workflow_kwargs"]["shared"] = False
+            if "blocking" not in config:
+                config["blocking"] = True
+            if "nonblocking_data" not in config:
+                config["nonblocking_data"] = None
+            if "nonblocking_timeout" not in config:
+                config["nonblocking_timeout"] = None
+            if "server" not in config:
+                config["server"] = None
+
+            if self.validate_object(config, values=["name", "protocol", "streammode", "host", "port", "numbers", "handler", "workflow_kwargs", "blocking", "nonblocking_data", "nonblocking_timeout", "server"]):
                 # srv = socket.socket(socket[config.get("protocol")], socket[config.get("streammode")])
                 srv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 config["server"] = srv
-                if "workflow_kwargs" not in config:
-                    config["workflow_kwargs"] = {}
-                if "shared" not in config["workflow_kwargs"]:
-                    config["workflow_kwargs"]["shared"] = False
+
                 s = self.setter("sockets", config, self)
                 if s:
                     return config
@@ -40,6 +53,7 @@ class Sockets(SocketsBase, ClosureBase, UtilsBase):
     def socket_listen(self, config):
 
         # TODO: Add Logger
+        # self.log(config)
 
         # TODO: Add Authentication
         # if not is_authenticated():
@@ -54,7 +68,16 @@ class Sockets(SocketsBase, ClosureBase, UtilsBase):
             srv.get("server").setsockopt(
                 socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             srv.get("server").listen(srv.get("numbers"))
-            c = self.socket_accept(srv)
+            if not srv.get("blocking"):
+                srv.get("server").setblocking(False)
+                sel = selectors.DefaultSelector()
+                sel.register(srv.get("server"), selectors.EVENT_READ,
+                             data=srv.get("nonblocking_data"))
+                srv["selectors"] = sel
+                c = self.socket_accept_nonblocking(srv)
+            else:
+                srv["selectors"] = None
+                c = self.socket_accept(srv)
             if c:
                 sc = self.setter("sockets", srv, self)
                 if sc:
@@ -63,9 +86,47 @@ class Sockets(SocketsBase, ClosureBase, UtilsBase):
             raise e
         return False
 
+    def socket_accept_nonblocking(self, config):
+
+        # TODO: Add Logger
+        # self.log(config)
+
+        # TODO: Add Authentication
+        # if not is_authenticated():
+        #     raise Exception("Not authenticated")
+        s = self.getter("sockets", config.get("name"))
+        if len(s) > 0:
+            srv = s[0]
+        else:
+            raise Exception("Server object not found")
+
+        def accept_wrapper(fileobj):
+            pass
+
+        def service_connection(key, mask):
+            pass
+
+        while True and srv:
+            try:
+                events = srv.get("selectors").select(
+                    timeout=srv.get("nonblocking_timeout"))
+                for key, mask in events:
+                    if key.data is None:
+                        accept_wrapper(key.fileobj)
+                    else:
+                        service_connection(key, mask)
+
+                # IMPORTANT NOTES
+                # Sending, Receiving data is Handlers work
+                # Closing connection is Handlers work
+                # srv.get("handler")(srv, conn, addr)
+            except Exception as e:
+                raise e
+
     def socket_accept(self, config):
 
         # TODO: Add Logger
+        # self.log(config)
 
         # TODO: Add Authentication
         # if not is_authenticated():
@@ -99,12 +160,13 @@ class Sockets(SocketsBase, ClosureBase, UtilsBase):
     def socket_connect(self, config):
 
         # TODO: Add Logger
+        # self.log(config)
 
         # TODO: Add Authentication
         # if not is_authenticated():
         #     raise Exception("Not authenticated")
         try:
-            if self.validate_object(config, values=["name", "protocol", "streammode", "host", "port", "numbers", "handler", "workflow_kwargs", "server"]):
+            if self.validate_object(config, values=["name", "protocol", "streammode", "host", "port", "numbers", "handler", "workflow_kwargs", "blocking", "nonblocking_data", "nonblocking_timeout", "server"]):
                 s = self.getter("sockets", config.get("name"))
                 if len(s) > 0:
                     clt = s[0]
@@ -122,6 +184,7 @@ class Sockets(SocketsBase, ClosureBase, UtilsBase):
     def socket_message(self, socket_object, message):
 
         # TODO: Add Logger
+        # self.log(config)
 
         # TODO: Add Authentication
         # if not is_authenticated():
@@ -131,6 +194,7 @@ class Sockets(SocketsBase, ClosureBase, UtilsBase):
     def socket_receive(self, socket_object):
 
         # TODO: Add Logger
+        # self.log(config)
 
         # TODO: Add Authentication
         # if not is_authenticated():
@@ -141,6 +205,7 @@ class Sockets(SocketsBase, ClosureBase, UtilsBase):
     def socket_close(self, socket_object):
 
         # TODO: Add Logger
+        # self.log(config)
 
         # TODO: Add Authentication
         # if not is_authenticated():
@@ -150,6 +215,7 @@ class Sockets(SocketsBase, ClosureBase, UtilsBase):
     def socket_delete(self, config):
 
         # TODO: Add Logger
+        # self.log(config)
 
         # TODO: Add Authentication
         # if not is_authenticated():

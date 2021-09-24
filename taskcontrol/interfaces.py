@@ -93,7 +93,7 @@ class SocketsBase(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def __init__(self, **kwargs):
         raise NotImplementedError
-        
+
     @abc.abstractmethod
     def socket_create(self):
         raise NotImplementedError
@@ -165,11 +165,11 @@ class SshBase(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def remove(self, servers):
         raise NotImplementedError
-    
+
     @abc.abstractmethod
     def commands_add(self, commands):
         raise NotImplementedError
-    
+
     @abc.abstractmethod
     def commands_remove(self, commands):
         raise NotImplementedError
@@ -177,11 +177,11 @@ class SshBase(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def connect(self, options):
         raise NotImplementedError
-    
+
     @abc.abstractmethod
     def run(self, options):
         raise NotImplementedError
-    
+
     @abc.abstractmethod
     def close(self, options):
         raise NotImplementedError
@@ -193,11 +193,11 @@ class SQLBase(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def create(self, conn, options):
         raise NotImplementedError
-    
+
     @abc.abstractmethod
     def find(self, conn, options):
         raise NotImplementedError
-    
+
     @abc.abstractmethod
     def update(self, conn, options):
         raise NotImplementedError
@@ -208,7 +208,7 @@ class SQLBase(metaclass=abc.ABCMeta):
 
 
 @dataclass(frozen=True)
-class LogBase(metaclass=abc.ABCMeta):
+class LogsBase(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def create(self, config):
@@ -233,4 +233,3 @@ class TimeBase(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def time(self, name, task_instance):
         raise NotImplementedError
-

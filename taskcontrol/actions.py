@@ -1,10 +1,17 @@
-# Events Actions Base
+# Queue Events Actions Base
 
-from .sharedbase import ClosureBase, UtilsBase
-from .logger import Logger
+from .sharedbase import ClosureBase, UtilsBase, LogBase
 
 
-class Actions(UtilsBase):
+class Queue():
+    pass
+
+
+class Event(UtilsBase):
+    pass
+
+
+class Action(UtilsBase):
     """
     Description of ActionsBase
 
@@ -64,7 +71,8 @@ class Actions(UtilsBase):
             def handler(data):
                 try:
                     event_func(data)
-                    action = self.getter("actions", event_object.get("name"))[0]
+                    action = self.getter(
+                        "actions", event_object.get("name"))[0]
                     for ln in action.get("listeners").keys():
                         action.get("listeners").get(ln).get("listener")(data)
                     return True
@@ -129,7 +137,8 @@ class Actions(UtilsBase):
                 action = act[0]
             else:
                 raise Exception("Event not present")
-            action["listeners"][listener_object.get("action")] = listener_object
+            action["listeners"][listener_object.get(
+                "action")] = listener_object
             ev = self.setter("actions", action, self)
             if ev:
                 return ev
@@ -164,7 +173,7 @@ class Actions(UtilsBase):
             ev = self.setter("actions", action, self)
             if ev:
                 print("Unregistered Action Listener " +
-                    listener_object.get("action"))
+                      listener_object.get("action"))
                 return ev
         except Exception as e:
             raise e
@@ -216,8 +225,8 @@ class Actions(UtilsBase):
             if len(act) > 0:
                 action = act[0]
             else:
-                raise Exception("Error in name") 
-            
+                raise Exception("Error in name")
+
             action["listening"] = True
             ev = self.setter("actions", action, self)
             if ev:
@@ -252,7 +261,7 @@ class Actions(UtilsBase):
 
 
 if __name__ == "__main__":
-    action = Actions()
+    action = Action()
 
     def run(data):
         print("Run Event Handler", data)
@@ -266,4 +275,4 @@ if __name__ == "__main__":
     action.unregister_event({"name": "new"})
 
 
-__all__ = ["Actions"]
+__all__ = ["Action", "Event", "Queue"]
