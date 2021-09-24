@@ -152,42 +152,6 @@ class HooksBase(metaclass=abc.ABCMeta):
 
 
 @dataclass(frozen=True)
-class SshBase(metaclass=abc.ABCMeta):
-
-    @abc.abstractmethod
-    def __init__(self, **kwargs):
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    def add(self, servers):
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    def remove(self, servers):
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    def commands_add(self, commands):
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    def commands_remove(self, commands):
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    def connect(self, options):
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    def run(self, options):
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    def close(self, options):
-        raise NotImplementedError
-
-
-@dataclass(frozen=True)
 class SQLBase(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
@@ -205,6 +169,38 @@ class SQLBase(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def delete(self, conn, options):
         raise NotImplementedError
+
+    @abc.abstractmethod
+    def db_create(self, conn, options):
+        pass
+
+    @abc.abstractmethod
+    def db_alter(self, conn, options):
+        pass
+
+    @abc.abstractmethod
+    def db_delete(self, conn, options):
+        pass
+
+    @abc.abstractmethod
+    def db_find(self, conn, options):
+        pass
+
+    @abc.abstractmethod
+    def table_create(self, conn, options):
+        pass
+
+    @abc.abstractmethod
+    def table_alter(self, conn, options):
+        pass
+
+    @abc.abstractmethod
+    def table_delete(self, conn, options):
+        pass
+
+    @abc.abstractmethod
+    def table_find(self, conn, options):
+        pass
 
 
 @dataclass(frozen=True)
@@ -237,22 +233,40 @@ class TimeBase(metaclass=abc.ABCMeta):
 
 @dataclass(frozen=True)
 class CommandBase(metaclass=abc.ABCMeta):
-    
+
     @abc.abstractmethod
     def create(self, config):
-        pass
-    
+        raise NotImplementedError
+
     @abc.abstractmethod
     def execute(self, config):
-        pass
-    
+        raise NotImplementedError
+
     @abc.abstractmethod
     def close(self, config):
-        pass
-    
+        raise NotImplementedError
+
     @abc.abstractmethod
     def delete(self, config):
-        pass
+        raise NotImplementedError
 
-    
+
+@dataclass(frozen=True)
+class SshBase(metaclass=abc.ABCMeta):
+
+    @abc.abstractmethod
+    def create(self, options):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def connect(self, options):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def execute(self, options):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def close(self, options):
+        raise NotImplementedError
 

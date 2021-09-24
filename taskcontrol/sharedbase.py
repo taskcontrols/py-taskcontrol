@@ -257,16 +257,16 @@ class CommandsBase(CommandBase, ClosureBase, UtilsBase):
         self.getter, self.setter, self.deleter = self.class_closure(
             commands=commands)
 
-    def create(self, config):
+    def create(self, options):
         pass
 
-    def run(self, config):
+    def execute(self, options):
         pass
 
-    def close(self, config):
+    def close(self, options):
         pass
 
-    def delete(self, config):
+    def delete(self, options):
         pass
 
 

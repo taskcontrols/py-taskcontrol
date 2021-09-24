@@ -161,28 +161,28 @@ class SQLORM(SQLBase, ClosureBase, UtilsBase):
             raise Exception("Error with options provided", e)
         return True
 
-    def db_create(self):
+    def db_create(self, conn, options):
         pass
 
-    def db_alter(self):
+    def db_alter(self, conn, options):
         pass
 
-    def db_delete(self):
+    def db_delete(self, conn, options):
         pass
 
-    def db_find(self):
+    def db_find(self, conn, options):
         pass
 
-    def table_create(self):
+    def table_create(self, conn, options):
         pass
 
-    def table_alter(self):
+    def table_alter(self, conn, options):
         pass
 
-    def table_delete(self):
+    def table_delete(self, conn, options):
         pass
 
-    def table_find(self):
+    def table_find(self, conn, options):
         pass
 
 
