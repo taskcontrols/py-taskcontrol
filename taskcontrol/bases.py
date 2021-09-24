@@ -6,7 +6,43 @@ from .concurrency import ConcurencyBase
 from .actions import Action, Event, Queue
 from .hooks import Sockets, Hooks
 from .authentication import AuthBase
-from .plugin import PluginsBase
+
+
+class PluginsBase(UtilsBase):
+
+    # return plugin instance/module (plugin_instance)
+    def plugin_create(self, name, task_instance):
+
+        # TODO: Apply multiple instances (Allow seperate and merged instances)
+        # Low priority
+        if type(task_instance) != dict:
+            raise TypeError("plugins definition has an issue")
+
+        if type(task_instance) == dict:
+            if not task_instance.get("config"):
+                raise ValueError("config definition has an issue")
+            if not task_instance.get("ctx"):
+                raise ValueError("ctx definition has an issue")
+            if not task_instance.get("plugins"):
+                raise ValueError("internal plugins definition has an issue")
+            if not task_instance.get("shared"):
+                raise ValueError("shared definition has an issue")
+            if not task_instance.get("tasks"):
+                raise ValueError("tasks definition has an issue")
+            if not task_instance.get("workflows"):
+                raise ValueError("workflows definition has an issue")
+
+        if type(name) == str:
+            return {
+                name: {
+                    "config": task_instance.get("config"),
+                    "ctx": task_instance.get("ctx"),
+                    "plugins": task_instance.get("plugins"),
+                    "shared": task_instance.get("shared"),
+                    "tasks": task_instance.get("tasks"),
+                    "workflows": task_instance.get("workflows")
+                }
+            }
 
 
 class WorkflowBase(ClosureBase, ConcurencyBase, PluginsBase, UtilsBase):
@@ -174,6 +210,10 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginsBase, UtilsBase):
 
         import functools
         return functools.reduce(self.reducer, tasks_to_run_in_task)
+
+
+if __name__ == "__main__":
+    plugin = PluginsBase()
 
 
 __all__ = [
