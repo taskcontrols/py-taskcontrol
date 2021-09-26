@@ -168,11 +168,11 @@ if __name__ == "__main__":
         print("Run Event Handler", data)
 
     event.register_event({"name": "new", "event": run})
-    event.register_listener({"name": "new", "action": "run", "listener": run})
+    event.register_listener({"event_name": "new", "name": "run", "listener": run})
     event.listen({"name": "new"})
-    event.message({"name": "new", "message": "Testing message"})
-    event.stop_listening({"name": "new"})
-    event.unregister_listener({"name": "new", "action": "run"})
+    event.message({"event_name": "new", "message": "Testing message"})
+    event.stop_listening({"event_name": "new"})
+    event.unregister_listener({"event_name": "new", "action": "run"})
     event.unregister_event({"name": "new"})
 
 if __name__ == "__main__":
