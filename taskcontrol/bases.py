@@ -4,7 +4,7 @@
 from .sharedbase import ClosureBase, SharedBase, UtilsBase, TimerBase, LogBase, CommandsBase
 from .concurrency import ConcurencyBase
 from .actions import Actions, Events, Queues
-from .hooks import Sockets, Hooks
+from .webhooks import Sockets, Hooks
 from .authentication import AuthBase
 
 

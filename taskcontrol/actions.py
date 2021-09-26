@@ -50,52 +50,98 @@ class Events(UtilsBase):
         super().__init__("events", events=event)
 
     def create_event(self, event_object):
-        pass
+        # Change this to different ways of using events/actions
+        event_func = event_object.get("event")
+        name = event_object.get("name")
+        try:
+            if "listening" not in event_object:
+                event_object["listening"] = False
+            if "listeners" not in event_object:
+                event_object["listeners"] = {}
 
-    def create_listener(self, event_object):
+            def __handler(data):
+                try:
+                    event_func(data)
+                    action = self.fetch(name)
+                    for ln in action.get("listeners").keys():
+                        action.get("listeners").get(ln).get("listener")(data)
+                    return True
+                except:
+                    return False
+
+            event_object["handler"] = __handler
+            if self.validate_object(event_object, ["name", "event", "handler", "listening", "listeners"]):
+                return self.create(event_object)
+        except Exception as e:
+            raise e
+        return False
+
+    def create_listener(self, listener_object):
         pass
 
     def listener_register(self, listener_object):
         try:
-            return
-        except Exception as e:
-            raise e
-
-    def listener_unregister(self, listener_object):
-        try:
-            return
-        except Exception as e:
-            raise e
-
-    def start(self, event_object):
-        try:
-            return
-        except Exception as e:
-            raise e
-
-    def stop(self, event_object):
-        try:
-            return
-        except Exception as e:
-            raise e
-
-    def get_state(self, event_object):
-        try:
+            if self.validate_object(listener_object, ["name", "event_name", "listener"]):
+                action = self.fetch(listener_object.get("event_name"))
+                action["listeners"][listener_object.get(
+                    "name")] = listener_object
+                return self.update(action)
             return False
         except Exception as e:
             raise e
 
-    def send(self, message_object):
+    def on(self, name, event_name, handler):
+        return self.listener_register({"name": name, "event_name": event_name, "listener": handler})
+
+    def listener_unregister(self, listener_object):
+        event_name = listener_object.get("event_name")
+        a_name = listener_object.get("action")
         try:
-            return True
+            action = self.fetch(event_name)
+            for ln in action.get("listeners"):
+                if ln == a_name:
+                    del action["listeners"][a_name]
+                    break
+            return self.update(action)
         except Exception as e:
             raise e
 
-    def receive(self, message_object):
+    def get_state(self, event_name):
         try:
-            return True
+            e = self.fetch(event_name)
+            if e:
+                return e.get("listening")
+            return False
         except Exception as e:
             raise e
+
+    def set_state(self, event_name, state):
+        try:
+            event = self.fetch(event_name)
+            event["listening"] = state
+            # Stop/Start listening to event
+            return self.update(event)
+        except Exception as e:
+            raise e
+
+    def start(self, event_name):
+        return self.set_state({"name": event_name, "listening": True})
+
+    def stop(self, event_name):
+        return self.set_state({"name": event_name, "listening": False})
+
+    def send(self, message_object):
+        try:
+            action = self.fetch(message_object.get("event_name"))
+            if action.get("listening"):
+                action.get("handler")(message_object.get("message"))
+                return True
+            return False
+        except Exception as e:
+            raise e
+
+    def emit(self, event_name, message):
+        return self.send({"event_name": event_name, "message": message})
 
 
 class Actions(UtilsBase):
@@ -108,203 +154,7 @@ class Actions(UtilsBase):
     """
 
     def __init__(self, action={}):
-        super()
-        self.getter, self.setter, self.deleter = ClosureBase().class_closure(
-            actions=action)
-
-    def action_state(self, event_object):
-        """
-        Description of action_state
-
-        Args:
-            event_object (dict):
-            { "name": "eventactionstate" }
-
-        """
-        # TODO: Add Logger
-
-        # TODO: Add Authentication
-        # if not is_authenticated():
-        #     raise Exception("Not authenticated")
-        try:
-            ev = self.getter("actions", event_object.get("name"))[0]
-            if ev.get("listening"):
-                return ev.get("listening")
-            return False
-        except Exception as e:
-            raise e
-
-    def register_event(self, event_object):
-        """
-        Description of register_event
-
-        Args:
-            event_object (dict):
-            { "name": "name", "event": function, "listening": True/False, listeners: {} }
-
-        """
-        try:
-            event_func = event_object.get("event")
-            event_object["listening"] = False
-            if "listeners" not in event_object:
-                event_object["listeners"] = {}
-            if "workflow_kwargs" not in event_object:
-                event_object["workflow_kwargs"] = {}
-            if "shared" not in event_object["workflow_kwargs"]:
-                event_object["workflow_kwargs"]["shared"] = False
-
-            def handler(data):
-                try:
-                    event_func(data)
-                    action = self.getter(
-                        "actions", event_object.get("name"))[0]
-                    for ln in action.get("listeners").keys():
-                        action.get("listeners").get(ln).get("listener")(data)
-                    return True
-                except:
-                    return False
-
-            event_object["handler"] = handler
-            if self.validate_object(event_object, ["name", "event", "handler", "listening", "listeners", "workflow_kwargs"]):
-                # TODO: Add Logger
-
-                # TODO: Add Authentication
-                # if not is_authenticated():
-                #     raise Exception("Not authenticated")
-                return self.setter("actions", event_object, self)
-        except Exception as e:
-            raise e
-        return False
-
-    def unregister_event(self, event_object):
-        """
-        Description of unregister_listener
-
-        Args:
-            event_object (dict):
-            { "name": "name" }
-
-        """
-        # TODO: Add Logger
-
-        # TODO: Add Authentication
-        # if not is_authenticated():
-        #     raise Exception("Not authenticated")
-        try:
-            return self.deleter("actions", event_object.get("name"))
-        except Exception as e:
-            raise e
-
-    def register_listener(self, listener_object):
-        """
-        Description of register_listener
-
-        Args:
-            listener_object (dict):
-            { "name": "name", "action": "eventactionname", "listener": function }
-
-        """
-        # TODO: Add Logger
-
-        # TODO: Add Authentication
-        # if not is_authenticated():
-        #     raise Exception("Not authenticated")
-        try:
-            action = self.getter("actions", listener_object.get("name"))[0]
-            action["listeners"][listener_object.get(
-                "action")] = listener_object
-            return self.setter("actions", action, self)
-        except Exception as e:
-            raise e
-
-    def unregister_listener(self, listener_object):
-        """
-        Description of unregister_listener
-
-        Args:
-            listener_object (dict):
-            { "action": "name", "name": "eventname" }
-
-        """
-        # TODO: Add Logger
-
-        # TODO: Add Authentication
-        # if not is_authenticated():
-        #     raise Exception("Not authenticated")
-        try:
-            action = self.getter("actions", listener_object.get("name"))[0]
-            for i, ln in enumerate(action.get("listeners")):
-                if ln == listener_object.get("action"):
-                    del action["listeners"][listener_object.get("action")]
-                    break
-            return self.setter("actions", action, self)
-        except Exception as e:
-            raise e
-
-    def message(self, message_object):
-        """
-        Description of message
-
-        Args:
-            message_object (dict):
-            {"name": "eventactionname", "message": object}
-
-        """
-        # TODO: Add Logger
-
-        # TODO: Add Authentication
-        # if not is_authenticated():
-        #     raise Exception("Not authenticated")
-        try:
-            action = self.getter("actions", message_object.get("name"))[0]
-            if action.get("listening"):
-                action.get("handler")(message_object.get("message"))
-                return True
-            return False
-        except Exception as e:
-            raise e
-
-    def listen(self, event_object):
-        """
-        Description of listen
-
-        Args:
-            event_object (dict):
-            { "name": "eventactionname" }
-
-        """
-        # TODO: Add Logger
-
-        # TODO: Add Authentication
-        # if not is_authenticated():
-        #     raise Exception("Not authenticated")
-        try:
-            action = self.getter("actions", event_object.get("name"))[0]
-            action["listening"] = True
-            return self.setter("actions", action, self)
-        except Exception as e:
-            raise e
-
-    def stop_listening(self, event_object):
-        """
-        Description of stop_listening
-
-        Args:
-            event_object (dict):
-            { "name": "eventactionname" }
-
-        """
-        # TODO: Add Logger
-
-        # TODO: Add Authentication
-        # if not is_authenticated():
-        #     raise Exception("Not authenticated")
-        try:
-            action = self.getter("actions", event_object.get("name"))[0]
-            action["listening"] = False
-            return self.setter("actions", action, self)
-        except Exception as e:
-            raise e
+        super().__init__("actions", actions=action)
 
 
 if __name__ == "__main__":
@@ -314,20 +164,19 @@ if __name__ == "__main__":
 if __name__ == "__main__":
     event = Events()
 
-
-if __name__ == "__main__":
-    action = Actions()
-
     def run(data):
         print("Run Event Handler", data)
 
-    action.register_event({"name": "new", "event": run})
-    action.register_listener({"name": "new", "action": "run", "listener": run})
-    action.listen({"name": "new"})
-    action.message({"name": "new", "message": "Testing message"})
-    action.stop_listening({"name": "new"})
-    action.unregister_listener({"name": "new", "action": "run"})
-    action.unregister_event({"name": "new"})
+    event.register_event({"name": "new", "event": run})
+    event.register_listener({"name": "new", "action": "run", "listener": run})
+    event.listen({"name": "new"})
+    event.message({"name": "new", "message": "Testing message"})
+    event.stop_listening({"name": "new"})
+    event.unregister_listener({"name": "new", "action": "run"})
+    event.unregister_event({"name": "new"})
+
+if __name__ == "__main__":
+    action = Actions()
 
 
 __all__ = ["Action", "Events", "Queues"]
