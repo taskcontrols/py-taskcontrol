@@ -1,7 +1,6 @@
 # Queue Events Actions Base
 
 from typing import List
-from .interfaces import ObjectModificationBase
 from .sharedbase import ClosureBase, UtilsBase, LogBase
 from collections import deque
 from queue import Queue
@@ -168,15 +167,17 @@ if __name__ == "__main__":
         print("Run Event Handler", data)
 
     event.register_event({"name": "new", "event": run})
-    event.register_listener({"event_name": "new", "name": "run", "listener": run})
+    event.register_listener(
+        {"event_name": "new", "name": "run", "listener": run})
     event.listen({"name": "new"})
     event.message({"event_name": "new", "message": "Testing message"})
     event.stop_listening({"event_name": "new"})
     event.unregister_listener({"event_name": "new", "action": "run"})
     event.unregister_event({"name": "new"})
 
+
 if __name__ == "__main__":
     action = Actions()
 
 
-__all__ = ["Action", "Events", "Queues"]
+__all__ = ["Actions", "Events", "Queues"]
