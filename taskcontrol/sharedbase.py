@@ -2,31 +2,7 @@
 
 import time
 import logging
-from .interfaces import TimeBase, LogsBase, CommandBase
-
-
-class UtilsBase():
-    def validate_object(self, event_object, values=[]):
-        keys = event_object.keys()
-        if len(keys) == len(values):
-            if type(values) == list:
-                for k in values:
-                    if k in keys:
-                        return True
-                    else:
-                        return False
-            elif type(values) == dict:
-                v_keys = values.keys()
-                for v in v_keys:
-                    if v in keys:
-                        for k in keys:
-                            if type(values.get(v)) == type(event_object.get(k)):
-                                continue
-                            else:
-                                return False
-                    else:
-                        return False
-        return False
+from .interfaces import TimeBase, LogsBase, CommandBase, ObjectModificationBase
 
 
 class ClosureBase():
@@ -124,6 +100,76 @@ class SharedBase(ClosureBase):
         if not SharedBase.__instance:
             return SharedBase()
         return SharedBase.__instance
+
+
+class UtilsBase(ObjectModificationBase):
+    object_name = None
+
+    def __init__(self, object_name="", validations={}, **kwargs):
+        self.object_name = object_name
+        self.validate_create = validations.get("create", ["name"])
+        self.validate_fetch = validations.get("fetch", ["name"])
+        self.validate_add = validations.get("add", ["name"])
+        self.validate_update = validations.get("update", ["name"])
+        self.validate_delete = validations.get("delete", ["name"])
+        self.getter, self.setter, self.deleter = ClosureBase().class_closure(
+            **kwargs)
+
+    def validate_object(self, val_object, values=[]):
+        keys = val_object.keys()
+        if len(keys) == len(values):
+            if type(values) == list:
+                for k in values:
+                    if k in keys:
+                        return True
+                    else:
+                        return False
+            elif type(values) == dict:
+                v_keys = values.keys()
+                for v in v_keys:
+                    if v in keys:
+                        for k in keys:
+                            if type(values.get(v)) == type(val_object.get(k)):
+                                continue
+                            else:
+                                return False
+                    else:
+                        return False
+        return False
+
+    def create(self, config):
+        if "workflow_kwargs" not in config:
+            config["workflow_kwargs"] = {}
+        if "shared" not in config["workflow_kwargs"]:
+            config["workflow_kwargs"]["shared"] = False
+        try:
+            if self.validate_object(config, self.validate_add):
+                return self.setter(self.object_name, config, self)[0]
+            return False
+        except Exception as e:
+            raise e
+
+    def fetch(self, name):
+        try:
+            return self.getter(self.object_name, name)[0]
+        except Exception as e:
+            raise e
+
+    def update(self, config):
+        try:
+            o = self.getter(self.object_name, config.get("name"))[0]
+            for k, v in config:
+                if o.get(k) and (not k == "name"):
+                    o[k] = v
+            return self.setter(self.object_name, o, self)
+        except Exception as e:
+            raise e
+
+    def delete(self, name):
+        try:
+            return self.deleter(self.object_name, name)
+        except Exception as e:
+            raise e
 
 
 class TimerBase(TimeBase, ClosureBase, UtilsBase):

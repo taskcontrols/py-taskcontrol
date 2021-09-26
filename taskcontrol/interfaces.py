@@ -4,6 +4,31 @@ import abc
 
 
 @dataclass(frozen=True)
+class ObjectModificationBase(metaclass=abc.ABCMeta):
+
+    @abc.abstractmethod
+    def __init__(self, **kwargs):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def create(self, config):
+        raise NotImplementedError
+    
+    @abc.abstractmethod
+    def fetch(self, config):
+        raise NotImplementedError
+    
+    @abc.abstractmethod
+    def update(self, config):
+        raise NotImplementedError
+    
+    @abc.abstractmethod
+    def delete(self, config):
+        raise NotImplementedError
+
+
+
+@dataclass(frozen=True)
 class AuthenticationBase(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod

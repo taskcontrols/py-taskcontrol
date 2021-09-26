@@ -1,14 +1,101 @@
 # Queue Events Actions Base
 
+from typing import List
+from .interfaces import ObjectModificationBase
 from .sharedbase import ClosureBase, UtilsBase, LogBase
+from collections import deque
+from queue import Queue
 
 
-class Queue():
-    pass
+class Queues(UtilsBase):
+    tmp = {}
+
+    def __init__(self, queues={}):
+        super().__init__("queues", queues=queues)
+
+    def new(self, config):
+        if self.validate_object(config, values=["maxsize", "queue_type"]):
+            if config.get("queue_type") == "queue":
+                return Queue(config.get("maxsize"))
+            elif config.get("queue_type") == "deque":
+                return deque([], maxlen=config.get("maxsize"))
+            else:
+                return []
+
+    def add(self, name, item):
+        o = self.fetch(name)
+        o.insert(item)
+        return self.update(o)
+
+    def remove(self, name, item):
+        o = self.fetch(name)
+        u = o.remove(item)
+        return u, self.update(o)
+
+    def pop(self, name, index):
+        o = self.fetch(name)
+        u = o.pop(index)
+        return u, self.update(o)
+
+    def next(self, name):
+        if name not in self.tmp:
+            self.tmp[name] = self.fetch(name)
+        if isinstance(self.tmp.get(name), List):
+            return self.tmp.get(name).shift()
+        return self.tmp.get(name).next()
 
 
 class Event(UtilsBase):
-    pass
+    def __init__(self, event={}):
+        super().__init__("events", events=event)
+
+    def create_event(self, event_object):
+        pass
+
+    def create_listener(self, event_object):
+        pass
+
+    def listener_register(self, listener_object):
+        try:
+            return
+        except Exception as e:
+            raise e
+
+    def listener_unregister(self, listener_object):
+        try:
+            return
+        except Exception as e:
+            raise e
+
+    def start(self, event_object):
+        try:
+            return
+        except Exception as e:
+            raise e
+
+    def stop(self, event_object):
+        try:
+            return
+        except Exception as e:
+            raise e
+
+    def get_state(self, event_object):
+        try:
+            return False
+        except Exception as e:
+            raise e
+
+    def send(self, message_object):
+        try:
+            return True
+        except Exception as e:
+            raise e
+
+    def receive(self, message_object):
+        try:
+            return True
+        except Exception as e:
+            raise e
 
 
 class Action(UtilsBase):
@@ -20,10 +107,10 @@ class Action(UtilsBase):
 
     """
 
-    def __init__(self):
+    def __init__(self, action={}):
         super()
         self.getter, self.setter, self.deleter = ClosureBase().class_closure(
-            actions={})
+            actions=action)
 
     def action_state(self, event_object):
         """
@@ -40,14 +127,12 @@ class Action(UtilsBase):
         # if not is_authenticated():
         #     raise Exception("Not authenticated")
         try:
-            ev = self.getter("actions", event_object.get("name"))
-            if len(ev) > 0:
-                e = ev[0]
-                if e.get("listening"):
-                    return e.get("listening")
+            ev = self.getter("actions", event_object.get("name"))[0]
+            if ev.get("listening"):
+                return ev.get("listening")
+            return False
         except Exception as e:
             raise e
-        return False
 
     def register_event(self, event_object):
         """
@@ -86,10 +171,7 @@ class Action(UtilsBase):
                 # TODO: Add Authentication
                 # if not is_authenticated():
                 #     raise Exception("Not authenticated")
-                ev = self.setter("actions", event_object, self)
-                if ev:
-                    return ev
-                return False
+                return self.setter("actions", event_object, self)
         except Exception as e:
             raise e
         return False
@@ -109,13 +191,9 @@ class Action(UtilsBase):
         # if not is_authenticated():
         #     raise Exception("Not authenticated")
         try:
-            ev = self.deleter("actions", event_object.get("name"))
-            if ev:
-                print("Unregistered Action Event " + event_object.get("name"))
-                return ev
+            return self.deleter("actions", event_object.get("name"))
         except Exception as e:
             raise e
-        return False
 
     def register_listener(self, listener_object):
         """
@@ -132,19 +210,12 @@ class Action(UtilsBase):
         # if not is_authenticated():
         #     raise Exception("Not authenticated")
         try:
-            act = self.getter("actions", listener_object.get("name"))
-            if len(act) > 0:
-                action = act[0]
-            else:
-                raise Exception("Event not present")
+            action = self.getter("actions", listener_object.get("name"))[0]
             action["listeners"][listener_object.get(
                 "action")] = listener_object
-            ev = self.setter("actions", action, self)
-            if ev:
-                return ev
+            return self.setter("actions", action, self)
         except Exception as e:
             raise e
-        return False
 
     def unregister_listener(self, listener_object):
         """
@@ -161,23 +232,14 @@ class Action(UtilsBase):
         # if not is_authenticated():
         #     raise Exception("Not authenticated")
         try:
-            act = self.getter("actions", listener_object.get("name"))
-            if len(act) > 0:
-                action = act[0]
-            else:
-                raise Exception("Event not present")
+            action = self.getter("actions", listener_object.get("name"))[0]
             for i, ln in enumerate(action.get("listeners")):
                 if ln == listener_object.get("action"):
                     del action["listeners"][listener_object.get("action")]
                     break
-            ev = self.setter("actions", action, self)
-            if ev:
-                print("Unregistered Action Listener " +
-                      listener_object.get("action"))
-                return ev
+            return self.setter("actions", action, self)
         except Exception as e:
             raise e
-        return False
 
     def message(self, message_object):
         """
@@ -194,17 +256,13 @@ class Action(UtilsBase):
         # if not is_authenticated():
         #     raise Exception("Not authenticated")
         try:
-            act = self.getter("actions", message_object.get("name"))
-            if len(act) > 0:
-                action = act[0]
-            else:
-                raise Exception("Event not present")
+            action = self.getter("actions", message_object.get("name"))[0]
             if action.get("listening"):
                 action.get("handler")(message_object.get("message"))
                 return True
+            return False
         except Exception as e:
             raise e
-        return False
 
     def listen(self, event_object):
         """
@@ -221,19 +279,11 @@ class Action(UtilsBase):
         # if not is_authenticated():
         #     raise Exception("Not authenticated")
         try:
-            act = self.getter("actions", event_object.get("name"))
-            if len(act) > 0:
-                action = act[0]
-            else:
-                raise Exception("Error in name")
-
+            action = self.getter("actions", event_object.get("name"))[0]
             action["listening"] = True
-            ev = self.setter("actions", action, self)
-            if ev:
-                return ev
+            return self.setter("actions", action, self)
         except Exception as e:
             raise e
-        return False
 
     def stop_listening(self, event_object):
         """
@@ -252,12 +302,17 @@ class Action(UtilsBase):
         try:
             action = self.getter("actions", event_object.get("name"))[0]
             action["listening"] = False
-            e = self.setter("actions", action, self)
-            if e:
-                return e
+            return self.setter("actions", action, self)
         except Exception as e:
             raise e
-        return False
+
+
+if __name__ == "__main__":
+    queue = Queue()
+
+
+if __name__ == "__main__":
+    event = Event()
 
 
 if __name__ == "__main__":
@@ -275,4 +330,4 @@ if __name__ == "__main__":
     action.unregister_event({"name": "new"})
 
 
-__all__ = ["Action", "Event", "Queue"]
+__all__ = ["Action", "Event", "Queues"]
