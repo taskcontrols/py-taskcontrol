@@ -45,7 +45,7 @@ class Queues(UtilsBase):
         return self.tmp.get(name).next()
 
 
-class Event(UtilsBase):
+class Events(UtilsBase):
     def __init__(self, event={}):
         super().__init__("events", events=event)
 
@@ -98,7 +98,7 @@ class Event(UtilsBase):
             raise e
 
 
-class Action(UtilsBase):
+class Actions(UtilsBase):
     """
     Description of ActionsBase
 
@@ -308,15 +308,15 @@ class Action(UtilsBase):
 
 
 if __name__ == "__main__":
-    queue = Queue()
+    queue = Queues()
 
 
 if __name__ == "__main__":
-    event = Event()
+    event = Events()
 
 
 if __name__ == "__main__":
-    action = Action()
+    action = Actions()
 
     def run(data):
         print("Run Event Handler", data)
@@ -330,4 +330,4 @@ if __name__ == "__main__":
     action.unregister_event({"name": "new"})
 
 
-__all__ = ["Action", "Event", "Queues"]
+__all__ = ["Action", "Events", "Queues"]

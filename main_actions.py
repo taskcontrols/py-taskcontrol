@@ -1,11 +1,11 @@
 
 # Actions and Listeners
 # (Publisher Subscriber using Action like functions)
-from taskcontrol.actions import Action
+from taskcontrol.actions import Actions
 
 
 print("\nActions:\nDemonstrating Action and Action Listeners")
-action = Action()
+action = Actions()
 
 def run(data):
     print("Run Action Handler", data)

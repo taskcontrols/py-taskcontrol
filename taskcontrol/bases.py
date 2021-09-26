@@ -3,7 +3,7 @@
 
 from .sharedbase import ClosureBase, SharedBase, UtilsBase, TimerBase, LogBase, CommandsBase
 from .concurrency import ConcurencyBase
-from .actions import Action, Event, Queue
+from .actions import Actions, Events, Queues
 from .hooks import Sockets, Hooks
 from .authentication import AuthBase
 
@@ -218,8 +218,9 @@ if __name__ == "__main__":
 
 __all__ = [
     "WorkflowBase", "PluginsBase",
-    "ConcurencyBase", "Action", "Event",
-    "Queue", "Sockets", "Hooks",
+    "ConcurencyBase", "Actions",
+    "Queues", "Events",
+    "Sockets", "Hooks",
     "LogBase", "TimerBase",
     "AuthBase", "UtilsBase"
 ]
