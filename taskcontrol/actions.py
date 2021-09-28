@@ -1,6 +1,7 @@
 # Queue Events Actions Base
 
 from typing import List
+from .interfaces import PubSubBase
 from .sharedbase import ClosureBase, UtilsBase, LogBase
 from collections import deque
 from queue import Queue
@@ -144,16 +145,33 @@ class Events(UtilsBase):
 
 
 class Actions(UtilsBase):
-    """
-    Description of ActionsBase
-
-    Attributes:
-
-
-    """
 
     def __init__(self, action={}):
         super().__init__("actions", actions=action)
+
+
+class EPubSub(UtilsBase, PubSubBase):
+
+    def __init__(self, pubsub={}):
+        super().__init__("pubsubs", pubsubs=pubsub)
+    
+    def register_publisher(self, event_name, publisher_object):
+        pass
+    
+    def register_subscriber(self, event_name, subscriber_object):
+        pass
+    
+    def register_event(self, event_object):
+        pass
+    
+    def __process(self, event_name, message_object):
+        pass
+
+    def send(self, message_object):
+        pass
+    
+    def receive(self, message_object):
+        pass
 
 
 if __name__ == "__main__":

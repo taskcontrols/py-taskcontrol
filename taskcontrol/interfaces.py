@@ -27,7 +27,6 @@ class ObjectModificationBase(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
 
-
 @dataclass(frozen=True)
 class AuthenticationBase(metaclass=abc.ABCMeta):
 
@@ -113,30 +112,66 @@ class AuthenticationBase(metaclass=abc.ABCMeta):
 
 
 @dataclass(frozen=True)
-class SocketsBase(metaclass=abc.ABCMeta):
+class PubSubBase(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def __init__(self, **kwargs):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def socket_create(self):
+    def register_publisher(self):
+        pass
+    
+    @abc.abstractmethod
+    def register_subscriber(self):
+        pass
+    
+    @abc.abstractmethod
+    def register_event(self):
+        pass
+        
+    @abc.abstractmethod
+    def __process(self):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def socket_delete(self):
+    def send(self, event_object):
+        raise NotImplementedError
+    
+    @abc.abstractmethod
+    def receive(self, event_object):
+        raise NotImplementedError
+
+
+@dataclass(frozen=True)
+class SocketsBase(metaclass=abc.ABCMeta):
+
+    @abc.abstractmethod
+    def __init__(self, **kwargs):
+        raise NotImplementedError
+    
+    @abc.abstractmethod
+    def socket_create(self):
+        raise NotImplementedError
+    
+    @abc.abstractmethod
+    def socket_accept(self):
         raise NotImplementedError
 
     @abc.abstractmethod
     def socket_listen(self):
         raise NotImplementedError
-
+    
     @abc.abstractmethod
-    def socket_message(self):
+    def socket_close(self):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def socket_receive(self):
+    def send(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def receive(self):
         raise NotImplementedError
 
 

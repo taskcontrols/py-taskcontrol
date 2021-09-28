@@ -1,230 +1,258 @@
 # Hooks Base
 
 import ast
-# import sys
-
+import sys
+import types
 import socket
 import selectors
+import copy
 from .sharedbase import ClosureBase, UtilsBase
 # Inherit shared and logging
-from .interfaces import SocketsBase, HooksBase, SshBase
+from .interfaces import SocketsBase, HooksBase, SshBase, PubSubBase
+from .actions import Queues, Events, EPubSub
 
 
-class Sockets(SocketsBase, ClosureBase, UtilsBase):
+class Sockets(UtilsBase, SocketsBase):
 
-    def __init__(self):
-        super()
-        self.getter, self.setter, self.deleter = self.class_closure(sockets={})
+    validations = {
+        "create": ["name", "protocol", "streammode", "host", "port", "numbers", "handler", "blocking", "nonblocking_data", "nonblocking_timeout", "server"],
+        "add": ["name", "protocol", "streammode", "host", "port", "numbers", "handler", "blocking", "nonblocking_data", "nonblocking_timeout", "workflow_kwargs", "server"],
+        "fetch": ["name"],
+        "update": ["name"],
+        "delete": ["name"]
+    }
 
-    def socket_create(self, config):
+    def __init__(self, socket={}):
+        super().__init__("sockets", validations=self.validations, sockets=socket)
 
-        # TODO: Add Logger
-        # self.log(config)
+    def socket_create(self, socket_object):
+        socket_object.update({
+            "blocking": socket_object.get("blocking", True),
+            "nonblocking_data": socket_object.get("nonblocking_data", None),
+            "nonblocking_timeout": socket_object.get("nonblocking_timeout", 1),
+            "server": socket_object.get("server", None)
+        })
+        if self.validate_object(socket_object, values=self.validations.get("create")):
+            srv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            socket_object.update({"server": srv})
+            return self.create(socket_object)
+        raise ValueError
 
-        # TODO: Add Authentication
-        # if not is_authenticated():
-        #     raise Exception("Not authenticated")
-        try:
-            if "workflow_kwargs" not in config:
-                config["workflow_kwargs"] = {}
-            if "shared" not in config["workflow_kwargs"]:
-                config["workflow_kwargs"]["shared"] = False
-            if "blocking" not in config:
-                config["blocking"] = True
-            if "nonblocking_data" not in config:
-                config["nonblocking_data"] = None
-            if "nonblocking_timeout" not in config:
-                config["nonblocking_timeout"] = None
-            if "server" not in config:
-                config["server"] = None
+    def socket_listen(self, socket_name):
+        sel = selectors.DefaultSelector()
+        socket_object = self.fetch(socket_name)
+        blocking = socket_object.get("blocking", False)
+        srv = socket_object.get("server")
+        srv.bind((socket_object.get("host"), socket_object.get("port")))
+        srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        srv.listen(socket_object.get("numbers", 1))
+        srv.setblocking(blocking)
+        if not blocking:
+            sel.register(srv, selectors.EVENT_READ, data=None)
+        socket_object.update({"server": srv, "selectors": sel})
+        self.socket_accept(socket_object)
+        return True
 
-            if self.validate_object(config, values=["name", "protocol", "streammode", "host", "port", "numbers", "handler", "workflow_kwargs", "blocking", "nonblocking_data", "nonblocking_timeout", "server"]):
-                # srv = socket.socket(socket[config.get("protocol")], socket[config.get("streammode")])
-                srv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                config["server"] = srv
-
-                s = self.setter("sockets", config, self)
-                if s:
-                    return config
-        except Exception as e:
-            raise e
-        return False
-
-    def socket_listen(self, config):
-
-        # TODO: Add Logger
-        # self.log(config)
-
-        # TODO: Add Authentication
-        # if not is_authenticated():
-        #     raise Exception("Not authenticated")
-        try:
-            s = self.getter("sockets", config.get("name"))
-            if len(s) > 0:
-                srv = s[0]
-            else:
-                raise Exception("Server object not found")
-            srv.get("server").bind((srv.get("host"), srv.get("port")))
-            srv.get("server").setsockopt(
-                socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            srv.get("server").listen(srv.get("numbers"))
-            if not srv.get("blocking"):
-                srv.get("server").setblocking(False)
-                sel = selectors.DefaultSelector()
-                sel.register(srv.get("server"), selectors.EVENT_READ,
-                             data=srv.get("nonblocking_data"))
-                srv["selectors"] = sel
-                c = self.socket_accept_nonblocking(srv)
-            else:
-                srv["selectors"] = None
-                c = self.socket_accept(srv)
-            if c:
-                sc = self.setter("sockets", srv, self)
-                if sc:
-                    return sc
-        except Exception as e:
-            raise e
-        return False
-
-    def socket_accept_nonblocking(self, config):
-
-        # TODO: Add Logger
-        # self.log(config)
-
-        # TODO: Add Authentication
-        # if not is_authenticated():
-        #     raise Exception("Not authenticated")
-        s = self.getter("sockets", config.get("name"))
-        if len(s) > 0:
-            srv = s[0]
-        else:
-            raise Exception("Server object not found")
-
-        def accept_wrapper(fileobj):
-            pass
-
-        def service_connection(key, mask):
-            pass
-
+    def socket_accept(self, socket_object):
+        srv = socket_object.get("server")
+        sel = socket_object.get("selectors")
+        blocking = socket_object.get("blocking")
         while True and srv:
-            try:
-                events = srv.get("selectors").select(
-                    timeout=srv.get("nonblocking_timeout"))
-                for key, mask in events:
-                    if key.data is None:
-                        accept_wrapper(key.fileobj)
-                    else:
-                        service_connection(key, mask)
+            if blocking:
+                try:
+                    conn, addr = srv.accept()
 
-                # IMPORTANT NOTES
-                # Sending, Receiving data is Handlers work
-                # Closing connection is Handlers work
-                # srv.get("handler")(srv, conn, addr)
-            except Exception as e:
-                raise e
+                    # IMPORTANT NOTES
+                    # Sending, Receiving data is Handlers work
+                    # Closing connection is Handlers work
+                    socket_object.get("handler")(conn, addr, socket_object)
+                    try:
+                        if conn:
+                            conn.close()
+                    except Exception as e:
+                        pass
+                    print("Closing connection to client", str(addr))
+                except KeyboardInterrupt:
+                    print("Exiting due to keyboard interrupt")
+                except Exception as e:
+                    raise e
+            else:
+                def accept_wrapper(sock):
+                    try:
+                        # Should be ready to read
+                        conn, addr = sock.accept()  # Should be ready to read
+                        print("accepted connection from", addr)
+                        # conn.setblocking(False)
+                        data = types.SimpleNamespace(
+                            addr=addr, inb=b"", outb=b"")
+                        events = selectors.EVENT_READ | selectors.EVENT_WRITE
+                        sel.register(conn, events, data=data)
+                        return True
+                    except Exception as e:
+                        print("Error in service connection: accept_wrapper")
+                        # raise e
+                        return False
 
-    def socket_accept(self, config):
+                def service_connection(key, mask):
+                    try:
+                        sock = key.fileobj
+                        data = key.data
+                        if mask & selectors.EVENT_READ:
+                            # Should be ready to read
+                            recv_data = sock.recv(1024)
+                            if recv_data:
+                                data.outb += recv_data
+                            else:
+                                print("closing connection to", data.addr)
+                                sel.unregister(sock)
+                                sock.close()
+                        if mask & selectors.EVENT_WRITE:
+                            if data.outb:
+                                print("echoing", repr(
+                                    data.outb), "to", data.addr)
+                                # Should be ready to write
+                                sent = sock.send(data.outb)
+                                data.outb = data.outb[sent:]
+                        # sock.close()
+                        return True
+                    except Exception as e:
+                        print("Error in service connection: service_connection")
+                        # raise e
+                        return False
+                try:
+                    while True:
+                        events = sel.select(timeout=None)
+                        for key, mask in events:
+                            if key.data is None:
+                                accept_wrapper(key.fileobj)
+                            else:
+                                service_connection(key, mask)
+                except KeyboardInterrupt:
+                    print("Caught keyboard interrupt, exiting")
+                    sys.exit(0)
+                finally:
+                    sel.close()
 
-        # TODO: Add Logger
-        # self.log(config)
+        print("Server connection to client closed")
+        socket_object.update({"server": srv, "selectors": sel})
+        return self.update(socket_object)
 
-        # TODO: Add Authentication
-        # if not is_authenticated():
-        #     raise Exception("Not authenticated")
+    def socket_multi_server_connect(self, socket_objects):
+        pass
 
-        # Process exit not happening in Windows using Keyboard
-        # import sys
-        # import signal
-
-        # def signal_handler(signal, frame):
-        #     sys.exit(1)
-        # signal.signal(signal.SIGINT, signal_handler)
-
-        s = self.getter("sockets", config.get("name"))
-        if len(s) > 0:
-            srv = s[0]
+    def socket_connect(self, socket_object, messages=[]):
+        connections = socket_object.get("numbers", 1)
+        server_addr = (socket_object.get("host"), socket_object.get("port"))
+        sel = selectors.DefaultSelector()
+        blocking = socket_object.get("blocking", False)
+        if connections == 0:
+            raise ValueError
+        elif connections < 2:
+            o = self.socket_create(socket_object)
+            if o:
+                s = self.fetch(socket_object.get("name"))
+                srv = s.get("server")
+                srv.connect(server_addr)
+                srv.sendall(b"Hello, world from client")
+                data = srv.recv(1024)
+                print("Received ", str(data))
+                s.get("handler")(messages, s)
+                try:
+                    s.get("server").close()
+                except Exception:
+                    pass
         else:
-            raise Exception("Server object not found")
-        while True and srv:
+            def service_connection(key, mask):
+                sock = key.fileobj
+                data = key.data
+                if mask & selectors.EVENT_READ:
+                    recv_data = sock.recv(1024)  # Should be ready to read
+                    if recv_data:
+                        print("Received ", repr(recv_data),
+                              " from connection ", data.connid)
+                        data.recv_total += len(recv_data)
+                    if not recv_data or data.recv_total == data.msg_total:
+                        print("Closing connection ", data.connid)
+                        sel.unregister(sock)
+                        sock.close()
+                if mask & selectors.EVENT_WRITE:
+                    if not data.outb and data.messages:
+                        data.outb = data.messages.pop(0)
+                    if data.outb:
+                        print("Sending ", repr(data.outb),
+                              " to connection ", data.connid)
+                        # Should be ready to write
+                        sent = sock.send(data.outb)
+                        data.outb = data.outb[sent:]
+
+            for i in range(0, connections):
+                connid = i + 1
+                print("Starting connection ", connid, " to ", server_addr)
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.setblocking(blocking)
+                sock.connect_ex(server_addr)
+                events = selectors.EVENT_READ | selectors.EVENT_WRITE
+                data = types.SimpleNamespace(
+                    connid=connid,
+                    msg_total=sum(len(m) for m in messages),
+                    recv_total=0,
+                    messages=list(messages),
+                    outb=b"",
+                )
+                sel.register(sock, events, data=data)
             try:
-                conn, addr = srv.get("server").accept()
+                while True:
+                    events = sel.select(timeout=1)
+                    if events:
+                        for key, mask in events:
+                            service_connection(key, mask)
+                    # Check for a socket being monitored to continue.
+                    if not sel.get_map():
+                        break
+            except KeyboardInterrupt:
+                print("Caught keyboard interrupt, exiting")
+            finally:
+                sel.close()
 
-                # IMPORTANT NOTES
-                # Sending, Receiving data is Handlers work
-                # Closing connection is Handlers work
-                srv.get("handler")(srv, conn, addr)
-            except Exception as e:
-                raise e
-        return False
+    def socket_close(self, socket_object):
+        return socket_object.close()
 
-    def socket_connect(self, config):
-
-        # TODO: Add Logger
-        # self.log(config)
-
-        # TODO: Add Authentication
-        # if not is_authenticated():
-        #     raise Exception("Not authenticated")
+    def socket_delete(self, socket_object):
         try:
-            if self.validate_object(config, values=["name", "protocol", "streammode", "host", "port", "numbers", "handler", "workflow_kwargs", "blocking", "nonblocking_data", "nonblocking_timeout", "server"]):
-                s = self.getter("sockets", config.get("name"))
-                if len(s) > 0:
-                    clt = s[0]
-                else:
-                    raise Exception("Server object not found")
-                clt.get("server").connect((clt.get("host"), clt.get("port")))
-                clt.get("handler")(clt)
-                sc = self.setter("sockets", clt, self)
-                if sc:
-                    return sc
+            return self.delete(socket_object.get("name"))
         except Exception as e:
             raise e
-        return False
 
-    def socket_message(self, socket_object, message):
-
-        # TODO: Add Logger
-        # self.log(config)
-
-        # TODO: Add Authentication
-        # if not is_authenticated():
-        #     raise Exception("Not authenticated")
+    def send(self, socket_object, message):
         return socket_object.send(str(message).encode())
 
-    def socket_receive(self, socket_object):
-
-        # TODO: Add Logger
-        # self.log(config)
-
-        # TODO: Add Authentication
-        # if not is_authenticated():
-        #     raise Exception("Not authenticated")
+    def receive(self, socket_object):
         msg = socket_object.recv(1024).decode()
         return ast.literal_eval(msg)
 
-    def socket_close(self, socket_object):
 
-        # TODO: Add Logger
-        # self.log(config)
+class IPubSub(UtilsBase, PubSubBase):
 
-        # TODO: Add Authentication
-        # if not is_authenticated():
-        #     raise Exception("Not authenticated")
-        return socket_object.close()
+    def __init__(self, pubsub={}):
+        super().__init__("pubsubs", pubsubs=pubsub)
 
-    def socket_delete(self, config):
+    def register_publisher(self, event_name, publisher_object):
+        pass
 
-        # TODO: Add Logger
-        # self.log(config)
+    def register_subscriber(self, event_name, subscriber_object):
+        pass
 
-        # TODO: Add Authentication
-        # if not is_authenticated():
-        #     raise Exception("Not authenticated")
-        try:
-            self.deleter("sockets", config.get("name"))
-        except Exception as e:
-            raise e
-        return True
+    def register_event(self, event_object):
+        pass
+
+    def __process(self):
+        pass
+
+    def send(self, event_object):
+        pass
+
+    def receive(self, event_object):
+        pass
 
 
 class Hooks(HooksBase, ClosureBase, UtilsBase):
@@ -298,7 +326,10 @@ class Hooks(HooksBase, ClosureBase, UtilsBase):
         pass
 
 
-class SSH(SshBase, ClosureBase, UtilsBase):
+class SSH(UtilsBase, SshBase):
+
+    def __init__(self, pubsub={}):
+        super().__init__("pubsubs", pubsubs=pubsub)
 
     def create(self, options):
         pass
@@ -315,31 +346,6 @@ class SSH(SshBase, ClosureBase, UtilsBase):
 
 if __name__ == "__main__":
     Socket = Sockets()
-
-    def server_handler(socket_server, conn, addr):
-        print(conn, addr)
-        print(conn.recv(1024).decode())
-        conn.send("Test message from server".encode())
-        conn.close()
-
-    # SERVER CODE
-    s = Socket.socket_create({"name": "test", "protocol": socket.AF_INET, "streammode": socket.SOCK_STREAM,
-                              "host": "127.0.0.1", "port": 9001, "numbers": 1, "handler": server_handler})
-    if s:
-        print("Server started")
-    sr = Socket.socket_listen(s)
-
-    # CLIENT CODE
-    def client_handler(socket_client):
-        socket_client.get("server").send("Testing the client message".encode())
-        print(socket_client.get("server").recv(1024).decode())
-        socket_client.get("server").close()
-
-    c = Socket.socket_create({"name": "testclient", "protocol": socket.AF_INET, "streammode": socket.SOCK_STREAM,
-                              "host": "127.0.0.1", "port": 9001, "numbers": 1, "handler": client_handler})
-    if c:
-        print("Client started")
-    cl = Socket.socket_connect(c)
 
 
 if __name__ == "__main__":

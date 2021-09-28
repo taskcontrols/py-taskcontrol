@@ -5,7 +5,7 @@ path.append('./')
 
 
 from .interfaces import AuthenticationBase, SocketsBase, HooksBase, SQLBase, LogsBase, TimeBase, CommandBase
-from .bases import WorkflowBase, PluginsBase, LogBase, TimerBase, ConcurencyBase, AuthBase, UtilsBase, Queue, Action, Event, Hooks, Sockets, CommandsBase
+from .bases import WorkflowBase, PluginsBase, LogBase, TimerBase, ConcurencyBase, AuthBase, UtilsBase, Queues, Actions, Events, Hooks, Sockets, CommandsBase
 
 
 class Tasks(WorkflowBase):
@@ -149,7 +149,7 @@ __all__ = [
     "HooksBase", "LogBase", "SQLBase",
     "ConcurencyBase", "AuthBase",
     "LogBase", "TimerBase", "UtilsBase",
-    "Action", "Event",
+    "Actions", "Events",
     "Hooks", "Sockets",
     "Tasks", "workflow", "PluginsBase"
 ]

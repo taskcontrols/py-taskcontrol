@@ -3,9 +3,7 @@ import socket
 # Socket's Listeners
 from taskcontrol.hooks import Sockets
 
-
 Socket = Sockets()
-
 
 def client_handler(socket_client):
     socket_client.get("server").send("Testing the client message".encode())

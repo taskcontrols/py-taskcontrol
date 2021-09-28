@@ -115,15 +115,24 @@ class UtilsBase(ObjectModificationBase):
         self.getter, self.setter, self.deleter = ClosureBase().class_closure(
             **kwargs)
 
+    def append_update_dict(self, main_object, update_object):
+        for k in update_object:
+            if k in main_object:
+                main_object.update(dict([[k, update_object.get(k)]]))
+            else:
+                main_object.append(dict([[k, update_object.get(k)]]))
+        return main_object
+
     def validate_object(self, val_object, values=[]):
         keys = val_object.keys()
         if len(keys) == len(values):
             if type(values) == list:
                 for k in values:
                     if k in keys:
-                        return True
+                        continue
                     else:
                         return False
+                return True
             elif type(values) == dict:
                 v_keys = values.keys()
                 for v in v_keys:
@@ -135,16 +144,16 @@ class UtilsBase(ObjectModificationBase):
                                 return False
                     else:
                         return False
+                return True
         return False
 
     def create(self, config):
-        if "workflow_kwargs" not in config:
-            config["workflow_kwargs"] = {}
-        if "shared" not in config["workflow_kwargs"]:
-            config["workflow_kwargs"]["shared"] = False
+        config["workflow_kwargs"] = config.get("workflow_kwargs", {})
+        config["workflow_kwargs"]["shared"] = config.get(
+            "workflow_kwargs").get("shared", False)
         try:
             if self.validate_object(config, self.validate_add):
-                return self.setter(self.object_name, config, self)[0]
+                return self.setter(self.object_name, config, self)
             return False
         except Exception as e:
             raise e
@@ -158,9 +167,9 @@ class UtilsBase(ObjectModificationBase):
     def update(self, config):
         try:
             o = self.getter(self.object_name, config.get("name"))[0]
-            for k, v in config:
+            for k in config:
                 if o.get(k) and (not k == "name"):
-                    o[k] = v
+                    o[k] = o.get(k)
             return self.setter(self.object_name, o, self)
         except Exception as e:
             raise e
@@ -341,3 +350,8 @@ __all__ = [
     "UtilsBase", "TimerBase",
     "LogBase", "CommandsBase"
 ]
+
+
+1, 3, 5, (26)
+
+
