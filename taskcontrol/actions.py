@@ -1,48 +1,74 @@
 # Queue Events Actions Base
 
-from typing import List
+import time
+from typing import Dict, List
 from .interfaces import PubSubBase
 from .sharedbase import ClosureBase, UtilsBase, LogBase
 from collections import deque
-from queue import Queue
+from queue import Queue, LifoQueue, PriorityQueue, SimpleQueue
 
 
 class Queues(UtilsBase):
     tmp = {}
 
     def __init__(self, queues={}):
-        super().__init__("queues", queues=queues)
+        v = ["name", "maxsize", "queue_type", "queue", "workflow_kwargs"]
+        super().__init__("queues", validations={
+            "add": v, "create": v, "update": v, "delete": ["name"]}, queues=queues)
 
     def new(self, config):
-        if self.validate_object(config, values=["maxsize", "queue_type"]):
+        if self.validate_object(config, values=["name", "maxsize", "queue_type", "queue"]):
             if config.get("queue_type") == "queue":
-                return Queue(config.get("maxsize"))
+                return Queue(maxsize=config.get("maxsize"))
             elif config.get("queue_type") == "deque":
                 return deque([], maxlen=config.get("maxsize"))
             else:
                 return []
 
-    def add(self, name, item):
-        o = self.fetch(name)
-        o.insert(item)
-        return self.update(o)
+    def add(self, name, item, index=0, nowait=True):
+        q = self.fetch(name)
+        o = q["queue"]
+        if isinstance(o, List) or isinstance(o, deque):
+            if not q.get("maxsize") == len(o):
+                o.append(item)
+            else:
+                return False
+        elif isinstance(o, Queue) or isinstance(o, LifoQueue) or isinstance(o, PriorityQueue):
+            if not q.get("maxsize") == o.qsize():
+                o.put(item, nowait)
+            else:
+                return False
+        elif isinstance(o, SimpleQueue):
+            try:
+                o.put(item)
+            except Exception as e:
+                return False
+        q["queue"] = o
+        return self.update(q)
 
-    def remove(self, name, item):
-        o = self.fetch(name)
-        u = o.remove(item)
-        return u, self.update(o)
-
-    def pop(self, name, index):
-        o = self.fetch(name)
-        u = o.pop(index)
-        return u, self.update(o)
-
-    def next(self, name):
-        if name not in self.tmp:
-            self.tmp[name] = self.fetch(name)
-        if isinstance(self.tmp.get(name), List):
-            return self.tmp.get(name).shift()
-        return self.tmp.get(name).next()
+    def get(self, name, index=0, nowait=True):
+        q = self.fetch(name)
+        o = q["queue"]
+        u = None
+        if type(o) == List:
+            if len(o):
+                u = o.pop(index)
+        elif isinstance(o, Queue) or isinstance(o, SimpleQueue):
+            if not o.empty():
+                u = o.get(nowait)
+        elif isinstance(o, LifoQueue) or isinstance(o, PriorityQueue):
+            if not o.empty():
+                u = o.get()
+        elif isinstance(o, deque):
+            if o:
+                if index == 0:
+                    u = o.popleft()
+                else:
+                    u = o.pop()
+        q["queue"] = o
+        c = self.update(q)
+        if c:
+            return u
 
 
 class Events(UtilsBase):
@@ -150,32 +176,151 @@ class Actions(UtilsBase):
         super().__init__("actions", actions=action)
 
 
-class EPubSub(UtilsBase, PubSubBase):
+class EPubSub(UtilsBase):
 
-    def __init__(self, pubsub={}):
-        super().__init__("pubsubs", pubsubs=pubsub)
-    
-    def register_publisher(self, event_name, publisher_object):
-        pass
-    
-    def register_subscriber(self, event_name, subscriber_object):
-        pass
-    
-    def register_event(self, event_object):
-        pass
-    
-    def __process(self, event_name, message_object):
-        pass
+    def __init__(self, pubsubs={}):
+        self.v = [
+            "name", "handler", "queues",
+            "maxsize", "queue_type", "events"
+        ]
+        self.ev = ["name", "publishers", "subscribers"]
+        super().__init__("pubsubs", {}, pubsubs=pubsubs)
+
+    def __handler(self, task, handler):
+        handler(task)
+        return True
+
+    def queue_create(self, config):
+        # "name", "handler", "queue", "events"
+        if not "name" in config:
+            raise TypeError
+
+        o = {"name": config.get("name"),
+             "handler": config.get("handler", lambda message_object: print(str(message_object))),
+             "queue": config.get("queue", None),
+             "maxsize": config.get("maxsize", 10),
+             "queue_type": config.get("queue_type", None),
+             "batch_interval": 60,
+             "events": dict([
+                 [
+                     config.get("events").get("name"), {
+                         "name": config.get("events").get("name"),
+                         "publishers": config.get("events").get("publishers", {}),
+                         "subscribers": config.get("events").get("subscribers", {})
+                     }
+                 ]
+             ])}
+
+        if self.validate_object(o, self.validate_create):
+            tmpQ = Queues()
+            q = tmpQ.new({
+                "name": config.get(),
+                "maxsize": config.get("maxsize"),
+                "queue_type": config.get("queue_type", "list")
+            })
+            config["queues"][config.get("name")].update({"queue":  q})
+            print("config", config)
+            u = tmpQ.create(q)
+            if u:
+                self.__process()
+                return True
+            return False
+
+    def register_publisher(self, queue_name, publisher_object):
+        q = self.fetch(queue_name)
+        q["events"][publisher_object.get("event_name")]["publishers"].update(dict([
+            [publisher_object.get("name"), publisher_object]
+        ]))
+        return self.update(q)
+
+    def register_subscriber(self, queue_name, subscriber_object):
+        s = self.fetch(queue_name)
+        s["events"][subscriber_object.get("event_name")]["subscribers"].update(dict([
+            [subscriber_object.get("name"), subscriber_object]
+        ]))
+        return self.update(s)
+
+    def register_event(self, queue_name, event_object):
+        e = self.fetch(queue_name)
+        e["events"].update(dict([
+            [
+                event_object.get("event_name"), {
+                    "name": event_object.get("name"),
+                    "publishers": event_object.get("publishers", {}),
+                    "subscribers": event_object.get("subscribers", {})
+                }
+            ]
+        ]))
+        return self.update(e)
+
+    def __process(self, name):
+        o = self.fetch(name)
+        h = o.get("handler")
+        t = o["queue"].pop(0)
+        r = None
+        try:
+            r = self.__handler(t, h)
+        except Exception as e:
+            o["queue"].add(t)
+        u = self.update(o)
+        if u:
+            return r
+
+    def __schedular(self):
+        pb = self.fetch("pubsubs")
+        for k in pb:
+            # Put into thread
+            while True:
+                try:
+                    time.sleep(pb.get(k).get("batch_interval"))
+                    self.__process(k)
+                except Exception as e:
+                    raise e
 
     def send(self, message_object):
+        # message_object: queue_name, event_name, publisher_name, message
         pass
-    
+
     def receive(self, message_object):
+        # message_object: queue_name, event_name, publisher_name, message
         pass
 
 
 if __name__ == "__main__":
     queue = Queues()
+
+    config = {"name": "test", "maxsize": 10,
+              "queue_type": "queue", "queue": None}
+
+    q = queue.new(config)
+    config["queue"] = q
+    # print(config)
+    c = queue.create(config)
+    print(c, queue.validate_add)
+    print(queue.add("test", "test1"))
+    print(queue.add("test", "test2"))
+    print(queue.add("test", "test3"))
+    print(queue.add("test", "test4"))
+    print(queue.add("test", "test5"))
+    print(queue.add("test", "test6"))
+    print(queue.add("test", "test7"))
+    print(queue.add("test", "test8"))
+    print(queue.add("test", "test9"))
+    print(queue.add("test", "test10"))
+    print(queue.add("test", "test11"))
+    print(queue.add("test", "test10"))
+    print(queue.get("test"))
+    print(queue.get("test"))
+    print(queue.get("test"))
+    print(queue.get("test"))
+    print(queue.get("test"))
+    print(queue.get("test"))
+    print(queue.get("test"))
+    print(queue.get("test"))
+    print(queue.get("test"))
+    print(queue.get("test"))
+    print(queue.get("test"))
+    print(queue.get("test"))
 
 
 if __name__ == "__main__":
@@ -198,4 +343,8 @@ if __name__ == "__main__":
     action = Actions()
 
 
-__all__ = ["Actions", "Events", "Queues"]
+if __name__ == "__main__":
+    epb = EPubSub()
+
+
+__all__ = ["Actions", "Events", "Queues", "EPubSub"]

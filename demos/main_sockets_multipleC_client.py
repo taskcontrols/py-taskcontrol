@@ -33,4 +33,5 @@ config = {"name": "testclient", "protocol": socket.AF_INET, "streammode": socket
 #         config.get("name"), [b"Test message from client"]
 #     )
 
-Socket.socket_connect(config, [b"Message 1 from client.", b"Message 2 from client."])
+Socket.socket_connect(
+    config, [b"Message 1 from client.", b"Message 2 from client."])
