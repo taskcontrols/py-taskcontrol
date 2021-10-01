@@ -73,9 +73,19 @@ class Queues(UtilsBase):
 
 class Events(UtilsBase):
     def __init__(self, event={}):
-        super().__init__("events", events=event)
+        v = ["name", "event", "handler", "listening",
+             "listeners", "workflow_kwargs"]
+        super().__init__("events", validations={
+            "add": v, "create": v, "update": v, "delete": ["name"]}, events=event)
 
-    def create_event(self, event_object):
+    def event_register(self, event_object):
+        """
+        event_object: name (str), event (func), listening (bool), listeners (dict)
+            event (func): function to execute when event is invoked
+            listening (bool): if function needs to be listening to events
+            listeners (dict): dictionary of listener objects
+        TODO: This is blocking event object. Needs to allow non-blocking and non-blocking multithreaded/multiprocess
+        """
         # Change this to different ways of using events/actions
         event_func = event_object.get("event")
         name = event_object.get("name")
@@ -84,6 +94,8 @@ class Events(UtilsBase):
                 event_object["listening"] = False
             if "listeners" not in event_object:
                 event_object["listeners"] = {}
+            if "workflow_kwargs" not in event_object:
+                event_object["workflow_kwargs"] = {}
 
             def __handler(data):
                 try:
@@ -96,14 +108,16 @@ class Events(UtilsBase):
                     return False
 
             event_object["handler"] = __handler
-            if self.validate_object(event_object, ["name", "event", "handler", "listening", "listeners"]):
+            if self.validate_object(event_object, self.validate_create):
+                print("Creating event: ", event_object.get("name"))
                 return self.create(event_object)
         except Exception as e:
             raise e
         return False
 
-    def create_listener(self, listener_object):
-        pass
+    def event_unregister(self, event_name):
+        print("Deleting event: ", event_name)
+        return self.delete(event_name)
 
     def listener_register(self, listener_object):
         try:
@@ -116,12 +130,12 @@ class Events(UtilsBase):
         except Exception as e:
             raise e
 
-    def on(self, name, event_name, handler):
+    def on(self, event_name, name, handler):
         return self.listener_register({"name": name, "event_name": event_name, "listener": handler})
 
     def listener_unregister(self, listener_object):
         event_name = listener_object.get("event_name")
-        a_name = listener_object.get("action")
+        a_name = listener_object.get("name")
         try:
             action = self.fetch(event_name)
             for ln in action.get("listeners"):
@@ -151,10 +165,10 @@ class Events(UtilsBase):
             raise e
 
     def start(self, event_name):
-        return self.set_state({"name": event_name, "listening": True})
+        return self.set_state(event_name, True)
 
     def stop(self, event_name):
-        return self.set_state({"name": event_name, "listening": False})
+        return self.set_state(event_name, False)
 
     def send(self, message_object):
         try:
