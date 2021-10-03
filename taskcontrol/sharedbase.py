@@ -10,56 +10,67 @@ class ClosureBase():
         closure_val = kwargs
 
         def getter(key, value=None):
-            if (type(value) == int and value == 1) or (type(value) == str and value == "1"):
-                keys = closure_val[key]
-                val = []
-                for t in keys:
-                    if t:
-                        val.append(closure_val[key].get(t))
-                return val
-            elif type(value) == str:
-                val = closure_val[key].get(value)
-                if val:
-                    return [val]
+            try:
+                if (type(value) == int and value == 1) or (type(value) == str and value == "1"):
+                    keys = closure_val[key]
+                    val = []
+                    for t in keys:
+                        if t:
+                            val.append(closure_val[key].get(t))
+                    return val
+                elif type(value) == str:
+                    val = closure_val[key].get(value)
+                    if val:
+                        return [val]
+                    return []
+                elif type(value) == list:
+                    vl = []
+                    for tk in value:
+                        if int(tk) == 1:
+                            for i in closure_val[key].keys():
+                                vl.append(closure_val[key].get(i))
+                        elif tk in closure_val[key].keys():
+                            vl.append(closure_val[key].get(tk))
+                    return vl
                 return []
-            elif type(value) == list:
-                vl = []
-                for tk in value:
-                    if int(tk) == 1:
-                        for i in closure_val[key].keys():
-                            vl.append(closure_val[key].get(i))
-                    elif tk in closure_val[key].keys():
-                        vl.append(closure_val[key].get(tk))
-                return vl
-            return []
+            except Exception as e:
+                print("Error in Getter ", e)
+                return False
 
         def setter(key, value=None, inst=None):
-            if type(value) == dict and inst != None:
-                if inst.__class__.__name__ == "SharedBase":
-                    closure_val[key].update({value.get("name"): value})
-                elif value.get("workflow_kwargs").get("shared") == True:
-                    inst.shared.setter(key, value, inst.shared)
-                elif value.get("workflow_kwargs").get("shared") == False:
-                    closure_val[key].update({value.get("name"): value})
-                return True
-            else:
-                raise TypeError("Problem with " + key +
-                                " Value setting " + str(value))
-
-        def deleter(key, value=None):
-            if type(value) == str:
-                if value != None:
-                    closure_val[key].pop(value)
+            try:
+                if type(value) == dict and inst != None:
+                    if inst.__class__.__name__ == "SharedBase":
+                        closure_val[key].update({value.get("name"): value})
+                    elif value.get("workflow_kwargs").get("shared") == True:
+                        inst.shared.setter(key, value, inst.shared)
+                    elif value.get("workflow_kwargs").get("shared") == False:
+                        closure_val[key].update({value.get("name"): value})
+                    return True
                 else:
                     raise TypeError("Problem with " + key +
-                                    " Value deleting " + value)
-                return True
-            elif type(value) == int:
-                if value == 1:
-                    for v in value:
-                        closure_val[key].pop(v)
-                return True
-            return False
+                                    " Value setting " + str(value))
+            except Exception as e:
+                print("Error in Setter ", e)
+                return False
+
+        def deleter(key, value=None):
+            try:
+                if type(value) == str:
+                    if value != None:
+                        closure_val[key].pop(value)
+                    else:
+                        return False
+                    return True
+                elif type(value) == int:
+                    if value == 1:
+                        for v in value:
+                            closure_val[key].pop(v)
+                    return True
+                return False
+            except Exception as e:
+                print("Exception in delete ", e)
+                return False
 
         def log(config):
             pass
@@ -156,13 +167,15 @@ class UtilsBase(ObjectModificationBase):
                 return self.setter(self.object_name, config, self)
             return False
         except Exception as e:
-            raise e
+            print("Fetch error ", e)
+            return False
 
     def fetch(self, name):
         try:
             return self.getter(self.object_name, name)[0]
         except Exception as e:
-            raise e
+            print("Fetch error ", e)
+            return False
 
     def update(self, config):
         try:
@@ -172,13 +185,15 @@ class UtilsBase(ObjectModificationBase):
                     o[k] = o.get(k)
             return self.setter(self.object_name, o, self)
         except Exception as e:
-            raise e
+            print("Fetch error ", e)
+            return False
 
     def delete(self, name):
         try:
             return self.deleter(self.object_name, name)
         except Exception as e:
-            raise e
+            print("Fetch error ", e)
+            return False
 
 
 class TimerBase(TimeBase, ClosureBase, UtilsBase):
@@ -352,4 +367,4 @@ __all__ = [
 ]
 
 
-1, 3, 5, (26)
+# 1, 3, 5, (26)

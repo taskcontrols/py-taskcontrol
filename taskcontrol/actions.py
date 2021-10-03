@@ -193,72 +193,90 @@ class Actions(UtilsBase):
 class EPubSub(UtilsBase):
 
     def __init__(self, pubsubs={}):
-        self.v = [
-            "name", "handler", "queues",
-            "maxsize", "queue_type", "events"
-        ]
-        self.ev = ["name", "publishers", "subscribers"]
-        super().__init__("pubsubs", {}, pubsubs=pubsubs)
+        v = ["name", "handler", "queue", "maxsize",
+             "queue_type", "batch_interval", "processing_flag", "events", "workflow_kwargs"]
+        self.ev = ["name", "pubsub_name", "publishers", "subscribers"]
+        super().__init__("pubsubs", validations={
+            "add": v, "create": v, "update": v, "delete": ["name"]}, pubsubs=pubsubs)
+        # self.__schedular()
 
     def __handler(self, task, handler):
         handler(task)
         return True
 
-    def queue_create(self, config):
-        # "name", "handler", "queue", "events"
+    def pubsub_create(self, config):
+        # "name", "handler", "queue", "maxsize", "queue_type", "processing_flag", "batch_interval", "events"
         if not "name" in config:
             raise TypeError
 
         o = {"name": config.get("name"),
              "handler": config.get("handler", lambda message_object: print(str(message_object))),
-             "queue": config.get("queue", None),
              "maxsize": config.get("maxsize", 10),
+             "queue": config.get("queue", None),
              "queue_type": config.get("queue_type", None),
-             "batch_interval": 60,
-             "events": dict([
-                 [
-                     config.get("events").get("name"), {
-                         "name": config.get("events").get("name"),
-                         "publishers": config.get("events").get("publishers", {}),
-                         "subscribers": config.get("events").get("subscribers", {})
-                     }
-                 ]
-             ])}
+             "batch_interval": 5,
+             "processing_flag": False,
+             "workflow_kwargs": {},
+             "events": {}}
 
-        if self.validate_object(o, self.validate_create):
-            tmpQ = Queues()
-            q = tmpQ.new({
-                "name": config.get(),
-                "maxsize": config.get("maxsize"),
-                "queue_type": config.get("queue_type", "list")
-            })
-            config["queues"][config.get("name")].update({"queue":  q})
-            print("config", config)
-            u = tmpQ.create(q)
-            if u:
-                self.__process()
-                return True
-            return False
+        u = self.queue_create({
+            "name": config.get("name"),
+            "maxsize": config.get("maxsize"),
+            "queue_type": config.get("queue_type", "list")
+        })
+        if u:
+            o["queue"] = u
+            if self.validate_object(o, self.validate_create):
+                return self.create(o)
+        return False
 
-    def register_publisher(self, queue_name, publisher_object):
-        q = self.fetch(queue_name)
-        q["events"][publisher_object.get("event_name")]["publishers"].update(dict([
+    def pubsub_delete(self, pubsub_name):
+        return self.delete(pubsub_name)
+
+    def queue_create(self, config):
+        # "name", "queue", "maxsize", "queue_type"
+        qConfig = config
+        tmpQ = Queues()
+        q = tmpQ.new(qConfig)
+        qConfig["queue"] = q
+        qs = tmpQ.create(qConfig)
+        if qs:
+            return tmpQ
+        return False
+
+    def queue_delete(self, pubsub_name):
+        """
+        publisher_object: name, event_name, publisher
+        """
+        o = self.fetch(pubsub_name)
+        o["queue"] = None
+        return self.update(o)
+
+    def register_publisher(self, pubsub_name, publisher_object):
+        """
+        publisher_object: name, event_name, publisher
+        """
+        p = self.fetch(pubsub_name)
+        p["events"][publisher_object.get("event_name")]["publishers"].update(dict([
             [publisher_object.get("name"), publisher_object]
         ]))
-        return self.update(q)
+        return self.update(p)
 
-    def register_subscriber(self, queue_name, subscriber_object):
-        s = self.fetch(queue_name)
+    def register_subscriber(self, pubsub_name, subscriber_object):
+        """
+        subscriber_object: name, event_name, subscriber
+        """
+        s = self.fetch(pubsub_name)
         s["events"][subscriber_object.get("event_name")]["subscribers"].update(dict([
             [subscriber_object.get("name"), subscriber_object]
         ]))
         return self.update(s)
 
-    def register_event(self, queue_name, event_object):
-        e = self.fetch(queue_name)
+    def register_event(self, pubsub_name, event_object):
+        e = self.fetch(pubsub_name)
         e["events"].update(dict([
             [
-                event_object.get("event_name"), {
+                event_object.get("name"), {
                     "name": event_object.get("name"),
                     "publishers": event_object.get("publishers", {}),
                     "subscribers": event_object.get("subscribers", {})
@@ -267,33 +285,70 @@ class EPubSub(UtilsBase):
         ]))
         return self.update(e)
 
+    def unregister_event(self, pubsub_name, event_object):
+        try:
+            p = self.fetch(pubsub_name)
+            del p["events"][event_object.get("name")]
+            return self.update(p)
+        except Exception as e:
+            pass
+        return False
+
+    def unregister_publisher(self, pubsub_name, publisher_object):
+        try:
+            p = self.fetch(pubsub_name)
+            del p["events"][publisher_object.get("event_name")]["publishers"][publisher_object.get("name")]
+            return self.update(p)
+        except Exception as e:
+            print("Exception during Publisher unregister ", e)
+        return False
+
+    def unregister_subscriber(self, pubsub_name, subscriber_object):
+        try:
+            p = self.fetch(pubsub_name)
+            del p["events"][subscriber_object.get(
+                "event_name")]["subscribers"][subscriber_object.get("name")]
+            return self.update(p)
+        except Exception as e:
+            pass
+        return False
+
     def __process(self, name):
         o = self.fetch(name)
         h = o.get("handler")
-        t = o["queue"].pop(0)
         r = None
         try:
-            r = self.__handler(t, h)
+            while True:
+                t = o["queue"].get(o.get("name"))
+                if t:
+                    r = self.__handler(t, h)
+                else:
+                    break
         except Exception as e:
             o["queue"].add(t)
+        o["processing_flag"] = False
         u = self.update(o)
         if u:
             return r
 
     def __schedular(self):
-        pb = self.fetch("pubsubs")
-        for k in pb:
-            # Put into thread
-            while True:
+        while True:
+            pb = self.fetch(1)
+            for k in pb:
+                # Put into thread
                 try:
-                    time.sleep(pb.get(k).get("batch_interval"))
-                    self.__process(k)
+                    if pb[k].get("processing_flag") == False:
+                        pb[k]["processing_flag"] = True
+                        u = self.update(dict([[k, pb[k]]]))
+                        if u:
+                            self.__process(k)
                 except Exception as e:
                     raise e
+            time.sleep(pb.get(k).get("batch_interval"))
 
     def send(self, message_object):
         # message_object: queue_name, event_name, publisher_name, message
-        pass
+        return True
 
     def receive(self, message_object):
         # message_object: queue_name, event_name, publisher_name, message
@@ -341,16 +396,25 @@ if __name__ == "__main__":
     event = Events()
 
     def run(data):
-        print("Run Event Handler", data)
+        print("Run Action Handler ->", data)
 
-    event.register_event({"name": "new", "event": run})
-    event.register_listener(
-        {"event_name": "new", "name": "run", "listener": run})
-    event.listen({"name": "new"})
-    event.message({"event_name": "new", "message": "Testing message"})
-    event.stop_listening({"event_name": "new"})
-    event.unregister_listener({"event_name": "new", "action": "run"})
-    event.unregister_event({"name": "new"})
+    c = event.event_register({"name": "new", "event": run})
+    if c:
+        event.listener_register(
+            {"name": "run", "event_name": "new", "listener": run})
+        event.on("new", "runner", lambda data: print(
+            "Second Listener running -> ", data))
+        event.start("new")
+        print("'new' event state is", event.get_state("new"))
+        event.set_state("new", False)
+        print("'new' event state is", event.get_state("new"))
+        event.set_state("new", True)
+        print("'new' event state is", event.get_state("new"))
+        event.send({"event_name": "new", "message": "Testing message"})
+        event.emit("new", "Testing message")
+        event.listener_register({"event_name": "new", "name": "run"})
+        event.stop("new")
+        event.event_unregister("new")
 
 
 if __name__ == "__main__":
