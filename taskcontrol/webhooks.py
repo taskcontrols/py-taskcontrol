@@ -255,7 +255,7 @@ class IPubSub(UtilsBase, PubSubBase):
         pass
 
 
-class Hooks(HooksBase, ClosureBase, UtilsBase):
+class Hooks(UtilsBase, HooksBase):
 
     def __init__(self, socketsbase=Sockets):
         super()
