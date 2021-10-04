@@ -241,12 +241,11 @@ class Sockets(UtilsBase, SocketsBase):
 
 class IPubSub(EPubSub):
 
-    def __init__(self, pubsubs={}, type="ipubsub", agent="server"):
+    def __init__(self, pubsubs={}, type="ipubsub"):
         super().__init__(pubsubs=pubsubs, type="ipubsub")
         self.v = ["name", "handler", "queue", "maxsize",
                   "queue_type", "batch_interval", "processing_flag", "events", "workflow_kwargs"]
         self.ev = ["name", "pubsub_name", "publishers", "subscribers"]
-        # self.__schedular()
 
 
 class Hooks(UtilsBase, HooksBase):

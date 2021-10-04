@@ -195,9 +195,9 @@ class EPubSub(UtilsBase):
 
     type = "epubsub"
     # agent options: publisher, server, subscriber
-    agent = "publisher"
+    agent = "server"
 
-    def __init__(self, pubsubs={}, type="epubsub", agent="publisher"):
+    def __init__(self, pubsubs={}, type="epubsub", agent="server"):
         self.v = ["name", "handler", "queue", "maxsize",
                   "queue_type", "batch_interval", "processing_flag", "events", "workflow_kwargs"]
         self.ev = ["name", "pubsub_name",
