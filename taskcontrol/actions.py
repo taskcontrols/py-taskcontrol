@@ -72,6 +72,7 @@ class Queues(UtilsBase):
 
 
 class Events(UtilsBase):
+
     def __init__(self, event={}):
         v = ["name", "event", "handler", "listening",
              "listeners", "workflow_kwargs"]
@@ -192,17 +193,44 @@ class Actions(UtilsBase):
 
 class EPubSub(UtilsBase):
 
-    def __init__(self, pubsubs={}):
-        v = ["name", "handler", "queue", "maxsize",
-             "queue_type", "batch_interval", "processing_flag", "events", "workflow_kwargs"]
-        self.ev = ["name", "pubsub_name", "publishers", "subscribers"]
+    type = "epubsub"
+    # agent options: publisher, server, subscriber
+    agent = "publisher"
+
+    def __init__(self, pubsubs={}, type="epubsub", agent="publisher"):
+        self.v = ["name", "handler", "queue", "maxsize",
+                  "queue_type", "batch_interval", "processing_flag", "events", "workflow_kwargs"]
+        self.ev = ["name", "pubsub_name",
+                   "publishers", "subscribers", "handler"]
+        self.type = type
+        self.agent = agent
         super().__init__("pubsubs", validations={
-            "add": v, "create": v, "update": v, "delete": ["name"]}, pubsubs=pubsubs)
+            "add": self.v, "create": self.v, "update": self.v, "delete": ["name"]}, pubsubs=pubsubs)
         # self.__schedular()
 
     def __handler(self, task, handler):
-        handler(task)
-        return True
+        r = handler(task)
+        if r:
+            return True
+        return False
+
+    def __publish_handler(self, message_object):
+        o = self.fetch(message_object.get("queue_name"))
+        u = o.get("handler")(message_object)
+        if u:
+            e = o.get("events").get(message_object.get("event_name"))
+            if e:
+                r = False
+                if self.agent == "publisher" or self.agent == "server":
+                    r = e.get("publishers").get(message_object.get(
+                        "publisher_name")).get("handler")(message_object)
+                elif self.agent == "subscriber":
+                    r = e.get("subscribers").get(message_object.get(
+                        "publisher_name")).get("handler")(message_object)
+                else:
+                    r = e.get("handler")(message_object)
+                return r
+        return False
 
     def pubsub_create(self, config):
         # "name", "handler", "queue", "maxsize", "queue_type", "processing_flag", "batch_interval", "events"
@@ -297,7 +325,8 @@ class EPubSub(UtilsBase):
     def unregister_publisher(self, pubsub_name, publisher_object):
         try:
             p = self.fetch(pubsub_name)
-            del p["events"][publisher_object.get("event_name")]["publishers"][publisher_object.get("name")]
+            del p["events"][publisher_object.get(
+                "event_name")]["publishers"][publisher_object.get("name")]
             return self.update(p)
         except Exception as e:
             print("Exception during Publisher unregister ", e)
@@ -348,11 +377,19 @@ class EPubSub(UtilsBase):
 
     def send(self, message_object):
         # message_object: queue_name, event_name, publisher_name, message
-        return True
+        # publisher, server[forsubscriber]
+        u = self.__publish_handler(message_object)
+        if u:
+            return True
+        return False
 
     def receive(self, message_object):
         # message_object: queue_name, event_name, publisher_name, message
-        pass
+        # server[forpublisher], subscriber
+        u = self.__publish_handler(message_object)
+        if u:
+            return True
+        return False
 
 
 if __name__ == "__main__":
@@ -422,7 +459,43 @@ if __name__ == "__main__":
 
 
 if __name__ == "__main__":
-    epb = EPubSub()
+
+    def run(data):
+        print("Running Pubsub")
+
+    def publisher(data):
+        print("Running publisher", data)
+
+    def subscriber(data):
+        print("Running subscriber", data)
+
+    config = {"name": "new", "handler": run, "queue": None, "maxsize": 10,
+              "queue_type": "queue", "processing_flag": False,  "batch_interval": 5, "events": {}}
+    name = config.get("name")
+
+    pb = EPubSub()
+    p = pb.pubsub_create(config)
+
+    if p:
+        print("Event register", pb.register_event(
+            name, {"name": "testevent", "event": run}))
+        print("Publish register", pb.register_publisher(
+            name, {"name": "pubone", "event_name": "testevent", "publisher": publisher}))
+        print("Subscribers register", pb.register_subscriber(
+            name, {"name": "subone", "event_name": "testevent", "subscriber": subscriber}))
+        print("Subscribers register", pb.register_subscriber(
+            name, {"name": "subtwo", "event_name": "testevent", "subscriber": subscriber}))
+        print("Event sending", pb.send({"event_name": "testevent",
+                                        "message": "Testing event testevent"}))
+        print("Publisher unregister", pb.unregister_publisher(
+            name, {"name": "pubone", "event_name": "testevent"}))
+        print("Subscriber unregister", pb.unregister_subscriber(
+            name, {"name": "subone", "event_name": "testevent"}))
+        print("Subscriber unregister", pb.unregister_subscriber(
+            name, {"name": "subtwo", "event_name": "testevent"}))
+        print("Pubsub Object ", pb.fetch(name))
+        print("Pubsub Object Deleted ", pb.pubsub_delete(name))
+        print("Pubsub Object ", pb.fetch(name))
 
 
 __all__ = ["Actions", "Events", "Queues", "EPubSub"]

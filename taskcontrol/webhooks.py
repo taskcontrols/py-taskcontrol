@@ -1,6 +1,7 @@
 # Hooks Base
 
 import ast
+import time
 import sys
 import types
 import socket
@@ -137,8 +138,63 @@ class Sockets(UtilsBase, SocketsBase):
         socket_object.update({"server": srv, "selectors": sel})
         return self.update(socket_object)
 
-    def socket_multi_server_connect(self, socket_objects):
-        pass
+    def socket_multi_server_connect(self, socket_object, messages=[]):
+        connections = socket_object.get("numbers", 1)
+        server_addr = (socket_object.get("host"), socket_object.get("port"))
+        sel = selectors.DefaultSelector()
+        blocking = socket_object.get("blocking", False)
+
+        def service_connection(key, mask):
+            sock = key.fileobj
+            data = key.data
+            if mask & selectors.EVENT_READ:
+                recv_data = sock.recv(1024)  # Should be ready to read
+                if recv_data:
+                    print("Received ", repr(recv_data),
+                          " from connection ", data.connid)
+                    data.recv_total += len(recv_data)
+                if not recv_data or data.recv_total == data.msg_total:
+                    print("Closing connection ", data.connid)
+                    sel.unregister(sock)
+                    sock.close()
+            if mask & selectors.EVENT_WRITE:
+                if not data.outb and data.messages:
+                    data.outb = data.messages.pop(0)
+                if data.outb:
+                    print("Sending ", repr(data.outb),
+                          " to connection ", data.connid)
+                    # Should be ready to write
+                    sent = sock.send(data.outb)
+                    data.outb = data.outb[sent:]
+
+        for i in range(0, connections):
+            connid = i + 1
+            print("Starting connection ", connid, " to ", server_addr)
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.setblocking(blocking)
+            sock.connect_ex(server_addr)
+            events = selectors.EVENT_READ | selectors.EVENT_WRITE
+            data = types.SimpleNamespace(
+                connid=connid,
+                msg_total=sum(len(m) for m in messages),
+                recv_total=0,
+                messages=list(messages),
+                outb=b"",
+            )
+            sel.register(sock, events, data=data)
+        try:
+            while True:
+                events = sel.select(timeout=1)
+                if events:
+                    for key, mask in events:
+                        service_connection(key, mask)
+                # Check for a socket being monitored to continue.
+                if not sel.get_map():
+                    break
+        except KeyboardInterrupt:
+            print("Caught keyboard interrupt, exiting")
+        finally:
+            sel.close()
 
     def socket_connect(self, socket_object, messages=[]):
         connections = socket_object.get("numbers", 1)
@@ -162,57 +218,9 @@ class Sockets(UtilsBase, SocketsBase):
                 except Exception:
                     pass
         else:
-            def service_connection(key, mask):
-                sock = key.fileobj
-                data = key.data
-                if mask & selectors.EVENT_READ:
-                    recv_data = sock.recv(1024)  # Should be ready to read
-                    if recv_data:
-                        print("Received ", repr(recv_data),
-                              " from connection ", data.connid)
-                        data.recv_total += len(recv_data)
-                    if not recv_data or data.recv_total == data.msg_total:
-                        print("Closing connection ", data.connid)
-                        sel.unregister(sock)
-                        sock.close()
-                if mask & selectors.EVENT_WRITE:
-                    if not data.outb and data.messages:
-                        data.outb = data.messages.pop(0)
-                    if data.outb:
-                        print("Sending ", repr(data.outb),
-                              " to connection ", data.connid)
-                        # Should be ready to write
-                        sent = sock.send(data.outb)
-                        data.outb = data.outb[sent:]
-
-            for i in range(0, connections):
-                connid = i + 1
-                print("Starting connection ", connid, " to ", server_addr)
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.setblocking(blocking)
-                sock.connect_ex(server_addr)
-                events = selectors.EVENT_READ | selectors.EVENT_WRITE
-                data = types.SimpleNamespace(
-                    connid=connid,
-                    msg_total=sum(len(m) for m in messages),
-                    recv_total=0,
-                    messages=list(messages),
-                    outb=b"",
-                )
-                sel.register(sock, events, data=data)
-            try:
-                while True:
-                    events = sel.select(timeout=1)
-                    if events:
-                        for key, mask in events:
-                            service_connection(key, mask)
-                    # Check for a socket being monitored to continue.
-                    if not sel.get_map():
-                        break
-            except KeyboardInterrupt:
-                print("Caught keyboard interrupt, exiting")
-            finally:
-                sel.close()
+            o = socket_object
+            o["selectors"] = sel
+            self.socket_multi_server_connect(o, messages)
 
     def socket_close(self, socket_object):
         return socket_object.close()
@@ -231,28 +239,14 @@ class Sockets(UtilsBase, SocketsBase):
         return ast.literal_eval(msg)
 
 
-class IPubSub(UtilsBase, PubSubBase):
+class IPubSub(EPubSub):
 
-    def __init__(self, pubsub={}):
-        super().__init__("pubsubs", pubsubs=pubsub)
-
-    def register_publisher(self, event_name, publisher_object):
-        pass
-
-    def register_subscriber(self, event_name, subscriber_object):
-        pass
-
-    def register_event(self, event_object):
-        pass
-
-    def __process(self):
-        pass
-
-    def send(self, event_object):
-        pass
-
-    def receive(self, event_object):
-        pass
+    def __init__(self, pubsubs={}, type="ipubsub", agent="server"):
+        super().__init__(pubsubs=pubsubs, type="ipubsub")
+        self.v = ["name", "handler", "queue", "maxsize",
+                  "queue_type", "batch_interval", "processing_flag", "events", "workflow_kwargs"]
+        self.ev = ["name", "pubsub_name", "publishers", "subscribers"]
+        # self.__schedular()
 
 
 class Hooks(UtilsBase, HooksBase):
