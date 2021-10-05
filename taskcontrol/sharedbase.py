@@ -321,11 +321,11 @@ class LogBase(LogsBase, ClosureBase, UtilsBase):
             return False
 
 
-class CommandsBase(CommandBase, ClosureBase, UtilsBase):
+class CommandsBase(UtilsBase, CommandBase):
 
-    def __init__(self, options, commands={}):
-        self.getter, self.setter, self.deleter = self.class_closure(
-            commands=commands)
+    def __init__(self, validations={}, commands={}):
+        self.v = validations
+        super().__init__("commands", self.v, commands=commands)
 
     def create(self, options):
         pass

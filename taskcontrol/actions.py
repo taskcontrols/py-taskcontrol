@@ -12,9 +12,9 @@ class Queues(UtilsBase):
     tmp = {}
 
     def __init__(self, queues={}):
-        v = ["name", "maxsize", "queue_type", "queue", "workflow_kwargs"]
+        self.v = ["name", "maxsize", "queue_type", "queue", "workflow_kwargs"]
         super().__init__("queues", validations={
-            "add": v, "create": v, "update": v, "delete": ["name"]}, queues=queues)
+            "add": self.v, "create": self.v, "update": self.v, "delete": ["name"]}, queues=queues)
 
     def new(self, config):
         if self.validate_object(config, values=["name", "maxsize", "queue_type", "queue"]):
@@ -74,10 +74,10 @@ class Queues(UtilsBase):
 class Events(UtilsBase):
 
     def __init__(self, event={}):
-        v = ["name", "event", "handler", "listening",
-             "listeners", "workflow_kwargs"]
+        self.v = ["name", "event", "handler", "listening",
+                  "listeners", "workflow_kwargs"]
         super().__init__("events", validations={
-            "add": v, "create": v, "update": v, "delete": ["name"]}, events=event)
+            "add": self.v, "create": self.v, "update": self.v, "delete": ["name"]}, events=event)
 
     def event_register(self, event_object):
         """

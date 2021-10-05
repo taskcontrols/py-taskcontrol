@@ -7,7 +7,7 @@ import types
 import socket
 import selectors
 import copy
-from .sharedbase import ClosureBase, UtilsBase
+from .sharedbase import ClosureBase, SharedBase, UtilsBase, CommandsBase
 # Inherit shared and logging
 from .interfaces import SocketsBase, HooksBase, SshBase, PubSubBase
 from .actions import Queues, Events, EPubSub
@@ -299,9 +299,9 @@ class Hooks(UtilsBase, HooksBase):
 
     server = None
 
-    def __init__(self, socketsbase=Sockets):
-        super()
-        self.getter, self.setter, self.deleter = self.class_closure(hooks={})
+    def __init__(self, validations={}, hooks={}, socketsbase=Sockets):
+        self.v = validations
+        super().__init__("hooks", self.v, hooks=hooks)
         self.server = socketsbase()
 
     def hook_state(self, config):
@@ -368,12 +368,13 @@ class Hooks(UtilsBase, HooksBase):
         pass
 
 
-class SSH(UtilsBase, SshBase):
+class SSH(CommandsBase, SshBase):
 
     server = None
 
     def __init__(self, pubsub={}):
         super().__init__("pubsubs", pubsubs=pubsub)
+        self.server = socketsbase()
 
     def create(self, options):
         pass
