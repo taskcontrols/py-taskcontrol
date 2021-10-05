@@ -26,6 +26,7 @@ def client_nonblocking_handler(key, mask, sel, socket_object):
 
 config = {"name": "testclient", "protocol": socket.AF_INET, "streammode": socket.SOCK_STREAM,
           "host": "127.0.0.1", "port": 9001, "numbers": 5, "handler": client_nonblocking_handler, "blocking": False}
+
 # c = Socket.socket_create(config)
 # if c:
 #     print("Client started")

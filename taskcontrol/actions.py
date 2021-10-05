@@ -221,14 +221,15 @@ class EPubSub(UtilsBase):
             e = o.get("events").get(message_object.get("event_name"))
             if e:
                 r = False
-                if self.agent == "publisher" or self.agent == "server":
+                if self.agent == "publisher":
                     r = e.get("publishers").get(message_object.get(
                         "publisher_name")).get("handler")(message_object)
                 elif self.agent == "subscriber":
                     r = e.get("subscribers").get(message_object.get(
                         "publisher_name")).get("handler")(message_object)
                 else:
-                    r = e.get("handler")(message_object)
+                    def f(message_object): return print(message_object)
+                    r = e.get("handler", f)(message_object)
                 return r
         return False
 

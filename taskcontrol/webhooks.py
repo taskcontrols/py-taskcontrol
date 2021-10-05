@@ -241,11 +241,57 @@ class Sockets(UtilsBase, SocketsBase):
 
 class IPubSub(EPubSub):
 
+    server = Sockets()
+
     def __init__(self, pubsubs={}, type="ipubsub", agent="server"):
         super().__init__(pubsubs=pubsubs, type=type, agent=agent)
         self.v = ["name", "handler", "queue", "maxsize",
                   "queue_type", "batch_interval", "processing_flag", "events", "workflow_kwargs"]
         self.ev = ["name", "pubsub_name", "publishers", "subscribers"]
+
+    def __multilistener_server(self, config):
+        c = copy.copy(config.get("handler", lambda key, mask, data, sock, conn, addr,
+                                 socket_object: print(key, mask, data, sock, conn, addr, socket_object)))
+
+        def server_nonblocking_handler(key, mask, data, sock, conn, addr, socket_object):
+            print(conn, addr)
+            # print(conn.recv(1024))
+            # conn.send("Test message from server".encode())
+            # conn.close()
+            c(key, mask, data, sock, conn, addr, socket_object)
+
+        config["handler"] = server_nonblocking_handler
+        sc = self.server.socket_create(config)
+
+        if sc:
+            print("Server started ")
+            sl = self.server.socket_listen(config.get("name"))
+            if sl:
+                return self.server
+        return False
+
+    def publisher_socket(self, config):
+        c = copy.copy(config.get("handler", lambda key, mask, sel,
+                                 socket_object: print(key, mask, sel, socket_object)))
+
+        def client_nonblocking_handler(key, mask, sel, socket_object):
+            """
+            Applies for numbers > 1
+            """
+            # sock.send("Testing the client message".encode())
+            # print(sock.recv(1024).decode())
+            # sock.close()
+            # print("Test")
+            c(key, mask, sel, socket_object)
+
+        config["handler"] = client_nonblocking_handler
+        return self.server
+
+    def subscriber_socket(self, config):
+        return self.__multilistener_server(config)
+
+    def server_socket(self, config):
+        return self.__multilistener_server(config)
 
 
 class Hooks(UtilsBase, HooksBase):

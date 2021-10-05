@@ -12,7 +12,6 @@ def client_handler(messages, socket_client):
     # print(socket_client.get("server").recv(1024).decode())
     # socket_client.get("server").close()
     print("CLIENT", socket_client.get("host"), socket_client.get("port"))
-    
 
 
 config = {"name": "testclient", "protocol": socket.AF_INET, "streammode": socket.SOCK_STREAM,
