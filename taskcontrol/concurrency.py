@@ -27,7 +27,6 @@ class ConcurencyBase(UtilsBase):
             options (undefined):
 
         """
-
         # options structure
         # # args, kwargs, needs_join, share_value
 
@@ -87,7 +86,6 @@ class ConcurencyBase(UtilsBase):
             options (undefined):
 
         """
-
         # options structure
         # args, kwargs, needs_join
 

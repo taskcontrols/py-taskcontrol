@@ -1,11 +1,9 @@
 # # Project Workflow
 
+from .bases import WorkflowBase, PluginsBase, LogBase, TimerBase, ConcurencyBase, AuthBase, UtilsBase, Queues, Actions, Events, Hooks, Sockets, CommandsBase
+from .interfaces import AuthenticationBase, SocketsBase, HooksBase, SQLBase, LogsBase, TimeBase, CommandBase
 from sys import path
 path.append('./')
-
-
-from .interfaces import AuthenticationBase, SocketsBase, HooksBase, SQLBase, LogsBase, TimeBase, CommandBase
-from .bases import WorkflowBase, PluginsBase, LogBase, TimerBase, ConcurencyBase, AuthBase, UtilsBase, Queues, Actions, Events, Hooks, Sockets, CommandsBase
 
 
 class Tasks(WorkflowBase):
