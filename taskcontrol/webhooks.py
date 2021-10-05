@@ -297,6 +297,8 @@ class IPubSub(EPubSub):
 
 class Hooks(UtilsBase, HooksBase):
 
+    server = None
+
     def __init__(self, socketsbase=Sockets):
         super()
         self.getter, self.setter, self.deleter = self.class_closure(hooks={})
@@ -367,6 +369,8 @@ class Hooks(UtilsBase, HooksBase):
 
 
 class SSH(UtilsBase, SshBase):
+
+    server = None
 
     def __init__(self, pubsub={}):
         super().__init__("pubsubs", pubsubs=pubsub)
