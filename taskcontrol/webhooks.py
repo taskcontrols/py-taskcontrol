@@ -241,13 +241,14 @@ class Sockets(UtilsBase, SocketsBase):
 
 class IPubSub(EPubSub):
 
-    server = Sockets()
+    server = None
 
-    def __init__(self, pubsubs={}, type="ipubsub", agent="server"):
+    def __init__(self, pubsubs={}, type="ipubsub", agent="server", socketsbase=Sockets):
         super().__init__(pubsubs=pubsubs, type=type, agent=agent)
         self.v = ["name", "handler", "queue", "maxsize",
                   "queue_type", "batch_interval", "processing_flag", "events", "workflow_kwargs"]
         self.ev = ["name", "pubsub_name", "publishers", "subscribers"]
+        self.server = socketsbase()
 
     def __multilistener_server(self, config):
         c = copy.copy(config.get("handler", lambda key, mask, data, sock, conn, addr,
@@ -299,7 +300,7 @@ class Hooks(UtilsBase, HooksBase):
     def __init__(self, socketsbase=Sockets):
         super()
         self.getter, self.setter, self.deleter = self.class_closure(hooks={})
-        self.sockets = socketsbase
+        self.server = socketsbase()
 
     def hook_state(self, config):
 
