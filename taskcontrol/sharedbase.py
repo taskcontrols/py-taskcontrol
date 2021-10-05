@@ -323,9 +323,9 @@ class LogBase(LogsBase, ClosureBase, UtilsBase):
 
 class CommandsBase(UtilsBase, CommandBase):
 
-    def __init__(self, validations={}, commands={}):
+    def __init__(self, object_name="commands", validations={}, commands={}):
         self.v = validations
-        super().__init__("commands", self.v, commands=commands)
+        super().__init__(object_name, validations=self.v, commands=commands)
 
     def create(self, options):
         pass

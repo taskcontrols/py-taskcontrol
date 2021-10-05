@@ -15,16 +15,15 @@ from .actions import Queues, Events, EPubSub
 
 class Sockets(UtilsBase, SocketsBase):
 
-    validations = {
-        "create": ["name", "protocol", "streammode", "host", "port", "numbers", "handler", "blocking", "nonblocking_data", "nonblocking_timeout", "server"],
-        "add": ["name", "protocol", "streammode", "host", "port", "numbers", "handler", "blocking", "nonblocking_data", "nonblocking_timeout", "workflow_kwargs", "server"],
-        "fetch": ["name"],
-        "update": ["name"],
-        "delete": ["name"]
-    }
-
     def __init__(self, socket={}):
-        super().__init__("sockets", validations=self.validations, sockets=socket)
+        self.v = {
+            "create": ["name", "protocol", "streammode", "host", "port", "numbers", "handler", "blocking", "nonblocking_data", "nonblocking_timeout", "server"],
+            "add": ["name", "protocol", "streammode", "host", "port", "numbers", "handler", "blocking", "nonblocking_data", "nonblocking_timeout", "workflow_kwargs", "server"],
+            "fetch": ["name"],
+            "update": ["name"],
+            "delete": ["name"]
+        }
+        super().__init__("sockets", validations=self.v, sockets=socket)
 
     def socket_create(self, socket_object):
         socket_object.update({
@@ -243,7 +242,7 @@ class IPubSub(EPubSub):
 
     server = None
 
-    def __init__(self, pubsubs={}, type="ipubsub", agent="server", socketsbase=Sockets):
+    def __init__(self, validations={}, pubsubs={}, type="ipubsub", agent="server", socketsbase=Sockets):
         super().__init__(pubsubs=pubsubs, type=type, agent=agent)
         self.v = ["name", "handler", "queue", "maxsize",
                   "queue_type", "batch_interval", "processing_flag", "events", "workflow_kwargs"]
@@ -301,7 +300,7 @@ class Hooks(UtilsBase, HooksBase):
 
     def __init__(self, validations={}, hooks={}, socketsbase=Sockets):
         self.v = validations
-        super().__init__("hooks", self.v, hooks=hooks)
+        super().__init__("hooks", validations=self.v, hooks=hooks)
         self.server = socketsbase()
 
     def hook_state(self, config):
@@ -372,8 +371,9 @@ class SSH(CommandsBase, SshBase):
 
     server = None
 
-    def __init__(self, pubsub={}):
-        super().__init__("pubsubs", pubsubs=pubsub)
+    def __init__(self, validations={}, pubsub={}, socketsbase=Sockets):
+        self.v = validations
+        super().__init__("pubsubs", validations=self.v, pubsubs=pubsub)
         self.server = socketsbase()
 
     def create(self, options):
@@ -401,4 +401,4 @@ if __name__ == "__main__":
     ssh = SSH()
 
 
-__all__ = ["Sockets", "Hooks"]
+__all__ = ["Sockets", "Hooks", "IPubSub", "SSH"]
