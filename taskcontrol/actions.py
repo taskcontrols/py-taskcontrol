@@ -411,6 +411,7 @@ class EPubSub(UtilsBase):
     def send(self, message_object):
         # message_object: queue_name, event_name, publisher_name, message
         # publisher, server[forsubscriber]
+        # TODO: Consider send for subscriber for Client-Server (Server-Agent) Mode
         u = self.__publish_handler(message_object)
         if u:
             return True
