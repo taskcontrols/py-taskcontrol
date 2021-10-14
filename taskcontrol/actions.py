@@ -408,7 +408,7 @@ class EPubSub(UtilsBase):
             pass
         return False
 
-    def send(self, message_object):
+    def send(self, message_object): 
         # message_object: queue_name, event_name, publisher_name, message
         # Events (Publisher-Subscriber, WebHooks) Mode:
         #       publisher, server[forsubscribers]
