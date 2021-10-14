@@ -196,7 +196,7 @@ class EPubSub(UtilsBase):
     type = "epubsub"
     # agent options: application, publisher, server, subscriber
     # TODO: Implement threading/processing
-    # application (in application events, simple event architecture)
+    # application (in application events, simple app event architecture)
     # publisher, server, subscriber (in network system application events, clientagent-server architecture)
     agent = "application"
 
