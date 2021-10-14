@@ -234,7 +234,7 @@ class EPubSub(UtilsBase):
         while True:
             pb = self.fetch(1)
             for k in pb:
-                # Put into thread
+                # TODO: Add Threading/Processing
                 try:
                     if pb[k].get("processing_flag") == False:
                         pb[k]["processing_flag"] = True
