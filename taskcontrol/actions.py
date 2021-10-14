@@ -242,7 +242,7 @@ class EPubSub(UtilsBase):
                         if u:
                             r = self.__process(k)
                             if not r:
-                                raise Exception(result=r)
+                                raise Exception
                 except Exception as e:
                     raise e
             time.sleep(pb.get(k).get("batch_interval"))
