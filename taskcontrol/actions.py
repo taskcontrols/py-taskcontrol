@@ -194,7 +194,9 @@ class Actions(UtilsBase):
 class EPubSub(UtilsBase):
 
     type = "epubsub"
-    # agent options: publisher, server, subscriber
+    # agent options: application (in application events), publisher, server, subscriber
+    # application (in application events)
+    # publisher, server, subscriber (in network system events)
     agent = "application"
 
     def __init__(self, pubsubs={}, type="epubsub", agent="server"):
