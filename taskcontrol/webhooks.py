@@ -8,6 +8,7 @@ import socket
 import selectors
 import copy
 from .sharedbase import ClosureBase, SharedBase, UtilsBase, CommandsBase
+
 # Inherit shared and logging
 from .interfaces import SocketsBase, HooksBase, SshBase, PubSubBase
 from .actions import Queues, Events, EPubSub
@@ -285,6 +286,7 @@ class IPubSub(EPubSub):
             c(key, mask, sel, socket_object)
 
         config["handler"] = client_nonblocking_handler
+        self.server = config
         return self.server
 
     def subscriber_socket(self, config):

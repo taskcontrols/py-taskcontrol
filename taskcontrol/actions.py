@@ -195,7 +195,7 @@ class EPubSub(UtilsBase):
 
     type = "epubsub"
     # agent options: publisher, server, subscriber
-    agent = "server"
+    agent = "application"
 
     def __init__(self, pubsubs={}, type="epubsub", agent="server"):
         self.v = ["name", "handler", "queue", "maxsize",
@@ -216,20 +216,46 @@ class EPubSub(UtilsBase):
 
     def __publish_handler(self, message_object):
         o = self.fetch(message_object.get("queue_name"))
-        u = o.get("handler")(message_object)
-        if u:
+        h = o.get("handler")
+        if h:
             e = o.get("events").get(message_object.get("event_name"))
+            def f(message_object): print("Message Object", message_object)
             if e:
                 r = False
                 if self.agent == "publisher":
-                    r = e.get("publishers").get(message_object.get(
-                        "publisher_name")).get("handler")(message_object)
+                    # Get Handler
+                    pb_hdlr = e.get("handler")
+                    # Invoke Handler
+                    if pb_hdlr:
+                        r = self.__handler(message_object, pb_hdlr)
                 elif self.agent == "subscriber":
-                    r = e.get("subscribers").get(message_object.get(
-                        "publisher_name")).get("handler")(message_object)
+                    # Get Handler
+                    sb_hdlr = e.get("handler")
+                    # Invoke Handler
+                    if sb_hdlr:
+                        r = self.__handler(message_object, sb_hdlr)
                 else:
-                    def f(message_object): return print(message_object)
-                    r = e.get("handler", f)(message_object)
+                    r = []
+                    # Get Handler
+                    srv_hdlr = e.get("handler")
+                    # Invoke Handler
+                    u1 = self.__handler(message_object, srv_hdlr)
+                    # Get all subscriber handlers
+                    if not u1:
+                        print("Error U1")
+                    srv_pbh = e.get("publishers").get(
+                        message_object.get("publisher")).get("handler")
+                    # Invoke Publisher
+                    u2 = self.__handler(message_object, srv_pbh)
+                    if not u2:
+                        print("Error U2")
+                    sbs = e.get("subscribers")
+                    for sb in sbs:
+                        # Get individual handler
+                        srv_sb_hdlr = sb.get("handler")
+                        # Invoke all handlers
+                        tmpres = self.__handler(message_object, srv_sb_hdlr)
+                        r.append(tmpres)
                 return r
         return False
 
