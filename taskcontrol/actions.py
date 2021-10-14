@@ -211,6 +211,39 @@ class EPubSub(UtilsBase):
             "add": self.v, "create": self.v, "update": self.v, "delete": ["name"]}, pubsubs=pubsubs)
         # self.__schedular()
 
+    def __process(self, name):
+        o = self.fetch(name)
+        h = o.get("handler")
+        r = None
+        try:
+            while True:
+                t = o["queue"].get(o.get("name"))
+                if t:
+                    r = self.__handler(t, h)
+                else:
+                    break
+        except Exception as e:
+            o["queue"].add(t)
+        o["processing_flag"] = False
+        u = self.update(o)
+        if u:
+            return r
+
+    def __schedular(self):
+        while True:
+            pb = self.fetch(1)
+            for k in pb:
+                # Put into thread
+                try:
+                    if pb[k].get("processing_flag") == False:
+                        pb[k]["processing_flag"] = True
+                        u = self.update(dict([[k, pb[k]]]))
+                        if u:
+                            self.__process(k)
+                except Exception as e:
+                    raise e
+            time.sleep(pb.get(k).get("batch_interval"))
+
     def __handler(self, task, handler):
         r = handler(task)
         if r:
@@ -371,39 +404,6 @@ class EPubSub(UtilsBase):
         except Exception as e:
             pass
         return False
-
-    def __process(self, name):
-        o = self.fetch(name)
-        h = o.get("handler")
-        r = None
-        try:
-            while True:
-                t = o["queue"].get(o.get("name"))
-                if t:
-                    r = self.__handler(t, h)
-                else:
-                    break
-        except Exception as e:
-            o["queue"].add(t)
-        o["processing_flag"] = False
-        u = self.update(o)
-        if u:
-            return r
-
-    def __schedular(self):
-        while True:
-            pb = self.fetch(1)
-            for k in pb:
-                # Put into thread
-                try:
-                    if pb[k].get("processing_flag") == False:
-                        pb[k]["processing_flag"] = True
-                        u = self.update(dict([[k, pb[k]]]))
-                        if u:
-                            self.__process(k)
-                except Exception as e:
-                    raise e
-            time.sleep(pb.get(k).get("batch_interval"))
 
     def send(self, message_object):
         # message_object: queue_name, event_name, publisher_name, message
