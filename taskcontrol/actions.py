@@ -412,7 +412,7 @@ class EPubSub(UtilsBase):
         # message_object: queue_name, event_name, publisher_name, message
         # Events (Publisher-Subscriber, WebHooks) Mode:
         #       publisher, server[forsubscribers]
-        # TODO: Consider send for subscriber for Client-Server (Server-Agent) Mode
+        # TODO: Consider send for subscriber for Client-Server (Server-Agent) Mode or (Subscriber having feedback) or (Subscriber app in Dual) Mode
         u = self.__publish_handler(message_object)
         if u:
             return True
