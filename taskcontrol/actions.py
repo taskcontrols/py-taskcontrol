@@ -219,7 +219,7 @@ class EPubSub(UtilsBase):
             while True:
                 t = o["queue"].get(o.get("name"))
                 if t:
-                    r = self.__handler(t, h)
+                    r = self.__publish_handler(t)
                 else:
                     break
         except Exception as e:
@@ -228,6 +228,7 @@ class EPubSub(UtilsBase):
         u = self.update(o)
         if u:
             return r
+        return False
 
     def __schedular(self):
         while True:
@@ -239,7 +240,9 @@ class EPubSub(UtilsBase):
                         pb[k]["processing_flag"] = True
                         u = self.update(dict([[k, pb[k]]]))
                         if u:
-                            self.__process(k)
+                            r = self.__process(k)
+                            if not r:
+                                raise Exception(result=r)
                 except Exception as e:
                     raise e
             time.sleep(pb.get(k).get("batch_interval"))
