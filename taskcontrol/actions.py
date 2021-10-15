@@ -288,8 +288,6 @@ class EPubSub(UtilsBase):
                     print("Return Error U1")
                 srv_pbh = e.get("publishers").get(
                     message_object.get("publisher")).get("handler", h)
-                if not srv_pbh:
-                    print("Error srv_pbh")
                 # Invoke Publisher
                 print("Running Handler srv_pbh")
                 u2 = self.__handler(message_object, srv_pbh)
