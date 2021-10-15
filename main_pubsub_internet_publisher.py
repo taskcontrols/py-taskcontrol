@@ -1,4 +1,4 @@
-from taskcontrol.webhooks import IPubSub
+from taskcontrol.actions import IPubSub
 
 
 def run(data):

@@ -1,6 +1,6 @@
 import socket
 # Socket's Listeners
-from taskcontrol.webhooks import Sockets
+from taskcontrol.actions import Sockets
 
 
 Socket = Sockets()
