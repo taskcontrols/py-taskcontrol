@@ -446,11 +446,10 @@ class EPubSub(UtilsBase):
 
 
 if __name__ == "__main__":
-    queue = Queues()
 
     config = {"name": "test", "maxsize": 10,
-              "queue_type": "queue", "queue": None}
-
+            "queue_type": "queue", "queue": None}
+    queue = Queues()
     q = queue.new(config)
     config["queue"] = q
     # print(config)
@@ -483,6 +482,8 @@ if __name__ == "__main__":
 
 
 if __name__ == "__main__":
+        
+    print("\nActions:\nDemonstrating Action and Action Listeners")
     event = Events()
 
     def run(data):
@@ -494,7 +495,7 @@ if __name__ == "__main__":
             {"name": "run", "event_name": "new", "listener": run})
         event.on("new", "runner", lambda data: print(
             "Second Listener running -> ", data))
-        event.start("new")
+        event.listen("new")
         print("'new' event state is", event.get_state("new"))
         event.set_state("new", False)
         print("'new' event state is", event.get_state("new"))
@@ -508,47 +509,43 @@ if __name__ == "__main__":
 
 
 if __name__ == "__main__":
+    
     action = Actions()
 
 
 if __name__ == "__main__":
 
     def run(data):
-        print("Running Pubsub")
+        print("Running Pubsub ", data)
 
     def publisher(data):
-        print("Running publisher", data)
+        print("Running publisher ", data)
 
     def subscriber(data):
-        print("Running subscriber", data)
+        print("Running subscriber ", data)
 
     config = {"name": "new", "handler": run, "queue": None, "maxsize": 10,
-              "queue_type": "queue", "processing_flag": False,  "batch_interval": 5, "events": {}}
+            "queue_type": "queue", "processing_flag": False,  "batch_interval": 5, "events": {}}
     name = config.get("name")
 
     pb = EPubSub()
     p = pb.pubsub_create(config)
 
     if p:
-        print("Event register", pb.register_event(
-            name, {"name": "testevent", "event": run}))
-        print("Publish register", pb.register_publisher(
-            name, {"name": "pubone", "event_name": "testevent", "publisher": publisher}))
-        print("Subscribers register", pb.register_subscriber(
-            name, {"name": "subone", "event_name": "testevent", "subscriber": subscriber}))
-        print("Subscribers register", pb.register_subscriber(
-            name, {"name": "subtwo", "event_name": "testevent", "subscriber": subscriber}))
-        print("Event sending", pb.send({"event_name": "testevent",
-                                        "message": "Testing event testevent"}))
-        print("Publisher unregister", pb.unregister_publisher(
-            name, {"name": "pubone", "event_name": "testevent"}))
-        print("Subscriber unregister", pb.unregister_subscriber(
-            name, {"name": "subone", "event_name": "testevent"}))
-        print("Subscriber unregister", pb.unregister_subscriber(
-            name, {"name": "subtwo", "event_name": "testevent"}))
-        print("Pubsub Object ", pb.fetch(name))
+        print("Event register ", pb.register_event(name, {"name": "testevent", "event": run}))
+        print("Event listen ", pb.listen(name, "testevent"))
+        print("Publish register ", pb.register_publisher(name, {"name": "pubone", "event_name": "testevent", "publisher": publisher}))
+        print("Subscribers register ", pb.register_subscriber(name, {"name": "subone", "event_name": "testevent", "subscriber": subscriber}))
+        print("Subscribers register ", pb.register_subscriber(name, {"name": "subtwo", "event_name": "testevent", "subscriber": subscriber}))
+        print("Event sending ", pb.send({"event_name": "testevent", "queue_name": "new", "message": "Testing event testevent", "publisher": "pubone"}))
+        print("Publisher unregister ", pb.unregister_publisher(name, {"name": "pubone", "event_name": "testevent"}))
+        print("Subscriber unregister ", pb.unregister_subscriber(name, {"name": "subone", "event_name": "testevent"}))
+        print("Subscriber unregister ", pb.unregister_subscriber(name, {"name": "subtwo", "event_name": "testevent"}))
+        print("Pubsub Object PRINT FROM SCRIPT: ", pb.fetch(name))
+        print("Event unlisten ", pb.stop(name, "testevent"))
         print("Pubsub Object Deleted ", pb.pubsub_delete(name))
         print("Pubsub Object ", pb.fetch(name))
+
 
 
 __all__ = ["Actions", "Events", "Queues", "EPubSub"]
