@@ -1,8 +1,7 @@
 # # Project Workflow
 # Add support for Concurrency
 
-from .utils import ClosureBase, SharedBase, UtilsBase, TimerBase, LogBase, CommandsBase, Actions, Events, Queues, Sockets, Hooks
-from .concurrency import ConcurencyBase
+from .utils import ClosureBase, SharedBase, UtilsBase, ConcurencyBase, TimerBase, LogBase, CommandsBase, Actions, Events, Queues, Sockets, Hooks
 from .authentication import AuthBase
 
 
