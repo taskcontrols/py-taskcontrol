@@ -165,7 +165,7 @@ class Events(UtilsBase):
         except Exception as e:
             raise e
 
-    def start(self, event_name):
+    def listen(self, event_name):
         return self.set_state(event_name, True)
 
     def stop(self, event_name):
@@ -260,7 +260,7 @@ class EPubSub(UtilsBase):
             def h(message_object): return print(
                 "Message Object ", message_object)
         e = o.get("events").get(message_object.get("event_name"))
-        if e:
+        if e and e.get("listening"):
             r = False
             if self.agent == "publisher":
                 # Get Handler
@@ -339,8 +339,7 @@ class EPubSub(UtilsBase):
         # "name", "queue", "maxsize", "queue_type"
         qConfig = config
         tmpQ = Queues()
-        q = tmpQ.new(qConfig)
-        qConfig["queue"] = q
+        qConfig["queue"] = tmpQ.new(qConfig)
         qs = tmpQ.create(qConfig)
         if qs:
             return tmpQ
@@ -380,11 +379,22 @@ class EPubSub(UtilsBase):
             [
                 event_object.get("name"), {
                     "name": event_object.get("name"),
+                    "listening": False,
                     "publishers": event_object.get("publishers", {}),
                     "subscribers": event_object.get("subscribers", {})
                 }
             ]
         ]))
+        return self.update(e)
+
+    def listen(self, pubsub_name, event_name):
+        e = self.fetch(pubsub_name)
+        e["events"].get(event_name).update({"listening": True})
+        return self.update(e)
+
+    def stop(self, pubsub_name, event_name):
+        e = self.fetch(pubsub_name)
+        e["events"].get(event_name).update({"listening": False})
         return self.update(e)
 
     def unregister_event(self, pubsub_name, event_object):

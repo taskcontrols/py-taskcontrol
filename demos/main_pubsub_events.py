@@ -22,6 +22,7 @@ p = pb.pubsub_create(config)
 
 if p:
     print("Event register ", pb.register_event(name, {"name": "testevent", "event": run}))
+    print("Event listen ", pb.listen(name, "testevent"))
     print("Publish register ", pb.register_publisher(name, {"name": "pubone", "event_name": "testevent", "publisher": publisher}))
     print("Subscribers register ", pb.register_subscriber(name, {"name": "subone", "event_name": "testevent", "subscriber": subscriber}))
     print("Subscribers register ", pb.register_subscriber(name, {"name": "subtwo", "event_name": "testevent", "subscriber": subscriber}))
@@ -30,5 +31,6 @@ if p:
     print("Subscriber unregister ", pb.unregister_subscriber(name, {"name": "subone", "event_name": "testevent"}))
     print("Subscriber unregister ", pb.unregister_subscriber(name, {"name": "subtwo", "event_name": "testevent"}))
     print("Pubsub Object PRINT FROM SCRIPT: ", pb.fetch(name))
+    print("Event unlisten ", pb.stop(name, "testevent"))
     print("Pubsub Object Deleted ", pb.pubsub_delete(name))
     print("Pubsub Object ", pb.fetch(name))

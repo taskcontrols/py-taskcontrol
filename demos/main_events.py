@@ -18,7 +18,7 @@ if c:
         {"name": "run", "event_name": "new", "listener": run})
     event.on("new", "runner", lambda data: print(
         "Second Listener running -> ", data))
-    event.start("new")
+    event.listen("new")
     print("'new' event state is", event.get_state("new"))
     event.set_state("new", False)
     print("'new' event state is", event.get_state("new"))

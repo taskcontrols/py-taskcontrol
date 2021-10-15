@@ -29,7 +29,10 @@ if p:
         name, {"name": "subone", "event_name": "testevent", "subscriber": subscriber}))
     print("Subscribers register", pb.register_subscriber(
         name, {"name": "subtwo", "event_name": "testevent", "subscriber": subscriber}))
-    print("Event sending", pb.send({"event_name": "testevent", "queue_name": "new",
+    print("Event sending 1: ", pb.send({"event_name": "testevent", "queue_name": "new",
+                                    "message": "Testing event testevent", "publisher": "pubone"}))
+    print("Event listen ", pb.listen(name, "testevent"))
+    print("Event sending 2: ", pb.send({"event_name": "testevent", "queue_name": "new",
                                     "message": "Testing event testevent", "publisher": "pubone"}))
     print("Publisher unregister", pb.unregister_publisher(
         name, {"name": "pubone", "event_name": "testevent"}))
@@ -38,5 +41,6 @@ if p:
     print("Subscriber unregister", pb.unregister_subscriber(
         name, {"name": "subtwo", "event_name": "testevent"}))
     print("Pubsub Object ", pb.fetch(name))
+    print("Event unlisten ", pb.stop(name, "testevent"))
     print("Pubsub Object Deleted ", pb.pubsub_delete(name))
     print("Pubsub Object ", pb.fetch(name))
