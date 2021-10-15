@@ -1296,6 +1296,12 @@ class Hooks(UtilsBase, HooksBase):
         pass
 
 
+class Webhooks(UtilsBase):
+
+    def __init__(self, action={}):
+        super().__init__("actions", actions=action)
+
+
 class SSH(CommandsBase, SshBase):
 
     server = None
@@ -1344,14 +1350,6 @@ if __name__ == "__main__":
 
 if __name__ == "__main__":
     Socket = Sockets()
-
-
-if __name__ == "__main__":
-    hook = Hooks(socketsbase=Sockets)
-
-
-if __name__ == "__main__":
-    ssh = SSH()
 
 
 if __name__ == "__main__":
@@ -1419,11 +1417,6 @@ if __name__ == "__main__":
 
 if __name__ == "__main__":
 
-    action = Actions()
-
-
-if __name__ == "__main__":
-
     def run(data):
         print("Running Pubsub ", data)
 
@@ -1464,16 +1457,32 @@ if __name__ == "__main__":
         print("Pubsub Object ", pb.fetch(name))
 
 
+if __name__ == "__main__":
+
+    action = Actions()
+
+
+if __name__ == "__main__":
+
+    hook = Hooks(socketsbase=Sockets)
+
+
+if __name__ == "__main__":
+
+    webhook = Webhooks(socketsbase=Sockets)
+
+
+if __name__ == "__main__":
+
+    ssh = SSH()
+
 
 __all__ = [
-    "SharedBase", "ClosureBase",
-    "UtilsBase", "TimerBase",
-    "LogBase", "CommandsBase",
-    "ConcurencyBase",
-    "Events", "Queues", "Sockets",
-    "Actions", "Hooks",
-    "EPubSub", "IPubSub",
-    "SSH"
+    "SharedBase", "ClosureBase", "UtilsBase",
+    "TimerBase", "LogBase", "CommandsBase",
+    "ConcurencyBase", "Events", "Queues", "Sockets",
+    "Actions", "Hooks", "Webhooks",
+    "EPubSub", "IPubSub", "SSH"
 ]
 
 
