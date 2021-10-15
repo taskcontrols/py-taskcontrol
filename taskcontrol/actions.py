@@ -314,7 +314,7 @@ class EPubSub(UtilsBase):
             "handler": config.get("handler", lambda message_object: print(str(message_object))),
             "maxsize": config.get("maxsize", 10),
             "queue": config.get("queue", None),
-            "queue_type": config.get("queue_type", None),
+            "queue_type": config.get("queue_type", "list"),
             "batch_interval": 5,
             "processing_flag": False,
             "workflow_kwargs": {},
@@ -324,7 +324,7 @@ class EPubSub(UtilsBase):
         u = self.queue_create({
             "name": config.get("name"),
             "maxsize": config.get("maxsize"),
-            "queue_type": config.get("queue_type", "list")
+            "queue_type": config.get("queue_type")
         })
         if u:
             o["queue"] = u
