@@ -257,7 +257,8 @@ class EPubSub(UtilsBase):
         o = self.fetch(message_object.get("queue_name"))
         h = o.get("handler")
         if not h:
-            h = lambda message_object: print("Message Object", message_object)
+            def h(message_object): return print(
+                "Message Object", message_object)
         e = o.get("events").get(message_object.get("event_name"))
         if e:
             r = False
@@ -266,28 +267,31 @@ class EPubSub(UtilsBase):
                 pb_hdlr = e.get("handler")
                 # Invoke Handler
                 if pb_hdlr:
+                    print("Running Handler pb_hdlr")
                     r = self.__handler(message_object, pb_hdlr)
             elif self.agent == "subscriber":
                 # Get Handler
                 sb_hdlr = e.get("handler")
                 # Invoke Handler
                 if sb_hdlr:
+                    print("Running Handler sb_hdlr")
                     r = self.__handler(message_object, sb_hdlr)
             else:
                 r = []
                 # Get Handler
                 srv_hdlr = e.get("handler", h)
                 # Invoke Handler
-                u1 = None
-                if srv_hdlr:
-                    u1 = self.__handler(message_object, srv_hdlr)
+                print("Running Handler srv_hdlr")
+                u1 = self.__handler(message_object, srv_hdlr)
                 # Get all subscriber handlers
                 if not u1:
                     print("Return Error U1")
-                srv_pbh = e.get("publishers").get(message_object.get("publisher")).get("handler", h)
+                srv_pbh = e.get("publishers").get(
+                    message_object.get("publisher")).get("handler", h)
                 if not srv_pbh:
                     print("Error srv_pbh")
                 # Invoke Publisher
+                print("Running Handler srv_pbh")
                 u2 = self.__handler(message_object, srv_pbh)
                 if not u2:
                     print("Return Error U2")
@@ -296,6 +300,7 @@ class EPubSub(UtilsBase):
                     # Get individual handler
                     srv_sb_hdlr = sbs[sb].get("handler", h)
                     # Invoke all handlers
+                    print("Running Handler srv_sb_hdlr")
                     tmpres = self.__handler(message_object, srv_sb_hdlr)
                     r.append(tmpres)
             return r
