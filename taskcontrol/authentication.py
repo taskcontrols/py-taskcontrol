@@ -10,7 +10,7 @@ import sqlite3
 
 
 from .interfaces import AuthenticationBase
-from .sharedbase import ClosureBase, UtilsBase
+from .utils import ClosureBase, UtilsBase
 from .orm import SQLORM
 
 

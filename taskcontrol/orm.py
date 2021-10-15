@@ -9,7 +9,7 @@
 # Which will make it compatible to any DB and Authentication ways
 
 from .interfaces import SQLBase
-from .sharedbase import ClosureBase, UtilsBase
+from .utils import ClosureBase, UtilsBase
 
 
 class SQLORM(SQLBase, ClosureBase, UtilsBase):

@@ -13,7 +13,6 @@ from typing import Dict, List
 from collections import deque
 from queue import Queue, LifoQueue, PriorityQueue, SimpleQueue
 from .interfaces import TimeBase, LogsBase, CommandBase, ObjectModificationBase, PubSubBase, SocketsBase, HooksBase, SshBase
-from .sharedbase import ClosureBase, UtilsBase, LogBase, ClosureBase, SharedBase, UtilsBase, CommandsBase
 
 
 class ClosureBase():
