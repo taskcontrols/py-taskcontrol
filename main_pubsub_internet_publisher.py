@@ -30,10 +30,10 @@ if p:
     print("Subscribers register", pb.register_subscriber(
         name, {"name": "subtwo", "event_name": "testevent", "subscriber": subscriber}))
     print("Event sending 1: ", pb.send({"event_name": "testevent", "queue_name": "new",
-                                    "message": "Testing event testevent", "publisher": "pubone"}))
+                                        "message": "Testing event testevent", "publisher": "pubone"}))
     print("Event listen ", pb.listen(name, "testevent"))
     print("Event sending 2: ", pb.send({"event_name": "testevent", "queue_name": "new",
-                                    "message": "Testing event testevent", "publisher": "pubone"}))
+                                        "message": "Testing event testevent", "publisher": "pubone"}))
     print("Publisher unregister", pb.unregister_publisher(
         name, {"name": "pubone", "event_name": "testevent"}))
     print("Subscriber unregister", pb.unregister_subscriber(
