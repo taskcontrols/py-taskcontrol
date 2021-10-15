@@ -87,8 +87,8 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginsBase, UtilsBase):
             fn = task.get("function")
             args = task.get("args")
             kwargs = task.get("kwargs")
-            workflow_args = task.get("workflow_args")
-            workflow_kwargs = task.get("workflow_kwargs")
+            workflow_args = task.get("workflow_args", [])
+            workflow_kwargs = task.get("workflow_kwargs", {})
             log_ = task.get("log")
             if task.get("options") and task.get("options") != None:
                 error_object = task.get("options")
@@ -101,9 +101,9 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginsBase, UtilsBase):
             raise TypeError("Args not a list type")
         if kwargs == None or type(kwargs) != dict:
             raise TypeError("Kwargs not a dictionary type")
-        if workflow_args == None or type(workflow_args) != list:
+        if type(workflow_args) != list:
             workflow_args = []
-        if workflow_kwargs == None or type(workflow_kwargs) != dict:
+        if type(workflow_kwargs) != dict:
             workflow_kwargs = {}
 
         if result:
