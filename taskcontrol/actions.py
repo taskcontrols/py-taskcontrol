@@ -257,7 +257,8 @@ class EPubSub(UtilsBase):
         o = self.fetch(message_object.get("queue_name"))
         h = o.get("handler")
         if not h:
-            h = lambda message_object: print("Message Object ", message_object)
+            def h(message_object): return print(
+                "Message Object ", message_object)
         e = o.get("events").get(message_object.get("event_name"))
         if e:
             r = False
