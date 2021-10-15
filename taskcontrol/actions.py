@@ -257,7 +257,7 @@ class EPubSub(UtilsBase):
         o = self.fetch(message_object.get("queue_name"))
         h = o.get("handler")
         if not h:
-            def h(message_object): print("Message Object", message_object)
+            h = lambda message_object: print("Message Object", message_object)
         e = o.get("events").get(message_object.get("event_name"))
         if e:
             r = False
@@ -276,22 +276,25 @@ class EPubSub(UtilsBase):
             else:
                 r = []
                 # Get Handler
-                srv_hdlr = e.get("handler")
+                srv_hdlr = e.get("handler", h)
                 # Invoke Handler
-                u1 = self.__handler(message_object, srv_hdlr)
+                u1 = None
+                if srv_hdlr:
+                    u1 = self.__handler(message_object, srv_hdlr)
                 # Get all subscriber handlers
                 if not u1:
-                    print("Error U1")
-                srv_pbh = e.get("publishers").get(
-                    message_object.get("publisher")).get("handler")
+                    print("Return Error U1")
+                srv_pbh = e.get("publishers").get(message_object.get("publisher")).get("handler", h)
+                if not srv_pbh:
+                    print("Error srv_pbh")
                 # Invoke Publisher
                 u2 = self.__handler(message_object, srv_pbh)
                 if not u2:
-                    print("Error U2")
+                    print("Return Error U2")
                 sbs = e.get("subscribers")
                 for sb in sbs:
                     # Get individual handler
-                    srv_sb_hdlr = sb.get("handler")
+                    srv_sb_hdlr = sbs[sb].get("handler", h)
                     # Invoke all handlers
                     tmpres = self.__handler(message_object, srv_sb_hdlr)
                     r.append(tmpres)

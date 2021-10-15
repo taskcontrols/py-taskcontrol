@@ -21,22 +21,14 @@ pb = EPubSub()
 p = pb.pubsub_create(config)
 
 if p:
-    print("Event register", pb.register_event(
-        name, {"name": "testevent", "event": run}))
-    print("Publish register", pb.register_publisher(
-        name, {"name": "pubone", "event_name": "testevent", "publisher": publisher}))
-    print("Subscribers register", pb.register_subscriber(
-        name, {"name": "subone", "event_name": "testevent", "subscriber": subscriber}))
-    print("Subscribers register", pb.register_subscriber(
-        name, {"name": "subtwo", "event_name": "testevent", "subscriber": subscriber}))
-    print("Event sending", pb.send({"event_name": "testevent", "queue_name": "new",
-                                    "message": "Testing event testevent"}))
-    print("Publisher unregister", pb.unregister_publisher(
-        name, {"name": "pubone", "event_name": "testevent"}))
-    print("Subscriber unregister", pb.unregister_subscriber(
-        name, {"name": "subone", "event_name": "testevent"}))
-    print("Subscriber unregister", pb.unregister_subscriber(
-        name, {"name": "subtwo", "event_name": "testevent"}))
+    print("Event register", pb.register_event(name, {"name": "testevent", "event": run}))
+    print("Publish register", pb.register_publisher(name, {"name": "pubone", "event_name": "testevent", "publisher": publisher}))
+    print("Subscribers register", pb.register_subscriber(name, {"name": "subone", "event_name": "testevent", "subscriber": subscriber}))
+    print("Subscribers register", pb.register_subscriber(name, {"name": "subtwo", "event_name": "testevent", "subscriber": subscriber}))
+    print("Event sending", pb.send({"event_name": "testevent", "queue_name": "new", "message": "Testing event testevent", "publisher": "pubone"}))
+    print("Publisher unregister", pb.unregister_publisher(name, {"name": "pubone", "event_name": "testevent"}))
+    print("Subscriber unregister", pb.unregister_subscriber(name, {"name": "subone", "event_name": "testevent"}))
+    print("Subscriber unregister", pb.unregister_subscriber(name, {"name": "subtwo", "event_name": "testevent"}))
     print("Pubsub Object PRINT FROM SCRIPT: ", pb.fetch(name))
     print("Pubsub Object Deleted ", pb.pubsub_delete(name))
     print("Pubsub Object ", pb.fetch(name))
