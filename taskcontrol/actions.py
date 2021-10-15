@@ -311,15 +311,17 @@ class EPubSub(UtilsBase):
         if not "name" in config:
             raise TypeError
 
-        o = {"name": config.get("name"),
-             "handler": config.get("handler", lambda message_object: print(str(message_object))),
-             "maxsize": config.get("maxsize", 10),
-             "queue": config.get("queue", None),
-             "queue_type": config.get("queue_type", None),
-             "batch_interval": 5,
-             "processing_flag": False,
-             "workflow_kwargs": {},
-             "events": {}}
+        o = {
+            "name": config.get("name"),
+            "handler": config.get("handler", lambda message_object: print(str(message_object))),
+            "maxsize": config.get("maxsize", 10),
+            "queue": config.get("queue", None),
+            "queue_type": config.get("queue_type", None),
+            "batch_interval": 5,
+            "processing_flag": False,
+            "workflow_kwargs": {},
+            "events": {}
+        }
 
         u = self.queue_create({
             "name": config.get("name"),
