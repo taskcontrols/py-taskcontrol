@@ -1,4 +1,4 @@
-from taskcontrol.actions import IPubSub
+from taskcontrol.utils import IPubSub
 
 
 def run(data):
