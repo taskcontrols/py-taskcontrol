@@ -264,14 +264,14 @@ class EPubSub(UtilsBase):
             r = False
             if self.agent == "publisher":
                 # Get Handler
-                pb_hdlr = e.get("handler")
+                pb_hdlr = e.get("handler", h)
                 # Invoke Handler
                 if pb_hdlr:
                     print("Running Handler pb_hdlr")
                     r = self.__handler(message_object, pb_hdlr)
             elif self.agent == "subscriber":
                 # Get Handler
-                sb_hdlr = e.get("handler")
+                sb_hdlr = e.get("handler", h)
                 # Invoke Handler
                 if sb_hdlr:
                     print("Running Handler sb_hdlr")
