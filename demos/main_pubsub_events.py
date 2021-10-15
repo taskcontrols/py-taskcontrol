@@ -1,4 +1,4 @@
-from taskcontrol.actions import EPubSub
+from taskcontrol.utils import EPubSub
 
 
 def run(data):

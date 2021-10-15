@@ -1,4 +1,4 @@
-from taskcontrol.actions import Actions
+from taskcontrol.utils import Actions
 
 actions = Actions()
 

@@ -1,7 +1,7 @@
 
 # Actions and Listeners
 # (Publisher Subscriber using Action like functions)
-from taskcontrol.actions import Events
+from taskcontrol.utils import Events
 
 
 print("\nActions:\nDemonstrating Action and Action Listeners")
