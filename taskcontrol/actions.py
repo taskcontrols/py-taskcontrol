@@ -282,17 +282,17 @@ class EPubSub(UtilsBase):
                 srv_hdlr = e.get("handler", h)
                 # Invoke Handler
                 print("Running Handler srv_hdlr")
-                u1 = self.__handler(message_object, srv_hdlr)
+                r1 = self.__handler(message_object, srv_hdlr)
                 # Get all subscriber handlers
-                if not u1:
-                    print("Return Error U1")
+                if not r1:
+                    print("Return Error R1")
                 srv_pbh = e.get("publishers").get(
                     message_object.get("publisher")).get("handler", h)
                 # Invoke Publisher
                 print("Running Handler srv_pbh")
-                u2 = self.__handler(message_object, srv_pbh)
-                if not u2:
-                    print("Return Error U2")
+                r2 = self.__handler(message_object, srv_pbh)
+                if not r2:
+                    print("Return Error R2")
                 sbs = e.get("subscribers")
                 for sb in sbs:
                     # Get individual handler
