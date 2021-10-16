@@ -187,18 +187,19 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginsBase, UtilsBase):
             t_after = []
 
         if isinstance(t_after, dict) or type(t_after) == dict:
-            t_after.update({"name": task.get("name")})
-            t_after.update({"workflow_args": task.get("workflow_args")})
-            t_after.update(
-                {"workflow_kwargs": task.get("workflow_kwargs")})
+            t_after.update({
+                "name": task.get("name"),
+                "workflow_args": task.get("workflow_args"),
+                "workflow_kwargs": task.get("workflow_kwargs")
+            })
             after = [t_after]
         elif isinstance(t_after, list) or type(t_after) == list:
             for idx, item in enumerate(t_after):
-                t_after[idx].update({"name": task.get("name")})
-                t_after[idx].update(
-                    {"workflow_args": task.get("workflow_args")})
-                t_after[idx].update(
-                    {"workflow_kwargs": task.get("workflow_kwargs")})
+                t_after[idx].update({
+                    "name": task.get("name"),
+                    "workflow_args": task.get("workflow_args"),
+                    "workflow_kwargs": task.get("workflow_kwargs")
+                })
             after = t_after
         else:
             raise ValueError("Error: run_task: Definition of after")
