@@ -245,11 +245,11 @@ class ConcurencyBase(UtilsBase):
             daemon = True
 
         args = options.get("args")
-        if not args:
+        if not args and type(args) != list:
             args = []
 
         kwargs = options.get("kwargs")
-        if not kwargs:
+        if not kwargs and type(kwargs) != dict:
             kwargs = {}
 
         need_lock = options.get("lock")
@@ -306,15 +306,15 @@ class ConcurencyBase(UtilsBase):
             # share_value = options.get("share_value")
             # share_array = options.get("share_array")
 
-            args = options.get("args")
-            if not args:
+            args = options.get("args", [])
+            if type(args) != list:
                 args = []
 
-            kwargs = options.get("kwargs")
-            if not kwargs:
+            kwargs = options.get("kwargs", {})
+            if type(kwargs) != dict:
                 kwargs = {}
 
-        daemon = options.get("daemon")
+        daemon = options.get("daemon", True)
         if type(daemon) != bool:
             daemon = True
 
