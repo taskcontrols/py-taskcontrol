@@ -151,18 +151,19 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginsBase, UtilsBase):
             t_before = []
 
         if isinstance(t_before, dict) or type(t_before) == dict:
-            t_before.update({"name": task.get("name")})
-            t_before.update({"workflow_args": task.get("workflow_args")})
-            t_before.update(
-                {"workflow_kwargs": task.get("workflow_kwargs")})
+            t_before.update({
+                "name": task.get("name"),
+                "workflow_args": task.get("workflow_args"),
+                "workflow_kwargs": task.get("workflow_kwargs")
+            })
             before = [t_before]
         elif isinstance(t_before, list) or type(t_before) == list:
             for idx, item in enumerate(t_before):
-                t_before[idx].update({"name": task.get("name")})
-                t_before[idx].update(
-                    {"workflow_args": task.get("workflow_args")})
-                t_before[idx].update(
-                    {"workflow_kwargs": task.get("workflow_kwargs")})
+                t_before[idx].update({
+                    "name": task.get("name"),
+                    "workflow_args": task.get("workflow_args"),
+                    "workflow_kwargs": task.get("workflow_kwargs")
+                })
             before = t_before
         else:
             raise ValueError("Error: run_task: Definition of before")
@@ -170,14 +171,15 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginsBase, UtilsBase):
         for b in before:
             b["name"] = task.get("name")
 
-        fn_task = {}
-        fn_task["name"] = task.get("name")
-        fn_task["args"] = task.get("args")
-        fn_task["kwargs"] = task.get("kwargs")
-        fn_task["function"] = task.get("function")
-        fn_task["workflow_args"] = task.get("workflow_args")
-        fn_task["workflow_kwargs"] = task.get("workflow_kwargs")
-        fn_task["log"] = task.get("log")
+        fn_task = {
+            "name": task.get("name"),
+            "args": task.get("args"),
+            "kwargs": task.get("kwargs"),
+            "function": task.get("function"),
+            "workflow_args": task.get("workflow_args"),
+            "workflow_kwargs": task.get("workflow_kwargs"),
+            "log": task.get("log")
+        }
 
         t_after = task.get("workflow_kwargs").get("after")
 
