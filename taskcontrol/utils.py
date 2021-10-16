@@ -1049,7 +1049,7 @@ class EPubSub(UtilsBase):
 
     def queue_create(self, config):
         # "name", "queue", "maxsize", "queue_type"
-        qConfig = config
+        qConfig = copy.copy(config)
         tmpQ = Queues()
         qConfig["queue"] = tmpQ.new(qConfig)
         qs = tmpQ.create(qConfig)
