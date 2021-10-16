@@ -28,7 +28,7 @@ class ObjectModificationBase(metaclass=abc.ABCMeta):
 
 
 @dataclass(frozen=True)
-class AuthenticationBase(metaclass=abc.ABCMeta):
+class AuthBase(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def __init__(self, **kwargs):

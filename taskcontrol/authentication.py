@@ -9,7 +9,7 @@ import sqlite3
 # https://docs.python.org/3/library/pickle.html
 
 
-from .interfaces import AuthenticationBase
+from .interfaces import AuthBase
 from .utils import ClosureBase, UtilsBase
 from .orm import SQLORM
 
@@ -21,7 +21,7 @@ from .orm import SQLORM
 # TODO: Make all AuthBase functions ORM based
 
 
-class AuthBase(AuthenticationBase, ClosureBase, UtilsBase):
+class AuthenticationBase(AuthBase, ClosureBase, UtilsBase):
 
     def __init__(self, **kwargs):
         if self.verify_kwargs_structure(**kwargs):
@@ -254,7 +254,7 @@ class AuthBase(AuthenticationBase, ClosureBase, UtilsBase):
 
 
 if __name__ == "__main__":
-    auth = AuthBase()
+    auth = AuthenticationBase()
 
 
-__all__ = ["AuthBase"]
+__all__ = ["AuthenticationBase"]
