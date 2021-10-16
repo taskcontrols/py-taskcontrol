@@ -143,10 +143,7 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginsBase, UtilsBase):
         if task == None:
             return {"result": "Task not found error", "type": str(type(task))}
         log_ = task.get("log")
-        t_before = task.get("workflow_kwargs").get("before")
-
-        if t_before == None:
-            t_before = []
+        t_before = task.get("workflow_kwargs").get("before", [])
 
         if isinstance(t_before, dict) or type(t_before) == dict:
             t_before.update({
@@ -179,10 +176,7 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginsBase, UtilsBase):
             "log": task.get("log")
         }
 
-        t_after = task.get("workflow_kwargs").get("after")
-
-        if t_after == None:
-            t_after = []
+        t_after = task.get("workflow_kwargs").get("after", [])
 
         if isinstance(t_after, dict) or type(t_after) == dict:
             t_after.update({
