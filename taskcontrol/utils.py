@@ -240,16 +240,16 @@ class ConcurencyBase(UtilsBase):
             # share_value = options.get("share_value")
             pass
 
-        daemon = options.get("daemon")
+        daemon = options.get("daemon", True)
         if type(daemon) != bool:
             daemon = True
 
-        args = options.get("args")
-        if not args and type(args) != list:
+        args = options.get("args", [])
+        if type(args) != list:
             args = []
 
-        kwargs = options.get("kwargs")
-        if not kwargs and type(kwargs) != dict:
+        kwargs = options.get("kwargs", {})
+        if type(kwargs) != dict:
             kwargs = {}
 
         need_lock = options.get("lock")
