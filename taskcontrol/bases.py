@@ -104,11 +104,9 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginsBase, UtilsBase):
         if type(workflow_kwargs) != dict:
             workflow_kwargs = {}
 
-        if result:
-            result_ = result.get("result")
         if not result:
-            result_ = []
             result = {"result": []}
+        result_ = result.get("result", [])
 
         try:
             r_ = fn(self.getter("ctx", 1), result_, *args, **kwargs)
