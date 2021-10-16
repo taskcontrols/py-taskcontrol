@@ -14,7 +14,6 @@ from threading import Thread, Lock
 from multiprocessing import Process, Array, Value, Manager
 from collections import deque
 from queue import Queue, LifoQueue, PriorityQueue, SimpleQueue
-from taskcontrol.authentication import AuthenticationBase
 from .interfaces import TimeBase, LogsBase, CommandBase, ObjectModificationBase, PubSubBase, SocketsBase, HooksBase, SshBase
 
 
@@ -84,15 +83,6 @@ class ClosureBase():
             except Exception as e:
                 print("Exception in delete ", e)
                 return False
-
-        def authenticate(config):
-            pass
-
-        def is_authenticated(config):
-            pass
-
-        def logout(config):
-            pass
 
         return (getter, setter, deleter)
 
