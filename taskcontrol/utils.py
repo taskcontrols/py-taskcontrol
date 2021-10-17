@@ -356,6 +356,17 @@ class TimerBase(UtilsBase, TimeBase):
                                     "update": self.v, "delete": ["name"]},
                        timers=timers)
 
+    def timer_create(self, config):
+        config.update({
+            "_start_time": None,
+            "_elapsed_time": None,
+            "_accumulated": 0
+        })
+        u = self.create(config)
+        if u:
+            return True
+        return False
+
     def time(self):
         return time.perf_counter()
 
@@ -372,15 +383,24 @@ class TimerBase(UtilsBase, TimeBase):
         t = self.fetch(name).get("_start_time")
         if not t:
             raise ValueError("Timer not started")
-        return time.perf_counter() - self.fetch(name).get("_start_time")
+        return time.perf_counter() - t
+
+    def reset(self, name):
+        t = self.fetch(name)
+        if t:
+            t["_start_time"] = 0
+            t["_elapsed_time"] = 0
+            t["_accumulated"] = 0
+            return True
+        return False
 
     def start(self, name):
         # options object : {"name":"name", "timer": None}
         t = self.fetch(name)
-        if not name or not t:
-            raise TypeError
+        if not t:
+            raise ValueError("Timer not present")
         t["_start_time"] = self.time()
-        t["_elapsed_time"] = 0
+        t["_elapsed_time"] = None
         u = self.update(t)
         if u:
             return t["_start_time"]
@@ -389,14 +409,15 @@ class TimerBase(UtilsBase, TimeBase):
     def stop(self, name):
         # options object : {"name":"name", "timer": None}
         t = self.fetch(name)
-        if not name or not t:
-            raise TypeError
+        if not t or not t.get("_start_time"):
+            raise ValueError("Timer not present")
         elapsed_time = time.perf_counter() - t.get("_start_time")
         t["_start_time"] = None
-        t["_elapsed_time"] += elapsed_time
+        t["_elapsed_time"] = elapsed_time
+        t["_accumulated"] += elapsed_time
         u = self.update(t)
         if u:
-            return t["_elapsed_time"]
+            return elapsed_time
         raise Exception("Couldnot stop")
 
 
