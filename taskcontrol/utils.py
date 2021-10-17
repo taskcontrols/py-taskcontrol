@@ -449,11 +449,11 @@ class LogBase(UtilsBase, LogsBase):
             return self.fetch(config.get("name"))
         return False
 
-    def logger_delete(self, options):
+    def logger_delete(self, logger_name):
 
         # options object expected
         # {"key":"name", "value": ""}
-        u = self.deleter(options.get("name"))
+        u = self.deleter(logger_name)
         if u:
             return True
         return False
