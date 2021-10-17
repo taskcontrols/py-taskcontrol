@@ -476,8 +476,8 @@ class LogBase(UtilsBase, LogsBase):
         return False
 
     def logger_delete(self, logger_name):
-        # options object : {"key":"name", "value": ""}
-        u = self.deleter(logger_name)
+        # options object : {"name": "name"}
+        u = self.delete(logger_name)
         if u:
             return True
         return False
