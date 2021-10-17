@@ -420,7 +420,6 @@ class LogBase(UtilsBase, LogsBase):
         self.delete = lambda x: x
 
     def logger_create(self, config):
-
         # Config object expected
         # { "name":"name", "logger":logger, "level": "debug", "format": "",
         #   "handlers": {"handler": {"type": "file", "file": "filename.log"}, "format": "", "level": logging.INFO},
@@ -477,7 +476,6 @@ class LogBase(UtilsBase, LogsBase):
         return False
 
     def logger_delete(self, logger_name):
-
         # options object : {"key":"name", "value": ""}
         u = self.deleter(logger_name)
         if u:
@@ -487,9 +485,7 @@ class LogBase(UtilsBase, LogsBase):
     def log(self, options):
         # TODO: Concurrency can be added
         # https://docs.python.org/3/howto/logging-cookbook.html
-
-        # options object expected
-        # {"name":"name", "level": "debug", "message": ""}
+        # options object : {"name":"name", "level": "debug", "message": ""}
 
         log = self.fetch(options.get("name"))
         level = options.get("level")
