@@ -375,8 +375,7 @@ class TimerBase(UtilsBase, TimeBase):
         return time.perf_counter() - self.fetch(name).get("_start_time")
 
     def start(self, name):
-        # options object expected
-        # {"name":"name", "timer": None}
+        # options object : {"name":"name", "timer": None}
         t = self.fetch(name)
         if not name or not t:
             raise TypeError
@@ -388,8 +387,7 @@ class TimerBase(UtilsBase, TimeBase):
         return False
 
     def stop(self, name):
-        # options object expected
-        # {"name":"name", "timer": None}
+        # options object : {"name":"name", "timer": None}
         t = self.fetch(name)
         if not name or not t:
             raise TypeError
