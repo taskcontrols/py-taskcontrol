@@ -403,13 +403,13 @@ class LogBase(UtilsBase, LogsBase):
 
         logger = self.fetch(config.get("name"))
         if not logger:
-            raise ValueError("Logger not present")
+            raise ValueError("Logger name not present")
 
         # Use config here
         # config contains network info if logging needed to network
         log = logging.getLogger(config.get("name"))
         if not config.get("handlers"):
-            raise TypeError("Handlers Object not provided")
+            raise TypeError("Handlers Object not provided in config")
 
         def log_hdlr(cfg):
             if cfg.get("handler"):
