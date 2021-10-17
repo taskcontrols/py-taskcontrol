@@ -356,22 +356,47 @@ class TimerBase(UtilsBase, TimeBase):
                                     "update": self.v, "delete": ["name"]},
                        timers=timers)
 
-    def time(self, options):
+    def time(self):
+        return time.perf_counter()
+
+    def get_timer(self, name):
+        t = self.fetch(name).get("_elapsed_time")
+        if not t:
+            return time.perf_counter() - self.fetch(name).get("_start_time")
+        return t
+
+    def get_elapsed_time(self, name):
+        t = self.fetch(name).get("_start_time")
+        if not t:
+            raise ValueError
+        return time.perf_counter() - self.fetch(name).get("_start_time")
+
+    def start(self, name):
         # options object expected
         # {"name":"name", "timer": None}
+        t = self.fetch(name)
+        if not name or not t:
+            raise TypeError
+        t["_start_time"] = self.time()
+        t["_elapsed_time"] = 0
+        u = self.update(t)
+        if u:
+            return t["_start_time"]
+        return False
 
-        t = self.getter("timers", options.get("name"))
-        if not t:
-            raise TypeError("Wrong timer name provided")
-
-        timer = t.get("timer").perf_counter()
-
-        if not timer:
-            raise ValueError("Did not find timer")
-        return timer
-
-    def stop(self, options):
-        pass
+    def stop(self, name):
+        # options object expected
+        # {"name":"name", "timer": None}
+        t = self.fetch(name)
+        if not name or not t:
+            raise TypeError
+        elapsed_time = time.perf_counter() - t.get("_start_time")
+        t["_start_time"] = None
+        t["_elapsed_time"] += elapsed_time
+        u = self.update(t)
+        if u:
+            return t["_elapsed_time"]
+        raise Exception("Couldnot stop")
 
 
 class LogBase(UtilsBase, LogsBase):
