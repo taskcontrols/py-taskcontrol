@@ -430,10 +430,12 @@ class LogBase(UtilsBase, LogsBase):
         if type(config.get("handlers")) == list:
             for hdlrs in config.get("handlers"):
                 if type(hdlrs) != dict:
-                    raise ValueError("Error One in Configs list " + hdlrs.get("name"))
+                    raise ValueError(
+                        "Error One in Configs list " + hdlrs.get("name"))
                 h = log_hdlr(hdlrs)
                 if not h:
-                    raise ValueError("Error Two in Configs list " + hdlrs.get("name"))
+                    raise ValueError(
+                        "Error Two in Configs list " + hdlrs.get("name"))
                 log.addHandler(h)
         elif type(config.get("handlers")) == dict:
             h = log_hdlr(config.get("handler"))
