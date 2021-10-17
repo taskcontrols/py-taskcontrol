@@ -438,7 +438,7 @@ class LogBase(UtilsBase, LogsBase):
         elif type(config.get("handlers")) == dict:
             h = log_hdlr(config.get("handler"))
             if not h:
-                raise ValueError("Error in Config dict")
+                raise ValueError("Error in Config dict " + config.get("name"))
             log.addHandler(h)
         else:
             raise TypeError
