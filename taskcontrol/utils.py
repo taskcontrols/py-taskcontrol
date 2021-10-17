@@ -362,13 +362,16 @@ class TimerBase(UtilsBase, TimeBase):
     def get_timer(self, name):
         t = self.fetch(name).get("_elapsed_time")
         if not t:
-            return time.perf_counter() - self.fetch(name).get("_start_time")
+            s = self.fetch(name).get("_start_time")
+            if not s:
+                raise ValueError("Timer not started")
+            return time.perf_counter() - s
         return t
 
     def get_elapsed_time(self, name):
         t = self.fetch(name).get("_start_time")
         if not t:
-            raise ValueError
+            raise ValueError("Timer not started")
         return time.perf_counter() - self.fetch(name).get("_start_time")
 
     def start(self, name):
