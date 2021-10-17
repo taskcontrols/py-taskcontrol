@@ -431,8 +431,7 @@ class LogBase(UtilsBase, LogsBase):
         if not logger:
             raise ValueError("Logger name not present")
 
-        # Use config here
-        # config contains network info if logging needed to network
+        # Use config here. config contains network info if logging needed to network
         log = logging.getLogger(config.get("name"))
         if not config.get("handlers"):
             raise TypeError("Handlers Object not provided in config")
@@ -479,8 +478,7 @@ class LogBase(UtilsBase, LogsBase):
 
     def logger_delete(self, logger_name):
 
-        # options object expected
-        # {"key":"name", "value": ""}
+        # options object : {"key":"name", "value": ""}
         u = self.deleter(logger_name)
         if u:
             return True
