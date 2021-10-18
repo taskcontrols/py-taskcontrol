@@ -427,6 +427,10 @@ class TimerBase(UtilsBase, TimeBase):
         raise Exception("Couldnot stop")
 
 
+class FileReaderBase(UtilsBase):
+    pass
+
+
 class LogBase(UtilsBase, LogsBase):
 
     def __init__(self, loggers={}):
@@ -550,6 +554,10 @@ class CommandsBase(UtilsBase, CommandBase):
 
     def delete(self, options):
         pass
+
+
+class CSVReader(UtilsBase):
+    pass
 
 
 class Queues(UtilsBase):
@@ -1528,8 +1536,10 @@ if __name__ == "__main__":
 
 __all__ = [
     "SharedBase", "ClosureBase", "UtilsBase",
-    "TimerBase", "LogBase", "CommandsBase",
-    "ConcurencyBase", "Events", "Queues", "Sockets",
+    "TimerBase", "FileReaderBase", "CSVBase",
+    "LogBase", "CommandsBase",
+    "ConcurencyBase", "Queues",
+    "Events", "Sockets",
     "Actions", "Hooks", "Webhooks",
     "EPubSub", "IPubSub", "SSH"
 ]
