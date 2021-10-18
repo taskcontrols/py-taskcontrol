@@ -388,9 +388,11 @@ class TimerBase(UtilsBase, TimeBase):
     def reset(self, name):
         t = self.fetch(name)
         if t:
-            t["_start_time"] = 0
-            t["_elapsed_time"] = 0
-            t["_accumulated"] = 0
+            t.update({
+                "_start_time": 0,
+                "_elapsed_time": 0,
+                "_accumulated": 0
+            })
             return True
         return False
 
@@ -399,8 +401,10 @@ class TimerBase(UtilsBase, TimeBase):
         t = self.fetch(name)
         if not t:
             raise ValueError("Timer not present")
-        t["_start_time"] = self.time()
-        t["_elapsed_time"] = None
+        t.update({
+            "_start_time": self.time(),
+            "_elapsed_time": None
+        })
         u = self.update(t)
         if u:
             return t["_start_time"]
@@ -412,9 +416,11 @@ class TimerBase(UtilsBase, TimeBase):
         if not t or not t.get("_start_time"):
             raise ValueError("Timer not present")
         elapsed_time = time.perf_counter() - t.get("_start_time")
-        t["_start_time"] = None
-        t["_elapsed_time"] = elapsed_time
-        t["_accumulated"] += elapsed_time
+        t.update({
+            "_start_time": None,
+            "_elapsed_time": elapsed_time,
+            "_accumulated": t["_accumulated"] + elapsed_time
+        })
         u = self.update(t)
         if u:
             return elapsed_time
