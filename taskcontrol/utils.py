@@ -14,7 +14,8 @@ from threading import Thread, Lock
 from multiprocessing import Process, Array, Value, Manager
 from collections import deque
 from queue import Queue, LifoQueue, PriorityQueue, SimpleQueue
-from .interfaces import TimeBase, LogsBase, CommandBase, ObjectModificationBase, PubSubBase, SocketsBase, HooksBase, SshBase
+from .interfaces import ObjectModificationBase, SocketsBase, HooksBase, SshBase
+from .interfaces import PicklesBase, PubSubsBase, TimeBase, LogsBase, CommandsBase
 
 
 class ClosureBase():
@@ -537,7 +538,7 @@ class LogBase(UtilsBase, LogsBase):
             return False
 
 
-class CommandsBase(UtilsBase, CommandBase):
+class CommandBase(UtilsBase, CommandsBase):
 
     def __init__(self, object_name="commands", validations={}, commands={}):
         self.v = validations
@@ -560,7 +561,7 @@ class CSVReader(UtilsBase):
     pass
 
 
-class PickleBase(UtilsBase):
+class PickleBase(UtilsBase, PicklesBase):
     # Consider PickleBase class for ORM and Authentication
     pass
 
@@ -967,7 +968,7 @@ class Sockets(UtilsBase, SocketsBase):
         return ast.literal_eval(msg)
 
 
-class EPubSub(UtilsBase):
+class EPubSub(UtilsBase, PubSubsBase):
 
     type = "epubsub"
     # agent options: application, publisher, server, subscriber
@@ -1364,7 +1365,7 @@ class Webhooks(UtilsBase):
         super().__init__("actions", actions=action)
 
 
-class SSH(CommandsBase, SshBase):
+class SSH(CommandBase, SshBase):
 
     server = None
 
@@ -1542,7 +1543,7 @@ if __name__ == "__main__":
 __all__ = [
     "SharedBase", "ClosureBase", "UtilsBase",
     "TimerBase", "FileReaderBase", "CSVBase",
-    "LogBase", "CommandsBase",
+    "LogBase", "CommandBase",
     "ConcurencyBase", "Queues",
     "Events", "Sockets",
     "Actions", "Hooks", "Webhooks",

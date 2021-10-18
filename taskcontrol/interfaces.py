@@ -28,7 +28,39 @@ class ObjectModificationBase(metaclass=abc.ABCMeta):
 
 
 @dataclass(frozen=True)
-class AuthBase(metaclass=abc.ABCMeta):
+class PicklesBase(metaclass=abc.ABCMeta):
+    
+    @abc.abstractmethod
+    def __init__(self, **kwargs):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def create(self, config):
+        raise NotImplementedError
+    
+    @abc.abstractmethod
+    def insert(self, config):
+        raise NotImplementedError
+    
+    @abc.abstractmethod
+    def append(self, config):
+        raise NotImplementedError
+    
+    @abc.abstractmethod
+    def update(self, config):
+        raise NotImplementedError
+    
+    @abc.abstractmethod
+    def search(self, config):
+        raise NotImplementedError
+    
+    @abc.abstractmethod
+    def delete(self, config):
+        raise NotImplementedError
+    
+
+@dataclass(frozen=True)
+class AuthsBase(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def __init__(self, **kwargs):
@@ -112,7 +144,7 @@ class AuthBase(metaclass=abc.ABCMeta):
 
 
 @dataclass(frozen=True)
-class PubSubBase(metaclass=abc.ABCMeta):
+class PubSubsBase(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def __init__(self, **kwargs):
@@ -276,7 +308,7 @@ class LogsBase(metaclass=abc.ABCMeta):
 
 
 @dataclass(frozen=True)
-class PluginBase(metaclass=abc.ABCMeta):
+class PluginsBase(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def plugin_create(self, name, task_instance):
@@ -292,7 +324,7 @@ class TimeBase(metaclass=abc.ABCMeta):
 
 
 @dataclass(frozen=True)
-class CommandBase(metaclass=abc.ABCMeta):
+class CommandsBase(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def create(self, config):

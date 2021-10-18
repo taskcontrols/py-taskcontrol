@@ -4,9 +4,10 @@
 from .utils import ClosureBase, SharedBase, UtilsBase, ConcurencyBase, TimerBase, LogBase, CommandsBase
 from .utils import Events, Queues, Sockets, Hooks, Actions, EPubSub, IPubSub, Webhooks, SSH
 from .authentication import AuthenticationBase
+from .interfaces import PluginsBase
 
 
-class PluginsBase(UtilsBase):
+class PluginBase(UtilsBase, PluginsBase):
 
     # return plugin instance/module (plugin_instance)
     def plugin_create(self, name, task_instance):
@@ -43,7 +44,7 @@ class PluginsBase(UtilsBase):
             }
 
 
-class WorkflowBase(ClosureBase, ConcurencyBase, PluginsBase, UtilsBase):
+class WorkflowBase(ClosureBase, ConcurencyBase, PluginBase, UtilsBase):
 
     def __init__(self):
         super().__init__()
@@ -206,11 +207,11 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginsBase, UtilsBase):
 
 
 if __name__ == "__main__":
-    plugin = PluginsBase()
+    plugin = PluginBase()
 
 
 __all__ = [
-    "WorkflowBase", "PluginsBase",
+    "WorkflowBase", "PluginBase",
     "ConcurencyBase", "Actions",
     "Queues", "Events",
     "Sockets", "Hooks",

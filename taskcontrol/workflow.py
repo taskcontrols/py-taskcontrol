@@ -4,9 +4,8 @@ from sys import path
 path.append('./')
 
 
-from .bases import WorkflowBase, PluginsBase, LogBase, TimerBase, ConcurencyBase, AuthenticationBase, UtilsBase, Queues, Actions, Events, Hooks, Sockets, CommandsBase
-from .interfaces import AuthBase, SocketsBase, HooksBase, SQLBase, LogsBase, TimeBase, CommandBase
-
+from .bases import WorkflowBase, PluginBase, LogBase, TimerBase, ConcurencyBase, AuthenticationBase, UtilsBase, Queues, Actions, Events, Hooks, Sockets, CommandBase
+from .interfaces import AuthsBase, SocketsBase, HooksBase, SQLBase, LogsBase, TimeBase, CommandBase
 
 
 class Tasks(WorkflowBase):
@@ -146,9 +145,9 @@ def workflow(*workflow_args, **workflow_kwargs):
 __all__ = [
     "AuthenticationBase", "SocketsBase",
     "HooksBase", "LogBase", "SQLBase",
-    "ConcurencyBase", "AuthBase", "CommandsBase",
+    "ConcurencyBase", "AuthBase", "CommandBase",
     "LogBase", "TimerBase", "UtilsBase",
     "Actions", "Events", "Queue", "Sockets",
     "Hooks", "Webhooks", "EPubSub", "IPubSub",
-    "Tasks", "workflow", "PluginsBase"
+    "Tasks", "workflow", "PluginBase"
 ]
