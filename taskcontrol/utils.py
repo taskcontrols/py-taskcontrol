@@ -453,10 +453,6 @@ class LogBase(UtilsBase, LogsBase):
         #   "handlers": [{"handler": {"type": "file", "file": "filename.log"}, "format": "", "level": logging.DEBUG}]
         # }
 
-        logger = self.fetch(config.get("name"))
-        if not logger:
-            raise ValueError("Logger name not present")
-
         # Use config here. config contains network info if logging needed to network
         log = logging.getLogger(config.get("name"))
         if not config.get("handlers"):
@@ -489,7 +485,7 @@ class LogBase(UtilsBase, LogsBase):
                         "Error Two in Configs list " + hdlrs.get("name"))
                 log.addHandler(h)
         elif type(config.get("handlers")) == dict:
-            h = log_hdlr(config.get("handler"))
+            h = log_hdlr(config.get("handlers"))
             if not h:
                 raise ValueError("Error in Config dict " + config.get("name"))
             log.addHandler(h)
@@ -521,14 +517,16 @@ class LogBase(UtilsBase, LogsBase):
         try:
             if level == "debug" and log:
                 log.debug(message)
-            if level == "info" and log:
+            elif level == "info" and log:
                 log.info(message)
-            if level == "info" and log:
+            elif level == "info" and log:
                 log.warning(message)
-            if level == "error" and log:
+            elif level == "error" and log:
                 log.error(message)
-            if level == "critical" and log:
+            elif level == "critical" and log:
                 log.critical(message)
+            else:
+                raise Exception
             return True
         except Exception as e:
             log.raise_error(e, level, message)
