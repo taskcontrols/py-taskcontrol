@@ -564,6 +564,7 @@ class PickleBase(UtilsBase):
     # Consider PickleBase class for ORM and Authentication
     pass
 
+
 class Queues(UtilsBase):
     tmp = {}
 
