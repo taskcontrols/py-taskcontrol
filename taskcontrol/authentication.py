@@ -21,7 +21,7 @@ from .orm import SQLORM
 # TODO: Make all AuthBase functions ORM based
 
 
-class AuthenticationBase(AuthBase, ClosureBase, UtilsBase):
+class AuthenticationBase(UtilsBase, AuthBase, ClosureBase):
 
     def __init__(self, **kwargs):
         if self.verify_kwargs_structure(**kwargs):
