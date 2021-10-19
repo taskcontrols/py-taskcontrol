@@ -351,17 +351,17 @@ class ConcurencyBase(UtilsBase):
 class TimerBase(UtilsBase, TimeBase):
 
     def __init__(self, timers={}):
-        self.v = ["name", "_start_time", "_elapsed_time", "_accumulated"]
+        self.v = ["name", "_start_time", "_elapsed_time", "_accumulated", "workflow_kwargs"]
         super().__init__("timers",
-                         validations={"add": self.v, "create": self.v,
+                         validations={"add": self.v, "fetch": self.v, "create": self.v,
                                       "update": self.v, "delete": ["name"]},
                          timers=timers)
 
     def timer_create(self, config):
         config.update({
-            "_start_time": None,
-            "_elapsed_time": None,
-            "_accumulated": 0
+            "_start_time": 0.0,
+            "_elapsed_time": 0.0,
+            "_accumulated": 0.0
         })
         print(config)
         u = self.create(config)
@@ -372,28 +372,26 @@ class TimerBase(UtilsBase, TimeBase):
     def time(self):
         return time.perf_counter()
 
-    def get_timer(self, name):
-        t = self.fetch(name).get("_elapsed_time")
+    def elapsed_time(self, name):
+        t = self.fetch(name)
         if not t:
-            s = self.fetch(name).get("_start_time")
-            if not s:
-                raise ValueError("Timer not started")
-            return time.perf_counter() - s
-        return t
-
-    def get_elapsed_time(self, name):
-        t = self.fetch(name).get("_start_time")
+            raise TypeError("Timer not present")
+        else:
+            return t.get("_elapsed_time")
+    
+    def curent_elapsed_time(self, name):
+        t = self.fetch(name)
         if not t:
             raise ValueError("Timer not started")
-        return time.perf_counter() - t
+        return time.perf_counter() - t.get("_start_time", 0.0)
 
     def reset(self, name):
         t = self.fetch(name)
         if t:
             t.update({
-                "_start_time": 0,
-                "_elapsed_time": 0,
-                "_accumulated": 0
+                "_start_time": 0.0,
+                "_elapsed_time": 0.0,
+                "_accumulated": 0.0
             })
             return True
         return False
@@ -405,7 +403,7 @@ class TimerBase(UtilsBase, TimeBase):
             raise ValueError("Timer not present")
         t.update({
             "_start_time": self.time(),
-            "_elapsed_time": None
+            "_elapsed_time": 0.0
         })
         u = self.update(t)
         if u:
@@ -419,7 +417,7 @@ class TimerBase(UtilsBase, TimeBase):
             raise ValueError("Timer not present")
         elapsed_time = time.perf_counter() - t.get("_start_time")
         t.update({
-            "_start_time": None,
+            "_start_time": 0.0,
             "_elapsed_time": elapsed_time,
             "_accumulated": t["_accumulated"] + elapsed_time
         })
@@ -440,7 +438,7 @@ class CSVReaderBase(UtilsBase):
 class LogBase(UtilsBase, LogsBase):
 
     def __init__(self, loggers={}):
-        self.v = ["name", "logger", "level", "format", "handlers"]
+        self.v = ["name", "logger", "level", "format", "handlers", "workflow_kwargs"]
         super.__init__("timers",
                        validations={"add": self.v, "create": self.v,
                                     "update": self.v, "delete": ["name"]},
@@ -546,7 +544,7 @@ class LogBase(UtilsBase, LogsBase):
 class PickleBase(UtilsBase, PicklesBase):
     # Consider PickleBase class for ORM and Authentication
     def __init__(self, pickles={}):
-        self.v = ["name"]
+        self.v = ["name", "workflow_kwargs"]
         super().__init__(
             "pickles", validations={"add": self.v, "create": self.v, "update": self.v, "delete": ["name"]},
             pickles=pickles
@@ -571,7 +569,7 @@ class PickleBase(UtilsBase, PicklesBase):
 class CommandBase(UtilsBase, CommandsBase):
 
     def __init__(self, object_name="commands", validations={}, commands={}):
-        self.v = validations
+        self.v = ["name", "workflow_kwargs"]
         super().__init__(object_name, validations=self.v, commands=commands)
 
     def create(self, options):
