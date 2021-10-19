@@ -15,7 +15,7 @@ from multiprocessing import Process, Array, Value, Manager
 from collections import deque
 from queue import Queue, LifoQueue, PriorityQueue, SimpleQueue
 from .interfaces import ObjectModificationBase, SocketsBase, HooksBase, SshBase
-from .interfaces import PicklesBase, PubSubsBase, TimeBase, LogsBase, CommandsBase
+from .interfaces import PubSubsBase, TimeBase, LogsBase, CommandsBase, PicklesBase
 
 
 class ClosureBase():
@@ -351,11 +351,11 @@ class ConcurencyBase(UtilsBase):
 class TimerBase(UtilsBase, TimeBase):
 
     def __init__(self, timers={}):
-        self.v = ["name", "timer"]
-        super.__init__("timers",
-                       validations={"add": self.v, "create": self.v,
-                                    "update": self.v, "delete": ["name"]},
-                       timers=timers)
+        self.v = ["name", "_start_time", "_elapsed_time", "_accumulated"]
+        super().__init__("timers",
+                         validations={"add": self.v, "create": self.v,
+                                      "update": self.v, "delete": ["name"]},
+                         timers=timers)
 
     def timer_create(self, config):
         config.update({
@@ -363,6 +363,7 @@ class TimerBase(UtilsBase, TimeBase):
             "_elapsed_time": None,
             "_accumulated": 0
         })
+        print(config)
         u = self.create(config)
         if u:
             return True
@@ -429,6 +430,10 @@ class TimerBase(UtilsBase, TimeBase):
 
 
 class FileReaderBase(UtilsBase):
+    pass
+
+
+class CSVReaderBase(UtilsBase):
     pass
 
 
@@ -538,6 +543,31 @@ class LogBase(UtilsBase, LogsBase):
             return False
 
 
+class PickleBase(UtilsBase, PicklesBase):
+    # Consider PickleBase class for ORM and Authentication
+    def __init__(self, pickles={}):
+        self.v = ["name"]
+        super().__init__(
+            "pickles", validations={"add": self.v, "create": self.v, "update": self.v, "delete": ["name"]},
+            pickles=pickles
+        )
+
+    def connection(self, config):
+        pass
+
+    def insert(self, name, config):
+        pass
+
+    def find(self, name, config):
+        pass
+
+    def update(self, name, config):
+        pass
+
+    def delete(self, name, config):
+        pass
+
+
 class CommandBase(UtilsBase, CommandsBase):
 
     def __init__(self, object_name="commands", validations={}, commands={}):
@@ -555,15 +585,6 @@ class CommandBase(UtilsBase, CommandsBase):
 
     def delete(self, options):
         pass
-
-
-class CSVReader(UtilsBase):
-    pass
-
-
-class PickleBase(UtilsBase, PicklesBase):
-    # Consider PickleBase class for ORM and Authentication
-    pass
 
 
 class Queues(UtilsBase):

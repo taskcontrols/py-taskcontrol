@@ -247,19 +247,19 @@ class HooksBase(metaclass=abc.ABCMeta):
 class SQLBase(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
-    def create(self, conn, options):
+    def row_insert(self, conn, options):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def find(self, conn, options):
+    def row_find(self, conn, options):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def update(self, conn, options):
+    def row_update(self, conn, options):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def delete(self, conn, options):
+    def row_delete(self, conn, options):
         raise NotImplementedError
 
     @abc.abstractmethod

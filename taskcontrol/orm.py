@@ -9,15 +9,15 @@
 # Which will make it compatible to any DB and Authentication ways
 
 from .interfaces import SQLBase
-from .utils import ClosureBase, UtilsBase
+from .utils import UtilsBase
 
 
-class SQLORM(SQLBase, ClosureBase, UtilsBase):
+class SQLORM(UtilsBase, SQLBase):
 
-    def __init__(self, sockets={}):
-        super()
-        self.getter, self.setter, self.deleter = self.class_closure(
-            sockets=sockets)
+    def __init__(self, dbs={}):
+        self.v = ["name"]
+        super().__init__("orms", validations={"add": self.v, "create": self.v,
+                                              "update": self.v, "delete": ["name"]}, dbs=dbs)
 
     def has_sql(self, options, run="check", action="search"):
         sql = options.get("sql")
@@ -33,7 +33,7 @@ class SQLORM(SQLBase, ClosureBase, UtilsBase):
                 print(options.get("table"),
                       " {0}ed successfully".format(action))
 
-    def create(self, conn, options):
+    def row_insert(self, conn, options):
         try:
             if self.has_sql(options, run="check"):
                 sql = options.get("sql")
@@ -56,7 +56,7 @@ class SQLORM(SQLBase, ClosureBase, UtilsBase):
             raise Exception("Error with options provided", e)
         return True
 
-    def find(self, conn, options):
+    def row_find(self, conn, options):
         try:
             if self.has_sql(options, run="check"):
                 sql = options.get("sql")
@@ -97,7 +97,7 @@ class SQLORM(SQLBase, ClosureBase, UtilsBase):
             raise Exception("Error with options provided", e)
         return True
 
-    def update(self, conn, options):
+    def row_update(self, conn, options):
         try:
             if self.has_sql(options, run="check"):
                 sql = options.get("sql")
@@ -124,7 +124,7 @@ class SQLORM(SQLBase, ClosureBase, UtilsBase):
             raise Exception("Error with options provided", e)
         return True
 
-    def delete(self, conn, options):
+    def row_delete(self, conn, options):
         try:
             if self.has_sql(options, run="check"):
                 sql = options.get("sql")
