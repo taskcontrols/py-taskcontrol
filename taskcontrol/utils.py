@@ -431,8 +431,12 @@ class TimerBase(UtilsBase, TimeBase):
 
 class FileReaderBase(UtilsBase):
 
-    def __init__(self, fileobjects={}):
-        self.v = ["name"]
+    def __init__(self, validations={}, fileobjects={}):
+        if validations:
+            self.v = validations
+        else:
+            self.v = ["name", "file", "mode", "encoding", "workflow_kwargs"]
+
         super().__init__("fileobjects", validations={
             "add": self.v,
             "create": self.v,
@@ -569,12 +573,19 @@ class FileReaderBase(UtilsBase):
 
 class CSVReaderBase(FileReaderBase):
 
-    def __init__(self, csvs={}):
-        super().__init__(fileobjects=csvs)
-    
+    def __init__(self, validations={}, csvs={}):
+        self.v = ["name", "file", "mode", "encoding",
+                  "seperator", "workflow_kwargs"]
+        super().__init__("csvs", validations={
+            "add": self.v,
+            "create": self.v,
+            "update": self.v,
+            "delete": self.v
+        }, fileobjects=csvs)
+
     def rowitem_insert(self, name, head, item):
         pass
-    
+
     def rowitem_fetch(self, name, head):
         pass
 
@@ -583,17 +594,28 @@ class CSVReaderBase(FileReaderBase):
 
     def rowitem_delete(self, name, head):
         pass
-    
+
 
 class LogBase(UtilsBase, LogsBase):
 
     def __init__(self, loggers={}):
         self.v = ["name", "logger", "level",
                   "format", "handlers", "workflow_kwargs"]
-        super.__init__("timers",
+        # format
+        # Add field: "seperator"
+        self.fv = ["name", "file", "mode", "encoding",
+                   "seperator", "workflow_kwargs"]
+        super.__init__("loggers",
                        validations={"add": self.v, "create": self.v,
                                     "update": self.v, "delete": ["name"]},
                        loggers=loggers)
+
+        self.log_handlers = CSVReaderBase(validations={
+            "add": self.fv,
+            "create": self.fv,
+            "update": self.fv,
+            "delete": self.fv
+        }, csvs={})
 
         # self.setter("loggers", config, self)
         # self.format = None
