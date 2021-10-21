@@ -9,6 +9,7 @@ import socket
 import selectors
 import copy
 import logging
+import re
 from typing import Dict, List
 from threading import Thread, Lock
 from multiprocessing import Process, Array, Value, Manager
@@ -351,7 +352,8 @@ class ConcurencyBase(UtilsBase):
 class TimerBase(UtilsBase, TimeBase):
 
     def __init__(self, timers={}):
-        self.v = ["name", "_start_time", "_elapsed_time", "_accumulated", "workflow_kwargs"]
+        self.v = ["name", "_start_time", "_elapsed_time",
+                  "_accumulated", "workflow_kwargs"]
         super().__init__("timers",
                          validations={"add": self.v, "fetch": self.v, "create": self.v,
                                       "update": self.v, "delete": ["name"]},
@@ -378,7 +380,7 @@ class TimerBase(UtilsBase, TimeBase):
             raise TypeError("Timer not present")
         else:
             return t.get("_elapsed_time")
-    
+
     def curent_elapsed_time(self, name):
         t = self.fetch(name)
         if not t:
@@ -428,17 +430,166 @@ class TimerBase(UtilsBase, TimeBase):
 
 
 class FileReaderBase(UtilsBase):
-    pass
+
+    def __init__(self, fileobjects={}):
+        self.v = ["name"]
+        super().__init__("fileobjects", validations={
+            "add": self.v,
+            "create": self.v,
+            "update": self.v,
+            "delete": self.v
+        }, fileobjects=fileobjects)
+
+    def file_open(self, config):
+        try:
+            f = self.create(config)
+            if f:
+                return open(file=config.get("file"), mode=config.get("mode", "a+"), encoding=config.get("encoding", "utf-8"))
+            raise Exception
+        except Exception as e:
+            return False
+
+    def file_read(self, obj, way, char=None):
+        try:
+            if way == "read":
+                if char:
+                    return obj.read(char)
+                else:
+                    return obj.read()
+            elif way == "readlines":
+                return obj.readlines()
+            elif way == "file":
+                a = []
+                for i in obj:
+                    a.append(a)
+                return a
+            return True
+        except Exception as e:
+            return False
+
+    def file_write(self, obj, items, way):
+        try:
+            if way == "write":
+                obj.write(items)
+            elif way == "writelines":
+                obj.writelines(items)
+            self.close_file(obj)
+            return True
+        except Exception as e:
+            return False
+
+    def file_close(self, obj):
+        try:
+            obj.close()
+            return True
+        except Exception as e:
+            return False
+
+    def row_insert(self, name, item, row=-1):
+        c = self.fetch(name)
+        try:
+            if row == -1:
+                c.update({"mode": "a+"})
+                o = self.open_file(c)
+                return self.file_write(o, item, "write")
+            else:
+                c.update({"mode": "w+"})
+                o = self.open_file(c)
+                f = self.file_read(o, "readlines")
+                f.insert(row, item)
+                return self.file_write(o, f, "writelines")
+        except Exception as e:
+            return False
+
+    def row_append(self, name, item):
+        c = self.fetch(name)
+        try:
+            c.update({"mode": "a+"})
+            o = self.open_file(c)
+            return self.file_write(o, item, "write")
+        except Exception as e:
+            return False
+
+    def row_update(self, name, item, row=-1):
+        c = self.fetch(name)
+        c.update({"mode": "w+"})
+        o = self.open_file(c)
+        f = self.file_read(o, "readlines")
+        try:
+            if row == -1:
+                f[len(f)-1] = item
+            else:
+                f[row] = item
+            return self.file_write(o, f, "writelines")
+        except Exception as e:
+            return False
+
+    def row_delete(self, name, row=-1):
+        c = self.fetch(name)
+        c.update({"mode": "w+"})
+        o = self.open_file(c)
+        f = self.file_read(o, "readlines")
+        try:
+            if row == -1:
+                item = f.pop()
+            else:
+                item = f.pop(row)
+            u = self.file_write(o, f, "writelines")
+            if not u:
+                raise ValueError
+            return item
+        except Exception as e:
+            return False
+
+    def row_search(self, name, params):
+        # exact, match, search, contains
+        c = self.fetch(name)
+        c.update({"mode": "w+"})
+        o = self.open_file(c)
+        fir_lines = self.file_read(o, "readlines")
+        arr = []
+        for idx, l in enumerate(fir_lines):
+            for w in params:
+                if w.type == "exact":
+                    if l == w.param:
+                        arr.append({"row": idx, "item": l})
+                if w.type == "reg-match":
+                    p = re.compile(w.get("pattern"))
+                    if re.search(p, w.get("param")):
+                        arr.append({"row": idx, "item": l})
+                elif w.type == "reg-search" or w.type == "contains":
+                    p = re.compile(w.get("pattern"))
+                    if re.search(p, w.get("param")):
+                        arr.append({"row": idx, "item": l})
+        u = self.file_close(o)
+        if not u:
+            raise ValueError
+        return arr
 
 
-class CSVReaderBase(UtilsBase):
-    pass
+class CSVReaderBase(FileReaderBase):
 
+    def __init__(self, csvs={}):
+        super().__init__(fileobjects=csvs)
+    
+    def rowitem_insert(self, name, head, item):
+        pass
+    
+    def rowitem_fetch(self, name, head):
+        pass
+
+    def rowitem_update(self, name, head, item):
+        pass
+
+    def rowitem_delete(self, name, head):
+        pass
+    
 
 class LogBase(UtilsBase, LogsBase):
 
     def __init__(self, loggers={}):
-        self.v = ["name", "logger", "level", "format", "handlers", "workflow_kwargs"]
+        self.v = ["name", "logger", "level",
+                  "format", "handlers", "workflow_kwargs"]
         super.__init__("timers",
                        validations={"add": self.v, "create": self.v,
                                     "update": self.v, "delete": ["name"]},
