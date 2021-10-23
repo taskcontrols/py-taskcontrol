@@ -160,6 +160,23 @@ class UtilsBase(ObjectModificationBase):
                 return True
         return False
 
+    def list_search(self, list_object, params):
+        arr = []
+        for idx, l in enumerate(list_object):
+            for w in params:
+                if w.type == "exact":
+                    if l == w.param:
+                        arr.append({"row": idx, "item": l})
+                if w.type == "reg-match":
+                    p = re.compile(w.get("pattern"))
+                    if re.search(p, w.get("param")):
+                        arr.append({"row": idx, "item": l})
+                elif w.type == "reg-search" or w.type == "contains":
+                    p = re.compile(w.get("pattern"))
+                    if re.search(p, w.get("param")):
+                        arr.append({"row": idx, "item": l})
+        return arr
+
     def create(self, config):
         config["workflow_kwargs"] = config.get("workflow_kwargs", {})
         config["workflow_kwargs"]["shared"] = config.get(
@@ -439,6 +456,7 @@ class FileReaderBase(UtilsBase):
 
         super().__init__("fileobjects", validations={
             "add": self.v,
+            "fetch": self.v,
             "create": self.v,
             "update": self.v,
             "delete": self.v
@@ -540,31 +558,18 @@ class FileReaderBase(UtilsBase):
                 item = f.pop(row)
             u = self.file_write(o, f, "writelines")
             if not u:
-                raise ValueError
+                raise Exception
             return item
         except Exception as e:
             return False
 
     def row_search(self, name, params):
-        # exact, match, search, contains
+        # exact, reg-match, reg-search, contains
         c = self.fetch(name)
-        c.update({"mode": "w+"})
+        c.update({"mode": "r"})
         o = self.open_file(c)
         fir_lines = self.file_read(o, "readlines")
-        arr = []
-        for idx, l in enumerate(fir_lines):
-            for w in params:
-                if w.type == "exact":
-                    if l == w.param:
-                        arr.append({"row": idx, "item": l})
-                if w.type == "reg-match":
-                    p = re.compile(w.get("pattern"))
-                    if re.search(p, w.get("param")):
-                        arr.append({"row": idx, "item": l})
-                elif w.type == "reg-search" or w.type == "contains":
-                    p = re.compile(w.get("pattern"))
-                    if re.search(p, w.get("param")):
-                        arr.append({"row": idx, "item": l})
+        arr = self.list_search(fir_lines, params)
         u = self.file_close(o)
         if not u:
             raise ValueError
@@ -574,44 +579,50 @@ class FileReaderBase(UtilsBase):
 class CSVReaderBase(FileReaderBase):
 
     def __init__(self, validations={}, csvs={}):
-        self.v = ["name", "file", "mode", "encoding",
-                  "seperator", "workflow_kwargs"]
-        super().__init__("csvs", validations={
-            "add": self.v,
-            "create": self.v,
-            "update": self.v,
-            "delete": self.v
-        }, fileobjects=csvs)
+        if validations:
+            self.vd = validations
+        else:
+            self.v = ["name", "file", "mode", "encoding",
+                      "seperator", "workflow_kwargs"]
+            self.vd = {
+                "add": self.v,
+                "fetch": self.v,
+                "create": self.v,
+                "update": self.v,
+                "delete": self.v
+            }
 
-    def rowitem_insert(self, name, head, item):
-        pass
+        super().__init__(validations=self.vd, fileobjects=csvs)
 
-    def rowitem_fetch(self, name, head):
-        pass
+    def rowitem_insert(self, name, head, item, params):
+        a = self.row_search(name, params)
 
-    def rowitem_update(self, name, head, item):
-        pass
+    def rowitem_fetch(self, name, head, params):
+        a = self.row_search(name, params)
 
-    def rowitem_delete(self, name, head):
-        pass
+    def rowitem_update(self, name, head, item, params):
+        a = self.row_search(name, params)
+
+    def rowitem_delete(self, name, head, params):
+        a = self.row_search(name, params)
 
 
 class LogBase(UtilsBase, LogsBase):
 
     def __init__(self, loggers={}):
-        self.v = ["name", "logger", "level",
-                  "format", "handlers", "workflow_kwargs"]
+        self.v = ["name", "handlers", "logger", "workflow_kwargs"]
         # format
         # Add field: "seperator"
         self.fv = ["name", "file", "mode", "encoding",
                    "seperator", "workflow_kwargs"]
-        super.__init__("loggers",
-                       validations={"add": self.v, "create": self.v,
-                                    "update": self.v, "delete": ["name"]},
-                       loggers=loggers)
+        super().__init__("loggers",
+                         validations={"add": self.v, "fetch": self.v, "create": self.v,
+                                      "update": self.v, "delete": ["name"]},
+                         loggers=loggers)
 
         self.log_handlers = CSVReaderBase(validations={
             "add": self.fv,
+            "fetch": self.fv,
             "create": self.fv,
             "update": self.fv,
             "delete": self.fv
@@ -629,54 +640,61 @@ class LogBase(UtilsBase, LogsBase):
 
     def logger_create(self, config):
         # Config object expected
-        # { "name":"name", "logger":logger, "level": "debug", "format": "",
+        # { "name":"name",
         #   "handlers": {"handler": {"type": "file", "file": "filename.log"}, "format": "", "level": logging.INFO},
         #   "handlers": [{"handler": {"type": "file", "file": "filename.log"}, "format": "", "level": logging.DEBUG}]
         # }
 
         # Use config here. config contains network info if logging needed to network
-        log = logging.getLogger(config.get("name"))
-        if not config.get("handlers"):
-            raise TypeError("Handlers Object not provided in config")
+        try:
+            log = logging.getLogger(config.get("name"))
+            if not config.get("handlers"):
+                raise TypeError("Handlers Object not provided in config")
 
-        def log_hdlr(cfg):
-            if cfg.get("handler"):
-                h = None
-                if cfg.get("handler").get("type") == "file":
-                    h = logging.FileHandler(cfg.get(
-                        "handler").get("file"), "logging_" + cfg.get("name") + ".log")
-                elif cfg.get("handler").get("type") == "stream":
+            if type(config.get("handlers")) == list:
+                for hdlrs in config.get("handlers"):
+                    if type(hdlrs) != dict:
+                        raise ValueError(
+                            "Error One in Configs list " + hdlrs.get("name"))
+                    if config.get("handlers").get("handler").get("type") == "file":
+                        h = logging.FileHandler(config.get("handlers").get(
+                            "handler").get("file", "./demos/logs/logfile.log"))
+                    elif config.get("handler").get("type") == "stream":
+                        h = logging.StreamHandler()
+                    if not h:
+                        raise ValueError(
+                            "Error in Config dict " + config.get("name"))
+                    h.setLevel(config.get("level", logging.INFO))
+                    fmt = logging.Formatter(
+                        config.get("handlers").get(
+                        "handler").get("format", "%(levelname)s - %(asctime)s - %(name)s - %(message)s"))
+                    h.setFormatter(fmt)
+                    log.addHandler(h)
+            elif type(config.get("handlers")) == dict:
+                if config.get("handlers").get("handler").get("type") == "file":
+                    h = logging.FileHandler(config.get("handlers").get(
+                        "handler").get("file", "./demos/logs/logfile.log"))
+                elif config.get("handler").get("type") == "stream":
                     h = logging.StreamHandler()
-                else:
-                    return False
-                h.setLevel(cfg.get("level", logging.INFO))
-                fmt = logging.Formatter(
-                    cfg.get("format", "%(levelname)s - %(asctime)s - %(name)s - %(message)s"))
-                return h.setFormatter(fmt)
-            return False
-
-        if type(config.get("handlers")) == list:
-            for hdlrs in config.get("handlers"):
-                if type(hdlrs) != dict:
-                    raise ValueError(
-                        "Error One in Configs list " + hdlrs.get("name"))
-                h = log_hdlr(hdlrs)
                 if not h:
                     raise ValueError(
-                        "Error Two in Configs list " + hdlrs.get("name"))
+                        "Error in Config dict " + config.get("name"))
+                h.setLevel(config.get("level", logging.INFO))
+                fmt = logging.Formatter(
+                    config.get("handlers").get(
+                        "handler").get("format", "%(levelname)s - %(asctime)s - %(name)s - %(message)s"))
+                h.setFormatter(fmt)
                 log.addHandler(h)
-        elif type(config.get("handlers")) == dict:
-            h = log_hdlr(config.get("handlers"))
-            if not h:
-                raise ValueError("Error in Config dict " + config.get("name"))
-            log.addHandler(h)
-        else:
-            raise TypeError
-
+            else:
+                raise TypeError
+        except Exception as e:
+            print("Error in creation of logger ", e)
+            return False
         config.update({"logger": log})
-        u = self.update(config)
+        u = self.create(config)
+        print(config)
         if u:
-            return self.fetch(config.get("name"))
+            return True
         return False
 
     def logger_delete(self, logger_name):
@@ -691,26 +709,27 @@ class LogBase(UtilsBase, LogsBase):
         # https://docs.python.org/3/howto/logging-cookbook.html
         # options object : {"name":"name", "level": "debug", "message": ""}
 
-        log = self.fetch(options.get("name"))
-        level = options.get("level")
+        l = self.fetch(options.get("name"))
+        log = l.get("logger")
+        level = options.get("level", "info")
         message = options.get("message")
-
         try:
-            if level == "debug" and log:
+            if level == "critical":
                 log.debug(message)
-            elif level == "info" and log:
+            elif level == "error":
                 log.info(message)
-            elif level == "info" and log:
+            elif level == "info":
                 log.warning(message)
-            elif level == "error" and log:
+            elif level == "warning":
                 log.error(message)
-            elif level == "critical" and log:
+            elif level == "debug":
                 log.critical(message)
             else:
                 raise Exception
             return True
         except Exception as e:
-            log.raise_error(e, level, message)
+            # log.raise_error(e, level, message)
+            print(log, level, message, e)
             return False
 
 
