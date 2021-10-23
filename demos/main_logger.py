@@ -13,7 +13,7 @@ if log:
     if lg:
         l = log.log({
             "name": "logtest",
-            "level": "warning",
+            "level": "tst",
             "message": "This is a test"
         })
         if not l:

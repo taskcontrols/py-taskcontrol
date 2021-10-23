@@ -725,8 +725,7 @@ class LogBase(UtilsBase, LogsBase):
                 raise Exception
             return True
         except Exception as e:
-            log.raise_error(e, level, message)
-            # print(log, level, message, e)
+            log.error("Exception occurred " + str(e) + " " + level + " " + message, exc_info=True)
             return False
 
 
