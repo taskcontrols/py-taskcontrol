@@ -611,8 +611,6 @@ class LogBase(UtilsBase, LogsBase):
 
     def __init__(self, loggers={}):
         self.v = ["name", "handlers", "logger", "workflow_kwargs"]
-        # format
-        # Add field: "seperator"
         self.fv = ["name", "file", "mode", "encoding",
                    "seperator", "workflow_kwargs"]
         super().__init__("loggers",
