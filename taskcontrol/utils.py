@@ -618,13 +618,13 @@ class LogBase(UtilsBase, LogsBase):
                                       "update": self.v, "delete": ["name"]},
                          loggers=loggers)
 
-        self.log_handlers = CSVReaderBase(validations={
-            "add": self.fv,
-            "fetch": self.fv,
-            "create": self.fv,
-            "update": self.fv,
-            "delete": self.fv
-        }, csvs={})
+        # self.log_handlers = CSVReaderBase(validations={
+        #     "add": self.fv,
+        #     "fetch": self.fv,
+        #     "create": self.fv,
+        #     "update": self.fv,
+        #     "delete": self.fv
+        # }, csvs={})
 
         # self.setter("loggers", config, self)
         # self.format = None
@@ -690,7 +690,6 @@ class LogBase(UtilsBase, LogsBase):
             return False
         config.update({"logger": log})
         u = self.create(config)
-        print(config)
         if u:
             return True
         return False
