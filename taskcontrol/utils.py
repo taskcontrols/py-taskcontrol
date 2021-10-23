@@ -656,7 +656,7 @@ class LogBase(UtilsBase, LogsBase):
                             "Error One in Configs list " + hdlrs.get("name"))
                     if config.get("handlers").get("handler").get("type") == "file":
                         h = logging.FileHandler(config.get("handlers").get(
-                            "handler").get("file", "./demos/logs/logfile.log"))
+                            "handler").get("file", "./logs/logfile.log"))
                     elif config.get("handler").get("type") == "stream":
                         h = logging.StreamHandler()
                     if not h:
@@ -671,7 +671,7 @@ class LogBase(UtilsBase, LogsBase):
             elif type(config.get("handlers")) == dict:
                 if config.get("handlers").get("handler").get("type") == "file":
                     h = logging.FileHandler(config.get("handlers").get(
-                        "handler").get("file", "./demos/logs/logfile.log"))
+                        "handler").get("file", "./logs/logfile.log"))
                 elif config.get("handler").get("type") == "stream":
                     h = logging.StreamHandler()
                 if not h:
