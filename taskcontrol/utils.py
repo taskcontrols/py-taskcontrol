@@ -686,7 +686,7 @@ class LogBase(UtilsBase, LogsBase):
             else:
                 raise TypeError
         except Exception as e:
-            print("Error in creation of logger ", e)
+            # print("Error in creation of logger ", e)
             return False
         config.update({"logger": log})
         u = self.create(config)
@@ -725,8 +725,8 @@ class LogBase(UtilsBase, LogsBase):
                 raise Exception
             return True
         except Exception as e:
-            # log.raise_error(e, level, message)
-            print(log, level, message, e)
+            log.raise_error(e, level, message)
+            # print(log, level, message, e)
             return False
 
 
