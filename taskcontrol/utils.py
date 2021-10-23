@@ -656,7 +656,8 @@ class LogBase(UtilsBase, LogsBase):
                             "Error One in Configs list " + hdlrs.get("name"))
                     if config.get("handlers").get("handler").get("type") == "file":
                         h = logging.FileHandler(config.get("handlers").get(
-                            "handler").get("file", "./logs/logfile.log"))
+                            "handler").get("path", "./logs/") + config.get("name") + "_" + config.get("handlers").get(
+                            "handler").get("file", "logfile.log"))
                     elif config.get("handler").get("type") == "stream":
                         h = logging.StreamHandler()
                     if not h:
@@ -665,13 +666,14 @@ class LogBase(UtilsBase, LogsBase):
                     h.setLevel(config.get("level", logging.INFO))
                     fmt = logging.Formatter(
                         config.get("handlers").get(
-                        "handler").get("format", "%(levelname)s - %(asctime)s - %(name)s - %(message)s"))
+                            "handler").get("format", "%(levelname)s - %(asctime)s - %(name)s - %(message)s"))
                     h.setFormatter(fmt)
                     log.addHandler(h)
             elif type(config.get("handlers")) == dict:
                 if config.get("handlers").get("handler").get("type") == "file":
                     h = logging.FileHandler(config.get("handlers").get(
-                        "handler").get("file", "./logs/logfile.log"))
+                        "handler").get("path", "./logs/") + config.get("name") + "_" + config.get("handlers").get(
+                        "handler").get("file", "logfile.log"))
                 elif config.get("handler").get("type") == "stream":
                     h = logging.StreamHandler()
                 if not h:
@@ -725,7 +727,8 @@ class LogBase(UtilsBase, LogsBase):
                 raise Exception
             return True
         except Exception as e:
-            log.error("Exception occurred " + str(e) + " " + level + " " + message, exc_info=True)
+            log.error("Exception occurred " + str(e) + " " +
+                      level + " " + message, exc_info=True)
             return False
 
 
