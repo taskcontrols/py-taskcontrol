@@ -22,7 +22,7 @@
 * Allows working with Logging, Sockets, Events, Queues, Publisher-Subscriber Architectures, etc
 * In-Development: Allows working with commands (Todo), ssh (Todo), etc
 * In-Development: Allows working with Files (Todo - normal, yaml, ini, and csv), Scheduling (Todo), etc
-* In-Development: Allows working with best practices like Dependency Injection (Todo), ORMs/Databases (Todo), Authentication (Todo), etc from within the library and workflows/tasks
+* In-Development: Allows working with ORMs/Databases (Todo), Authentication (Todo), and best practices like Dependency Injection (Todo) within the library, tasks, and workflows
 * In-Development: Allows creating, registering, and using tasks/workflows as a plugin
 * In-Development: Provided in and Allows plugins support for Python, Javascript languages
 
