@@ -201,7 +201,7 @@ functools.reduce(red, ls)
 * Allow creating and registering a set of task controls as a plugin
 * Allow working with commands (Todo), ssh (Todo), Files (Todo - normal, yaml, ini, json, and csv), Scheduling (Todo), Dependency Injection (Todo), ORMs/Databases (Todo), Authentication (Todo)
 * Consider Workflow/Tasks tracking system and Dashboard with its own progress and logging
-* Consider compatibility to Chef/CircleCI/Github/Other Automation tools
+* Consider compatibility to Chef/CircleCI/Github/Other Automation tools, atleast as external added plugins
 
 # Status
 
