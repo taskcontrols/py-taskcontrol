@@ -19,7 +19,7 @@
 * Access read-only contexts and results of middlewares/tasks
 * Allows Merging two instances of task controls with namespace clash handling
 * Run instance, shared, and mix of tasks (individual or all groups)
-* Allows working with Logging, Sockets, Events, queues, Publisher-Subscriber Architectures, etc
+* Allows working with Logging, Sockets, Events, Queues, Publisher-Subscriber Architectures, etc
 * In-Development: Allows working with commands (Todo), ssh (Todo), etc
 * In-Development: Allows working with Files (Todo - normal, yaml, ini, and csv), Scheduling (Todo), etc
 * In-Development: Allows working with best practices like Dependency Injection (Todo), ORMs/Databases (Todo), Authentication (Todo), etc from within the library and workflows/tasks
