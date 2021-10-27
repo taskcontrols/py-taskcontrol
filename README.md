@@ -20,6 +20,7 @@
 * Allows merging two instances of task controls with namespace clash handling
 * Run instance, shared, and mix of tasks (individual or all groups)
 * Allows working with Logging, Sockets, Events, Queues, Publisher-Subscriber Architectures, etc
+* In-Development: Allows support for / working with concurrency
 * In-Development: Allows working with commands (Todo), ssh (Todo), etc
 * In-Development: Allows working with Files (Todo - normal, yaml, ini, and csv), Scheduling (Todo), etc
 * In-Development: Allows working with ORMs/Databases (Todo), Authentication (Todo), and best practices like Dependency Injection (Todo) within the library, tasks, and workflows
