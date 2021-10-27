@@ -21,7 +21,7 @@
 * Run instance, shared, and mix of tasks (individual or all groups)
 * Allows working with Sockets, Events,  queues, commands (Todo), ssh (Todo), etc
 * Allows working with Logging, Files (Todo - normal, yaml, ini, and csv), Scheduling (Todo), etc
-* Allows working with best practices like Publisher-Subscriber Architectures, Dependency Injection (Todo), ORMs/Databases (Todo), Authentication (Todo), etc
+* Allows working with best practices like Publisher-Subscriber Architectures, Dependency Injection (Todo), ORMs/Databases (Todo), Authentication (Todo), etc from within the library
 * In-Development: Allows creating, registering, and using tasks/workflows as a plugin
 
 
