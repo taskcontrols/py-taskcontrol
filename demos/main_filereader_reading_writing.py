@@ -1,4 +1,3 @@
-from os import read
 from taskcontrol.utils import FileReaderBase
 
 fr = FileReaderBase()
@@ -16,7 +15,6 @@ writelogfile = {
 }
 
 if fr:
-    
     # # Alternate ways - Readlines
     # # Adds all lines from filereaderdemo.log
     f = fr.file_open(logfile)
