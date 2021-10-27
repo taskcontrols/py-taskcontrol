@@ -19,9 +19,10 @@
 * Access read-only contexts and results of middlewares/tasks
 * Allows Merging two instances of task controls with namespace clash handling
 * Run instance, shared, and mix of tasks (individual or all groups)
-* Allows working with Sockets, Events,  queues, commands (Todo), ssh (Todo), etc
-* Allows working with Logging, Files (Todo - normal, yaml, ini, and csv), Scheduling (Todo), etc
-* Allows working with best practices like Publisher-Subscriber Architectures, Dependency Injection (Todo), ORMs/Databases (Todo), Authentication (Todo), etc from within the library
+* Allows working with Logging, Sockets, Events, queues, Publisher-Subscriber Architectures, etc
+* In-Development: Allows working with commands (Todo), ssh (Todo), etc
+* In-Development: Allows working with Files (Todo - normal, yaml, ini, and csv), Scheduling (Todo), etc
+* In-Development: Allows working with best practices like Dependency Injection (Todo), ORMs/Databases (Todo), Authentication (Todo), etc from within the library and workflows/tasks
 * In-Development: Allows creating, registering, and using tasks/workflows as a plugin
 
 
@@ -200,8 +201,8 @@ functools.reduce(red, ls)
 * e2e and Unit Tests - Add Tests (Structure of package created - to be cleaned after writing tests)
 * Allow creating and registering a set of task controls as a plugin
 * Allow working with commands (Todo), ssh (Todo), Files (Todo - normal, yaml, ini, json, and csv), Scheduling (Todo), Dependency Injection (Todo), ORMs/Databases (Todo), Authentication (Todo)
-* Consider Workflow/Tasks tracking system and Dashboard with its own progress and logging
-* Consider compatibility to Chef/CircleCI/Github/Other Automation tools, atleast as external added plugins
+* [C?] Consider Workflow/Tasks tracking system and Dashboard with its own progress and logging
+* [C?] Consider compatibility to Chef/CircleCI/Github/Other Automation tools, atleast as external added plugins
 
 # Status
 
