@@ -18,9 +18,9 @@
 * Manual:
     - Manual download of source and .whl file available at [https://pypi.org/project/taskcontrol/](https://pypi.org/project/taskcontrol/)
 
-## NodeJS (TODO, TDB)
+## NodeJS
 
 * Use npm:
-    - npm install ...TBD...
+    - `npm install taskcontrol`
 
 
