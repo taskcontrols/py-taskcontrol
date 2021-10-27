@@ -5,16 +5,18 @@
 
 # Features Details
 
-* Create Named task controls (tasks) using a Workflow decorator with simple options to setup workflow
-* Allows middlewares before each task (data fetch, auth, etc)
-* Allows middlewares after each task (data save, logging, logout, cleanup, etc)
-* Allows context (currently read-only) for each set of tasks run accessible by any function
-* Allows accessing returns/results of runs by each task or their middlewares
-* Allows creating isolated instance tasks or common/shared tasks based on shared keyword argument
-* Allows creating and merging two instances of task controls with namespace clash handling
-* Allows running single or multiple isolated, shared, or mixed tasks for each set of tasks run
-<!-- * In-Development: Allows creating, registering, and using a set of task controls as a plugin -->
-<!-- * In-Development: Allows  -->
+* Create Named task controls (tasks) - instance and isolated
+* Allows before / after middlewares for each task
+* Access read-only contexts and results of middlewares/tasks
+* Allows merging two instances of task controls with namespace clash handling
+* Run instance, shared, and mix of tasks (individual or all groups)
+* Allows working with Logging, Sockets, Events, Queues, Publisher-Subscriber Architectures, etc
+* In-Development: Allows support for / working with Concurrency
+* In-Development: Allows working with Commands & Scripts (Todo), SSH (Todo), etc
+* In-Development: Allows working with Files (Todo - normal, yaml, ini, and csv), Scheduling (Todo), etc
+* In-Development: Allows working with ORMs/Databases (Todo), Authentication (Todo), and best practices like Dependency Injection (Todo) within the library, tasks, and workflows
+* In-Development: Allows creating, registering, and using tasks/workflows as a plugin
+* In-Development: Provided in and Allows plugins support for Python, Javascript languages
 
 <!-- # Feature Details -->
 
