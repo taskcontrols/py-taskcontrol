@@ -15,7 +15,7 @@
 # Features
 
 * Create Named task controls (tasks) - instance and isolated
-* Allows middlewares before / after each task (data fetch, auth, data save, logging, logout, cleanup, etc)
+* Allows before / after middlewares for each task
 * Access read-only contexts and results of middlewares/tasks
 * Allows Merging two instances of task controls with namespace clash handling
 * Run instance, shared, and mix of tasks (individual or all groups)
