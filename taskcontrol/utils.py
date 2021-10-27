@@ -643,7 +643,7 @@ class CSVReaderBase(FileReaderBase):
 
         super().__init__(validations=self.vd, fileobjects=csvs)
 
-    def rowitem_insert(self, name, head, params):
+    def row_insert(self, name, head, params):
         c = self.fetch(name)
         o = self.file_open(c)
         f = self.file_read(o, "readlines")
@@ -711,7 +711,7 @@ class CSVReaderBase(FileReaderBase):
             return True
         return False
 
-    def rowitem_fetch(self, name, head, params):
+    def row_fetch(self, name, head, params):
         c = self.fetch(name)
         o = self.file_open(c)
         f = self.file_read(o, "readlines")
@@ -726,7 +726,7 @@ class CSVReaderBase(FileReaderBase):
             return arr
         return False
 
-    def rowitem_update(self, name, params):
+    def row_update(self, name, params):
         c = self.fetch(name)
         o = self.file_open(c)
         f = self.file_read(o, "readlines")
@@ -781,7 +781,7 @@ class CSVReaderBase(FileReaderBase):
             return True
         return False
 
-    def rowitem_delete(self, name, head):
+    def row_delete(self, name, head):
         c = self.fetch(name)
         o = self.file_open(c)
         f = self.file_read(o, "readlines")
