@@ -1,11 +1,11 @@
 # # Project Workflow
 # Add support for Concurrency
 
-from .utils import ClosureBase, SharedBase, UtilsBase, ConcurencyBase, TimerBase, LogBase, CommandBase
-from .utils import Events, Queues, Sockets, Hooks, Actions, EPubSub, IPubSub, Webhooks, SSH
-from .authentication import AuthenticationBase
-from .orm import SQLORM
-from .interfaces import PluginsBase
+from taskcontrol.utils import ClosureBase, SharedBase, UtilsBase, ConcurencyBase, TimerBase, LogBase, CommandBase
+from taskcontrol.utils import Events, Queues, Sockets, Hooks, Actions, EPubSub, IPubSub, Webhooks, SSH
+from taskcontrol.authentication import AuthenticationBase
+from taskcontrol.orm import SQLORM
+from taskcontrol.interfaces import PluginsBase
 
 
 class PluginBase(UtilsBase, PluginsBase):

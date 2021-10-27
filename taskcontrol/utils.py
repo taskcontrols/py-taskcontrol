@@ -1,6 +1,5 @@
 # SHARED BASE
 
-import time
 import ast
 import time
 import sys
@@ -10,13 +9,14 @@ import selectors
 import copy
 import logging
 import re
+import pickle
 from typing import Dict, List
 from threading import Thread, Lock
 from multiprocessing import Process, Array, Value, Manager
 from collections import deque
 from queue import Queue, LifoQueue, PriorityQueue, SimpleQueue
-from .interfaces import ObjectModificationBase, SocketsBase, HooksBase, SshBase
-from .interfaces import PubSubsBase, TimeBase, LogsBase, CommandsBase, PicklesBase
+from taskcontrol.interfaces import ObjectModificationBase, SocketsBase, HooksBase, SshBase
+from taskcontrol.interfaces import PubSubsBase, TimeBase, LogsBase, CommandsBase, PicklesBase
 
 
 class ClosureBase():
@@ -96,7 +96,11 @@ class SharedBase(ClosureBase):
     def __init__(self):
         super().__init__()
         self.getter, self.setter, self.deleter = self.class_closure(
-            tasks={}, ctx={}, plugins={}, config={}, workflow={}
+            workflows={}, tasks={}, plugins={}, ctx={}, configs={},
+            loggers={}, orms={}, auth={}, timers={}, files={}, pickles={},
+            queues={}, events={}, sockets={},
+            epubsubs={}, ipubsubs={}, webhooks={},
+            cmds={}, ssh={}
         )
         if SharedBase.__instance != None:
             pass
@@ -115,120 +119,23 @@ class SharedBase(ClosureBase):
         return SharedBase.__instance
 
 
-class UtilsBase(ObjectModificationBase):
-    object_name = None
-
-    def __init__(self, object_name="", validations={}, **kwargs):
-        self.object_name = object_name
-        self.validate_create = validations.get("create", ["name"])
-        self.validate_fetch = validations.get("fetch", ["name"])
-        self.validate_add = validations.get("add", ["name"])
-        self.validate_update = validations.get("update", ["name"])
-        self.validate_delete = validations.get("delete", ["name"])
-        self.getter, self.setter, self.deleter = ClosureBase().class_closure(
-            **kwargs)
-
-    def append_update_dict(self, main_object, update_object):
-        for k in update_object:
-            if k in main_object:
-                main_object.update(dict([[k, update_object.get(k)]]))
-            else:
-                main_object.append(dict([[k, update_object.get(k)]]))
-        return main_object
-
-    def validate_object(self, val_object, values=[]):
-        keys = val_object.keys()
-        if len(keys) == len(values):
-            if type(values) == list:
-                for k in values:
-                    if k in keys:
-                        continue
-                    else:
-                        return False
-                return True
-            elif type(values) == dict:
-                v_keys = values.keys()
-                for v in v_keys:
-                    if v in keys:
-                        for k in keys:
-                            if type(values.get(v)) == type(val_object.get(k)):
-                                continue
-                            else:
-                                return False
-                    else:
-                        return False
-                return True
-        return False
-
-    def list_search(self, list_object, params):
-        arr = []
-        for idx, l in enumerate(list_object):
-            for w in params:
-                if w.type == "exact":
-                    if l == w.param:
-                        arr.append({"row": idx, "item": l})
-                if w.type == "reg-match":
-                    p = re.compile(w.get("pattern"))
-                    if re.search(p, w.get("param")):
-                        arr.append({"row": idx, "item": l})
-                elif w.type == "reg-search" or w.type == "contains":
-                    p = re.compile(w.get("pattern"))
-                    if re.search(p, w.get("param")):
-                        arr.append({"row": idx, "item": l})
-        return arr
-
-    def create(self, config):
-        config["workflow_kwargs"] = config.get("workflow_kwargs", {})
-        config["workflow_kwargs"]["shared"] = config.get(
-            "workflow_kwargs").get("shared", False)
-        try:
-            if self.validate_object(config, self.validate_add):
-                return self.setter(self.object_name, config, self)
-            return False
-        except Exception as e:
-            print("Fetch error ", e)
-            return False
-
-    def fetch(self, name):
-        try:
-            return self.getter(self.object_name, name)[0]
-        except Exception as e:
-            print("Fetch error ", e)
-            return False
-
-    def update(self, config):
-        try:
-            o = self.getter(self.object_name, config.get("name"))[0]
-            for k in config:
-                if o.get(k) and (not k == "name"):
-                    o[k] = o.get(k)
-            return self.setter(self.object_name, o, self)
-        except Exception as e:
-            print("Fetch error ", e)
-            return False
-
-    def delete(self, name):
-        try:
-            return self.deleter(self.object_name, name)
-        except Exception as e:
-            print("Fetch error ", e)
-            return False
-
-
-class ConcurencyBase(UtilsBase):
+class ConcurencyBase():
 
     # consider adding concurrency futures
-    def futures_run(self):
+    @staticmethod
+    def futures():
         pass
 
     # consider adding asyncio lib
-    def asyncio_run(self):
+    @staticmethod
+    def asyncio():
         pass
 
     # asynchronous, needs_join
-    def mthread_run(self, function, options):
+    @staticmethod
+    def mthread(function, options):
         """
-        Description of mthread_run
+        Description of mthread
 
         Args:
             self (undefined):
@@ -285,9 +192,10 @@ class ConcurencyBase(UtilsBase):
         return {"worker": worker, "result": result}
 
     # asynchronous, needs_join
-    def mprocess_run(self, function, options):
+    @staticmethod
+    def mprocess(function, options):
         """
-        Description of mprocess_run
+        Description of mprocess
 
         Args:
             self (undefined):
@@ -347,23 +255,144 @@ class ConcurencyBase(UtilsBase):
         return {"worker": worker, "result": result}
 
     # asynchronous, needs_join
-    def mprocess_pool_run(self, function, options):
+    @staticmethod
+    def mprocess_pool(function, options):
         pass
 
-    def run_concurrently(self, function, options):
+    @staticmethod
+    def concurrency(function, options):
         mode = options.get("mode")
         if mode:
             if mode == "process":
-                return self.mprocess_run(function, options)
+                return ConcurencyBase.mprocess(function, options)
             if mode == "process_pool":
-                return self.mprocess_pool_run(function, options)
+                return ConcurencyBase.mprocess_pool(function, options)
             if mode == "thread":
-                return self.mthread_run(function, options)
+                return ConcurencyBase.mthread(function, options)
             if mode == "async":
-                pass
+                return ConcurencyBase.asyncio(function, options)
             if mode == "futures":
-                pass
+                return ConcurencyBase.futures(function, options)
         return None
+
+
+class UtilsBase(ObjectModificationBase):
+    object_name = None
+
+    def __init__(self, object_name="", validations={}, **kwargs):
+        self.object_name = object_name
+        self.validate_create = validations.get("create", ["name"])
+        self.validate_fetch = validations.get("fetch", ["name"])
+        self.validate_add = validations.get("add", ["name"])
+        self.validate_update = validations.get("update", ["name"])
+        self.validate_delete = validations.get("delete", ["name"])
+        self.getter, self.setter, self.deleter = ClosureBase().class_closure(
+            **kwargs)
+
+    def append_update_dict(self, main_object, update_object):
+        for k in update_object:
+            if k in main_object:
+                main_object.update(dict([[k, update_object.get(k)]]))
+            else:
+                main_object.append(dict([[k, update_object.get(k)]]))
+        return main_object
+
+    def validate_object(self, val_object, values=[]):
+        keys = val_object.keys()
+        if len(keys) == len(values):
+            if type(values) == list:
+                for k in values:
+                    if k in keys:
+                        continue
+                    else:
+                        return False
+                return True
+            elif type(values) == dict:
+                v_keys = values.keys()
+                for v in v_keys:
+                    if v in keys:
+                        for k in keys:
+                            if type(values.get(v)) == type(val_object.get(k)):
+                                continue
+                            else:
+                                return False
+                    else:
+                        return False
+                return True
+        return False
+
+    def list_search(self, list_object, params):
+        arr = []
+        for idx, l in enumerate(list_object):
+            for w in params:
+                if w.type == "exact":
+                    if l == w.param:
+                        arr.append({"row": idx, "item": l})
+                if w.type == "reg-match":
+                    p = re.compile(w.get("pattern"))
+                    if re.match(p, w.get("param")):
+                        arr.append({"row": idx, "item": l})
+                elif w.type == "reg-search" or w.type == "contains":
+                    p = re.compile(w.get("pattern"))
+                    if re.search(p, w.get("param")):
+                        arr.append({"row": idx, "item": l})
+        return arr
+
+    def list_modify(self, list_object, fnc, params=None):
+        if not params:
+            return map(fnc, list_object)
+        arr = []
+        for idx, l in enumerate(list_object):
+            for w in params:
+                if w.type == "exact":
+                    if l == w.param:
+                        arr.append({"row": idx, "item": fnc(l)})
+                if w.type == "reg-match":
+                    p = re.compile(w.get("pattern"))
+                    if re.match(p, w.get("param")):
+                        arr.append({"row": idx, "item": fnc(l)})
+                elif w.type == "reg-search" or w.type == "contains":
+                    p = re.compile(w.get("pattern"))
+                    if re.search(p, w.get("param")):
+                        arr.append({"row": idx, "item": fnc(l)})
+        return arr
+
+    def create(self, config):
+        config["workflow_kwargs"] = config.get("workflow_kwargs", {})
+        config["workflow_kwargs"]["shared"] = config.get(
+            "workflow_kwargs").get("shared", False)
+        try:
+            if self.validate_object(config, self.validate_add):
+                return self.setter(self.object_name, config, self)
+            return False
+        except Exception as e:
+            print("Fetch error ", e)
+            return False
+
+    def fetch(self, name):
+        try:
+            return self.getter(self.object_name, name)[0]
+        except Exception as e:
+            print("Fetch error ", e)
+            return False
+
+    def update(self, config):
+        try:
+            o = self.getter(self.object_name, config.get("name"))[0]
+            for k in config:
+                if o.get(k) and (not k == "name"):
+                    o[k] = o.get(k)
+            return self.setter(self.object_name, o, self)
+        except Exception as e:
+            print("Fetch error ", e)
+            return False
+
+    def delete(self, name):
+        try:
+            return self.deleter(self.object_name, name)
+        except Exception as e:
+            print("Fetch error ", e)
+            return False
 
 
 class TimerBase(UtilsBase, TimeBase):
@@ -448,44 +477,46 @@ class TimerBase(UtilsBase, TimeBase):
 
 class FileReaderBase(UtilsBase):
 
-    def __init__(self, validations={}, fileobjects={}):
-        if validations:
-            self.v = validations
-        else:
-            self.v = ["name", "file", "mode", "encoding", "workflow_kwargs"]
+    def __init__(self, fileobjects={}):
+        # self.v = ["name", "file", "mode", "encoding", "workflow_kwargs"]
+        self.v = ["name", "file", "mode", "workflow_kwargs"]
 
         super().__init__("fileobjects", validations={
             "add": self.v,
             "fetch": self.v,
             "create": self.v,
             "update": self.v,
-            "delete": self.v
+            "delete": ["name"]
         }, fileobjects=fileobjects)
 
-    def file_open(self, config):
+    def file_open(self, name):
+        config = self.fetch(name)
         try:
-            f = self.create(config)
-            if f:
-                return open(file=config.get("file"), mode=config.get("mode", "a+"), encoding=config.get("encoding", "utf-8"))
-            raise Exception
+            # return open(config.get("file"), config.get("mode"), config.get("encoding"))
+            return open(config.get("file"), config.get("mode"))
         except Exception as e:
             return False
 
-    def file_read(self, obj, way, char=None):
+    def file_read(self, obj, way, index=None):
         try:
             if way == "read":
-                if char:
-                    return obj.read(char)
+                if index:
+                    return obj.read(index)
                 else:
                     return obj.read()
+            elif way == "readline":
+                if index:
+                    return obj.readline(index)
+                else:
+                    return obj.readline()
             elif way == "readlines":
                 return obj.readlines()
             elif way == "file":
                 a = []
                 for i in obj:
-                    a.append(a)
+                    a.append(i)
                 return a
-            return True
+            return False
         except Exception as e:
             return False
 
@@ -493,9 +524,10 @@ class FileReaderBase(UtilsBase):
         try:
             if way == "write":
                 obj.write(items)
+            elif way == "writeline":
+                obj.writeline(items)
             elif way == "writelines":
                 obj.writelines(items)
-            self.close_file(obj)
             return True
         except Exception as e:
             return False
@@ -507,19 +539,29 @@ class FileReaderBase(UtilsBase):
         except Exception as e:
             return False
 
-    def row_insert(self, name, item, row=-1):
+    def row_insert(self, name, item, row=None):
         c = self.fetch(name)
         try:
-            if row == -1:
-                c.update({"mode": "a+"})
-                o = self.open_file(c)
-                return self.file_write(o, item, "write")
+            if row == None:
+                c.update({"mode": "a"})
+                o = self.file_open(c)
+                w = self.file_write(o, item, "writeline")
+                print(w)
+                u = self.file_close(o)
+                if not u:
+                    raise Exception
+                return True
             else:
-                c.update({"mode": "w+"})
-                o = self.open_file(c)
+                c.update({"mode": "w"})
+                o = self.file_open(c)
                 f = self.file_read(o, "readlines")
                 f.insert(row, item)
-                return self.file_write(o, f, "writelines")
+                print(f)
+                w = self.file_write(o, f, "write")
+                u = self.file_close(o)
+                if not u:
+                    raise Exception
+                return True
         except Exception as e:
             return False
 
@@ -527,36 +569,43 @@ class FileReaderBase(UtilsBase):
         c = self.fetch(name)
         try:
             c.update({"mode": "a+"})
-            o = self.open_file(c)
-            return self.file_write(o, item, "write")
+            o = self.file_open(c)
+            w = self.file_write(o, item, "write")
+            u = self.file_close(o)
+            if not u:
+                raise Exception
         except Exception as e:
             return False
 
     def row_update(self, name, item, row=-1):
         c = self.fetch(name)
         c.update({"mode": "w+"})
-        o = self.open_file(c)
+        o = self.file_open(c)
         f = self.file_read(o, "readlines")
         try:
             if row == -1:
                 f[len(f)-1] = item
             else:
                 f[row] = item
-            return self.file_write(o, f, "writelines")
+            w = self.file_write(o, f, "writelines")
+            u = self.file_close(o)
+            if not u:
+                raise Exception
         except Exception as e:
             return False
 
     def row_delete(self, name, row=-1):
         c = self.fetch(name)
         c.update({"mode": "w+"})
-        o = self.open_file(c)
+        o = self.file_open(c)
         f = self.file_read(o, "readlines")
         try:
             if row == -1:
                 item = f.pop()
             else:
                 item = f.pop(row)
-            u = self.file_write(o, f, "writelines")
+            w = self.file_write(o, f, "writelines")
+            u = self.file_close(o)
             if not u:
                 raise Exception
             return item
@@ -567,7 +616,7 @@ class FileReaderBase(UtilsBase):
         # exact, reg-match, reg-search, contains
         c = self.fetch(name)
         c.update({"mode": "r"})
-        o = self.open_file(c)
+        o = self.file_open(c)
         fir_lines = self.file_read(o, "readlines")
         arr = self.list_search(fir_lines, params)
         u = self.file_close(o)
@@ -583,7 +632,7 @@ class CSVReaderBase(FileReaderBase):
             self.vd = validations
         else:
             self.v = ["name", "file", "mode", "encoding",
-                      "seperator", "workflow_kwargs"]
+                      "seperator", "heads", "workflow_kwargs"]
             self.vd = {
                 "add": self.v,
                 "fetch": self.v,
@@ -594,17 +643,160 @@ class CSVReaderBase(FileReaderBase):
 
         super().__init__(validations=self.vd, fileobjects=csvs)
 
-    def rowitem_insert(self, name, head, item, params):
-        a = self.row_search(name, params)
+    def rowitem_insert(self, name, head, params):
+        c = self.fetch(name)
+        o = self.file_open(c)
+        f = self.file_read(o, "readlines")
+        seperator = c.get("seperator", ",")
+        f[0] += seperator + head
+        heads = copy.copy(f[0])
+        for idx, l in enumerate(f):
+            if idx != 0:
+                a = copy.copy(l).split(seperator)
+                for w in params:
+                    if w.get("type", None) == "exact":
+                        if w.get("head", None):
+                            id = heads.index(w.get("head"))
+                            if a[id] == w.get("params"):
+                                f[idx] = l + seperator + \
+                                    w.get("item", str(None))
+                        else:
+                            if w.get("params") == l:
+                                f[idx] = l + seperator + \
+                                    w.get("item", str(None))
+                        if len(a) == len(f[idx].split(seperator)):
+                            f[idx] = l + seperator + str(None)
+                    elif w.get("type", None) == "reg-match":
+                        p = re.compile(w.get("pattern"))
+                        if w.get("head", None):
+                            id = heads.index(w.get("head"))
+                            if re.match(p, a[id]):
+                                f[idx] = l + seperator + \
+                                    w.get("item", str(None))
+                            else:
+                                f[idx] = l + seperator + str(None)
+                        else:
+                            if re.match(p, l):
+                                f[idx] = l + seperator + \
+                                    w.get("item", str(None))
+                            else:
+                                for t in a:
+                                    if re.match(p, t):
+                                        f[idx] = l + seperator + \
+                                            w.get("item", str(None))
+                        if len(a) == len(f[idx].split(seperator)):
+                            f[idx] = l + seperator + str(None)
+                    elif w.get("type", None) == "reg-search" or w.get("type") == "contains":
+                        p = re.compile(w.get("pattern"))
+                        if w.get("head", None):
+                            id = heads.index(w.get("head"))
+                            if re.search(p, a[id]):
+                                f[idx] = l + seperator + \
+                                    w.get("item", str(None))
+                        else:
+                            if re.search(p, l):
+                                f[idx] = l + seperator + \
+                                    w.get("item", str(None))
+                            else:
+                                for t in a:
+                                    if re.search(p, t):
+                                        f[idx] = l + seperator + \
+                                            w.get("item", str(None))
+                        if len(a) == len(f[idx].split(seperator)):
+                            f[idx] = l + seperator + str(None)
+                    else:
+                        f[idx] = l + seperator + str(None)
+        u = self.file_write(o, f, "writelines")
+        if u:
+            return True
+        return False
 
     def rowitem_fetch(self, name, head, params):
-        a = self.row_search(name, params)
+        c = self.fetch(name)
+        o = self.file_open(c)
+        f = self.file_read(o, "readlines")
+        index = f[0].index(head)
+        seperator = c.get("seperator", ",")
+        heads = f.pop(0)
+        arr = self.list_search(f, params)
+        for idx, i in enumerate(arr):
+            items = i.get("item").split(seperator)
+            arr[idx] = {"row": idx, "item": items[index]}
+        if len(arr):
+            return arr
+        return False
 
-    def rowitem_update(self, name, head, item, params):
-        a = self.row_search(name, params)
+    def rowitem_update(self, name, params):
+        c = self.fetch(name)
+        o = self.file_open(c)
+        f = self.file_read(o, "readlines")
+        seperator = c.get("seperator", ",")
+        heads = copy.copy(f[0])
+        for idx, l in enumerate(f):
+            if idx != 0:
+                a = copy.copy(l).split(seperator)
+                for w in params:
+                    if w.get("type", None) == "exact":
+                        if w.get("head", None):
+                            id = heads.index(w.get("head"))
+                            if a[id] == w.get("params"):
+                                a[id] = w.get("item", str(None))
+                                f[idx] = seperator.join(a)
+                        else:
+                            if w.get("params") == l:
+                                f[idx] = w.get("item", l)
+                    elif w.get("type", None) == "reg-match":
+                        p = re.compile(w.get("pattern"))
+                        if w.get("head", None):
+                            id = heads.index(w.get("head"))
+                            if re.match(p, a[id]):
+                                a[id] = w.get("item", str(None))
+                                f[idx] = seperator.join(a)
+                        else:
+                            if re.match(p, l):
+                                f[idx] = w.get("item", l)
+                            else:
+                                for t in a:
+                                    if re.match(p, t):
+                                        f[idx] = w.get("item", l)
+                                        break
+                    elif w.get("type", None) == "reg-search" or w.get("type") == "contains":
+                        p = re.compile(w.get("pattern"))
+                        if w.get("head", None):
+                            id = heads.index(w.get("head"))
+                            if re.search(p, a[id]):
+                                a[id] = w.get("item", str(None))
+                                f[idx] = seperator.join(a)
+                        else:
+                            if re.search(p, l):
+                                f[idx] = w.get("item", l)
+                            else:
+                                for t in a:
+                                    if re.search(p, t):
+                                        f[idx] = w.get("item", l)
+                                        break
+                                f[idx] = seperator.join(a)
+        u = self.file_write(o, f, "writelines")
+        if u:
+            return True
+        return False
 
-    def rowitem_delete(self, name, head, params):
-        a = self.row_search(name, params)
+    def rowitem_delete(self, name, head):
+        c = self.fetch(name)
+        o = self.file_open(c)
+        f = self.file_read(o, "readlines")
+        seperator = c.get("seperator", ",")
+        heads = copy.copy(f[0])
+        hidx = heads.split(seperator).index(head)
+        for idx, l in enumerate(f):
+            if idx != 0:
+                a = copy.copy(l).split(seperator)
+                del a[hidx]
+                f[idx] = seperator.join(a)
+        u = self.file_write(o, f, "writelines")
+        if u:
+            return True
+        return False
 
 
 class LogBase(UtilsBase, LogsBase):

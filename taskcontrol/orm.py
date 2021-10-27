@@ -8,8 +8,8 @@
 # Consider making this an interface that can be extended later
 # Which will make it compatible to any DB and Authentication ways
 
-from .interfaces import SQLBase
-from .utils import UtilsBase
+from taskcontrol.interfaces import SQLBase
+from taskcontrol.utils import UtilsBase
 
 
 class SQLORM(UtilsBase, SQLBase):

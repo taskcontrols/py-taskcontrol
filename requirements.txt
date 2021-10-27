@@ -1,4 +1,4 @@
-tornado=6.0.4
 autopep8=1.5.2
 pytest=5.4.1
 pyinstaller=3.6
+dependency-injector=4.36.2

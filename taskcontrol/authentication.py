@@ -1,5 +1,4 @@
 # decide package
-import pickle
 import sqlite3
 
 # Inherit shared and logging
@@ -9,9 +8,9 @@ import sqlite3
 # https://docs.python.org/3/library/pickle.html
 
 
-from .interfaces import AuthsBase
-from .utils import ClosureBase, UtilsBase
-from .orm import SQLORM
+from taskcontrol.interfaces import AuthsBase
+from taskcontrol.utils import UtilsBase
+from taskcontrol.orm import SQLORM
 
 
 # TODO
@@ -21,29 +20,12 @@ from .orm import SQLORM
 # TODO: Make all AuthBase functions ORM based
 
 
-class AuthenticationBase(UtilsBase, AuthsBase, ClosureBase):
+class AuthenticationBase(UtilsBase, AuthsBase):
 
-    def __init__(self, **kwargs):
-        if self.verify_kwargs_structure(**kwargs):
-            self.getter, self.setter, self.deleter = self.class_closure(
-                dbs={}, pickles={})
-        if kwargs.get("sql_orm"):
-            # IMPORTANT: Custom ORM should adhere to SQLBase Interface
-            self.sql = kwargs.get("sql_orm")()
-        else:
-            self.sql = SQLORM()
-
-    def verify_kwargs_structure(self, **kwargs):
-        if not kwargs.get("get_dbconn") or not kwargs.get("set_dbconn") or not kwargs.get("db_execute") or not kwargs.get("db_close") or not kwargs.get("get_pconn") or not kwargs.get("set_pconn") or not kwargs.get("p_dump") or not kwargs.get("p_close"):
-            raise TypeError("Authentication Base Arguments Not Correct")
-        return True
-
-    def verify_options_structure(self, options):
-        # id or username, password
-        # action, user
-        if type(options) != dict:
-            raise TypeError("Options structure wrong")
-        return True
+    def __init__(self, orm=SQLORM, **kwargs):
+        self.getter, self.setter, self.deleter = self.class_closure(
+            dbs={}, pickles={})
+        self.orm = orm()
 
     def init_db(self, path, name):
         conn = sqlite3.connect(path + name + '.db')
@@ -175,22 +157,18 @@ class AuthenticationBase(UtilsBase, AuthsBase, ClosureBase):
     def create_permissions(self, conn, options):
         # user/role, action, permissions
         self.verify_options_structure(options)
-
         return False
 
     def update_permissions(self, conn, options):
         self.verify_options_structure(options)
-
         return False
 
     def delete_permissions(self, conn, options):
         self.verify_options_structure(options)
-
         return False
 
     def get_permissions(self, conn, options):
         self.verify_options_structure(options)
-
         return {}
 
     def create_role(self, conn, options):

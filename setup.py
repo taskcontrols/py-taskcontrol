@@ -17,7 +17,6 @@ setuptools.setup(
      url="https://github.com/taskcontrols/taskcontrol",
      packages=setuptools.find_packages(),
      install_requires=[
-          'tornado=6.0.4',
           'pytest=5.4.2'
       ],
      license='MIT',
