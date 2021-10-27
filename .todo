@@ -14,7 +14,8 @@
 * [T] Run PreCreated Tasks
 * [T] Check impact of self on closure (Low priority)
 * [T] Logging & Concurrency for logger (Concurrency can be added)
-* [T] Consider Workflow/Tasks tracking system and Dashboard with its own progress logging
+* [C?] Consider Workflow/Tasks tracking system and Dashboard with its own progress and logging
+* [C?] Consider compatibility to Chef/CircleCI/Github/Other Automation tools
 
 ** [W] Add Tests
         Add all variations of tests for 
