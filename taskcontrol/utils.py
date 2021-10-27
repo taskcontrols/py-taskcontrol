@@ -643,158 +643,15 @@ class CSVReaderBase(FileReaderBase):
         super().__init__(validations=self.vd, fileobjects=csvs)
 
     def row_insert(self, name, head, params):
-        c = self.fetch(name)
-        o = self.file_open(c)
-        f = self.file_read(o, "readlines")
-        seperator = c.get("seperator", ",")
-        f[0] += seperator + head
-        heads = copy.copy(f[0])
-        for idx, l in enumerate(f):
-            if idx != 0:
-                a = copy.copy(l).split(seperator)
-                for w in params:
-                    if w.get("type", None) == "exact":
-                        if w.get("head", None):
-                            id = heads.index(w.get("head"))
-                            if a[id] == w.get("params"):
-                                f[idx] = l + seperator + \
-                                    w.get("item", str(None))
-                        else:
-                            if w.get("params") == l:
-                                f[idx] = l + seperator + \
-                                    w.get("item", str(None))
-                        if len(a) == len(f[idx].split(seperator)):
-                            f[idx] = l + seperator + str(None)
-                    elif w.get("type", None) == "reg-match":
-                        p = re.compile(w.get("pattern"))
-                        if w.get("head", None):
-                            id = heads.index(w.get("head"))
-                            if re.match(p, a[id]):
-                                f[idx] = l + seperator + \
-                                    w.get("item", str(None))
-                            else:
-                                f[idx] = l + seperator + str(None)
-                        else:
-                            if re.match(p, l):
-                                f[idx] = l + seperator + \
-                                    w.get("item", str(None))
-                            else:
-                                for t in a:
-                                    if re.match(p, t):
-                                        f[idx] = l + seperator + \
-                                            w.get("item", str(None))
-                        if len(a) == len(f[idx].split(seperator)):
-                            f[idx] = l + seperator + str(None)
-                    elif w.get("type", None) == "reg-search" or w.get("type") == "contains":
-                        p = re.compile(w.get("pattern"))
-                        if w.get("head", None):
-                            id = heads.index(w.get("head"))
-                            if re.search(p, a[id]):
-                                f[idx] = l + seperator + \
-                                    w.get("item", str(None))
-                        else:
-                            if re.search(p, l):
-                                f[idx] = l + seperator + \
-                                    w.get("item", str(None))
-                            else:
-                                for t in a:
-                                    if re.search(p, t):
-                                        f[idx] = l + seperator + \
-                                            w.get("item", str(None))
-                        if len(a) == len(f[idx].split(seperator)):
-                            f[idx] = l + seperator + str(None)
-                    else:
-                        f[idx] = l + seperator + str(None)
-        u = self.file_write(o, f, "writelines")
-        if u:
-            return True
         return False
 
     def row_fetch(self, name, head, params):
-        c = self.fetch(name)
-        o = self.file_open(c)
-        f = self.file_read(o, "readlines")
-        index = f[0].index(head)
-        seperator = c.get("seperator", ",")
-        heads = f.pop(0)
-        arr = self.list_search(f, params)
-        for idx, i in enumerate(arr):
-            items = i.get("item").split(seperator)
-            arr[idx] = {"row": idx, "item": items[index]}
-        if len(arr):
-            return arr
         return False
 
     def row_update(self, name, params):
-        c = self.fetch(name)
-        o = self.file_open(c)
-        f = self.file_read(o, "readlines")
-        seperator = c.get("seperator", ",")
-        heads = copy.copy(f[0])
-        for idx, l in enumerate(f):
-            if idx != 0:
-                a = copy.copy(l).split(seperator)
-                for w in params:
-                    if w.get("type", None) == "exact":
-                        if w.get("head", None):
-                            id = heads.index(w.get("head"))
-                            if a[id] == w.get("params"):
-                                a[id] = w.get("item", str(None))
-                                f[idx] = seperator.join(a)
-                        else:
-                            if w.get("params") == l:
-                                f[idx] = w.get("item", l)
-                    elif w.get("type", None) == "reg-match":
-                        p = re.compile(w.get("pattern"))
-                        if w.get("head", None):
-                            id = heads.index(w.get("head"))
-                            if re.match(p, a[id]):
-                                a[id] = w.get("item", str(None))
-                                f[idx] = seperator.join(a)
-                        else:
-                            if re.match(p, l):
-                                f[idx] = w.get("item", l)
-                            else:
-                                for t in a:
-                                    if re.match(p, t):
-                                        f[idx] = w.get("item", l)
-                                        break
-                    elif w.get("type", None) == "reg-search" or w.get("type") == "contains":
-                        p = re.compile(w.get("pattern"))
-                        if w.get("head", None):
-                            id = heads.index(w.get("head"))
-                            if re.search(p, a[id]):
-                                a[id] = w.get("item", str(None))
-                                f[idx] = seperator.join(a)
-                        else:
-                            if re.search(p, l):
-                                f[idx] = w.get("item", l)
-                            else:
-                                for t in a:
-                                    if re.search(p, t):
-                                        f[idx] = w.get("item", l)
-                                        break
-                                f[idx] = seperator.join(a)
-        u = self.file_write(o, f, "writelines")
-        if u:
-            return True
         return False
 
     def row_delete(self, name, head):
-        c = self.fetch(name)
-        o = self.file_open(c)
-        f = self.file_read(o, "readlines")
-        seperator = c.get("seperator", ",")
-        heads = copy.copy(f[0])
-        hidx = heads.split(seperator).index(head)
-        for idx, l in enumerate(f):
-            if idx != 0:
-                a = copy.copy(l).split(seperator)
-                del a[hidx]
-                f[idx] = seperator.join(a)
-        u = self.file_write(o, f, "writelines")
-        if u:
-            return True
         return False
 
 
