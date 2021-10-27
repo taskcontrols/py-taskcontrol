@@ -199,7 +199,7 @@ functools.reduce(red, ls)
 
 * e2e and Unit Tests - Add Tests (Structure of package created - to be cleaned after writing tests)
 * Allow creating and registering a set of task controls as a plugin
-* Allows working with commands (Todo), ssh (Todo), Files (Todo - normal, yaml, ini, and csv), Scheduling (Todo), Dependency Injection (Todo), ORMs/Databases (Todo), Authentication (Todo)
+* Allow working with commands (Todo), ssh (Todo), Files (Todo - normal, yaml, ini, and csv), Scheduling (Todo), Dependency Injection (Todo), ORMs/Databases (Todo), Authentication (Todo)
 
 # Status
 
