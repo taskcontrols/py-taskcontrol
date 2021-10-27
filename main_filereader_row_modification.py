@@ -1,4 +1,3 @@
-from os import read
 from taskcontrol.utils import FileReaderBase
 
 fr = FileReaderBase()
