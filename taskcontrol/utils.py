@@ -477,9 +477,12 @@ class TimerBase(UtilsBase, TimeBase):
 
 class FileReaderBase(UtilsBase):
 
-    def __init__(self, fileobjects={}):
-        # self.v = ["name", "file", "mode", "encoding", "workflow_kwargs"]
-        self.v = ["name", "file", "mode", "workflow_kwargs"]
+    def __init__(self, validations={}, fileobjects={}):
+        if len(validations):
+            self.v = validations
+        else:
+            # self.v = ["name", "file", "mode", "encoding", "workflow_kwargs"]
+            self.v = ["name", "file", "mode", "workflow_kwargs"]
 
         super().__init__("fileobjects", validations={
             "add": self.v,
@@ -627,20 +630,16 @@ class FileReaderBase(UtilsBase):
 
 class CSVReaderBase(FileReaderBase):
 
-    def __init__(self, validations={}, csvs={}):
-        if validations:
-            self.vd = validations
-        else:
-            self.v = ["name", "file", "mode", "encoding",
-                      "seperator", "heads", "workflow_kwargs"]
-            self.vd = {
-                "add": self.v,
-                "fetch": self.v,
-                "create": self.v,
-                "update": self.v,
-                "delete": self.v
-            }
-
+    def __init__(self, csvs={}):
+        self.v = ["name", "file", "mode", "encoding",
+                  "seperator", "heads", "workflow_kwargs"]
+        self.vd = {
+            "add": self.v,
+            "fetch": self.v,
+            "create": self.v,
+            "update": self.v,
+            "delete": self.v
+        }
         super().__init__(validations=self.vd, fileobjects=csvs)
 
     def row_insert(self, name, head, params):
