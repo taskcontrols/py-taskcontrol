@@ -5,7 +5,7 @@
 # taskcontrol  (py-taskcontrol)
 
 
-##### Workflow Automation Library to support Scalable Concurrent or Event based processes or activities for Local/Network Automation Tasks including CI/CD activities.
+##### Workflow Automation Library with support for Scalable Concurrent or Event based processes or activities in Local/Network Automation Tasks, including CI/CD activities.
 
 
 * `taskcontrol (py-taskcontrol)` is a python library to create tasks in and based on named workflow controls. It allows middlewares before and after each task with support for concurrent processing. taskcontrol can run single or multiple tasks during task invocation/runs.
