@@ -21,7 +21,7 @@
 * Run instance, shared, and mix of tasks (individual or all groups)
 * Allows working with Logging, Sockets, Events, Queues, Publisher-Subscriber Architectures, etc
 * In-Development: Allows support for / working with Concurrency
-* In-Development: Allows working with Commands (Todo), SSH (Todo), etc
+* In-Development: Allows working with Commands & Scripts (Todo), SSH (Todo), etc
 * In-Development: Allows working with Files (Todo - normal, yaml, ini, and csv), Scheduling (Todo), etc
 * In-Development: Allows working with ORMs/Databases (Todo), Authentication (Todo), and best practices like Dependency Injection (Todo) within the library, tasks, and workflows
 * In-Development: Allows creating, registering, and using tasks/workflows as a plugin
