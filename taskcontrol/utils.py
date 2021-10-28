@@ -1,6 +1,7 @@
 # SHARED BASE
 
 import ast
+from genericpath import exists
 import time
 import sys
 import types
@@ -10,6 +11,11 @@ import copy
 import logging
 import re
 import pickle
+import os
+from pathlib import Path
+import sys
+import shutil
+import subprocess
 from typing import Dict, List
 from threading import Thread, Lock
 from multiprocessing import Process, Array, Value, Manager
@@ -475,44 +481,6 @@ class TimerBase(UtilsBase, TimeInterface):
         raise Exception("Couldnot stop")
 
 
-class SchedularBase(UtilsBase):
-
-    def __init__(self, schedulars={}):
-        # type of schedular : time interval, timestamp
-        # time: secs, timestamp
-        self.v = ["name", "active", "interval", "type",
-                  "time", "function", "schedular", "workflow_kwargs"]
-        super().__init__("schedulars",
-                         validations={"add": self.v, "fetch": self.v, "create": self.v,
-                                      "update": self.v, "delete": ["name"]},
-                         schedulars=schedulars)
-
-    def __schedular(self, sch):
-        sobj = None  # Add scheduling here using sch config
-        if sobj:
-            return sobj
-        return False
-
-    def start(self, name):
-        sch = self.fetch(name)
-        sobj = self.__schedular(sch)
-        if sobj:
-            if sch:
-                sch.update({"active": True, "schedular": sobj})
-                u = self.update(sch)
-                return True
-        return False
-
-    def stop(self, name):
-        sc = self.fetch(name)
-        if sc:
-            sc.update({"active": False, "schedular": None})
-            u = self.update(sc)
-            if u:
-                return True
-        return False
-
-
 class FileReaderBase(UtilsBase, FileReaderInterface):
 
     def __init__(self, validations={}, fileobjects={}):
@@ -529,6 +497,13 @@ class FileReaderBase(UtilsBase, FileReaderInterface):
             "update": self.v,
             "delete": ["name"]
         }, fileobjects=fileobjects)
+
+    def exists(self, file_path):
+        return os.path.exists(file_path)
+    
+    def is_file(self, file_path):
+        path = Path(file_path)
+        return path.is_file()
 
     def file_open(self, name):
         config = self.fetch(name)
@@ -581,77 +556,81 @@ class FileReaderBase(UtilsBase, FileReaderInterface):
             return False
 
     def row_insert(self, name, item, row=None):
-        c = self.fetch(name)
-        try:
-            if row == None:
-                c.update({"mode": "a"})
-                o = self.file_open(c)
-                w = self.file_write(o, item, "writeline")
-                print(w)
-                u = self.file_close(o)
-                if not u:
-                    raise Exception
-                return True
-            else:
-                c.update({"mode": "w"})
-                o = self.file_open(c)
-                f = self.file_read(o, "readlines")
-                f.insert(row, item)
-                print(f)
-                w = self.file_write(o, f, "write")
-                u = self.file_close(o)
-                if not u:
-                    raise Exception
-                return True
-        except Exception as e:
-            return False
+        # c = self.fetch(name)
+        # try:
+        #     if row == None:
+        #         c.update({"mode": "a"})
+        #         o = self.file_open(c)
+        #         w = self.file_write(o, item, "writeline")
+        #         print(w)
+        #         u = self.file_close(o)
+        #         if not u:
+        #             raise Exception
+        #         return True
+        #     else:
+        #         c.update({"mode": "w"})
+        #         o = self.file_open(c)
+        #         f = self.file_read(o, "readlines")
+        #         f.insert(row, item)
+        #         print(f)
+        #         w = self.file_write(o, f, "write")
+        #         u = self.file_close(o)
+        #         if not u:
+        #             raise Exception
+        #         return True
+        # except Exception as e:
+        #     return False
+        pass
 
     def row_append(self, name, item):
-        c = self.fetch(name)
-        try:
-            c.update({"mode": "a+"})
-            o = self.file_open(c)
-            w = self.file_write(o, item, "write")
-            u = self.file_close(o)
-            if not u:
-                raise Exception
-        except Exception as e:
-            return False
+        # c = self.fetch(name)
+        # try:
+        #     c.update({"mode": "a+"})
+        #     o = self.file_open(c)
+        #     w = self.file_write(o, item, "write")
+        #     u = self.file_close(o)
+        #     if not u:
+        #         raise Exception
+        # except Exception as e:
+        #     return False
+        pass
 
     def row_update(self, name, item, row=-1):
-        c = self.fetch(name)
-        c.update({"mode": "w+"})
-        o = self.file_open(c)
-        f = self.file_read(o, "readlines")
-        try:
-            if row == -1:
-                f[len(f)-1] = item
-            else:
-                f[row] = item
-            w = self.file_write(o, f, "writelines")
-            u = self.file_close(o)
-            if not u:
-                raise Exception
-        except Exception as e:
-            return False
+        # c = self.fetch(name)
+        # c.update({"mode": "w+"})
+        # o = self.file_open(c)
+        # f = self.file_read(o, "readlines")
+        # try:
+        #     if row == -1:
+        #         f[len(f)-1] = item
+        #     else:
+        #         f[row] = item
+        #     w = self.file_write(o, f, "writelines")
+        #     u = self.file_close(o)
+        #     if not u:
+        #         raise Exception
+        # except Exception as e:
+        #     return False
+        pass
 
     def row_delete(self, name, row=-1):
-        c = self.fetch(name)
-        c.update({"mode": "w+"})
-        o = self.file_open(c)
-        f = self.file_read(o, "readlines")
-        try:
-            if row == -1:
-                item = f.pop()
-            else:
-                item = f.pop(row)
-            w = self.file_write(o, f, "writelines")
-            u = self.file_close(o)
-            if not u:
-                raise Exception
-            return item
-        except Exception as e:
-            return False
+        # c = self.fetch(name)
+        # c.update({"mode": "w+"})
+        # o = self.file_open(c)
+        # f = self.file_read(o, "readlines")
+        # try:
+        #     if row == -1:
+        #         item = f.pop()
+        #     else:
+        #         item = f.pop(row)
+        #     w = self.file_write(o, f, "writelines")
+        #     u = self.file_close(o)
+        #     if not u:
+        #         raise Exception
+        #     return item
+        # except Exception as e:
+        #     return False
+        pass
 
     def row_search(self, name, params):
         # exact, reg-match, reg-search, contains
@@ -844,10 +823,25 @@ class CommandsBase(UtilsBase, CommandsInterface):
         self.v = ["name", "workflow_kwargs"]
         super().__init__(object_name, validations=self.v, commands=commands)
 
-    def execute(self, options):
-        pass
+    def exists(self, command):
+        return shutil.which(command) is not None
+    
+    def path(self, command):
+        return shutil.which(command)
 
-    def close(self, options):
+    def execute(self, command, *args):
+        try:
+            if self.exists(command):
+                r = subprocess.call([command, *args])
+                return r
+            raise Exception
+        except OSError:
+            return False
+
+    def close(self, sproc):
+        """
+        Why is this needed? Causes, Reasons
+        """
         pass
 
 
@@ -1026,6 +1020,95 @@ class EventsBase(UtilsBase, EventsInterface):
 
     def emit(self, event_name, message):
         return self.send({"event_name": event_name, "message": message})
+
+
+class SchedularBase(UtilsBase):
+
+    #  EventsBase Send events for running schedular at a specific interval or time or day or manually
+    def __init__(self, schedulars={}):
+        # type of schedular: time, timestamp, days (Type of schedular)
+        # time: secs, timestamp, days. the interval value the schedular should run
+        # flag: True, False. if the schedular is running currently
+        # function: The function to run for schedular
+        # active: True, False, if the schedular can be run or not
+        # interval: single, multiple. if this is a single or multiple run
+        self.v = ["name", "active", "interval", "type",
+                  "time", "function", "schedular", "flag", "workflow_kwargs"]
+        super().__init__("schedulars",
+                         validations={"add": self.v, "fetch": self.v, "create": self.v,
+                                      "update": self.v, "delete": ["name"]},
+                         schedulars=schedulars)
+
+    def __runschedular(self, name, func, interval):
+        try:
+            o = self.fetch(name)
+            if o.get("flag") == False:
+                o.update({"flag": True})
+                s = self.update(o)
+                if s:
+                    res = func()
+                    o = self.fetch(name)
+                    if o.get("flag") == True:
+                        o.update({"flag": False})
+                        s = self.update(o)
+                        if s:
+                            if o.get("type") == "time":
+                                dTime = interval
+                            if o.get("type") == "timestamp":
+                                dTime = 24 * 60 * 60
+                            if o.get("type") == "days":
+                                dTime = interval * 24 * 60 * 60
+                            time.sleep(dTime)
+                            self.__timebased(name, func, interval)
+            return False
+        except Exception as e:
+            return False
+
+    def __schedular(self, sch):
+        if sch.get("interval") == "repeated" and sch.get("active") == True:
+            sobj = self.__runschedular(
+                sch.get("name"), sch.get("function"), sch.get("time"))
+        elif sch.get("interval") == "single" and sch.get("active") == True:
+            sobj = sch.get("function")()
+        if sobj:
+            return sobj
+        return False
+
+    def manual(self, name):
+        try:
+            o = self.fetch(name)
+            if o.get("flag") == False:
+                o.update({"flag": True})
+                s = self.update(o)
+                if s:
+                    res = o.get("function")()
+                    o.update({"flag": False})
+                    s = self.update(o)
+                    if s:
+                        return res
+            return False
+        except Exception as e:
+            return False
+
+    def start(self, name):
+        sch = self.fetch(name)
+        sobj = self.__schedular(sch)
+        if sobj:
+            if sch:
+                sch.update({"active": True, "schedular": sobj})
+                u = self.update(sch)
+                if u:
+                    return True
+        return False
+
+    def stop(self, name):
+        sc = self.fetch(name)
+        if sc:
+            sc.update({"active": False, "schedular": None})
+            u = self.update(sc)
+            if u:
+                return True
+        return False
 
 
 class SocketsBase(UtilsBase, SocketsInterface):

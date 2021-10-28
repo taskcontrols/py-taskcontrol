@@ -31,6 +31,14 @@ class ObjectModificationInterface(metaclass=abc.ABCMeta):
 class FileReaderInterface(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
+    def exists(self, file_path):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def is_file(self, file_path):
+        raise NotImplementedError
+
+    @abc.abstractmethod
     def file_open(self, name):
         raise NotImplementedError
 
@@ -477,6 +485,14 @@ class TimeInterface(metaclass=abc.ABCMeta):
 
 @dataclass(frozen=True)
 class CommandsInterface(metaclass=abc.ABCMeta):
+
+    @abc.abstractmethod
+    def exists(self, options):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def path(self, command):
+        raise NotImplementedError
 
     @abc.abstractmethod
     def execute(self, config):
