@@ -15,8 +15,8 @@ from threading import Thread, Lock
 from multiprocessing import Process, Array, Value, Manager
 from collections import deque
 from queue import Queue, LifoQueue, PriorityQueue, SimpleQueue
-from taskcontrol.interfaces import ObjectModificationBase, SocketsBase, HooksBase, SshBase
-from taskcontrol.interfaces import PubSubsBase, TimeBase, LogsBase, CommandsBase, PicklesBase
+from taskcontrol.interfaces import ObjectModificationInterface, SocketsInterface, HooksInterface, SSHInterface, FileReaderInterface, CSVReaderInterface
+from taskcontrol.interfaces import QueuesInterface, EventsInterface, PubSubsInterface, TimeInterface, LogsInterface, CommandsInterface, PicklesInterface
 
 
 class ClosureBase():
@@ -276,7 +276,7 @@ class ConcurencyBase():
         return None
 
 
-class UtilsBase(ObjectModificationBase):
+class UtilsBase(ObjectModificationInterface):
     object_name = None
 
     def __init__(self, object_name="", validations={}, **kwargs):
@@ -395,7 +395,7 @@ class UtilsBase(ObjectModificationBase):
             return False
 
 
-class TimerBase(UtilsBase, TimeBase):
+class TimerBase(UtilsBase, TimeInterface):
 
     def __init__(self, timers={}):
         self.v = ["name", "_start_time", "_elapsed_time",
@@ -475,7 +475,45 @@ class TimerBase(UtilsBase, TimeBase):
         raise Exception("Couldnot stop")
 
 
-class FileReaderBase(UtilsBase):
+class SchedularBase(UtilsBase):
+
+    def __init__(self, schedulars={}):
+        # type of schedular : time interval, timestamp
+        # time: secs, timestamp
+        self.v = ["name", "active", "interval", "type",
+                  "time", "function", "schedular", "workflow_kwargs"]
+        super().__init__("schedulars",
+                         validations={"add": self.v, "fetch": self.v, "create": self.v,
+                                      "update": self.v, "delete": ["name"]},
+                         schedulars=schedulars)
+
+    def __schedular(self, sch):
+        sobj = None  # Add scheduling here using sch config
+        if sobj:
+            return sobj
+        return False
+
+    def start(self, name):
+        sch = self.fetch(name)
+        sobj = self.__schedular(sch)
+        if sobj:
+            if sch:
+                sch.update({"active": True, "schedular": sobj})
+                u = self.update(sch)
+                return True
+        return False
+
+    def stop(self, name):
+        sc = self.fetch(name)
+        if sc:
+            sc.update({"active": False, "schedular": None})
+            u = self.update(sc)
+            if u:
+                return True
+        return False
+
+
+class FileReaderBase(UtilsBase, FileReaderInterface):
 
     def __init__(self, validations={}, fileobjects={}):
         if len(validations):
@@ -628,7 +666,7 @@ class FileReaderBase(UtilsBase):
         return arr
 
 
-class CSVReaderBase(FileReaderBase):
+class CSVReaderBase(FileReaderBase, CSVReaderInterface):
 
     def __init__(self, csvs={}):
         self.v = ["name", "file", "mode", "encoding",
@@ -655,7 +693,7 @@ class CSVReaderBase(FileReaderBase):
         return False
 
 
-class LogBase(UtilsBase, LogsBase):
+class LogBase(UtilsBase, LogsInterface):
 
     def __init__(self, loggers={}):
         self.v = ["name", "handlers", "logger", "workflow_kwargs"]
@@ -743,13 +781,6 @@ class LogBase(UtilsBase, LogsBase):
             return True
         return False
 
-    def logger_delete(self, logger_name):
-        # options object : {"name": "name"}
-        u = self.delete(logger_name)
-        if u:
-            return True
-        return False
-
     def log(self, options):
         # TODO: Concurrency can be added
         # https://docs.python.org/3/howto/logging-cookbook.html
@@ -779,7 +810,7 @@ class LogBase(UtilsBase, LogsBase):
             return False
 
 
-class PickleBase(UtilsBase, PicklesBase):
+class PicklesBase(UtilsBase, PicklesInterface):
     # Consider PickleBase class for ORM and Authentication
     def __init__(self, pickles={}):
         self.v = ["name", "workflow_kwargs"]
@@ -788,30 +819,30 @@ class PickleBase(UtilsBase, PicklesBase):
             pickles=pickles
         )
 
+    def row_insert(self, config):
+        pass
+
+    def row_append(self, config):
+        pass
+
+    def row_update(self, config):
+        pass
+
+    def row_delete(self, config):
+        pass
+
+    def search(self, config):
+        pass
+
     def connection(self, config):
         pass
 
-    def insert(self, name, config):
-        pass
 
-    def find(self, name, config):
-        pass
-
-    def update(self, name, config):
-        pass
-
-    def delete(self, name, config):
-        pass
-
-
-class CommandBase(UtilsBase, CommandsBase):
+class CommandsBase(UtilsBase, CommandsInterface):
 
     def __init__(self, object_name="commands", validations={}, commands={}):
         self.v = ["name", "workflow_kwargs"]
         super().__init__(object_name, validations=self.v, commands=commands)
-
-    def create(self, options):
-        pass
 
     def execute(self, options):
         pass
@@ -819,11 +850,8 @@ class CommandBase(UtilsBase, CommandsBase):
     def close(self, options):
         pass
 
-    def delete(self, options):
-        pass
 
-
-class Queues(UtilsBase):
+class QueuesBase(UtilsBase, QueuesInterface):
     tmp = {}
 
     def __init__(self, queues={}):
@@ -886,7 +914,7 @@ class Queues(UtilsBase):
             return u
 
 
-class Events(UtilsBase):
+class EventsBase(UtilsBase, EventsInterface):
 
     def __init__(self, event={}):
         self.v = ["name", "event", "handler", "listening",
@@ -1000,7 +1028,7 @@ class Events(UtilsBase):
         return self.send({"event_name": event_name, "message": message})
 
 
-class Sockets(UtilsBase, SocketsBase):
+class SocketsBase(UtilsBase, SocketsInterface):
 
     def __init__(self, socket={}):
         self.v = {
@@ -1225,7 +1253,7 @@ class Sockets(UtilsBase, SocketsBase):
         return ast.literal_eval(msg)
 
 
-class EPubSub(UtilsBase, PubSubsBase):
+class EPubSubBase(UtilsBase, PubSubsInterface):
 
     type = "epubsub"
     # agent options: application, publisher, server, subscriber
@@ -1480,11 +1508,11 @@ class EPubSub(UtilsBase, PubSubsBase):
         return False
 
 
-class IPubSub(EPubSub):
+class IPubSubBase(EPubSubBase):
 
     server = None
 
-    def __init__(self, validations={}, pubsubs={}, type="ipubsub", agent="server", socketsbase=Sockets):
+    def __init__(self, validations={}, pubsubs={}, type="ipubsub", agent="server", socketsbase=SocketsBase):
         super().__init__(pubsubs=pubsubs, type=type, agent=agent)
         self.v = ["name", "handler", "queue", "maxsize",
                   "queue_type", "batch_interval", "processing_flag", "events", "workflow_kwargs"]
@@ -1537,17 +1565,17 @@ class IPubSub(EPubSub):
         return self.__multilistener_server(config)
 
 
-class Actions(UtilsBase):
+class ActionsBase(UtilsBase):
 
     def __init__(self, action={}):
         super().__init__("actions", actions=action)
 
 
-class Hooks(UtilsBase, HooksBase):
+class HooksBase(UtilsBase, HooksInterface):
 
     server = None
 
-    def __init__(self, validations={}, hooks={}, socketsbase=Sockets):
+    def __init__(self, validations={}, hooks={}, socketsbase=SocketsBase):
         self.v = validations
         super().__init__("hooks", validations=self.v, hooks=hooks)
         self.server = socketsbase()
@@ -1616,23 +1644,20 @@ class Hooks(UtilsBase, HooksBase):
         pass
 
 
-class Webhooks(UtilsBase):
+class WebhooksBase(UtilsBase):
 
     def __init__(self, action={}):
         super().__init__("actions", actions=action)
 
 
-class SSH(CommandBase, SshBase):
+class SSHBase(CommandsBase, SSHInterface):
 
     server = None
 
-    def __init__(self, validations={}, pubsub={}, socketsbase=Sockets):
+    def __init__(self, validations={}, pubsub={}, socketsbase=SocketsBase):
         self.v = validations
         super().__init__("pubsubs", validations=self.v, pubsubs=pubsub)
         self.server = socketsbase()
-
-    def create(self, options):
-        pass
 
     def connect(self, options):
         pass
@@ -1669,14 +1694,14 @@ if __name__ == "__main__":
 
 
 if __name__ == "__main__":
-    Socket = Sockets()
+    Socket = SocketsBase()
 
 
 if __name__ == "__main__":
 
     config = {"name": "test", "maxsize": 10,
               "queue_type": "queue", "queue": None}
-    queue = Queues()
+    queue = QueuesBase()
     q = queue.new(config)
     config["queue"] = q
     # print(config)
@@ -1711,7 +1736,7 @@ if __name__ == "__main__":
 if __name__ == "__main__":
 
     print("\nActions:\nDemonstrating Action and Action Listeners")
-    event = Events()
+    event = EventsBase()
 
     def run(data):
         print("Run Action Handler ->", data)
@@ -1750,7 +1775,7 @@ if __name__ == "__main__":
               "queue_type": "queue", "processing_flag": False,  "batch_interval": 5, "events": {}}
     name = config.get("name")
 
-    pb = EPubSub()
+    pb = EPubSubBase()
     p = pb.pubsub_create(config)
 
     if p:
@@ -1779,32 +1804,32 @@ if __name__ == "__main__":
 
 if __name__ == "__main__":
 
-    action = Actions()
+    action = ActionsBase()
 
 
 if __name__ == "__main__":
 
-    hook = Hooks(socketsbase=Sockets)
+    hook = HooksBase(socketsbase=SocketsBase)
 
 
 if __name__ == "__main__":
 
-    webhook = Webhooks(socketsbase=Sockets)
+    webhook = WebhooksBase(socketsbase=SocketsBase)
 
 
 if __name__ == "__main__":
 
-    ssh = SSH()
+    ssh = SSHBase()
 
 
 __all__ = [
     "SharedBase", "ClosureBase", "UtilsBase",
     "TimerBase", "FileReaderBase", "CSVBase",
-    "LogBase", "CommandBase",
-    "ConcurencyBase", "Queues",
-    "Events", "Sockets",
-    "Actions", "Hooks", "Webhooks",
-    "EPubSub", "IPubSub", "SSH"
+    "LogBase", "CommandsBase", "PicklesBase",
+    "ConcurencyBase", "QueuesBase", "EventsBase",
+    "ActionsBase", "SocketsBase", "HooksBase",
+    "WebhooksBase", "EPubSubBase", "IPubSubBase",
+    "SSHBase"
 ]
 
 

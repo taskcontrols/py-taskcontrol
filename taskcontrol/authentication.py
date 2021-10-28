@@ -8,9 +8,9 @@ import sqlite3
 # https://docs.python.org/3/library/pickle.html
 
 
-from taskcontrol.interfaces import AuthsBase
+from taskcontrol.interfaces import AuthsInterface
 from taskcontrol.utils import UtilsBase
-from taskcontrol.orm import SQLORM
+from taskcontrol.orm import SQLORMBase
 
 
 # TODO
@@ -20,9 +20,9 @@ from taskcontrol.orm import SQLORM
 # TODO: Make all AuthBase functions ORM based
 
 
-class AuthenticationBase(UtilsBase, AuthsBase):
+class AuthenticationBase(UtilsBase, AuthsInterface):
 
-    def __init__(self, orm=SQLORM, **kwargs):
+    def __init__(self, orm=SQLORMBase, **kwargs):
         self.getter, self.setter, self.deleter = self.class_closure(
             dbs={}, pickles={})
         self.orm = orm()

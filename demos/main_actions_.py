@@ -1,4 +1,4 @@
-from taskcontrol.utils import Actions
+from taskcontrol.utils import ActionsBase
 
-actions = Actions()
+actions = ActionsBase()
 

@@ -1,4 +1,4 @@
-from taskcontrol.utils import EPubSub
+from taskcontrol.utils import EPubSubBase
 
 
 def run(data):
@@ -17,7 +17,7 @@ config = {"name": "new", "handler": run, "queue": None, "maxsize": 10,
           "queue_type": "queue", "processing_flag": False,  "batch_interval": 5, "events": {}}
 name = config.get("name")
 
-pb = EPubSub()
+pb = EPubSubBase()
 p = pb.pubsub_create(config)
 
 if p:

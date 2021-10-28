@@ -1,14 +1,15 @@
 # # Project Workflow
 # Add support for Concurrency
 
-from taskcontrol.utils import ClosureBase, SharedBase, UtilsBase, ConcurencyBase, TimerBase, LogBase, CommandBase
-from taskcontrol.utils import Events, Queues, Sockets, Hooks, Actions, EPubSub, IPubSub, Webhooks, SSH
+from taskcontrol.utils import ClosureBase, SharedBase, UtilsBase, ConcurencyBase, TimerBase, LogBase, CommandsBase
+from taskcontrol.utils import EventsBase, QueuesBase, SocketsBase, HooksBase, ActionsBase
+from taskcontrol.utils import EPubSubBase, IPubSubBase, WebhooksBase, SSHBase
 from taskcontrol.authentication import AuthenticationBase
-from taskcontrol.orm import SQLORM
-from taskcontrol.interfaces import PluginsBase
+from taskcontrol.orm import SQLORMBase
+from taskcontrol.interfaces import PluginsInterface
 
 
-class PluginBase(UtilsBase, PluginsBase):
+class PluginBase(UtilsBase, PluginsInterface):
 
     # return plugin instance/module (plugin_instance)
     def plugin_create(self, name, task_instance):
@@ -212,11 +213,8 @@ if __name__ == "__main__":
 
 
 __all__ = [
-    "WorkflowBase", "PluginBase",
-    "AuthenticationBase", "SQLORM",
-    "CommandBase", "ConcurencyBase",
-    "LogBase", "TimerBase", "Queues", "Events",
-    "Sockets", "Hooks", "Actions",
-    "EPubSub", "IPubSub",
-    "Webhooks", "UtilsBase", "SSH"
+    "ClosureBase", "SharedBase", "UtilsBase", "ConcurencyBase",
+    "TimerBase", "LogBase", "CommandsBase", "EventsBase", "QueuesBase", "SocketsBase",
+    "HooksBase", "ActionsBase", "EPubSubBase", "IPubSubBase", "WebhooksBase",
+    "SSHBase", "AuthenticationBase", "SQLORMBase", "PluginBase", "WorkflowBase"
 ]

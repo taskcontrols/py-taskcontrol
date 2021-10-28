@@ -1,11 +1,11 @@
 
 # Actions and Listeners
 # (Publisher Subscriber using Action like functions)
-from taskcontrol.utils import Events
+from taskcontrol.utils import EventsBase
 
 
 print("\nActions:\nDemonstrating Action and Action Listeners")
-event = Events()
+event = EventsBase()
 
 
 def run(data):

@@ -1,8 +1,8 @@
-from taskcontrol.utils import Queues
+from taskcontrol.utils import QueuesBase
 
 config = {"name": "test", "maxsize": 10,
           "queue_type": "queue", "queue": None}
-queue = Queues()
+queue = QueuesBase()
 q = queue.new(config)
 config["queue"] = q
 # print(config)

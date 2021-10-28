@@ -1,9 +1,9 @@
 import socket
 # Socket's Listeners
-from taskcontrol.utils import Sockets
+from taskcontrol.utils import SocketsBase
 
 
-Socket = Sockets()
+Socket = SocketsBase()
 
 
 def server_blocking_handler(conn, addr, socket_object):

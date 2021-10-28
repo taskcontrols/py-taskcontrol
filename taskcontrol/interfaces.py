@@ -4,7 +4,7 @@ import abc
 
 
 @dataclass(frozen=True)
-class ObjectModificationBase(metaclass=abc.ABCMeta):
+class ObjectModificationInterface(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def __init__(self, **kwargs):
@@ -13,54 +13,110 @@ class ObjectModificationBase(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def create(self, config):
         raise NotImplementedError
-    
+
     @abc.abstractmethod
     def fetch(self, config):
         raise NotImplementedError
-    
+
     @abc.abstractmethod
     def update(self, config):
         raise NotImplementedError
-    
+
     @abc.abstractmethod
     def delete(self, config):
         raise NotImplementedError
 
 
 @dataclass(frozen=True)
-class PicklesBase(metaclass=abc.ABCMeta):
-    
+class FileReaderInterface(metaclass=abc.ABCMeta):
+
+    @abc.abstractmethod
+    def file_open(self, name):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def file_read(self, obj, way, index):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def file_write(self, obj, items, way):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def row_insert(self, name, item, row):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def row_append(self, name, item):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def row_update(self, name, item, row):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def row_delete(self, name, row):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def row_search(self, name, params):
+        raise NotImplementedError
+
+
+@dataclass(frozen=True)
+class CSVReaderInterface(metaclass=abc.ABCMeta):
+
     @abc.abstractmethod
     def __init__(self, **kwargs):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def create(self, config):
+    def row_insert(self, name, head, params):
         raise NotImplementedError
-    
+
     @abc.abstractmethod
-    def insert(self, config):
+    def row_fetch(self, name, head, params):
         raise NotImplementedError
-    
+
     @abc.abstractmethod
-    def append(self, config):
+    def row_update(self, name, params):
         raise NotImplementedError
-    
+
     @abc.abstractmethod
-    def update(self, config):
+    def row_delete(self, name, head):
         raise NotImplementedError
-    
+
+
+@dataclass(frozen=True)
+class PicklesInterface(metaclass=abc.ABCMeta):
+
+    @abc.abstractmethod
+    def __init__(self, **kwargs):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def row_insert(self, config):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def row_append(self, config):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def row_update(self, config):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def row_delete(self, config):
+        raise NotImplementedError
+
     @abc.abstractmethod
     def search(self, config):
         raise NotImplementedError
-    
-    @abc.abstractmethod
-    def delete(self, config):
-        raise NotImplementedError
-    
+
 
 @dataclass(frozen=True)
-class AuthsBase(metaclass=abc.ABCMeta):
+class AuthsInterface(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def __init__(self, **kwargs):
@@ -144,7 +200,7 @@ class AuthsBase(metaclass=abc.ABCMeta):
 
 
 @dataclass(frozen=True)
-class PubSubsBase(metaclass=abc.ABCMeta):
+class PubSubsInterface(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def __init__(self, **kwargs):
@@ -153,15 +209,15 @@ class PubSubsBase(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def register_publisher(self):
         pass
-    
+
     @abc.abstractmethod
     def register_subscriber(self):
         pass
-    
+
     @abc.abstractmethod
     def register_event(self):
         pass
-        
+
     @abc.abstractmethod
     def __process(self):
         raise NotImplementedError
@@ -169,23 +225,95 @@ class PubSubsBase(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def send(self, event_object):
         raise NotImplementedError
-    
+
     @abc.abstractmethod
     def receive(self, event_object):
         raise NotImplementedError
 
 
 @dataclass(frozen=True)
-class SocketsBase(metaclass=abc.ABCMeta):
+class QueuesInterface(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def __init__(self, **kwargs):
         raise NotImplementedError
-    
+
+    @abc.abstractmethod
+    def new(self, config):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def add(self, name, item, index=0, nowait=True):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get(self, name, index=0, nowait=True):
+        raise NotImplementedError
+
+
+@dataclass(frozen=True)
+class EventsInterface(metaclass=abc.ABCMeta):
+
+    @abc.abstractmethod
+    def __init__(self, **kwargs):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def event_register(self, event_object):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def event_unregister(self, event_name):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def listener_register(self, listener_object):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def on(self, event_name, name, handler):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def listener_unregister(self, listener_object):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def get_state(self, event_name):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def set_state(self, event_name, state):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def listen(self, event_name):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def stop(self, event_name):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def send(self, message_object):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def emit(self, event_name, message):
+        raise NotImplementedError
+
+
+@dataclass(frozen=True)
+class SocketsInterface(metaclass=abc.ABCMeta):
+
+    @abc.abstractmethod
+    def __init__(self, **kwargs):
+        raise NotImplementedError
+
     @abc.abstractmethod
     def socket_create(self):
         raise NotImplementedError
-    
+
     @abc.abstractmethod
     def socket_accept(self):
         raise NotImplementedError
@@ -193,7 +321,7 @@ class SocketsBase(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def socket_listen(self):
         raise NotImplementedError
-    
+
     @abc.abstractmethod
     def socket_close(self):
         raise NotImplementedError
@@ -208,7 +336,7 @@ class SocketsBase(metaclass=abc.ABCMeta):
 
 
 @dataclass(frozen=True)
-class HooksBase(metaclass=abc.ABCMeta):
+class HooksInterface(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def __init__(self, **kwargs):
@@ -244,7 +372,7 @@ class HooksBase(metaclass=abc.ABCMeta):
 
 
 @dataclass(frozen=True)
-class SQLBase(metaclass=abc.ABCMeta):
+class SQLInterface(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def row_insert(self, conn, options):
@@ -296,10 +424,10 @@ class SQLBase(metaclass=abc.ABCMeta):
 
 
 @dataclass(frozen=True)
-class LogsBase(metaclass=abc.ABCMeta):
+class LogsInterface(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
-    def create(self, config):
+    def logger_create(self, logger_options):
         raise NotImplementedError
 
     @abc.abstractmethod
@@ -308,7 +436,7 @@ class LogsBase(metaclass=abc.ABCMeta):
 
 
 @dataclass(frozen=True)
-class PluginsBase(metaclass=abc.ABCMeta):
+class PluginsInterface(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def plugin_create(self, name, task_instance):
@@ -316,7 +444,31 @@ class PluginsBase(metaclass=abc.ABCMeta):
 
 
 @dataclass(frozen=True)
-class TimeBase(metaclass=abc.ABCMeta):
+class TimeInterface(metaclass=abc.ABCMeta):
+
+    @abc.abstractmethod
+    def timer_create(self, config):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def elapsed_time(self, name):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def curent_elapsed_time(self, name):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def reset(self, name):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def start(self, name):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def stop(self, name):
+        raise NotImplementedError
 
     @abc.abstractmethod
     def time(self, name, task_instance):
@@ -324,11 +476,7 @@ class TimeBase(metaclass=abc.ABCMeta):
 
 
 @dataclass(frozen=True)
-class CommandsBase(metaclass=abc.ABCMeta):
-
-    @abc.abstractmethod
-    def create(self, config):
-        raise NotImplementedError
+class CommandsInterface(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def execute(self, config):
@@ -338,17 +486,9 @@ class CommandsBase(metaclass=abc.ABCMeta):
     def close(self, config):
         raise NotImplementedError
 
-    @abc.abstractmethod
-    def delete(self, config):
-        raise NotImplementedError
-
 
 @dataclass(frozen=True)
-class SshBase(metaclass=abc.ABCMeta):
-
-    @abc.abstractmethod
-    def create(self, options):
-        raise NotImplementedError
+class SSHInterface(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def connect(self, options):
@@ -361,4 +501,3 @@ class SshBase(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def close(self, options):
         raise NotImplementedError
-

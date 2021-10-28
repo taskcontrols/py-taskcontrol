@@ -8,11 +8,11 @@
 # Consider making this an interface that can be extended later
 # Which will make it compatible to any DB and Authentication ways
 
-from taskcontrol.interfaces import SQLBase
+from taskcontrol.interfaces import SQLInterface
 from taskcontrol.utils import UtilsBase
 
 
-class SQLORM(UtilsBase, SQLBase):
+class SQLORMBase(UtilsBase, SQLInterface):
 
     def __init__(self, dbs={}):
         self.v = ["name"]
@@ -187,7 +187,7 @@ class SQLORM(UtilsBase, SQLBase):
 
 
 if __name__ == "__main__":
-    orm = SQLORM()
+    orm = SQLORMBase()
 
 
 __all__ = ["SQLORM"]
