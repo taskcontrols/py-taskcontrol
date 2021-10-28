@@ -659,6 +659,15 @@ class CSVReaderBase(FileReaderBase, CSVReaderInterface):
         }
         super().__init__(validations=self.vd, fileobjects=csvs)
 
+    def csv_to_json():
+        # https://dzone.com/articles/full-stack-development-tutorial-sending-pandas-dat
+        pass
+    
+    def csv_to_xml():
+        # https://dzone.com/articles/using-python-pandas-for-log-analysis
+        # https://pbpython.com/pdf-reports.html
+        pass
+
     def row_insert(self, name, head, params):
         return False
 
