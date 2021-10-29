@@ -14,8 +14,6 @@
 * [T] Run PreCreated Tasks
 * [T] Check impact of self on closure (Low priority)
 * [T] Logging & Concurrency for logger (Concurrency can be added)
-* [C?] Consider Workflow/Tasks tracking system and Dashboard with its own progress and logging
-* [C?] Consider compatibility to Chef/CircleCI/Github/Other Automation tools, atleast as external added plugins
 
 ** [W] Add Tests
         Add all variations of tests for 
@@ -35,5 +33,8 @@
 * Add UI for yaml, json creation and consumption
 
 ** [T] Monitoring Workflows
-* Add Tasks, script list status Monitoring UI
-* Add Analytics UI - Consider Third party UIs
+* [C?] Add Tasks, script list status Monitoring UI
+* [C?] Add Analytics UI - Consider Third party UIs
+* [C?] Consider Workflow/Tasks tracking system and Dashboard with its own progress and logging
+* [C?] Consider compatibility to Chef/CircleCI/Github/Other Automation tools, atleast as external added plugins
+* [T] Planned Integrations with Subversioning, Build Tools, Deployment, Data Transformation / Analytics Tooling, Testing, and Infrastructure toolings (List generation pending)

@@ -26,7 +26,8 @@
 * In-Development: Allows working with ORMs/Databases (Todo), Authentication (Todo), and best practices like Dependency Injection (Todo) within the library, tasks, and workflows
 * In-Development: Allows creating, registering, and using tasks/workflows as a plugin
 * In-Development: Provided in and Allows plugins support for Python, Javascript languages
-
+* In Development: Planned Integrations with Subversioning, Build Tools, Deployment, Data Transformation / Analytics Tooling, Testing, and Infrastructure Automation toolings
+* In Development: Monitoring Support
 
 # Installation
 
