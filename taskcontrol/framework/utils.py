@@ -27,8 +27,8 @@ from typing import Dict, List
 from threading import Thread, Lock
 from multiprocessing import Process, Array, Value, Manager
 from queue import Queue, LifoQueue, PriorityQueue, SimpleQueue
-from taskcontrol.interfaces import ObjectModificationInterface, SocketsInterface, HooksInterface, SSHInterface, FileReaderInterface, CSVReaderInterface
-from taskcontrol.interfaces import QueuesInterface, EventsInterface, PubSubsInterface, TimeInterface, LogsInterface, CommandsInterface, PicklesInterface
+from taskcontrol.framework.interfaces import ObjectModificationInterface, SocketsInterface, HooksInterface, SSHInterface, FileReaderInterface, CSVReaderInterface
+from taskcontrol.framework.interfaces import QueuesInterface, EventsInterface, PubSubsInterface, TimeInterface, LogsInterface, CommandsInterface, PicklesInterface
 
 
 class ClosureBase():

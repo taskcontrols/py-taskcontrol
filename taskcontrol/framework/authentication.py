@@ -8,9 +8,9 @@ import sqlite3
 # https://docs.python.org/3/library/pickle.html
 
 
-from taskcontrol.interfaces import AuthsInterface
-from taskcontrol.utils import UtilsBase
-from taskcontrol.orm import SQLORMBase
+from taskcontrol.framework.interfaces import AuthsInterface
+from taskcontrol.framework.utils import UtilsBase
+from taskcontrol.framework.orm import SQLORMBase
 
 
 # TODO

@@ -1,6 +1,6 @@
 # # Project Workflow
 
-from taskcontrol.bases import WorkflowBase
+from taskcontrol.framework.bases import WorkflowBase
 
 
 class Tasks(WorkflowBase):

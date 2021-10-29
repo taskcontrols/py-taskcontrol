@@ -1,3 +1,3 @@
 
-from taskcontrol.utils import ConcurencyBase
+from taskcontrol.framework.utils import ConcurencyBase
 

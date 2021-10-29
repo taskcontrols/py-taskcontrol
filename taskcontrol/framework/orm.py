@@ -8,8 +8,8 @@
 # Consider making this an interface that can be extended later
 # Which will make it compatible to any DB and Authentication ways
 
-from taskcontrol.interfaces import SQLInterface
-from taskcontrol.utils import UtilsBase
+from taskcontrol.framework.interfaces import SQLInterface
+from taskcontrol.framework.utils import UtilsBase
 
 
 class SQLORMBase(UtilsBase, SQLInterface):
