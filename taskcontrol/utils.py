@@ -11,11 +11,17 @@ import copy
 import logging
 import re
 import pickle
+# import yaml
+import csv
 import os
-from pathlib import Path
 import sys
 import shutil
 import subprocess
+import json
+import argparse
+from pathlib import Path
+from collections import defaultdict
+from xml.etree import cElementTree as ET
 from typing import Dict, List
 from threading import Thread, Lock
 from multiprocessing import Process, Array, Value, Manager
@@ -500,10 +506,103 @@ class FileReaderBase(UtilsBase, FileReaderInterface):
 
     def exists(self, file_path):
         return os.path.exists(file_path)
-    
+
     def is_file(self, file_path):
         path = Path(file_path)
         return path.is_file()
+
+    @staticmethod
+    def csv_to_dict(csvfile):
+        return csv.DictReader(open(csvfile))
+
+    @staticmethod
+    def yml_to_dict(ymlfile):
+        # with open(ymlfile) as inf:
+        #     content = yaml.load(inf, Loader=yaml.Loader)
+        #     return content
+        pass
+
+    @staticmethod
+    def xml_to_dict(node):
+        # # https://stackoverflow.com/questions/2148119/how-to-convert-an-xml-string-to-a-dictionary
+        # d = {t.tag: {} if t.attrib else None}
+        # children = list(t)
+        # if children:
+        #     dd = defaultdict(list)
+        #     for dc in map(FileReaderBase.xml_to_dict, children):
+        #         for k, v in dc.items():
+        #             dd[k].append(v)
+        #     d = {t.tag: {k:v[0] if len(v) == 1 else v for k, v in dd.items()}}
+        # if t.attrib:
+        #     d[t.tag].update(('@' + k, v) for k, v in t.attrib.items())
+        # if t.text:
+        #     text = t.text.strip()
+        #     if children or t.attrib:
+        #         if text:
+        #             d[t.tag]['#text'] = text
+        #     else:
+        #         d[t.tag] = text
+        # return d
+        return {'tag': node.tag, 'text': node.text, 'attrib': node.attrib, 'children': {child.tag: FileReaderBase.xml_to_dict(child) for child in node}}
+
+    @staticmethod
+    def json_to_dict(jsonobject):
+        return json.loads(jsonobject)
+
+    @staticmethod
+    def dict_to_json(diction):
+        return json.dumps(diction)
+
+    @staticmethod
+    def dict_to_xml(diction):
+        try:
+            basestring
+        except NameError:
+            basestring = str
+
+        def _to_etree(d, root):
+            if not d:
+                pass
+            elif isinstance(d, basestring):
+                root.text = d
+            elif isinstance(d, dict):
+                for k, v in d.items():
+                    assert isinstance(k, basestring)
+                    if k.startswith('#'):
+                        assert k == '#text' and isinstance(v, basestring)
+                        root.text = v
+                    elif k.startswith('@'):
+                        assert isinstance(v, basestring)
+                        root.set(k[1:], v)
+                    elif isinstance(v, list):
+                        for e in v:
+                            _to_etree(e, ET.SubElement(root, k))
+                    else:
+                        _to_etree(v, ET.SubElement(root, k))
+            else:
+                raise TypeError('invalid type: ' + str(type(d)))
+        assert isinstance(d, dict) and len(d) == 1
+        tag, body = next(iter(d.items()))
+        node = ET.Element(tag)
+        _to_etree(body, node)
+        return ET.tostring(node)
+
+    @staticmethod
+    def dict_to_csv(csv_filename, headers=[], diction_list=[]):
+        try:
+            with open(csv_filename, 'w') as csvfile:
+                writer = csv.DictWriter(csvfile, fieldnames=headers)
+                writer.writeheader()
+                # Every data in the list will be a
+                #       dictionary with matching columns
+                for data in diction_list:
+                    writer.writerow(data)
+        except IOError:
+            print("I/O error")
+
+    @staticmethod
+    def dict_yml(yml_filename, diction):
+        pass
 
     def file_open(self, name):
         config = self.fetch(name)
@@ -662,7 +761,7 @@ class CSVReaderBase(FileReaderBase, CSVReaderInterface):
     def csv_to_json():
         # https://dzone.com/articles/full-stack-development-tutorial-sending-pandas-dat
         pass
-    
+
     def csv_to_xml():
         # https://dzone.com/articles/using-python-pandas-for-log-analysis
         # https://pbpython.com/pdf-reports.html
@@ -834,7 +933,7 @@ class CommandsBase(UtilsBase, CommandsInterface):
 
     def exists(self, command):
         return shutil.which(command) is not None
-    
+
     def path(self, command):
         return shutil.which(command)
 
