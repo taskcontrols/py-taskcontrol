@@ -560,18 +560,6 @@ class FileReaderBase(UtilsBase, FileReaderInterface):
         except NameError:
             basestring = str
 
-        # def dictify(r,root=True):
-        #     if root:
-        #         return {r.tag : dictify(r, False)}
-        #     d=copy(r.attrib)
-        #     if r.text:
-        #         d["_text"]=r.text
-        #     for x in r.findall("./*"):
-        #         if x.tag not in d:
-        #             d[x.tag]=[]
-        #         d[x.tag].append(dictify(x,False))
-        #     return d
-
         def _to_etree(diction, root):
             if not diction:
                 pass
@@ -598,6 +586,18 @@ class FileReaderBase(UtilsBase, FileReaderInterface):
         node = ET.Element(tag)
         _to_etree(body, node)
         return ET.tostring(node)
+
+    # def dictify_xml(r,root=True):
+    #     if root:
+    #         return {r.tag : dictify(r, False)}
+    #     d=copy(r.attrib)
+    #     if r.text:
+    #         d["_text"]=r.text
+    #     for x in r.findall("./*"):
+    #         if x.tag not in d:
+    #             d[x.tag]=[]
+    #         d[x.tag].append(dictify(x,False))
+    #     return d
 
     @staticmethod
     def dict_to_csv(csv_filename, headers=[], diction_list=[]):
