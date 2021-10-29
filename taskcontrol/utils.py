@@ -1,7 +1,6 @@
 # SHARED BASE
 
 import ast
-from genericpath import exists
 import time
 import sys
 import types
@@ -19,13 +18,14 @@ import shutil
 import subprocess
 import json
 import argparse
+from genericpath import exists
 from pathlib import Path
 from collections import defaultdict
 from xml.etree import cElementTree as ET
+from collections import deque
 from typing import Dict, List
 from threading import Thread, Lock
 from multiprocessing import Process, Array, Value, Manager
-from collections import deque
 from queue import Queue, LifoQueue, PriorityQueue, SimpleQueue
 from taskcontrol.interfaces import ObjectModificationInterface, SocketsInterface, HooksInterface, SSHInterface, FileReaderInterface, CSVReaderInterface
 from taskcontrol.interfaces import QueuesInterface, EventsInterface, PubSubsInterface, TimeInterface, LogsInterface, CommandsInterface, PicklesInterface
