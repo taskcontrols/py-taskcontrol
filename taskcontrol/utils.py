@@ -546,12 +546,12 @@ class FileReaderBase(UtilsBase, FileReaderInterface):
         return {'tag': node.tag, 'text': node.text, 'attrib': node.attrib, 'children': {child.tag: FileReaderBase.xml_to_dict(child) for child in node}}
 
     @staticmethod
-    def json_to_dict(jsonobject):
-        return json.loads(jsonobject)
+    def json_to_dict(node):
+        return json.loads(node)
 
     @staticmethod
-    def dict_to_json(diction):
-        return json.dumps(diction)
+    def dict_to_json(node):
+        return json.dumps(node)
 
     @staticmethod
     def dict_to_xml(diction):
@@ -560,13 +560,25 @@ class FileReaderBase(UtilsBase, FileReaderInterface):
         except NameError:
             basestring = str
 
-        def _to_etree(d, root):
-            if not d:
+        # def dictify(r,root=True):
+        #     if root:
+        #         return {r.tag : dictify(r, False)}
+        #     d=copy(r.attrib)
+        #     if r.text:
+        #         d["_text"]=r.text
+        #     for x in r.findall("./*"):
+        #         if x.tag not in d:
+        #             d[x.tag]=[]
+        #         d[x.tag].append(dictify(x,False))
+        #     return d
+
+        def _to_etree(diction, root):
+            if not diction:
                 pass
-            elif isinstance(d, basestring):
-                root.text = d
-            elif isinstance(d, dict):
-                for k, v in d.items():
+            elif isinstance(diction, basestring):
+                root.text = diction
+            elif isinstance(diction, dict):
+                for k, v in diction.items():
                     assert isinstance(k, basestring)
                     if k.startswith('#'):
                         assert k == '#text' and isinstance(v, basestring)
@@ -580,9 +592,9 @@ class FileReaderBase(UtilsBase, FileReaderInterface):
                     else:
                         _to_etree(v, ET.SubElement(root, k))
             else:
-                raise TypeError('invalid type: ' + str(type(d)))
-        assert isinstance(d, dict) and len(d) == 1
-        tag, body = next(iter(d.items()))
+                raise TypeError('invalid type: ' + str(type(diction)))
+        assert isinstance(diction, dict) and len(diction) == 1
+        tag, body = next(iter(diction.items()))
         node = ET.Element(tag)
         _to_etree(body, node)
         return ET.tostring(node)
