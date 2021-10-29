@@ -209,7 +209,7 @@ functools.reduce(red, ls)
 # Status
 
 * In Active Development (taskcontrol version 1.2.6)
-
+* In Active Development (Common Integrations and Activities as Plugins)
 
 # Support
 
