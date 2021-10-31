@@ -30,13 +30,13 @@ def publisher(task=None):
         pass
 
     # print("Running publisher ")
-    pconfig = {"name": "testclient", "protocol": socket.AF_INET, "streammode": socket.SOCK_STREAM,
-                       "host": "127.0.0.1", "port": 9001, "numbers": 5, "handler": client_nonblocking_handler, "blocking": False}
+    pubconfig = {"name": "testclient", "protocol": socket.AF_INET, "streammode": socket.SOCK_STREAM,
+                 "host": "127.0.0.1", "port": 9001, "numbers": 5, "handler": client_nonblocking_handler, "blocking": False}
     Socket = SocketsBase()
     # # Trigger an event in the server based on any application event or manual trigger
     # # Use a socket connect to connect to the publisher server
     Socket.socket_connect(
-        pconfig, [b"Message 1 from client.", b"Message 2 from client."])
+        pubconfig, [b"Message 1 from client.", b"Message 2 from client."])
     # # Close the socket connection
     # Socket = None
 
@@ -86,7 +86,7 @@ def subscriber(task=None):
     # print("Running Publisher message to queue ")
     # # Receive the message from the server
 
-    srvconfig = {"name": "test", "protocol": socket.AF_INET, "streammode": socket.SOCK_STREAM,
+    subconfig = {"name": "test", "protocol": socket.AF_INET, "streammode": socket.SOCK_STREAM,
                  "host": "127.0.0.1", "port": 9001, "numbers": 5, "handler": server_nonblocking_handler, "blocking": False}
 
     Socket = SocketsBase()
