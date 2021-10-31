@@ -216,19 +216,19 @@ class PubSubsInterface(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def register_publisher(self):
-        pass
+        raise NotImplementedError
 
     @abc.abstractmethod
     def register_subscriber(self):
-        pass
+        raise NotImplementedError
 
     @abc.abstractmethod
     def register_event(self):
-        pass
-
-    @abc.abstractmethod
-    def __process(self):
         raise NotImplementedError
+
+    # @abc.abstractmethod
+    # def __process(self):
+    #     raise NotImplementedError
 
     @abc.abstractmethod
     def send(self, event_object):

@@ -1311,7 +1311,7 @@ class SocketsBase(UtilsBase, SocketsInterface):
                         # raise e
                         return False
 
-                def service_connection(key, mask):
+                def service_connection(key, mask, sel):
                     try:
                         sock = key.fileobj
                         data = key.data
@@ -1331,7 +1331,8 @@ class SocketsBase(UtilsBase, SocketsInterface):
                                 # Should be ready to write
                                 sent = sock.send(data.outb)
                                 data.outb = data.outb[sent:]
-                        # sock.close()
+                            # sock.close()
+                            # return False
                         return True
                     except Exception as e:
                         print("Error in service connection: service_connection")
@@ -1344,7 +1345,11 @@ class SocketsBase(UtilsBase, SocketsInterface):
                             if key.data is None:
                                 accept_wrapper(key.fileobj)
                             else:
-                                service_connection(key, mask)
+                                if srv.get("handler", None):
+                                    srv.get("handler")(
+                                        key, mask, socket_object)
+                                else:
+                                    service_connection(key, mask)
                 except KeyboardInterrupt:
                     print("Caught keyboard interrupt, exiting")
                     sys.exit(0)
@@ -1424,11 +1429,11 @@ class SocketsBase(UtilsBase, SocketsInterface):
             o = self.socket_create(socket_object)
             if o:
                 s = self.fetch(socket_object.get("name"))
-                srv = s.get("server")
-                srv.connect(server_addr)
-                srv.sendall(b"Hello, world from client")
-                data = srv.recv(1024)
-                print("Received ", str(data))
+                # srv = s.get("server")
+                # srv.connect(server_addr)
+                # srv.sendall(b"Hello, world from client")
+                # data = srv.recv(1024)
+                # print("Received ", str(data))
                 s.get("handler")(messages, s)
                 try:
                     s.get("server").close()
@@ -1526,44 +1531,33 @@ class EPubSubBase(UtilsBase, PubSubsInterface):
                 "Message Object ", message_object)
         e = o.get("events").get(message_object.get("event_name"))
         if e and e.get("listening"):
-            r = False
-            if self.agent == "publisher":
-                # Get Handler
-                pb_hdlr = e.get("handler", h)
-                # Invoke Handler
-                if pb_hdlr:
-                    print("Running Handler pb_hdlr")
-                    r = self.__handler(message_object, pb_hdlr)
-            elif self.agent == "subscriber":
-                # Get Handler
-                sb_hdlr = e.get("handler", h)
-                # Invoke Handler
-                if sb_hdlr:
-                    print("Running Handler sb_hdlr")
-                    r = self.__handler(message_object, sb_hdlr)
-            else:
-                r = []
-                # Get Handler
-                srv_hdlr = e.get("handler", h)
-                # Invoke Handler
-                print("Running Handler srv_hdlr")
+            r = []
+            # Get Handler
+            srv_hdlr = e.get("handler", None)
+            # Invoke Handler
+            if srv_hdlr:
+                print("Trying PubSub Main Handler Run: ", srv_hdlr.__name__)
                 r1 = self.__handler(message_object, srv_hdlr)
                 # Get all subscriber handlers
                 if not r1:
                     print("Return Error R1")
-                srv_pbh = e.get("publishers").get(
-                    message_object.get("publisher")).get("handler", h)
-                # Invoke Publisher
-                print("Running Handler srv_pbh")
+            srv_pbh = e.get("publishers").get(
+                message_object.get("publisher")).get("handler", None)
+            # Invoke Publisher
+            if srv_pbh:
+                print("Trying PubSub Publisher Handler Run: ",
+                      srv_pbh.__name__)
                 r2 = self.__handler(message_object, srv_pbh)
                 if not r2:
                     print("Return Error R2")
-                sbs = e.get("subscribers")
+            sbs = e.get("subscribers")
+            if sbs:
                 for sb in sbs:
                     # Get individual handler
-                    srv_sb_hdlr = sbs[sb].get("handler", h)
+                    srv_sb_hdlr = sbs[sb].get("subscriber", h)
                     # Invoke all handlers
-                    print("Running Handler srv_sb_hdlr")
+                    print("Trying PubSub Subscriber Handler Run: ",
+                          srv_sb_hdlr.__name__)
                     tmpres = self.__handler(message_object, srv_sb_hdlr)
                     r.append(tmpres)
             return r
@@ -1603,7 +1597,7 @@ class EPubSubBase(UtilsBase, PubSubsInterface):
     def queue_create(self, config):
         # "name", "queue", "maxsize", "queue_type"
         qConfig = copy.copy(config)
-        tmpQ = Queues()
+        tmpQ = QueuesBase()
         qConfig["queue"] = tmpQ.new(qConfig)
         qs = tmpQ.create(qConfig)
         if qs:
