@@ -16,6 +16,10 @@ pb = EPubSubBase()
 p = pb.pubsub_create(config)
 
 
+def invoker(action, obj):
+    print("Printing action and object ", action, obj)
+
+
 def publisher(task=None):
     print("Printing data", pb, task)
     # def client_nonblocking_handler(messages, socket_object):
@@ -30,6 +34,7 @@ def publisher(task=None):
     # print("Running publisher ")
     # pconfig = {"name": "testclient", "protocol": socket.AF_INET, "streammode": socket.SOCK_STREAM,
     #                    "host": "127.0.0.1", "port": 9001, "numbers": 5, "handler": client_nonblocking_handler, "blocking": False}
+    #
     # Socket = SocketsBase()
     # # Trigger an event in the server based on any application event or manual trigger
     # # Use a socket connect to connect to the publisher server
@@ -54,14 +59,14 @@ def server(task=None):
 
     # srvconfig = {"name": "test", "protocol": socket.AF_INET, "streammode": socket.SOCK_STREAM,
     #              "host": "127.0.0.1", "port": 9001, "numbers": 5, "handler": server_nonblocking_handler, "blocking": False}
-
+    #
     # Socket = SocketsBase()
-
+    #
     # s = Socket.socket_create(config)
     # if s:
     #     print("Server started")
     #     sr = Socket.socket_listen(config.get("name"))
-
+    #
     # # Use a server receive to receive the publisher message
     # # Add to the Queue using the publisher function
     # # Process the Queue items using __process/__schedular
@@ -81,17 +86,17 @@ def subscriber(task=None):
 
     # print("Running Publisher message to queue ")
     # # Receive the message from the server
-
+    #
     # srvconfig = {"name": "test", "protocol": socket.AF_INET, "streammode": socket.SOCK_STREAM,
     #              "host": "127.0.0.1", "port": 9001, "numbers": 5, "handler": server_nonblocking_handler, "blocking": False}
-
+    #
     # Socket = SocketsBase()
-
+    #
     # s = Socket.socket_create(config)
     # if s:
     #     print("Server started")
     #     sr = Socket.socket_listen(config.get("name"))
-
+    #
     # Receive the message from the server
     # Use a server receive to receive the server message
     # Add to the Queue using the publisher function
@@ -102,11 +107,11 @@ def subscriber(task=None):
 
 if p:
     print("Event registered ", pb.register_event(
-        name, {"name": "testingevent", "event": run}))
+        name, {"name": "testingevent", "event": run, "invoker": invoker}))
     print("Event listening ", pb.listen(name, "testingevent"))
     print("Publisher registered ", pb.register_publisher(
-        name, {"name": "pubone", "event_name": "testingevent", "publisher": publisher}))
+        name, {"name": "pubone", "event_name": "testingevent", "publisher": publisher, "invoker": invoker}))
     print("Subscribers registered ", pb.register_subscriber(
-        name, {"name": "subone", "event_name": "testingevent", "subscriber": subscriber}))
+        name, {"name": "subone", "event_name": "testingevent", "subscriber": subscriber, "invoker": invoker}))
     print("Event sending ", pb.send({"event_name": "testingevent", "queue_name": "new",
                                      "message": "Testing event testingevent", "publisher": "pubone"}))

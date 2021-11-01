@@ -16,6 +16,10 @@ pb = EPubSubBase()
 p = pb.pubsub_create(config)
 
 
+def invoker(action, obj):
+    print("Printing action and object ", action, obj)
+
+
 def publisher(task=None):
     print("Printing data", pb, task)
 
@@ -60,10 +64,10 @@ def server(task=None):
 
     Socket = SocketsBase()
 
-    s = Socket.socket_create(config)
+    s = Socket.socket_create(srvconfig)
     if s:
         print("Server started")
-        sr = Socket.socket_listen(config.get("name"))
+        sr = Socket.socket_listen(srvconfig.get("name"))
 
     # # Use a server receive to receive the publisher message
     # # Add to the Queue using the publisher function
@@ -91,10 +95,10 @@ def subscriber(task=None):
 
     Socket = SocketsBase()
 
-    s = Socket.socket_create(config)
+    s = Socket.socket_create(subconfig)
     if s:
         print("Server started")
-        sr = Socket.socket_listen(config.get("name"))
+        sr = Socket.socket_listen(subconfig.get("name"))
 
     # Receive the message from the server
     # Use a server receive to receive the server message
@@ -106,11 +110,11 @@ def subscriber(task=None):
 
 if p:
     print("Event registered ", pb.register_event(
-        name, {"name": "testingevent", "event": run}))
+        name, {"name": "testingevent", "event": run, "invoker": invoker}))
     print("Event listening ", pb.listen(name, "testingevent"))
     print("Publisher registered ", pb.register_publisher(
-        name, {"name": "pubone", "event_name": "testingevent", "publisher": publisher}))
-    print("Subscribers registered ", pb.register_subscriber(
-        name, {"name": "subone", "event_name": "testingevent", "subscriber": subscriber}))
+        name, {"name": "pubone", "event_name": "testingevent", "publisher": publisher, "invoker": invoker}))
+    # print("Subscribers registered ", pb.register_subscriber(
+    #     name, {"name": "subone", "event_name": "testingevent", "subscriber": subscriber}))
     print("Event sending ", pb.send({"event_name": "testingevent", "queue_name": "new",
-                                     "message": [b"Testing event testingevent", b"Testing second"], "publisher": "pubone"}))
+                                     "message": [b"Testing event testingevent", b"Testing second"], "publisher": "pubone", "invoker": invoker}))

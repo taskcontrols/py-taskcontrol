@@ -1531,37 +1531,49 @@ class EPubSubBase(UtilsBase, PubSubsInterface):
                 "Message Object ", message_object)
         e = o.get("events").get(message_object.get("event_name"))
         if e and e.get("listening"):
-            r = []
-            # Get Handler
-            srv_hdlr = e.get("handler", None)
-            # Invoke Handler
-            if srv_hdlr:
-                print("Trying PubSub Main Handler Run: ", srv_hdlr.__name__)
-                r1 = self.__handler(message_object, srv_hdlr)
-                # Get all subscriber handlers
-                if not r1:
-                    print("Return Error R1")
-            srv_pbh = e.get("publishers").get(
-                message_object.get("publisher")).get("handler", None)
-            # Invoke Publisher
-            if srv_pbh:
-                print("Trying PubSub Publisher Handler Run: ",
-                      srv_pbh.__name__)
-                r2 = self.__handler(message_object, srv_pbh)
-                if not r2:
-                    print("Return Error R2")
-            sbs = e.get("subscribers")
-            if sbs:
-                for sb in sbs:
-                    # Get individual handler
-                    srv_sb_hdlr = sbs[sb].get("subscriber", h)
-                    # Invoke all handlers
-                    print("Trying PubSub Subscriber Handler Run: ",
-                          srv_sb_hdlr.__name__)
-                    tmpres = self.__handler(message_object, srv_sb_hdlr)
-                    r.append(tmpres)
-            return r
+            try:
+                r = []
+                # Get Handler
+                srv_hdlr = e.get("handler", None)
+                # Invoke Handler
+                if srv_hdlr:
+                    print("Trying PubSub Main Handler Run: ", srv_hdlr.__name__)
+                    r1 = self.__handler(message_object, srv_hdlr)
+                    # Get all subscriber handlers
+                    if not r1:
+                        print("Return Error R1")
+                    r.append(r1)
+                srv_pb = e.get("publishers").get(
+                    message_object.get("publisher"))
+                if srv_pb:
+                    srv_pbh = srv_pb.get("handler", None)
+                    # Invoke Publisher
+                    if srv_pbh:
+                        print("Trying PubSub Publisher Handler Run: ",
+                              srv_pbh.__name__)
+                        r2 = self.__handler(message_object, srv_pbh)
+                        if not r2:
+                            print("Return Error R2")
+                        r.append(r2)
+                sbs = e.get("subscribers")
+                if sbs:
+                    r3 = []
+                    for sb in sbs:
+                        # Get individual handler
+                        srv_sb_hdlr = sbs[sb].get("subscriber", h)
+                        # Invoke all handlers
+                        print("Trying PubSub Subscriber Handler Run: ",
+                              srv_sb_hdlr.__name__)
+                        tmpres = self.__handler(message_object, srv_sb_hdlr)
+                        r3.append(tmpres)
+                    r.append(r3)
+                return r
+            except Exception as e:
+                return e
         return False
+
+    def __receive_handler(self, message_object):
+        pass
 
     def pubsub_create(self, config):
         # "name", "handler", "queue", "maxsize", "queue_type", "processing_flag", "batch_interval", "events"
@@ -1614,12 +1626,15 @@ class EPubSubBase(UtilsBase, PubSubsInterface):
 
     def register_publisher(self, pubsub_name, publisher_object):
         """
-        publisher_object: name, event_name, publisher
+        publisher_object: name, event_name, publisher, invoker
         """
         p = self.fetch(pubsub_name)
         p["events"][publisher_object.get("event_name")]["publishers"].update(dict([
             [publisher_object.get("name"), publisher_object]
         ]))
+        invoker = publisher_object.get("invoker")
+        if invoker:
+            invoker("register_publisher", str(p))
         return self.update(p)
 
     def register_subscriber(self, pubsub_name, subscriber_object):
@@ -1630,6 +1645,9 @@ class EPubSubBase(UtilsBase, PubSubsInterface):
         s["events"][subscriber_object.get("event_name")]["subscribers"].update(dict([
             [subscriber_object.get("name"), subscriber_object]
         ]))
+        invoker = subscriber_object.get("invoker")
+        if invoker:
+            invoker("register_subscriber", str(s))
         return self.update(s)
 
     def register_event(self, pubsub_name, event_object):
@@ -1644,6 +1662,9 @@ class EPubSubBase(UtilsBase, PubSubsInterface):
                 }
             ]
         ]))
+        invoker = event_object.get("invoker")
+        if invoker:
+            invoker("register_event", str(e))
         return self.update(e)
 
     def listen(self, pubsub_name, event_name):
@@ -1659,6 +1680,9 @@ class EPubSubBase(UtilsBase, PubSubsInterface):
     def unregister_event(self, pubsub_name, event_object):
         try:
             p = self.fetch(pubsub_name)
+            invoker = event_object.get("invoker")
+            if invoker:
+                invoker("unregister_event", str(p))
             del p["events"][event_object.get("name")]
             return self.update(p)
         except Exception as e:
@@ -1668,6 +1692,9 @@ class EPubSubBase(UtilsBase, PubSubsInterface):
     def unregister_publisher(self, pubsub_name, publisher_object):
         try:
             p = self.fetch(pubsub_name)
+            invoker = publisher_object.get("invoker")
+            if invoker:
+                invoker("unregister_publisher", str(p))
             del p["events"][publisher_object.get(
                 "event_name")]["publishers"][publisher_object.get("name")]
             return self.update(p)
@@ -1678,6 +1705,9 @@ class EPubSubBase(UtilsBase, PubSubsInterface):
     def unregister_subscriber(self, pubsub_name, subscriber_object):
         try:
             p = self.fetch(pubsub_name)
+            invoker = subscriber_object.get("invoker")
+            if invoker:
+                invoker("unregister_subscriber", str(p))
             del p["events"][subscriber_object.get(
                 "event_name")]["subscribers"][subscriber_object.get("name")]
             return self.update(p)
@@ -1690,19 +1720,13 @@ class EPubSubBase(UtilsBase, PubSubsInterface):
         # Events (Publisher-Subscriber, WebHooks) Mode:
         #       publisher, server[forsubscribers]
         # TODO: Consider send for subscriber for Client-Server (Server-Agent) Mode or (Subscriber having feedback) or (Subscriber app in Dual) Mode
-        u = self.__publish_handler(message_object)
-        if u:
-            return True
-        return False
+        return self.__publish_handler(message_object)
 
     def receive(self, message_object):
         # message_object: queue_name, event_name, publisher_name, message
         # server[forpublishers], subscribers
         # TODO: Consider receive for Client-Server (Server-Agent) or (Publisher having feedback) or (Publisher app in Dual) Mode
-        u = self.__publish_handler(message_object)
-        if u:
-            return True
-        return False
+        return self.__receive_handler(message_object)
 
 
 class IPubSubBase(EPubSubBase):

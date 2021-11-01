@@ -33,4 +33,4 @@ if p:
     print("Pubsub Object PRINT FROM SCRIPT: ", pb.fetch(name))
     print("Event unlistened ", pb.stop(name, "testevent"))
     print("Pubsub Object Deleted ", pb.pubsub_delete(name))
-    print("Pubsub Object ", pb.fetch(name))
+    print("Pubsub Object (Should return Error for handling) ", pb.fetch(name))
