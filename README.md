@@ -138,7 +138,6 @@ sparrow.run()
 # sparrow.run(tasks=["taskname", ..., "anothertask"])
 
 
-
 ```
 
 
