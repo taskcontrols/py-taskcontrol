@@ -1,6 +1,6 @@
 import socket
 import selectors
-from taskcontrol.framework.utils import EPubSubBase, SocketsBase
+from taskcontrol.lib.utils import EPubSubBase, SocketsBase
 
 
 def run(data):
@@ -14,10 +14,6 @@ name = config.get("name")
 
 pb = EPubSubBase()
 p = pb.pubsub_create(config)
-
-
-def invoker(action, obj):
-    print("Printing action and object ", action, obj)
 
 
 def publisher(task=None):
@@ -107,11 +103,11 @@ def subscriber(task=None):
 
 if p:
     print("Event registered ", pb.register_event(
-        name, {"name": "testingevent", "event": run, "invoker": invoker}))
+        name, {"name": "testingevent", "event": run}))
     print("Event listening ", pb.listen(name, "testingevent"))
     print("Publisher registered ", pb.register_publisher(
-        name, {"name": "pubone", "event_name": "testingevent", "publisher": publisher, "invoker": invoker}))
+        name, {"name": "pubone", "event_name": "testingevent", "publisher": publisher}))
     print("Subscribers registered ", pb.register_subscriber(
-        name, {"name": "subone", "event_name": "testingevent", "subscriber": subscriber, "invoker": invoker}))
+        name, {"name": "subone", "event_name": "testingevent", "subscriber": subscriber}))
     print("Event sending ", pb.send({"event_name": "testingevent", "queue_name": "new",
                                      "message": "Testing event testingevent", "publisher": "pubone"}))
