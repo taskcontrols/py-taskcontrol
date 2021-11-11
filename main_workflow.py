@@ -11,9 +11,9 @@ from taskcontrol.lib.workflows import workflow, Tasks
 sparrow = Tasks()
 
 
-def nesttree(ctx, result, k, c, d, **kwargs):
-    print("Running my Middleware Function: nesttree - task items", k, c, d, kwargs)
-    return k, c, d
+def nesttree(ctx, result, *args, **kwargs):
+    print("Running my Middleware Function: nesttree - task items", args, kwargs)
+    return args
 
 
 @workflow(
@@ -84,8 +84,8 @@ def nesttree(ctx, result, k, c, d, **kwargs):
     ],
     log=False
 )
-def taskone(ctx, result, a, b):
-    print("Running my task function: taskone", a, b)
+def taskone(ctx, result, *args, **kwargs):
+    print("Running my task function: taskone", args)
 
 
 # Example two for decorator usage
@@ -105,9 +105,9 @@ def taskone(ctx, result, a, b):
           after=[],
           log=False
           )
-def tasktwo(ctx, result, a, b):
-    print("Running my task function: tasktwo", a, b)
-    return a, b
+def tasktwo(ctx, result, *args, **kwargs):
+    print("Running my task function: tasktwo", args)
+    return args
 
 
 # Example two for decorator usage
@@ -127,9 +127,9 @@ def tasktwo(ctx, result, a, b):
           after=[],
           log=False
           )
-def taskthree(ctx, result, a, b):
-    print("Running my task function: taskthree", a, b)
-    return a, b
+def taskthree(ctx, result, *args, **kwargs):
+    print("Running my task function: taskthree", args)
+    return args
 
 
 # print(sparrow.get_tasks(task="tasktwo"))
