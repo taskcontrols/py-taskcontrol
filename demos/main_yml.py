@@ -1,3 +1,3 @@
-from taskcontrol.lib.utils import CSVReaderBase
+from taskcontrol import CSVReaderBase
 
 

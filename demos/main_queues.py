@@ -1,4 +1,4 @@
-from taskcontrol.lib.utils import QueuesBase
+from taskcontrol import QueuesBase
 
 config = {"name": "test", "maxsize": 10,
           "queue_type": "queue", "queue": None}

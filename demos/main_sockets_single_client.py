@@ -1,6 +1,6 @@
 import socket
 # Socket's Listeners
-from taskcontrol.lib.utils import SocketsBase
+from taskcontrol import SocketsBase
 
 
 Socket = SocketsBase()

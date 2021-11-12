@@ -1,4 +1,4 @@
-from taskcontrol.lib.utils import EPubSubBase
+from taskcontrol import EPubSubBase
 
 
 def run(data):

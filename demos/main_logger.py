@@ -1,4 +1,4 @@
-from taskcontrol.lib.utils import LogBase
+from taskcontrol import LogBase
 import logging
 
 log = LogBase()
