@@ -91,7 +91,7 @@ from taskcontrol.workflow import workflow, Tasks
 
 sparrow = Tasks()
 
-def middleware_trees(ctx, result, k, c, d, **kwargs):
+def middleware_trees(ctx, result, *args, **kwargs):
     print("Running my Middleware Function: middleware_trees - task items", k, c, d, kwargs)
 
 
@@ -124,8 +124,8 @@ def middleware_trees(ctx, result, k, c, d, **kwargs):
     ],
     log=False
 )
-def taskone(ctx, result, a, b):
-    print("Running my task function: taskone", a, b)
+def taskone(ctx, result, *args):
+    print("Running my task function: taskone", *args)
 
 
 # Run single task

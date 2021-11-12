@@ -42,7 +42,7 @@
 ```python
 
 # for package
-from taskcontrol.workflow import workflow, Tasks
+from taskcontrol.bases import workflow, Tasks
 
 
 # Create an instance of the task you are creating
@@ -52,8 +52,8 @@ sparrow = Tasks()
 # Middleware that we are running
 # Use any middleware that runs with or withour returning results
 # Demo uses common middleware for all. Please use you own middlewares
-def nesttree(ctx, result, k, c, d, **kwargs):
-    print("Running my Middleware Function: nesttree - task items", k, c, d, kwargs)
+def nesttree(ctx, result, *args, **kwargs):
+    print("Running my Middleware Function: nesttree - task items", args, kwargs)
 
 
 # workflow decorator
@@ -107,8 +107,8 @@ def nesttree(ctx, result, k, c, d, **kwargs):
     log=False
 )
 # Main function for the task
-def taskone(ctx, result, a, b):
-    print("Running my task function: taskone", a, b)
+def taskone(ctx, result, *args, **kwargs):
+    print("Running my task function: taskone", args, kwargs)
 
 sparrow.run(tasks="taskname")
 

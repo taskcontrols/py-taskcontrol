@@ -28,7 +28,7 @@
         ],
         log = <boolean>
     )
-    def function: <function> (ctx, result, args, ..., kwargs):
+    def function: <function> (ctx, result, *args, **kwargs):
         <code_here>
     ```
 
