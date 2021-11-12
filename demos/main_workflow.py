@@ -179,6 +179,11 @@ run_8 = sparrow.run(tasks="shared:taskthree")
 print("\nrun_8 0 Tasks [1S]", run_8)
 
 
+# # Single Workflow Tasks run
+run_9 = sparrow.run()
+print("\nrun_9 0 Tasks ", run_9)
+
+
 # TODO:
 # Run Precreated Tasks
 # run_9 = sparrow.run(tasks="workflow:workflowname")
