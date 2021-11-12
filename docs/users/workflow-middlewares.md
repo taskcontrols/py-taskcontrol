@@ -5,10 +5,10 @@
 
 
 # for git development repo
-# from taskcontrol.bases import workflow, Tasks
+# from taskcontrol import workflow, Tasks
 
 # for package
-from taskcontrol.bases import workflow, Tasks
+from taskcontrol import workflow, Tasks
 
 
 # Instance of tasks and apis object
@@ -18,7 +18,7 @@ sparrow = Tasks()
 
 
 def nesttree(ctx, result, *args, **kwargs):
-    print("Running my Middleware Function: nesttree - task items", *args, **kwargs)
+    print("Running my Middleware Function: nesttree - task items", args, kwargs)
 
 
 @workflow(
@@ -112,7 +112,7 @@ def taskone(ctx, result, *args, **kwargs):
           )
 def tasktwo(ctx, result, *args, **kwargs):
     print("Running my task function: tasktwo", args, kwargs)
-    return a, b
+    return args, kwargs
 
 
 # Invoke this where needed

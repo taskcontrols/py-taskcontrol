@@ -5,10 +5,10 @@
 
 
 # for git development repo
-# from taskcontrol.bases import workflow, Tasks
+# from taskcontrol import workflow, Tasks
 
 # for package
-from taskcontrol.bases import workflow, Tasks
+from taskcontrol import workflow, Tasks
 
 
 # Instance of tasks and apis object

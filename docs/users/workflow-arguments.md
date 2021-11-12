@@ -12,13 +12,13 @@ All Decorator arguments that can be used are are below. The only compulsory argu
 * Usage:
     ```python
 
-    from taskcontrol.bases import workflow, Tasks
+    from taskcontrol import workflow, Tasks
 
     sparrow = Tasks()
     @workflow( name="taskname", task_instance=sparrow )
     def taskone(ctx, result, *args, **kwargs):
         print("Running my task function: taskone", args, kwargs)
-        return a,b
+        return args, kwargs
 
     ```
 
@@ -31,13 +31,13 @@ All Decorator arguments that can be used are are below. The only compulsory argu
 * Usage:
     ```python
 
-    from taskcontrol.bases import workflow, Tasks
+    from taskcontrol import workflow, Tasks
 
     sparrow = Tasks()
     @workflow( name="taskname", task_instance=sparrow )
     def taskone(ctx, result, *args, **kwargs):
         print("Running my task function: taskone", args, kwargs)
-        return a,b
+        return args, kwargs
 
     ```
 
@@ -49,13 +49,13 @@ All Decorator arguments that can be used are are below. The only compulsory argu
 * Usage:
     ```python
 
-    from taskcontrol.bases import workflow, Tasks
+    from taskcontrol import workflow, Tasks
 
     sparrow = Tasks()
     @workflow( name="taskname", task_instance=sparrow, log=False )
     def taskone(ctx, result, *args, **kwargs):
         print("Running my task function: taskone", args, kwargs)
-        return a,b
+        return args, kwargs
 
     ```
 
@@ -69,7 +69,7 @@ All Decorator arguments that can be used are are below. The only compulsory argu
 
         ```python
 
-        from taskcontrol.bases import workflow, Tasks
+        from taskcontrol import workflow, Tasks
 
         sparrow = Tasks()
 
@@ -87,7 +87,7 @@ All Decorator arguments that can be used are are below. The only compulsory argu
         )
         def taskone(ctx, result, *args, **kwargs):
             print("Running my task function: taskone", args, kwargs)
-            return a,b
+            return args, kwargs
 
         ```
 
@@ -95,7 +95,7 @@ All Decorator arguments that can be used are are below. The only compulsory argu
 
         ```python
 
-        from taskcontrol.bases import workflow, Tasks
+        from taskcontrol import workflow, Tasks
 
         def nesttree(ctx, result, *args, **kwargs):
             print("Running my Middleware Function: nesttree - task items", args, kwargs)
@@ -113,7 +113,7 @@ All Decorator arguments that can be used are are below. The only compulsory argu
         )
         def taskone(ctx, result, *args, **kwargs):
             print("Running my task function: taskone", args, kwargs)
-            return a,b
+            return args, kwargs
 
         ```
 
@@ -127,7 +127,7 @@ All Decorator arguments that can be used are are below. The only compulsory argu
 
         ```python
 
-        from taskcontrol.bases import workflow, Tasks
+        from taskcontrol import workflow, Tasks
 
         sparrow = Tasks()
 
@@ -153,7 +153,7 @@ All Decorator arguments that can be used are are below. The only compulsory argu
 
         ```python
 
-        from taskcontrol.bases import workflow, Tasks
+        from taskcontrol import workflow, Tasks
 
         sparrow = Tasks()
         
@@ -183,7 +183,7 @@ All Decorator arguments that can be used are are below. The only compulsory argu
 * Usage:
     ```python
 
-    from taskcontrol.bases import workflow, Tasks
+    from taskcontrol import workflow, Tasks
 
     sparrow = Tasks()
     @workflow( name="taskname", task_instance=sparrow, args=[11, 12] )
@@ -201,7 +201,7 @@ All Decorator arguments that can be used are are below. The only compulsory argu
 * Usage:
     ```python
 
-    from taskcontrol.bases import workflow, Tasks
+    from taskcontrol import workflow, Tasks
 
     sparrow = Tasks()
     @workflow( name="taskname", task_instance=sparrow, kwargs={"a":11, "b":12} )
@@ -220,13 +220,13 @@ All Decorator arguments that can be used are are below. The only compulsory argu
 * Usage:
     ```python
 
-    from taskcontrol.bases import workflow, Tasks
+    from taskcontrol import workflow, Tasks
 
     sparrow = Tasks()
     @workflow( name="taskname", task_instance=sparrow, shared=True )
     def taskone(ctx, result, *args, **kwargs):
         print("Running my task function: taskone", args, kwargs)
-        return a,b
+        return args, kwargs
 
     ```
 
@@ -238,13 +238,13 @@ All Decorator arguments that can be used are are below. The only compulsory argu
 * Usage:
     ```python
 
-    from taskcontrol.bases import workflow, Tasks
+    from taskcontrol import workflow, Tasks
 
     sparrow = Tasks()
     @workflow( name="taskname", task_instance=sparrow, task_order=1 )
     def taskone(ctx, result, *args, **kwargs):
         print("Running my task function: taskone", args, kwargs)
-        return a,b
+        return args, kwargs
 
     ```
 
@@ -255,7 +255,7 @@ All Decorator arguments that can be used are are below. The only compulsory argu
 ```python
 
 
-from taskcontrol.bases import workflow, Tasks
+from taskcontrol import workflow, Tasks
 
 sparrow = Tasks()
 def nesttree(ctx, result, *args, **kwargs):

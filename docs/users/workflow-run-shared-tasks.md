@@ -5,10 +5,10 @@
 
 
 # for git development repo
-# from taskcontrol.bases import workflow, Tasks
+# from taskcontrol import workflow, Tasks
 
 # for package
-from taskcontrol.bases import workflow, Tasks
+from taskcontrol import workflow, Tasks
 
 
 # Instance of tasks and apis object
@@ -110,9 +110,9 @@ def taskone(ctx, result, *args, **kwargs):
           after=[],
           log=False
           )
-def tasktwo(ctx, result, *args):
-    print("Running my task function: tasktwo", args)
-    return a, b
+def tasktwo(ctx, result, *args, **kwargs):
+    print("Running my task function: tasktwo", args, kwargs)
+    return args, kwargs
 
 
 # Invoke this where needed

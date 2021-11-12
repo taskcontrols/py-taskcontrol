@@ -42,7 +42,7 @@
 ```python
 
 # for package
-from taskcontrol.bases import workflow, Tasks
+from taskcontrol import workflow, Tasks
 
 
 # Create an instance of the task you are creating
