@@ -1,6 +1,6 @@
 import socket
 import selectors
-from taskcontrol import EPubSubBase, SocketsBase
+from taskcontrol.lib import EPubSubBase, SocketsBase
 
 
 def run(data):

@@ -1,4 +1,4 @@
-from taskcontrol import TimerBase
+from taskcontrol.lib import TimerBase
 
 timer = TimerBase()
 

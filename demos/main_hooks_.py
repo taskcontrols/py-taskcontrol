@@ -1,2 +1,2 @@
 # Hook's Listeners
-from taskcontrol import HooksBase
+from taskcontrol.lib import HooksBase
