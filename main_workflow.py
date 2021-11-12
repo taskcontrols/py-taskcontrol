@@ -1,5 +1,5 @@
 # for git development repo
-from taskcontrol import workflow, Tasks
+from taskcontrol.lib import workflow, Tasks
 
 # for package
 # from taskcontrol.bases import workflow, Tasks

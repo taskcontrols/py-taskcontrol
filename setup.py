@@ -21,7 +21,7 @@ setuptools.setup(
     ],
     entry_points={
         'console_scripts': [
-            'tasks=setup:run'
+            'tasks=run:run'
         ]
     },
     license='MIT',
