@@ -194,7 +194,6 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginBase, UtilsBase):
         return functools.reduce(self.reducer, tasks_to_run_in_task)
 
 
-
 class Tasks(WorkflowBase):
 
     def __init__(self):
