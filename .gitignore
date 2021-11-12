@@ -14,7 +14,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+./lib/
 lib64/
 parts/
 sdist/
@@ -135,7 +135,7 @@ quickies.py
 pyvenv.cfg
 lib64/
 bin/
-lib/
+./lib/
 include/
 share/
 xc.py
