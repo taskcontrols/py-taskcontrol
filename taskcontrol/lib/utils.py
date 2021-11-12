@@ -3013,7 +3013,7 @@ if __name__ == "__main__":
 
 __all__ = [
     "SharedBase", "ClosureBase", "UtilsBase",
-    "TimerBase", "FileReaderBase", "CSVBase",
+    "TimerBase", "FileReaderBase", "CSVReaderBase",
     "LogBase", "CommandsBase", "PicklesBase",
     "ConcurencyBase", "QueuesBase", "EventsBase",
     "ActionsBase", "SocketsBase", "HooksBase",

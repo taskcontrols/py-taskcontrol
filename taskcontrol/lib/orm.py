@@ -190,4 +190,4 @@ if __name__ == "__main__":
     orm = SQLORMBase()
 
 
-__all__ = ["SQLORM"]
+__all__ = ["SQLORMBase"]

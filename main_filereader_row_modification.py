@@ -1,4 +1,4 @@
-from taskcontrol.lib.utils import FileReaderBase
+from taskcontrol import FileReaderBase
 
 fr = FileReaderBase()
 
