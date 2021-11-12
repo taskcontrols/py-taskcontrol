@@ -87,7 +87,7 @@
 
 
 
-from taskcontrol.workflow import workflow, Tasks
+from taskcontrol import workflow, Tasks
 
 sparrow = Tasks()
 
