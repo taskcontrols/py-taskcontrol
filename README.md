@@ -124,8 +124,8 @@ def middleware_trees(ctx, result, *args, **kwargs):
     ],
     log=False
 )
-def taskone(ctx, result, *args):
-    print("Running my task function: taskone", *args)
+def taskone(ctx, result, *args, **kwargs):
+    print("Running my task function: taskone", args, kwargs)
 
 
 # Run single task
