@@ -23,7 +23,7 @@ from pathlib import Path
 from collections import defaultdict
 from xml.etree import cElementTree as ET
 from collections import deque
-from typing import Dict, List
+from typing import Dict, List, Type
 from threading import Thread, Lock
 from multiprocessing import Process, Array, Value, Manager
 from queue import Queue, LifoQueue, PriorityQueue, SimpleQueue
@@ -152,104 +152,143 @@ class SharedBase(ClosureBase):
         return SharedBase.__instance
 
 
+class RThreadBase(Thread):
+    def __init__(self, group=None, target=None, name=None,
+                 args=(), kwargs={}, daemon=False, Verbose=None):
+        Thread.__init__(self, group=group, target=target,
+                        name=name, args=args, kwargs=kwargs, daemon=daemon)
+        self._return = None
+
+    def run(self):
+        if self._target is not None:
+            self._return = self._target(*self._args, **self._kwargs)
+
+    def join(self, *args):
+        Thread.join(self, *args, timeout=-1)
+        return self._return
+
+
+class RProcessBase(Process):
+    # https://analyticsindiamag.com/run-python-code-in-parallel-using-multiprocessing/
+    def __init__(self, group=None, target=None, name=None,
+                 args=(), kwargs={}, daemon=False, Verbose=None):
+        Process.__init__(self, group=group, target=target,
+                         name=name, args=args, kwargs=kwargs, daemon=daemon)
+        self._return = None
+
+    def run(self):
+        if self._target is not None:
+            self._return = self._target(*self._args, **self._kwargs)
+
+    def join(self, *args):
+        Process.join(self, *args, timeout=-1)
+        return self._return
+
+
 class ConcurencyBase():
     """
+    Description of ConcurencyBase
+
+    Different ways of working with concurrency \n
+    Includes: \n
+        # @staticmethod Futures: ConcurencyBase.futures
+        # @staticmethod Asyncio: ConcurencyBase.asyncio
+        # @staticmethod Thread: ConcurencyBase.thread
+        # @staticmethod Process: ConcurencyBase.process
 
     """
-    # consider adding concurrency futures
     @staticmethod
     def futures():
         """
+        Description of thread
+        asynchronous & 
+
+        Args:
 
         """
         pass
 
-    # consider adding asyncio lib
     @staticmethod
     def asyncio():
         """
+        Description of asyncio
+        asynchronous & 
+
+        Args:
 
         """
         pass
 
-    # asynchronous, needs_join
     @staticmethod
-    def mthread(function, options):
+    def thread(group=None, target=None, name=None, args=(), kwargs={}, daemon=False, function=lambda x: x, options={}):
         """
-        Description of mthread
+        Description of thread
+        asynchronous & 
+        needs 'join':True or False
 
         Args:
-            self (undefined):
-            function (undefined):
-            options (undefined):
+            name: str (default is None)
+            group: (default is None)
+            target: type(function)
+            args: list / tuple (default is blank tuple () )
+            kwargs: dict (default is blank dict {}) 
+            daemon: bool (default is False) 
+            function: type(function)
+            options {lock, share_value, needs_return, join, terminate, Verbose}: dict
 
         """
-        # options structure
-        # # args, kwargs, needs_join, share_value
+        if type(options) != dict:
+            raise TypeError
 
-        # Test this instance of MThreading for lock and other params
-
-        result = None
-
-        if type(options) == dict:
-            # # Keeping following to be user responsibility
-            # # Check addition later
-            # share_value = options.get("share_value")
-            pass
-
-        daemon = options.get("daemon", True)
-        if type(daemon) != bool:
-            daemon = True
-
-        args = options.get("args", [])
-        if type(args) != list:
-            args = []
-
-        kwargs = options.get("kwargs", {})
-        if type(kwargs) != dict:
-            kwargs = {}
-
-        need_lock = options.get("lock")
-        if need_lock:
+        if options.get("lock"):
             lock = Lock()
-
-        if lock:
             args = (lock, *args)
         else:
             arg = (*args,)
 
-        worker = Thread(
-            target=function,
-            args=arg,
-            kwargs={"result": result, **kwargs}
+        # share_value = options.get("share_value")
+        if options.get("needs_return") in [True, None]:
+            T = RThreadBase
+        else:
+            T = Thread
+
+        worker = T(
+            group=group, target=target,
+            name=name, target=function,
+            args=(*arg,), kwargs={**kwargs},
+            daemon=daemon
         )
         worker.setDaemon(daemon)
         worker.start()
 
-        if options.get("needs_join") or options.get("needs_join") == None:
-            worker.join()
+        result = None
+        if options.get("join") in [True, None]:
+            result = worker.join()
+        if options.get("terminate") in [True, None]:
+            worker.terminate()
             return {"result": result}
-
         return {"worker": worker, "result": result}
 
-    # asynchronous, needs_join
     @staticmethod
-    def mprocess(function, options):
+    def process(group=None, target=None, name=None, args=(), kwargs={}, daemon=False, function=lambda x: x, options={}):
         """
-        Description of mprocess
+        Description of process
+        asynchronous & 
+        needs 'join':True or False
 
         Args:
-            self (undefined):
-            function (undefined):
-            options (undefined):
+            name: str (default is None)
+            group: (default is None)
+            target: type(function)
+            args: list / tuple (default is blank tuple () )
+            kwargs: dict (default is blank dict {}) 
+            daemon: bool (default is False) 
+            function: type(function)
+            options {lock, share_value, needs_return, join, terminate, Verbose}: dict
 
         """
-        # options structure
-        # args, kwargs, needs_join
-
-        # Test this instance of MProcessing for lock and other params
-
-        result = None
+        if type(options) != dict:
+            raise TypeError
 
         # # Check need here. Create a common one outside by user
         # # Consider if you want to handle this (Negative currently)
@@ -258,69 +297,54 @@ class ConcurencyBase():
         # # share_manager, share_pool, share_connection, share_event,
         # # share_semaphore, share_bounded_semaphore
 
-        if type(options) == dict:
-            # # Keeping following to be user responsibility
-            # # Check addition later
-            # share_value = options.get("share_value")
-            # share_array = options.get("share_array")
-
-            args = options.get("args", [])
-            if type(args) != list:
-                args = []
-
-            kwargs = options.get("kwargs", {})
-            if type(kwargs) != dict:
-                kwargs = {}
-
-        daemon = options.get("daemon", True)
-        if type(daemon) != bool:
-            daemon = True
-
+        # share_value = options.get("share_value")
+        # share_array = options.get("share_array")
         worker = Process(
-            target=function,
-            args=(*args,),
-            kwargs={**kwargs}
+            group=group, target=target,
+            name=name, target=function,
+            args=(*args,), kwargs={**kwargs},
+            daemon=daemon
+        )
+
+        if options.get("lock"):
+            lock = Lock()
+            args = (lock, *args)
+        else:
+            arg = (*args,)
+
+        # share_value = options.get("share_value")
+        if options.get("needs_return") in [True, None]:
+            P = RProcessBase
+        else:
+            P = Process
+
+        worker = P(
+            group=group, target=target,
+            name=name, target=function,
+            args=(*arg,), kwargs={**kwargs},
+            daemon=daemon
         )
         worker.daemon = daemon
         worker.start()
 
-        if options.get("needs_join") or options.get("needs_join") == None:
+        result = None
+        if options.get("join") in [True, None]:
             result = worker.join()
-            return {"result": result}
-
-        terminate = options.get("terminate")
-        if type(terminate) != bool or terminate == True:
+        if options.get("terminate") in [True, None]:
             worker.terminate()
             return {"result": result}
-
         return {"worker": worker, "result": result}
 
-    # asynchronous, needs_join
     @staticmethod
-    def mprocess_pool(function, options):
+    def process_pool(function, options):
         """
+        Description of process_pool
+        asynchronous and needs 'join':True or False
+
+        Args:
 
         """
         pass
-
-    @staticmethod
-    def concurrency(function, options):
-        """
-
-        """
-        mode = options.get("mode")
-        if mode:
-            if mode == "process":
-                return ConcurencyBase.mprocess(function, options)
-            if mode == "process_pool":
-                return ConcurencyBase.mprocess_pool(function, options)
-            if mode == "thread":
-                return ConcurencyBase.mthread(function, options)
-            if mode == "async":
-                return ConcurencyBase.asyncio(function, options)
-            if mode == "futures":
-                return ConcurencyBase.futures(function, options)
-        return None
 
 
 class UtilsBase(ObjectModificationInterface):
@@ -335,6 +359,12 @@ class UtilsBase(ObjectModificationInterface):
         self.validate_delete = validations.get("delete", ["name"])
         self.getter, self.setter, self.deleter = ClosureBase().class_closure(
             **kwargs)
+
+    def string_to_json(self, string):
+        return json.loads(string)
+
+    def json_to_string(self, json):
+        return str(json)
 
     def append_update_dict(self, main_object, update_object):
         """
@@ -1161,6 +1191,7 @@ class CommandsBase(UtilsBase, CommandsInterface):
         stdin_options: [Options object that will be requested for Stdin] \n
         mode: str("subprocess_call", "subprocess_popen", "subprocess_run", "os_popen") [Default: "subprocess_call"] \n
         args: list(args to be passed to command) \n
+        https://www.cyberciti.biz/faq/python-run-external-command-and-get-output/ \n
         """
         try:
             if self.exists(command):
@@ -1557,7 +1588,7 @@ class SocketsBase(UtilsBase, SocketsInterface):
             "nonblocking_timeout": socket_object.get("nonblocking_timeout", 1),
             "server": socket_object.get("server", None)
         })
-        if self.validate_object(socket_object, values=self.validations.get("create")):
+        if self.validate_object(socket_object, values=self.v.get("create")):
             srv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             socket_object.update({"server": srv})
             return self.create(socket_object)
@@ -1608,7 +1639,7 @@ class SocketsBase(UtilsBase, SocketsInterface):
                 except Exception as e:
                     raise e
             else:
-                def accept_wrapper(sock):
+                def accept_wrapper(sock, self):
                     try:
                         # Should be ready to read
                         conn, addr = sock.accept()  # Should be ready to read
@@ -1624,7 +1655,7 @@ class SocketsBase(UtilsBase, SocketsInterface):
                         # raise e
                         return False
 
-                def service_connection(key, mask, sel):
+                def service_connection(key, mask, sel, self):
                     try:
                         sock = key.fileobj
                         data = key.data
@@ -1656,13 +1687,13 @@ class SocketsBase(UtilsBase, SocketsInterface):
                         events = sel.select(timeout=None)
                         for key, mask in events:
                             if key.data is None:
-                                accept_wrapper(key.fileobj)
+                                accept_wrapper(key.fileobj, self)
                             else:
                                 if srv.get("handler", None):
                                     srv.get("handler")(
-                                        key, mask, socket_object)
+                                        key, mask, socket_object, self)
                                 else:
-                                    service_connection(key, mask)
+                                    service_connection(key, mask, sel, self)
                 except KeyboardInterrupt:
                     print("Caught keyboard interrupt, exiting")
                     sys.exit(0)
@@ -1683,7 +1714,7 @@ class SocketsBase(UtilsBase, SocketsInterface):
         sel = selectors.DefaultSelector()
         blocking = socket_object.get("blocking", False)
 
-        def service_connection(key, mask):
+        def service_connection(key, mask, self):
             sock = key.fileobj
             data = key.data
             if mask & selectors.EVENT_READ:
@@ -1726,7 +1757,7 @@ class SocketsBase(UtilsBase, SocketsInterface):
                 events = sel.select(timeout=1)
                 if events:
                     for key, mask in events:
-                        service_connection(key, mask)
+                        service_connection(key, mask, self)
                 # Check for a socket being monitored to continue.
                 if not sel.get_map():
                     break
@@ -1762,7 +1793,7 @@ class SocketsBase(UtilsBase, SocketsInterface):
             #         s.get("server").close()
             #     except Exception:
             #         pass
-            sobject.get("handler")(messages, sobject)
+            sobject.get("handler")(messages, sobject, self)
             try:
                 sobject.get("server").close()
             except Exception:
@@ -1832,7 +1863,8 @@ class EPubSubBase(UtilsBase, PubSubsInterface):
         self.type = types
         self.agent = agent
         super().__init__("pubsubs", validations={
-            "add": self.v, "create": self.v, "update": self.v, "delete": ["name"]}, pubsubs=pubsubs)
+            "add": self.v, "fetch": self.v, "create": self.v, "update": self.v, "delete": ["name"]
+        }, pubsubs=pubsubs)
         # self.__schedular()
 
     def __process(self, name):
@@ -1892,47 +1924,56 @@ class EPubSubBase(UtilsBase, PubSubsInterface):
         message_object: 
         """
         o = self.fetch(message_object.get("queue_name"))
-        h = o.get("handler")
-        if not h:
-            def h(message_object): return print(
-                "Message Object ", message_object)
         e = o.get("events").get(message_object.get("event_name"))
         if e and e.get("listening"):
             try:
                 r = []
+                srv_h = o.get("handler")
+                if srv_h:
+                    print("Trying PubSub Handler Run: ", srv_h.__name__)
+                    r0 = self.__handler(message_object, srv_h)
+                    # Get all subscriber handlers
+                    if not r0:
+                        print("Return Error R0 ", srv_h.__name__)
+                    r.append(r0)
                 # Get Handler
-                srv_hdlr = e.get("handler", None)
+                srv_hdlr = e.get("handler")
                 # Invoke Handler
                 if srv_hdlr:
                     print("Trying PubSub Main Handler Run: ", srv_hdlr.__name__)
                     r1 = self.__handler(message_object, srv_hdlr)
                     # Get all subscriber handlers
                     if not r1:
-                        print("Return Error R1")
+                        print("Return Error R1 ", srv_hdlr.__name__)
                     r.append(r1)
                 srv_pb = e.get("publishers").get(
                     message_object.get("publisher"))
                 if srv_pb:
-                    srv_pbh = srv_pb.get("handler", None)
+                    srv_pbh = srv_pb.get("publisher", None)
                     # Invoke Publisher
                     if srv_pbh:
                         print("Trying PubSub Publisher Handler Run: ",
                               srv_pbh.__name__)
                         r2 = self.__handler(message_object, srv_pbh)
                         if not r2:
-                            print("Return Error R2")
+                            print("Return Error R2 ", srv_pbh.__name__)
                         r.append(r2)
                 sbs = e.get("subscribers")
                 if sbs:
                     r3 = []
                     for sb in sbs:
                         # Get individual handler
-                        srv_sb_hdlr = sbs[sb].get("subscriber", h)
-                        # Invoke all handlers
-                        print("Trying PubSub Subscriber Handler Run: ",
-                              srv_sb_hdlr.__name__)
-                        tmpres = self.__handler(message_object, srv_sb_hdlr)
-                        r3.append(tmpres)
+                        srv_sb_hdlr = sbs[sb].get("subscriber", None)
+                        if srv_sb_hdlr:
+                            # Invoke all handlers
+                            print("Trying PubSub Subscriber Handler Run: ",
+                                  srv_sb_hdlr.__name__)
+                            tmpres = self.__handler(
+                                message_object, srv_sb_hdlr)
+                            if not tmpres:
+                                print("Return Error tmpres ",
+                                      srv_sb_hdlr.__name__)
+                            r3.append(tmpres)
                     r.append(r3)
                 return r
             except Exception as e:
@@ -2032,6 +2073,7 @@ class EPubSubBase(UtilsBase, PubSubsInterface):
             [
                 event_object.get("name"), {
                     "name": event_object.get("name"),
+                    "handler": event_object.get("handler", lambda x: True),
                     "listening": event_object.get("listening", False),
                     "publishers": event_object.get("publishers", {}),
                     "subscribers": event_object.get("subscribers", {})
@@ -2139,8 +2181,9 @@ class IPubSubBase(EPubSubBase):
         self.agent = agent
         # Object Structure: Publishers, Subscribers, PubSubServer
         self.server = socketsbase()
-        super().__init__("pubsubs", validations={
+        super().__init__(validations={
             "add": self.v,
+            "fetch": self.v,
             "create": self.v,
             "update": self.v,
             "delete": ["name"]
@@ -2149,7 +2192,7 @@ class IPubSubBase(EPubSubBase):
 
     def __process(self, name):
         """
-        name: name
+        name: 
         """
         o = self.fetch(name)
         h = o.get("handler")
@@ -2191,8 +2234,8 @@ class IPubSubBase(EPubSubBase):
 
     def __handler(self, task, handler):
         """
-        task: "task" object
-        handler: Function
+        task:
+        handler:
         """
         r = handler(task)
         if r:
@@ -2204,47 +2247,56 @@ class IPubSubBase(EPubSubBase):
         message_object: 
         """
         o = self.fetch(message_object.get("queue_name"))
-        h = o.get("handler", None)
-        if not h:
-            def h(message_object): return print(
-                "Message Object ", message_object)
         e = o.get("events").get(message_object.get("event_name"))
         if e and e.get("listening"):
             try:
                 r = []
+                srv_h = o.get("handler")
+                if srv_h:
+                    print("Trying PubSub Handler Run: ", srv_h.__name__)
+                    r0 = self.__handler(message_object, srv_h)
+                    # Get all subscriber handlers
+                    if not r0:
+                        print("Return Error R0 ", srv_h.__name__)
+                    r.append(r0)
                 # Get Handler
-                srv_hdlr = e.get("handler", None)
-                # Invoke Main Handler
+                srv_hdlr = e.get("handler")
+                # Invoke Handler
                 if srv_hdlr:
                     print("Trying PubSub Main Handler Run: ", srv_hdlr.__name__)
                     r1 = self.__handler(message_object, srv_hdlr)
+                    # Get all subscriber handlers
                     if not r1:
-                        print("Return Error R1")
+                        print("Return Error R1 ", srv_hdlr.__name__)
                     r.append(r1)
                 srv_pb = e.get("publishers").get(
                     message_object.get("publisher"))
                 if srv_pb:
-                    srv_pbh = srv_pb.get("handler", None)
-                    # Invoke Publisher Handler
+                    srv_pbh = srv_pb.get("publisher", None)
+                    # Invoke Publisher
                     if srv_pbh:
                         print("Trying PubSub Publisher Handler Run: ",
                               srv_pbh.__name__)
                         r2 = self.__handler(message_object, srv_pbh)
                         if not r2:
-                            print("Return Error R2")
+                            print("Return Error R2 ", srv_pbh.__name__)
                         r.append(r2)
-                # Get all Subscriber Handlers
                 sbs = e.get("subscribers")
                 if sbs:
                     r3 = []
                     for sb in sbs:
-                        # Get Individual Handler
-                        srv_sb_hdlr = sbs[sb].get("subscriber", h)
-                        # Invoke all Subscribers Handlers
-                        print("Trying PubSub Subscriber Handler Run: ",
-                              srv_sb_hdlr.__name__)
-                        tmpres = self.__handler(message_object, srv_sb_hdlr)
-                        r3.append(tmpres)
+                        # Get individual handler
+                        srv_sb_hdlr = sbs[sb].get("subscriber", None)
+                        if srv_sb_hdlr:
+                            # Invoke all handlers
+                            print("Trying PubSub Subscriber Handler Run: ",
+                                  srv_sb_hdlr.__name__)
+                            tmpres = self.__handler(
+                                message_object, srv_sb_hdlr)
+                            if not tmpres:
+                                print("Return Error tmpres ",
+                                      srv_sb_hdlr.__name__)
+                            r3.append(tmpres)
                     r.append(r3)
                 return r
             except Exception as e:
@@ -2253,14 +2305,15 @@ class IPubSubBase(EPubSubBase):
 
     def __receive_handler(self, message_object):
         """
-        message_object: 
+
         """
         pass
 
     def pubsub_create(self, config):
         """
-        config: "name", "handler", "queue", "maxsize", "queue_type", "processing_flag", "batch_interval", "events"
+
         """
+        # "name", "handler", "queue", "maxsize", "queue_type", "processing_flag", "batch_interval", "events"
         if not "name" in config:
             raise TypeError
 
@@ -2281,35 +2334,23 @@ class IPubSubBase(EPubSubBase):
             "maxsize": config.get("maxsize"),
             "queue_type": config.get("queue_type")
         })
-
-        s = self.server.create(
-            dict([[config.get("name"), {
-                "publishers": config.get("publishers", {}),
-                "server": config.get("server", {}),
-                "subscribers": config.get("subscribers", {})
-            }]])
-        )
-
-        if u and s:
+        if u:
             o["queue"] = u
             if self.validate_object(o, self.validate_create):
                 return self.create(o)
-        return u and s
+        return False
 
     def pubsub_delete(self, pubsub_name):
         """
-        pubsub_name: name
+
         """
-        p = self.delete(pubsub_name)
-        s = False
-        if p:
-            s = self.server.delete(pubsub_name)
-        return p and s
+        return self.delete(pubsub_name)
 
     def queue_create(self, config):
         """
-        config: "name", "queue", "maxsize", "queue_type"
+
         """
+        # "name", "queue", "maxsize", "queue_type"
         qConfig = copy.copy(config)
         tmpQ = QueuesBase()
         qConfig["queue"] = tmpQ.new(qConfig)
@@ -2320,331 +2361,123 @@ class IPubSubBase(EPubSubBase):
 
     def queue_delete(self, pubsub_name):
         """
-        pubsub_name: name
+        publisher_object: name, event_name, publisher
         """
         o = self.fetch(pubsub_name)
         o["queue"] = None
         return self.update(o)
 
-    def register_publisher(self, pubsub_name, publisher_object, publisher_server={}):
+    def register_publisher(self, pubsub_name, publisher_object):
         """
-        pubsub_name: name
-        publisher_object: name, event_name, publisher (function)
-        publisher_server: type(socket_object)
+        publisher_object: name, event_name, publisher
         """
-        try:
-            p = self.fetch(pubsub_name)
-            p["events"][publisher_object.get("event_name")]["publishers"].update(dict([
-                [publisher_object.get("name"), publisher_object]
-            ]))
+        p = self.fetch(pubsub_name)
+        p["events"][publisher_object.get("event_name")]["publishers"].update(dict([
+            [publisher_object.get("name"), publisher_object]
+        ]))
+        return self.update(p)
 
-            s = self.server.fetch(pubsub_name)
-            if not s and publisher_server:
-                u = self.server.create(publisher_server)
-                if not u:
-                    raise TypeError
-                s = self.server.fetch(pubsub_name)
-
-            spb_object = {
-                "action": "register_publisher",
-                "message_object": copy.copy(publisher_object),
-                "source": s
-            }
-
-            if self.agent == "publisher" or self.agent == "subscriber":
-                # if send event to server
-                # if not registered, then register
-                sh = s.socket_connect({
-                    "name": s.get("name")
-                }, str(spb_object))
-            elif self.agent == "server":
-                # if send event to publisher and subscribers, if present
-                # if not registered, then register
-                spb = s.get("publishers").get(publisher_object.get("name"))
-                if spb:
-                    sh = spb.socket_connect({
-                        "name": s.get("name")
-                    }, str(spb_object))
-            else:
-                pass
-            if p:
-                return self.update(p)
-            return False
-        except Exception as e:
-            return e
-
-    def register_subscriber(self, pubsub_name, subscriber_object, subscriber_socket={}):
+    def register_subscriber(self, pubsub_name, subscriber_object):
         """
-        pubsub_name: name
-        subscriber_object: name, event_name, subscriber (function)
-        subscriber_socket: type(socket_object)
+        subscriber_object: name, event_name, subscriber
         """
-        try:
-            sc = self.fetch(pubsub_name)
-            sc["events"][subscriber_object.get("event_name")]["subscribers"].update(dict([
-                [subscriber_object.get("name"), subscriber_object]
-            ]))
-            s = self.server.fetch(pubsub_name)
-            if not s and subscriber_socket:
-                u = self.server.create(subscriber_socket)
-                if not u:
-                    raise TypeError
-                s = self.server.fetch(pubsub_name)
+        s = self.fetch(pubsub_name)
+        s["events"][subscriber_object.get("event_name")]["subscribers"].update(dict([
+            [subscriber_object.get("name"), subscriber_object]
+        ]))
+        return self.update(s)
 
-            ssb_object = {
-                "action": "register_subscriber",
-                "message_object": copy.copy(subscriber_socket),
-                "source": s
-            }
-
-            if self.agent == "publisher" or self.agent == "subscriber":
-                # if send event to server
-                # if not registered, then register
-                sh = s.socket_connect({
-                    "name": s.get("name")
-                }, str(ssb_object))
-            elif self.agent == "server":
-                # if send event to publisher and subscribers, if present
-                # if not registered, then register
-                ssb = s.get("subscribers").get(subscriber_socket.get("name"))
-                if ssb:
-                    sh = ssb.socket_connect({
-                        "name": s.get("name")
-                    }, str(ssb_object))
-            else:
-                pass
-            if sc:
-                return self.update(sc)
-            return False
-        except Exception as e:
-            return e
-
-    def register_event(self, pubsub_name, event_object, event_socket={}):
+    def register_event(self, pubsub_name, event_object):
         """
-        pubsub_name: name
-        event_object: name, listening, publishers [type(publisher_object)], subscribers [type(subscriber_object)]
-        event_socket: type(socket_object)
+        event_object: name, publishers, subscribers
         """
         e = self.fetch(pubsub_name)
         e["events"].update(dict([
             [
                 event_object.get("name"), {
                     "name": event_object.get("name"),
-                    "listening": False,
+                    "handler": event_object.get("handler", lambda x: True),
+                    "listening": event_object.get("listening", False),
                     "publishers": event_object.get("publishers", {}),
                     "subscribers": event_object.get("subscribers", {})
                 }
             ]
         ]))
-        s = self.server.fetch(pubsub_name)
-        if not s and event_socket:
-            u = self.server.create(event_socket)
-            if not u:
-                raise TypeError
-            s = self.server.fetch(pubsub_name)
-
-        se_object = {
-            "action": "register_event",
-            "message_object": copy.copy(event_socket),
-            "source": s
-        }
-
-        if self.agent == "publisher" or self.agent == "subscriber":
-            # if send event to server
-            # if not registered, then register
-            sh = s.socket_connect({
-                "name": s.get("name")
-            }, str(se_object))
-        elif self.agent == "server":
-            # if send event to publisher and subscribers, if present
-            # if not registered, then register
-            spb = s.get("publishers")
-            if spb:
-                sh = []
-                for t in spb:
-                    sh.append(spb.get(t.get("name")).socket_connect({
-                        "name": t.get("name")
-                    }, str(se_object)))
-            ssb = s.get("subscribers")
-            if ssb:
-                sh = []
-                for t in ssb:
-                    sh.append(ssb.get(t.get("name")).socket_connect({
-                        "name": t.get("name")
-                    }, str(se_object)))
-        else:
-            pass
-
-        if e:
-            return self.update(e)
-        return False
+        return self.update(e)
 
     def listen(self, pubsub_name, event_name):
         """
-        pubsub_name:
-        event_name: 
+
         """
         e = self.fetch(pubsub_name)
         e["events"].get(event_name).update({"listening": True})
-        s = self.server.fetch(pubsub_name)
-        se_object = {
-            "action": "listen",
-            "message_object": {"pubsub_name": pubsub_name, "event_name": event_name},
-            "source": s
-        }
-        sh = s.socket_connect({
-            "name": s.get("name")
-        }, str(se_object))
-        if e and sh:
-            return self.update(e)
-        return False
+
+        # def server_nonblocking_handler(key, mask, self):
+        #     sock = key.fileobj
+        #     data = key.data
+        #     print("Sending data ", str(data))
+        #     d = self.string_to_json(data)
+        #     print("Sending data ", d, d.__name__)
+        #
+        # srvconfig = {"name": "test", "protocol": socket.AF_INET, "streammode": socket.SOCK_STREAM,
+        #          "host": "127.0.0.1", "port": 9001, "numbers": 1, "handler": server_nonblocking_handler, "blocking": False}
+        #
+        # Socket = SocketsBase()
+        # s = Socket.socket_create(srvconfig)
+        # if s:
+        #     # sr = Socket.socket_listen(srvconfig.get("name"))
+        #     print("Server started ")
+        return self.update(e)
 
     def stop(self, pubsub_name, event_name):
         """
-        pubsub_name:
-        event_name: 
+
         """
         e = self.fetch(pubsub_name)
         e["events"].get(event_name).update({"listening": False})
-        s = self.server.fetch(pubsub_name)
-        se_object = {
-            "action": "stop",
-            "message_object": {"pubsub_name": pubsub_name, "event_name": event_name},
-            "source": s
-        }
-        sh = s.socket_connect({
-            "name": s.get("name")
-        }, str(se_object))
-        if e and sh:
-            return self.update(e)
-        return False
+        return self.update(e)
 
     def unregister_event(self, pubsub_name, event_object):
         """
-        pubsub_name:
-        event_object: 
+
         """
         try:
             p = self.fetch(pubsub_name)
-            s = self.server.fetch(pubsub_name)
-            se_object = {
-                "action": "register_event",
-                "message_object": {"pubsub_name": pubsub_name, "event_name": event_object.get("name")},
-                "source": s
-            }
-
-            if self.agent == "publisher" or self.agent == "subscriber":
-                # if send event to server
-                # if not registered, then register
-                sh = s.socket_connect({
-                    "name": s.get("name")
-                }, str(se_object))
-            elif self.agent == "server":
-                # if send event to publisher and subscribers, if present
-                # if not registered, then register
-                spb = s.get("publishers")
-                if spb:
-                    sh = []
-                    for t in spb:
-                        sh.append(spb.get(t.get("name")).socket_connect({
-                            "name": t.get("name")
-                        }, str(se_object)))
-                ssb = s.get("subscribers")
-                if ssb:
-                    sh = []
-                    for t in ssb:
-                        sh.append(ssb.get(t.get("name")).socket_connect({
-                            "name": t.get("name")
-                        }, str(se_object)))
-            else:
-                pass
             del p["events"][event_object.get("name")]
-            if p:
-                return self.update(p)
-            return False
+            return self.update(p)
         except Exception as e:
-            return e
+            pass
+        return False
 
     def unregister_publisher(self, pubsub_name, publisher_object):
         """
-        pubsub_name:
-        publisher_object: 
+
         """
         try:
             p = self.fetch(pubsub_name)
-            s = self.server.fetch(pubsub_name)
-            spb_object = {
-                "action": "register_publisher",
-                "message_object": {"pubsub_name": pubsub_name, "event_name": publisher_object.get("name")},
-                "source": s
-            }
-
-            if self.agent == "publisher" or self.agent == "subscriber":
-                # if send event to server
-                # if not registered, then register
-                sh = s.socket_connect({
-                    "name": s.get("name")
-                }, str(spb_object))
-            elif self.agent == "server":
-                # if send event to publisher and subscribers, if present
-                # if not registered, then register
-                spb = s.get("publishers").get(publisher_object.get("name"))
-                if spb:
-                    sh = spb.socket_connect({
-                        "name": s.get("name")
-                    }, str(spb_object))
-            else:
-                pass
             del p["events"][publisher_object.get(
                 "event_name")]["publishers"][publisher_object.get("name")]
-            if p:
-                return self.update(p)
-            return False
+            return self.update(p)
         except Exception as e:
             print("Exception during Publisher unregister ", e)
         return False
 
     def unregister_subscriber(self, pubsub_name, subscriber_object):
         """
-        pubsub_name:
-        subscriber_object: 
+
         """
         try:
             p = self.fetch(pubsub_name)
-            s = self.server.fetch(pubsub_name)
-            ssb_object = {
-                "action": "register_subscriber",
-                "message_object": {"pubsub_name": pubsub_name, "event_name": subscriber_object.get("name")},
-                "source": s
-            }
-
-            if self.agent == "publisher" or self.agent == "subscriber":
-                # if send event to server
-                # if not registered, then register
-                sh = s.socket_connect({
-                    "name": s.get("name")
-                }, str(ssb_object))
-            elif self.agent == "server":
-                # if send event to publisher and subscribers, if present
-                # if not registered, then register
-                ssb = s.get("subscribers").get(subscriber_object.get("name"))
-                if ssb:
-                    sh = ssb.socket_connect({
-                        "name": s.get("name")
-                    }, str(ssb_object))
-            else:
-                pass
             del p["events"][subscriber_object.get(
                 "event_name")]["subscribers"][subscriber_object.get("name")]
-            if p:
-                return self.update(p)
-            return False
+            return self.update(p)
         except Exception as e:
-            return e
+            pass
+        return False
 
     def send(self, message_object):
         """
-        message_object: 
+
         """
         # message_object: queue_name, event_name, publisher_name, message
         # Events (Publisher-Subscriber, WebHooks) Mode:
@@ -2654,7 +2487,7 @@ class IPubSubBase(EPubSubBase):
 
     def receive(self, message_object):
         """
-        message_object: 
+
         """
         # message_object: queue_name, event_name, publisher_name, message
         # server[forpublishers], subscribers
