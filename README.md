@@ -157,7 +157,7 @@ functools.reduce(red, ls)
 
 # [Todo](https://github.com/taskcontrols/py-taskcontrol/blob/master/.todo)
 
-* Check the [.todo]() file
+* Check the [.todo](https://github.com/taskcontrols/py-taskcontrol/blob/master/.todo) file
 <!-- 
 * e2e and Unit Tests - Add Tests (Structure of package created - to be cleaned after writing tests)
 * Allow creating and registering a set of task controls as a plugin
