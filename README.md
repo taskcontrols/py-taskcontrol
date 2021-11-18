@@ -25,10 +25,10 @@
 * Allows working with Logging, Sockets, Events, Queues, Publisher-Subscriber Architectures, etc
 * In-Development:
     * Allows support for / working with Concurrency
-    * Allows working with Commands & Scripts (Todo), SSH (Todo), etc
-    * Allows working with Files (Todo - normal, yaml, ini, and csv), Scheduling (Todo), etc
-    * Allows working with ORMs/Databases (Todo), Authentication (Todo)
-    * Allows working with best practices like Dependency Injection (Todo) within the library, tasks, and workflows
+    * Allows working with Commands & Scripts (T), SSH (T), etc
+    * Allows working with Scheduling (T), Files (T - normal, yaml, ini, and csv), etc
+    * Allows working with ORMs/Databases (T), Authentication (T)
+    * Allows working with best practices like Dependency Injection (T) within the library (including Tasks, Workflow)
     * Allows creating, registering, and using tasks/workflows as a plugin
     * Provided in and Allows plugins support for Python, Javascript languages
     * Planned Integrations with Subversioning, Build Tools, Deployment
