@@ -73,8 +73,7 @@
 
 ##### Requirements:
 
-* Python 3.x and above
-* Any OS supporting Python 3.x and above
+* Python 3.x and above (any OS)
 
 
 ##### Package Dependencies:
