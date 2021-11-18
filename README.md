@@ -157,21 +157,9 @@ Though it may support Python version 2.x. However, it has not been tested in 2.x
     
     Describes in short the usage of the package
 
-* [taskcontrol `workflow` decorator](https://github.com/taskcontrols/py-taskcontrol/blob/master/docs/users/workflow.md)
+* [taskcontrol wiki](https://github.com/taskcontrols/py-taskcontrol/wiki)
     
-    Describes how to use the taskcontrol workflow decorator in detail
-
-* [taskcontrol `workflow` decorator argument details](https://github.com/taskcontrols/py-taskcontrol/blob/master/docs/users/workflow-arguments.md)
-    
-    Describes in detail the arguments of workflow decorator
-
-* [taskcontrol `workflow` before / after argument for middleware declaration](https://github.com/taskcontrols/py-taskcontrol/blob/master/docs/users/workflow-middlewares.md)
-    
-    Describes creating, defining, and running middlewares
-
-* [taskcontrol `workflow` instance and shared tasks argument](https://github.com/taskcontrols/py-taskcontrol/blob/master/docs/users/workflow-instance-shared-tasks.md)
-    
-    Describes creating a instance (isolated task) and an shared task (available to all instances)
+    Documentation for taskcontrols
 
 
 ##### Crazy Hint:
