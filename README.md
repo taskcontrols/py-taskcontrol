@@ -157,12 +157,13 @@ functools.reduce(red, ls)
 
 # [Todo](https://github.com/taskcontrols/py-taskcontrol/blob/master/.todo)
 
-
+* Check the [.todo]() file
+<!-- 
 * e2e and Unit Tests - Add Tests (Structure of package created - to be cleaned after writing tests)
 * Allow creating and registering a set of task controls as a plugin
 * Allow working with commands (Todo), ssh (Todo), Files (Todo - normal, yaml, ini, json, and csv), Scheduling (Todo), Dependency Injection (Todo), ORMs/Databases (Todo), Authentication (Todo)
 * [C?] Consider Workflow/Tasks tracking system and Dashboard with its own progress and logging
-* [C?] Consider compatibility to Chef/CircleCI/Github/Other Automation tools, atleast as externally added plugins
+* [C?] Consider compatibility to Chef/CircleCI/Github/Other Automation tools, atleast as externally added plugins -->
 
 # Status
 
