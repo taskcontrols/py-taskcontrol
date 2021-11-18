@@ -23,14 +23,18 @@
 * Allows merging two instances of task controls with namespace clash handling
 * Run instance, shared, and mix of tasks (individual or all groups)
 * Allows working with Logging, Sockets, Events, Queues, Publisher-Subscriber Architectures, etc
-* In-Development: Allows support for / working with Concurrency
-* In-Development: Allows working with Commands & Scripts (Todo), SSH (Todo), etc
-* In-Development: Allows working with Files (Todo - normal, yaml, ini, and csv), Scheduling (Todo), etc
-* In-Development: Allows working with ORMs/Databases (Todo), Authentication (Todo), and best practices like Dependency Injection (Todo) within the library, tasks, and workflows
-* In-Development: Allows creating, registering, and using tasks/workflows as a plugin
-* In-Development: Provided in and Allows plugins support for Python, Javascript languages
-* In Development: Planned Integrations with Subversioning, Build Tools, Deployment, Data Transformation / Analytics Tooling, Testing, and Infrastructure Automation toolings
-* In Development: Monitoring Support
+* In-Development:
+    * Allows support for / working with Concurrency
+    * Allows working with Commands & Scripts (Todo), SSH (Todo), etc
+    * Allows working with Files (Todo - normal, yaml, ini, and csv), Scheduling (Todo), etc
+    * Allows working with ORMs/Databases (Todo), Authentication (Todo)
+    * Allows working with best practices like Dependency Injection (Todo) within the library, tasks, and workflows
+    * Allows creating, registering, and using tasks/workflows as a plugin
+    * Provided in and Allows plugins support for Python, Javascript languages
+    * Planned Integrations with Subversioning, Build Tools, Deployment
+    * Planned Integrations with Data Transformation / Analytics Tooling
+    * Planned Integrations with Testing, and Infrastructure Automation toolings
+    * Monitoring Support
 
 # Installation
 
