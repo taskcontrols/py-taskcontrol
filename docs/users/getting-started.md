@@ -71,7 +71,7 @@ def nesttree(ctx, result, *args, **kwargs):
     # Order of the task function when all tasks are run (Not functional yet)
     task_order=1,
     
-    # Task instance whic is used for creating tasks
+    # Task instance which is used for creating tasks
     # Tasks are isolated to this task instance
     task_instance=sparrow,
 
