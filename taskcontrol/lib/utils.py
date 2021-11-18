@@ -24,8 +24,10 @@ from collections import defaultdict
 from xml.etree import cElementTree as ET
 from collections import deque
 from typing import Dict, List, Type
-from threading import Thread, Lock
-from multiprocessing import Process, Array, Value, Manager
+import threading
+import multiprocessing
+# from threading import Thread, Lock
+# from multiprocessing import Process, Array, Value, Manager
 from queue import Queue, LifoQueue, PriorityQueue, SimpleQueue
 from taskcontrol.lib.interfaces import ObjectModificationInterface, SocketsInterface, HooksInterface, SSHInterface, FileReaderInterface, CSVReaderInterface
 from taskcontrol.lib.interfaces import QueuesInterface, EventsInterface, PubSubsInterface, TimeInterface, LogsInterface, CommandsInterface, PicklesInterface
@@ -152,11 +154,11 @@ class SharedBase(ClosureBase):
         return SharedBase.__instance
 
 
-class RThreadBase(Thread):
+class RThreadBase(threading.Thread):
     def __init__(self, group=None, target=None, name=None,
                  args=(), kwargs={}, daemon=False, Verbose=None):
-        Thread.__init__(self, group=group, target=target,
-                        name=name, args=args, kwargs=kwargs, daemon=daemon)
+        threading.Thread.__init__(self, group=group, target=target,
+                                  name=name, args=args, kwargs=kwargs, daemon=daemon)
         self._return = None
 
     def run(self):
@@ -164,16 +166,16 @@ class RThreadBase(Thread):
             self._return = self._target(*self._args, **self._kwargs)
 
     def join(self, *args):
-        Thread.join(self, *args, timeout=-1)
+        threading.Thread.join(self, *args, timeout=-1)
         return self._return
 
 
-class RProcessBase(Process):
+class RProcessBase(multiprocessing.Process):
     # https://analyticsindiamag.com/run-python-code-in-parallel-using-multiprocessing/
     def __init__(self, group=None, target=None, name=None,
                  args=(), kwargs={}, daemon=False, Verbose=None):
-        Process.__init__(self, group=group, target=target,
-                         name=name, args=args, kwargs=kwargs, daemon=daemon)
+        multiprocessing.Process.__init__(self, group=group, target=target,
+                                         name=name, args=args, kwargs=kwargs, daemon=daemon)
         self._return = None
 
     def run(self):
@@ -181,7 +183,7 @@ class RProcessBase(Process):
             self._return = self._target(*self._args, **self._kwargs)
 
     def join(self, *args):
-        Process.join(self, *args, timeout=-1)
+        multiprocessing.Process.join(self, *args, timeout=-1)
         return self._return
 
 
@@ -220,8 +222,9 @@ class ConcurencyBase():
         pass
 
     @staticmethod
-    def thread(group=None, target=None, name=None, args=(), kwargs={}, daemon=False, function=lambda x: x, options={}):
+    def thread(group=None, target=None, name=None, args=(), kwargs={}, daemon=False, options={}):
         """
+        https://analyticsindiamag.com/run-python-code-in-parallel-using-multiprocessing/
         Description of thread
         asynchronous & 
         needs 'join':True or False
@@ -233,44 +236,40 @@ class ConcurencyBase():
             args: list / tuple (default is blank tuple () )
             kwargs: dict (default is blank dict {}) 
             daemon: bool (default is False) 
-            function: type(function)
-            options {lock, share_value, needs_return, join, terminate, Verbose}: dict
+            options {lock, share_value, needs_return, join, Verbose}: dict
 
         """
         if type(options) != dict:
             raise TypeError
 
         if options.get("lock"):
-            lock = Lock()
-            args = (lock, *args)
+            lock = threading.Lock()
+            arg = (lock, *args)
         else:
             arg = (*args,)
 
         # share_value = options.get("share_value")
-        if options.get("needs_return") in [True, None]:
+        if options.get("needs_return", True):
             T = RThreadBase
         else:
-            T = Thread
+            T = threading.Thread
 
         worker = T(
             group=group, target=target,
-            name=name, target=function,
-            args=(*arg,), kwargs={**kwargs},
-            daemon=daemon
+            name=name, args=(*arg,),
+            kwargs={**kwargs}, daemon=daemon
         )
         worker.setDaemon(daemon)
         worker.start()
 
-        result = None
-        if options.get("join") in [True, None]:
+        print("[BUG] Print needed bug from python interpretor or Windows Hacked. Checking .join ",
+              options.get("join", True))
+        if options.get("join", True):
             result = worker.join()
-        if options.get("terminate") in [True, None]:
-            worker.terminate()
-            return {"result": result}
         return {"worker": worker, "result": result}
 
     @staticmethod
-    def process(group=None, target=None, name=None, args=(), kwargs={}, daemon=False, function=lambda x: x, options={}):
+    def process(group=None, target=None, name=None, args=(), kwargs={}, daemon=False, options={}):
         """
         Description of process
         asynchronous & 
@@ -283,7 +282,6 @@ class ConcurencyBase():
             args: list / tuple (default is blank tuple () )
             kwargs: dict (default is blank dict {}) 
             daemon: bool (default is False) 
-            function: type(function)
             options {lock, share_value, needs_return, join, terminate, Verbose}: dict
 
         """
@@ -299,40 +297,37 @@ class ConcurencyBase():
 
         # share_value = options.get("share_value")
         # share_array = options.get("share_array")
-        worker = Process(
-            group=group, target=target,
-            name=name, target=function,
-            args=(*args,), kwargs={**kwargs},
-            daemon=daemon
-        )
+        # worker = Process(
+        #     group=group, target=target,
+        #     name=name, args=(*args,),
+        #     kwargs={**kwargs}, daemon=daemon
+        # )
 
         if options.get("lock"):
-            lock = Lock()
-            args = (lock, *args)
+            lock = multiprocessing.Lock()
+            arg = (lock, *args)
         else:
             arg = (*args,)
 
         # share_value = options.get("share_value")
-        if options.get("needs_return") in [True, None]:
+        if options.get("needs_return", True):
             P = RProcessBase
         else:
-            P = Process
+            P = multiprocessing.Process
 
         worker = P(
             group=group, target=target,
-            name=name, target=function,
-            args=(*arg,), kwargs={**kwargs},
-            daemon=daemon
+            name=name, args=(*arg,),
+            kwargs={**kwargs}, daemon=daemon
         )
         worker.daemon = daemon
         worker.start()
 
-        result = None
-        if options.get("join") in [True, None]:
+        if options.get("join", True):
             result = worker.join()
-        if options.get("terminate") in [True, None]:
+
+        if options.get("terminate", True):
             worker.terminate()
-            return {"result": result}
         return {"worker": worker, "result": result}
 
     @staticmethod
@@ -340,6 +335,7 @@ class ConcurencyBase():
         """
         Description of process_pool
         asynchronous and needs 'join':True or False
+        https://stackoverflow.com/questions/8804830/python-multiprocessing-picklingerror-cant-pickle-type-function
 
         Args:
 
