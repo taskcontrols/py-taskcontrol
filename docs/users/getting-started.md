@@ -11,12 +11,18 @@
 * Allows merging two instances of task controls with namespace clash handling
 * Run instance, shared, and mix of tasks (individual or all groups)
 * Allows working with Logging, Sockets, Events, Queues, Publisher-Subscriber Architectures, etc
-* In-Development: Allows support for / working with Concurrency
-* In-Development: Allows working with Commands & Scripts (Todo), SSH (Todo), etc
-* In-Development: Allows working with Files (Todo - normal, yaml, ini, and csv), Scheduling (Todo), etc
-* In-Development: Allows working with ORMs/Databases (Todo), Authentication (Todo), and best practices like Dependency Injection (Todo) within the library, tasks, and workflows
-* In-Development: Allows creating, registering, and using tasks/workflows as a plugin
-* In-Development: Provided in and Allows plugins support for Python, Javascript languages
+* In-Development:
+    * Allows support for / working with Concurrency
+    * Allows working with Commands & Scripts (T), SSH (T), etc
+    * Allows working with Scheduling (T), Files (T - normal, yaml, ini, and csv), etc
+    * Allows working with ORMs/Databases (T), Authentication (T)
+    * Allows working with best practices like Dependency Injection (T) within the library (including Tasks, Workflow)
+    * Allows creating, registering, and using tasks/workflows as a plugin
+    * Planned Integrations with Subversioning, Build Tools, Deployment
+    * Planned Integrations with Data Transformation / Analytics Tooling
+    * Planned Integrations with Testing, and Infrastructure Automation toolings
+    * Monitoring Support
+    * Provided in and Allows plugins support for Python, Javascript languages
 
 <!-- # Feature Details -->
 
