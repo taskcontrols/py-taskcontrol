@@ -90,7 +90,6 @@
 ```python
 
 
-
 from taskcontrol import workflow, Tasks
 
 sparrow = Tasks()
@@ -98,48 +97,14 @@ sparrow = Tasks()
 def middleware_trees(ctx, result, *args, **kwargs):
     print("Running my Middleware Function: middleware_trees - task items", args, kwargs)
 
-
 @workflow(
     name="taskname",
-    task_order=1,
-    task_instance=sparrow,
-    shared=False,
-    args=[1, 2],
-    kwargs={},
-    before=[
-        {
-            "function": middleware_trees,
-            "args": [11, 12],
-            "kwargs": {"d": "Before Testing message Middleware "},
-            "options": {"error": "next", "error_next_value": ""}
-        }
-    ],
-    after=[
-        {
-            "function": middleware_trees,
-            "args": [13, 14],
-            "kwargs": {"d": "After Middleware Testing message"},
-            "options": {
-                "error": "error_handler",
-                "error_next_value": "value",
-                "error_handler": lambda err, value: (err, None)
-            }
-        }
-    ],
-    log=False
+    task_instance=sparrow
 )
 def taskone(ctx, result, *args, **kwargs):
     print("Running my task function: taskone", args, kwargs)
 
-
-# Run single task
-sparrow.run(tasks="taskname")
-
-
-# Run all tasks
 sparrow.run()
-# sparrow.run(tasks=["1"])
-# sparrow.run(tasks=["taskname", ..., "anothertask"])
 
 
 ```
@@ -157,7 +122,7 @@ Though it may support Python version 2.x. However, it has not been tested in 2.x
     
     Describes in short the usage of the package
 
-* [taskcontrol wiki](https://github.com/taskcontrols/py-taskcontrol/wiki)
+* [taskcontrols wiki](https://github.com/taskcontrols/py-taskcontrol/wiki)
     
     Documentation for taskcontrols
 

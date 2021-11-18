@@ -116,7 +116,15 @@ def nesttree(ctx, result, *args, **kwargs):
 def taskone(ctx, result, *args, **kwargs):
     print("Running my task function: taskone", args, kwargs)
 
+
+# Run single task
 sparrow.run(tasks="taskname")
+
+
+# Run all tasks
+sparrow.run()
+# sparrow.run(tasks=["1"])
+# sparrow.run(tasks=["taskname", ..., "anothertask", "shared:runsharedinstancetask"])
 
 
 ```
