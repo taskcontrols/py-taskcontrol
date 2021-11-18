@@ -94,9 +94,6 @@ from taskcontrol import workflow, Tasks
 
 sparrow = Tasks()
 
-def middleware_trees(ctx, result, *args, **kwargs):
-    print("Running my Middleware Function: middleware_trees - task items", args, kwargs)
-
 @workflow(
     name="taskname",
     task_instance=sparrow
