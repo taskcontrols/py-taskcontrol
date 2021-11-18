@@ -78,7 +78,7 @@
 
 ##### Package Dependencies:
 
-* None
+* dependency-injector (planned todo)
 
 
 ##### Quick Demo:
