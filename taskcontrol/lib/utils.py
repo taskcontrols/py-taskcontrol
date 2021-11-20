@@ -356,6 +356,7 @@ class ConcurencyBase():
             raise TypeError
 
         mode = options.get("mode", "apply")
+
         def init(l):
             global lock
             lock = l
