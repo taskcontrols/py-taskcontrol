@@ -244,9 +244,11 @@ class ConcurencyBase():
 
         if options.get("lock"):
             lock = threading.Lock()
-            arg = (lock, *args)
+            arg = (*args,)
+            kwarg = {**kwargs, "lock": lock}
         else:
             arg = (*args,)
+            kwarg = {**kwargs}
 
         # share_value = options.get("share_value")
         if options.get("needs_return", True):
@@ -257,7 +259,7 @@ class ConcurencyBase():
         worker = T(
             group=group, target=target,
             name=name, args=(*arg,),
-            kwargs={**kwargs}, daemon=daemon
+            kwargs={**kwarg}, daemon=daemon
         )
         worker.setDaemon(daemon)
         worker.start()
@@ -304,10 +306,12 @@ class ConcurencyBase():
         # )
 
         if options.get("lock"):
-            lock = multiprocessing.Lock()
-            arg = (lock, *args)
+            lock = threading.Lock()
+            arg = (*args,)
+            kwarg = {**kwargs, "lock": lock}
         else:
             arg = (*args,)
+            kwarg = {**kwargs}
 
         # share_value = options.get("share_value")
         if options.get("needs_return", True):
@@ -318,29 +322,88 @@ class ConcurencyBase():
         worker = P(
             group=group, target=target,
             name=name, args=(*arg,),
-            kwargs={**kwargs}, daemon=daemon
+            kwargs={**kwarg}, daemon=daemon
         )
         worker.daemon = daemon
         worker.start()
 
-        if options.get("join", True):
-            result = worker.join()
-
+        result = {}
         if options.get("terminate", True):
             worker.terminate()
-        return {"worker": worker, "result": result}
+        else:
+            result.update({"worker": worker})
+        if options.get("join", True):
+            res = worker.join()
+            result.update({"result": res})
+        return result
 
     @staticmethod
-    def process_pool(function, options):
+    def process_pool(function, args=(), kwargs={}, options={}):
         """
         Description of process_pool
         asynchronous and needs 'join':True or False
         https://stackoverflow.com/questions/8804830/python-multiprocessing-picklingerror-cant-pickle-type-function
 
         Args:
-
+        args: list (default is ())
+        kwargs: dict (default is {})
+        options {processes, mode}: dict
+            * default processes is 1
+            * mode options: apply, apply_async, map, map_async, manager
+            * default mode is `apply`
         """
-        pass
+        if type(options) != dict:
+            raise TypeError
+
+        mode = options.get("mode", "apply")
+        def init(l):
+            global lock
+            lock = l
+
+        if options.get("lock"):
+            lock = multiprocessing.Lock()
+            pool = multiprocessing.Pool(processes=options.get(
+                "processes", 1), initializer=init, initargs=(lock,))
+        else:
+            pool = multiprocessing.Pool(processes=options.get("processes", 1))
+
+        callback = options.get("processes", lambda *args,
+                               **kwargs: print("Callback run ", args, kwargs))
+        error_callback = options.get(
+            "processes", lambda *args, **kwargs: print("Error Callback run ", args, kwargs))
+
+        # https://towardsdatascience.com/parallelism-with-python-part-1-196f0458ca14
+        if mode == "apply":
+            # apply(func[, args[, kwds]]) (This is implemented as apply_async( ... ).get())
+            result = [pool.apply(function, args=a, kwds=kwargs)
+                      for a in args]
+        elif mode == "map":
+            # map(func, iterable[, chunksize]) (This is implemented as map_async( ... ).get())
+            result = [pool.map(
+                function, iterable=args, chunksize=options.get("chunksize", 1)
+            )]
+        elif mode == "apply_async":
+            # TODO: apply_async(func[, args[, kwds[, callback[, error_callback]]]])
+            output = [pool.apply_async(
+                function, args=[a], kwds=kwargs,
+                callback=callback, error_callback=error_callback
+            ) for a in args]
+            result = [p.get() for p in output]
+        elif mode == "map_async":
+            # TODO: map_async(func, iterable[, chunksize[, callback[, error_callback]]])
+            result = [pool.map_async(
+                function, iterable=args,
+                callback=callback, error_callback=error_callback
+            ).get()]
+        elif mode == "manager":
+            # manager = multiprocessing.Manager()
+            # res = manager.dict()
+            result = []
+
+        if options.get("join"):
+            pool.close()
+            pool.join()
+        return result
 
 
 class UtilsBase(ObjectModificationInterface):
