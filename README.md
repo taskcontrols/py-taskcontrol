@@ -83,7 +83,7 @@
 
 ##### Quick Demo:
 
-[General demo example - main_workflow.py](https://github.com/taskcontrols/py-taskcontrol/blob/master/main_workflow.py)
+[General demo example - main_workflow.py](https://github.com/taskcontrols/py-taskcontrol/blob/master/demos/main_workflow.py)
 
 
 ```python
