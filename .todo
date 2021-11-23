@@ -4,6 +4,7 @@
 * [D] Allow running instance, common, and both tasks 
 * [D] Add merging two workflow instances 
 * [W] Add ordered workflow runs 
+* [W] Add workflow name clashes inside an instance
 * [W] Add plugin system (No config addition)
 * [W] Add pre-created workflow script list/array
 * [W] Add cleaner logging system for monitoring with 
