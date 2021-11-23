@@ -59,24 +59,24 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginBase, UtilsBase):
         """middleware_task_ Structure: name, function, args, kwargs, options"""
         """workflow_kwargs: name, task_instance, task_order, shared, args, kwargs, before, after, log"""
 
-    def clean_args(self, function_, function_args, function_kwargs):
+    # def clean_args(self, function_, function_args, function_kwargs):
 
-        arg_list = function_.__code__.co_varnames
-        fnc_kwa_keys = function_kwargs.keys()
+    #     arg_list = function_.__code__.co_varnames
+    #     fnc_kwa_keys = function_kwargs.keys()
 
-        len_tpl, len_fnc_args, len_fnc_kwa_keys = len(arg_list), len(
-            function_args), len(fnc_kwa_keys)
+    #     len_tpl, len_fnc_args, len_fnc_kwa_keys = len(arg_list), len(
+    #         function_args), len(fnc_kwa_keys)
 
-        if arg_list[1] == "result" and arg_list[0] == "ctx":
-            if (len_tpl == len_fnc_args + len_fnc_kwa_keys + 2):
-                for k in fnc_kwa_keys:
-                    if not arg_list.index(k) >= len_fnc_args:
-                        return False
-                return True
-        else:
-            raise TypeError(
-                "First two args of a function/middleware has to be ctx and result")
-        return False
+    #     if arg_list[1] == "result" and arg_list[0] == "ctx":
+    #         if (len_tpl == len_fnc_args + len_fnc_kwa_keys + 2):
+    #             for k in fnc_kwa_keys:
+    #                 if not arg_list.index(k) >= len_fnc_args:
+    #                     return False
+    #             return True
+    #     else:
+    #         raise TypeError(
+    #             "First two args of a function/middleware has to be ctx and result")
+    #     return False
 
     def merge_tasks(self, tasks, inst, shared=None, clash_prefix=None):
         pass
@@ -104,7 +104,13 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginBase, UtilsBase):
         result_ = result.get("result", [])
 
         try:
-            r_ = fn(self.getter("ctx", 1), result_, *args, **kwargs)
+            if not hasattr(args, '__call__'):
+                r_ = fn(self.getter("ctx", 1), result_, *args, **kwargs)
+            else:
+                if not hasattr(kwargs, '__call__'):
+                    r_ = fn(self.getter("ctx", 1), result_, args(), **kwargs)
+                else:
+                    r_ = fn(self.getter("ctx", 1), result_, args(), kwargs())
         except (Exception) as e:
             if log_:
                 print("reducer: Running error for middleware")
@@ -188,6 +194,7 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginBase, UtilsBase):
         else:
             raise ValueError("Error: run_task: Definition of after")
 
+        print("\nINSTANTIATING TASK NAMED: ", task.get("name"), "\n")
         tasks_to_run_in_task = [None, *before, fn_task, *after]
 
         import functools
@@ -198,7 +205,7 @@ class Tasks(WorkflowBase):
 
     def __init__(self):
         super().__init__()
-    
+
     def plugin_register(self, plugin_instance):
         pass
 
@@ -262,9 +269,10 @@ def workflow(*work_args, **work_kwargs):
         def add_tasks(*function_args, **function_kwargs):
             if not work_kwargs.get("name"):
                 raise TypeError("Name Argument or task instance not provided")
-            if type(work_kwargs.get("args")) != list:
+
+            if type(work_kwargs.get("args")) != list or type(work_kwargs.get("args")) != tuple or not hasattr(work_kwargs.get("args"), '__call__'):
                 work_kwargs["args"] = work_kwargs.get("args", [])
-            if type(work_kwargs.get("kwargs")) != dict:
+            if type(work_kwargs.get("kwargs")) != dict or not hasattr(work_kwargs.get("kwargs"), '__call__'):
                 work_kwargs["kwargs"] = work_kwargs.get("kwargs", {})
 
             t = work_kwargs["task_instance"]
@@ -277,8 +285,9 @@ def workflow(*work_args, **work_kwargs):
                 "log": work_kwargs.get("log", False)
             })
 
-            args_normal = t.clean_args(function_, work_kwargs["args"], work_kwargs["kwargs"])
-            if args_normal == None or args_normal == False:
+            # args_normal = t.clean_args(
+            #         function_, work_kwargs["args"], work_kwargs["kwargs"])
+            if (True if (len(function_.__code__.co_varnames) == 4) else False) in [None, False]:
                 raise Exception("Args and Kwargs do not match")
 
             # function_, args, kwargs, work_args, work_kwargs

@@ -12,10 +12,13 @@ sparrow = Tasks()
 
 
 def nesttree(ctx, result, *args, **kwargs):
-    print("Running my Middleware Function: nesttree - task items", args, kwargs)
+    print("Running my Middleware Function: nesttree \n")
+    print("Running nesttree - task items [ctx, result]: ", ctx, result)
+    print("Running nesttree - task items [args, kwargs]: ", args, kwargs, "\n")
     return args, kwargs
 
 
+# Example one for decorator usage
 @workflow(
     name="taskname",
     task_order=1,
@@ -110,7 +113,7 @@ def tasktwo(ctx, result, *args, **kwargs):
     return args, kwargs
 
 
-# Example two for decorator usage
+# Example three for decorator usage
 @workflow(name="taskthree",
           task_instance=sparrow,
           task_order=2,
@@ -131,6 +134,59 @@ def taskthree(ctx, result, *args, **kwargs):
     print("Running my task function: taskthree")
     return args, kwargs
 
+
+# Example four for decorator usage
+def argrunner():
+    print("Running argument generator function argrunner")
+    return 1, 2
+
+def kwargrunner():
+    print("Running key argument generator function kwargrunner")
+    return {}
+
+
+# Example four for decorator usage with arg as function
+@workflow(name="taskfour",
+          task_instance=sparrow,
+          task_order=4,
+          shared=False,
+          args=argrunner,
+          kwargs={},
+          # Declare before/after as an list or an object (if single middleware function)
+          before={
+              "function": nesttree,
+              "args": argrunner,
+              "kwargs": {"d": "Before Testing message"},
+              "options": {"error": "next", "error_next_value": ""}
+          },
+          after=[],
+          log=False
+          )
+def taskthree(ctx, result, *args, **kwargs):
+    print("Running my task function: taskfour")
+    return args, kwargs
+
+
+# Example five for decorator usage with kwarg as function
+@workflow(name="taskfive",
+          task_instance=sparrow,
+          task_order=4,
+          shared=False,
+          args=[1, 2],
+          kwargs=kwargrunner,
+          # Declare before/after as an list or an object (if single middleware function)
+          before={
+              "function": nesttree,
+              "args": [21, 22],
+              "kwargs": kwargrunner,
+              "options": {"error": "next", "error_next_value": ""}
+          },
+          after=[],
+          log=False
+          )
+def taskfive(ctx, result, *args, **kwargs):
+    print("Running my task function: taskfive")
+    return args, kwargs
 
 # print(sparrow.get_tasks(task="tasktwo"))
 
@@ -183,10 +239,14 @@ print("\nrun_8 0 Tasks [1S]", run_8)
 run_9 = sparrow.run()
 print("\nrun_9 0 Tasks ", run_9)
 
+# # # Single Workflow Tasks run with argument as function
+run_10 = sparrow.run(tasks="taskfour")
 
-# TODO:
-# Run Precreated Tasks
-# run_9 = sparrow.run(tasks="workflow:workflowname")
-# print("\nrun_9", run_9)
+# # # Single Workflow Tasks run with keyword argument as function
+run_11 = sparrow.run(tasks="taskfive")
 
+# # TODO:
+# # Run Precreated Tasks
+# # run_10 = sparrow.run(tasks="workflow:workflowname")
+# # print("\nrun_10", run_10)
 
