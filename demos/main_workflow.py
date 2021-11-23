@@ -193,53 +193,53 @@ def taskfive(ctx, result, *args, **kwargs):
 # INVOKE BELOW WHERE NEEDED
 # Example: Within some other function
 
-# run_0 = sparrow.run(tasks=["taskname", "tasktwo"])
-# print("\nrun_0 2 Tasks [2I]", run_0)
+run_0 = sparrow.run(tasks=["taskname", "tasktwo"])
+print("\nrun_0 2 Tasks [2I]", run_0)
 
 
-# # # Run all tasks
-# # # Multiple Workflow Tasks run
-# run_1 = sparrow.run(tasks=["1"])
-# print("\nrun_1 2 Tasks [2I]", run_1)
-# run_2 = sparrow.run(tasks="1")
-# print("\nrun_2 2 Tasks [2I]", run_2)
+# # Run all tasks
+# # Multiple Workflow Tasks run
+run_1 = sparrow.run(tasks=["1"])
+print("\nrun_1 2 Tasks [2I]", run_1)
+run_2 = sparrow.run(tasks="1")
+print("\nrun_2 2 Tasks [2I]", run_2)
 
 
-# # # Run all shared tasks
-# # # Shared Workflow Tasks run
-# run_3 = sparrow.run(tasks=["shared:1"])
-# print("\nrun_3 0 Tasks [1S]", run_3)
-# run_4 = sparrow.run(tasks="shared:1")
-# print("\nrun_4 0 Tasks [1S]", run_4)
+# # Run all shared tasks
+# # Shared Workflow Tasks run
+run_3 = sparrow.run(tasks=["shared:1"])
+print("\nrun_3 0 Tasks [1S]", run_3)
+run_4 = sparrow.run(tasks="shared:1")
+print("\nrun_4 0 Tasks [1S]", run_4)
 
 
-# # # Multiple Workflow Tasks run
-# run_5 = sparrow.run(tasks=["shared:taskname", "tasktwo"])
-# # print("sparrow.ctx ", sparrow.ctx)
-# print("\nrun_5 1 Tasks [1S,1I]", run_5)
+# # Multiple Workflow Tasks run
+run_5 = sparrow.run(tasks=["shared:taskname", "tasktwo"])
+# print("sparrow.ctx ", sparrow.ctx)
+print("\nrun_5 1 Tasks [1S,1I]", run_5)
 
 
-# # # Run Tasks run with mix of shared
-# # # Multiple Workflow Tasks run with mix of shared
-# run_6 = sparrow.run(tasks=["taskname", "tasktwo", "shared:taskname"])
-# print("\nrun_6 2 Tasks [2I,1S]", run_6)
+# # Run Tasks run with mix of shared
+# # Multiple Workflow Tasks run with mix of shared
+run_6 = sparrow.run(tasks=["taskname", "tasktwo", "shared:taskname"])
+print("\nrun_6 2 Tasks [2I,1S]", run_6)
 
 
-# # # Single Workflow Tasks run
-# run_7 = sparrow.run(tasks="shared:taskname")
-# print("\nrun_7 0 Tasks [1S]", run_7)
+# # Single Workflow Tasks run
+run_7 = sparrow.run(tasks="shared:taskname")
+print("\nrun_7 0 Tasks [1S]", run_7)
 
 
-# # # Single Workflow Tasks run
-# run_8 = sparrow.run(tasks="shared:taskthree")
-# print("\nrun_8 0 Tasks [1S]", run_8)
+# # Single Workflow Tasks run
+run_8 = sparrow.run(tasks="shared:taskthree")
+print("\nrun_8 0 Tasks [1S]", run_8)
 
 
-# # # # Single Workflow Tasks run with argument as function
-# run_10 = sparrow.run(tasks="taskfour")
+# # # Single Workflow Tasks run with argument as function
+run_10 = sparrow.run(tasks="taskfour")
 
-# # # # Single Workflow Tasks run with keyword argument as function
-# run_11 = sparrow.run(tasks="taskfive")
+# # # Single Workflow Tasks run with keyword argument as function
+run_11 = sparrow.run(tasks="taskfive")
 
 
 # # Single Workflow Tasks run. Run all tasks excluding shared
