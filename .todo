@@ -15,7 +15,7 @@
 * [T] Run PreCreated Tasks
 * [T] Check impact of self on closure (Low priority)
 * [T] Logging & Concurrency for logger (Concurrency can be added)
-
+ 
 ** [W] Add Tests
         Add all variations of tests for 
                 - decorator, args, and kwargs
