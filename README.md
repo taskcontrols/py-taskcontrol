@@ -96,11 +96,11 @@ from taskcontrol import Workflow, task
 sparrow = Workflow()
 
 @task(
-    name="taskname",
+    name="migrate",
     task_instance=sparrow
 )
-def taskone(ctx, result, *args, **kwargs):
-    print("Running my task function: taskone", args, kwargs)
+def fly(ctx, result, *args, **kwargs):
+    print("Running my task function: fly", args, kwargs)
     return args, kwargs
 
 result = sparrow.start()
