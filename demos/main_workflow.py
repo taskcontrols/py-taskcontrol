@@ -2,7 +2,7 @@
 from taskcontrol import task, Workflow
 
 # for package
-# from taskcontrol import workflow, Workflow
+# from taskcontrol import task, Workflow
 
 
 # Instance of tasks and apis object
