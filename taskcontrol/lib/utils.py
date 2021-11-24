@@ -1230,7 +1230,8 @@ class CommandsBase(UtilsBase, CommandsInterface):
         commands: type(command) -> name, command, options(options:arguments) \n
         """
         self.v = ["name", "command", "options", "workflow_kwargs"]
-        super().__init__(object_name, validations=self.v, commands=commands)
+        super().__init__(object_name, validations={
+            "add": self.v, "create": self.v, "update": self.v, "delete": ["name"]}, commands=commands)
 
     def exists(self, command):
         """
@@ -1244,8 +1245,9 @@ class CommandsBase(UtilsBase, CommandsInterface):
         """
         return shutil.which(command)
 
-    def execute(self, command, mode="subprocess_call", stdin_mode=False, stdin_options={}, *args):
+    def execute(self, command, mode="subprocess_popen", stdin_mode=False, options={}, *args):
         """
+        TODO: REWRITE
         command: command [Default: "commands"] \n
         stdin_mode: True/False [Default: False. Get input value.] \n
         stdin_options: [Options object that will be requested for Stdin] \n
@@ -1255,33 +1257,114 @@ class CommandsBase(UtilsBase, CommandsInterface):
         """
         try:
             if self.exists(command):
+                if mode == "subprocess_call" or mode == "subprocess_popen" or mode == "subprocess_run":
+                    stdin = options.get("stdin", subprocess.PIPE)
+                    stdout = options.get("stdout", subprocess.PIPE)
+                    stderr = options.get("stderr", subprocess.PIPE)
+                    universal_newlines = options.get(
+                        "universal_newlines", True)
+                    bufsize = options.get("bufsize", 0)
+                    preexec_fn = options.get("preexec_fn", None)
+                    close_fds = options.get("close_fds", False)
+                    shell = options.get("shell", True)
+                    cwd = options.get("cwd", None)
+                    env = options.get("env", None)
+                    startupinfo = options.get("startupinfo", None)
+                    creationflags = options.get("creationflags", 0)
+                    restore_signals = options.get("restore_signals", True)
+                    start_new_session = options.get("start_new_session", True)
+                    pass_fds = options.get("pass_fds", None)
+                    timeout = options.get("timeout", 60)
+                    executable = options.get("executable", None)
+                    text = options.get("text", True)
+                    group = options.get("group", "")
+                    extra_groups = options.get("extra_groups", "")
+                    user = options.get("user", "")
+                    umask = options.get("umask", "")
+                    capture_output = options.get("capture_output", True)
+                    check = options.get("check", False)
+                    encoding = options.get("encoding", None)
+                    errors = options.get("errors", None)
+                    input = options.get("stdin_input", None)
+
                 if mode == "subprocess_call":
-                    r = subprocess.call([command, *args])
-                elif mode == "subprocess_popen":
-                    stream = subprocess.Popen([command, *args],
-                                              stdin=subprocess.PIPE,
-                                              stdout=subprocess.PIPE,
-                                              stderr=subprocess.PIPE,
-                                              universal_newlines=True,
-                                              bufsize=0)
+                    proc = subprocess.call(
+                        [command, *options.get("args")],
+                        stdin=stdin,
+                        stdout=stdout, stderr=stderr,
+                        bufsize=bufsize, universal_newlines=universal_newlines,
+                        executable=executable, shell=shell,
+                        cwd=cwd, env=env
+
+                        # preexec_fn=preexec_fn, close_fds=close_fds,
+                        # startupinfo=startupinfo, creationflags=creationflags,
+                        # restore_signals=restore_signals, start_new_session=start_new_session,
+                        # pass_fds=pass_fds, timeout=timeout
+                    )
                     if stdin_mode:
-                        ssh.stdin.write("uname -a\n")
-                        ssh.stdin.close()
-                    r = stream.read()
+                        pass
+                elif mode == "subprocess_popen":
+                    # a = {
+                    #     "stdin": stdin, "stdout": stdout, "stderr": stderr,
+                    #     "universal_newlines": universal_newlines, "bufsize": bufsize,
+                    #     "executable": executable, "close_fds": close_fds, "shell": shell,
+                    #     "cwd": cwd, "env": env, "start_new_session": start_new_session, "text": text
+                    # }
+                    # l = ("unneeded_key")
+                    # # # POSIX ONLY
+                    # # preexec_fn=preexec_fn, restore_signals=restore_signals,
+                    # # # group=group, extra_groups=extra_groups,
+                    # # pass_fds=pass_fds, umask=umask,
+                    # # # user=user
+                    # # # WINDOWS ONLY
+                    # # startupinfo=startupinfo, creationflags=creationflags
+                    # list(map(a.__delitem__, filter(a.__contains__, l)))
+
+                    proc = subprocess.Popen(
+                        [command, *options.get("args")],
+                        stdin=stdin, stdout=stdout, stderr=stderr,
+                        universal_newlines=universal_newlines, bufsize=bufsize,
+                        executable=executable, close_fds=close_fds, shell=shell,
+                        cwd=cwd, env=env, start_new_session=start_new_session, text=text
+                    )
+                    if stdin_mode:
+                        # proc.stdin.write(input)
+                        c = proc.communicate(input=input)[0]
+                        proc.stdin.close()
                 elif mode == "subprocess_run":
-                    process = subprocess.run([command, *args],
-                                             stdin=subprocess.PIPE,
-                                             stdout=subprocess.PIPE,
-                                             stderr=subprocess.PIPE,
-                                             universal_newlines=True)
-                    r = process.stdout
+                    # a = {
+                    #     "stdin": stdin, "stdout": stdout, "stderr": stderr,
+                    #     "universal_newlines": universal_newlines,
+                    #     "input": input, "bufsize": bufsize, "executable": executable,
+                    #     "preexec_fn": preexec_fn, "close_fds": close_fds, "shell": shell,
+                    #     "cwd": cwd, "env": env, "startupinfo": startupinfo,
+                    #     "creationflags": creationflags, "restore_signals": restore_signals,
+                    #     "start_new_session": start_new_session, "pass_fds": pass_fds,
+                    #     "capture_output": capture_output, "check": check, "encoding": encoding,
+                    #     "errors": errors, "text": text, "timeout": timeout
+                    # }
+                    if not input:
+                        proc = subprocess.run(
+                            [command, *options.get("args")],
+                            stdin=stdin, stdout=stdout, stderr=stderr,
+                            universal_newlines=universal_newlines,
+                            bufsize=bufsize, timeout=timeout
+                        )
+                        if stdin_mode:
+                            pass
+                    else:
+                        proc = subprocess.run(
+                            [command, *options.get("args")],
+                            stdout=stdout, stderr=stderr,
+                            universal_newlines=universal_newlines,
+                            input=input, bufsize=bufsize, timeout=timeout
+                        )
                 elif mode == "os_popen":
-                    stream = os.popen([command, *args])
-                    r = stream.read()
+                    proc = os.popen([command, *args])
                 elif mode == "os_popen":
-                    stream = os.popen([command, *args])
-                    r = stream.read()
-                return r
+                    proc = os.popen([command, *args])
+                    # r = proc.read()
+                return proc
             raise Exception
         except Exception:
             return False
