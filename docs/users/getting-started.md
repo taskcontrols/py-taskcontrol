@@ -10,7 +10,8 @@
 * Access read-only contexts and results of middlewares/tasks
 * Allows merging two instances of task controls with namespace clash handling
 * Run instance, shared, and mix of tasks (individual or all groups)
-* Allows working with Logging, Sockets, Events, Queues, Publisher-Subscriber Architectures, etc
+* Allows working with Logging, Sockets, Events, Queues, etc
+* Allows working with Publisher-Subscriber Architectures, Client-Agent Architectures, Webhooks
 * In-Development:
     * Allows support for / working with Concurrency
     * Allows working with Commands & Scripts (T), SSH (T), etc
@@ -29,8 +30,8 @@
 
 # Demo Usage
 
-* Import Taskcontrol and task object from workflow module in taskcontrol package
-* Create a Task instance
+* Import `Taskflow` and `task` object from `lib` module in taskcontrol package
+* Create a Task instance using the `Taskflow` class
 * Create a task definition using `@task` decorator
     - Usage: 
         - `@task(name, task_order, task_instance, args, kwargs, before, after, shared, log)`
