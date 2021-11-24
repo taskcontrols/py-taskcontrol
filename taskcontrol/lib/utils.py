@@ -1249,8 +1249,10 @@ class CommandsBase(UtilsBase, CommandsInterface):
         """
         TODO: REWRITE \n
         #### COMMON:  ARGUMENTS \n
-        `command`: type(str) or type(list)  [Default: "commands"] \n
-        `stdin_mode`: type(bool) { True, False } [Default: False. Get input value.] \n
+        `command`: type(str) or type(list) \n
+        Any command \n
+        `stdin_mode`: type(bool) \n
+        { True, False } [Default: False. Get input value.] \n
         `mode`: type(str) \n
         { subprocess_call, subprocess_popen, subprocess_run, os_popen } [Default: "subprocess_call"] \n
         #### SPECIFIC `option` KEYS for: \n
