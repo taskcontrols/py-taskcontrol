@@ -1273,7 +1273,9 @@ class CommandsBase(UtilsBase, CommandsInterface):
         pass_fds, capture_output, check, encoding, errors, text, timeout
         } \n\n
         for `os_popen`: \n
-
+        {
+        `args`
+        }
         """
         # https://www.cyberciti.biz/faq/python-run-external-command-and-get-output/
         try:
