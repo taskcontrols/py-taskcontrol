@@ -1252,9 +1252,9 @@ class CommandsBase(UtilsBase, CommandsInterface):
         `command`: type(str) or type(list) \n
         Any command \n
         `stdin_mode`: type(bool) \n
-        { True, False } [Default: False. Get input value.] \n
+        { True, False } [Default: `False`. Get input value.] \n
         `mode`: type(str) \n
-        { subprocess_call, subprocess_popen, subprocess_run, os_popen } [Default: "subprocess_call"] \n
+        { subprocess_call, subprocess_popen, subprocess_run, os_popen } [Default: `subprocess_call`] \n
         #### SPECIFIC `option` KEYS for: \n
         `options`: type(dict) [`options` object that will be requested for `subprocess` or `os` functions] \n
         for `subprocess_call`: \n
