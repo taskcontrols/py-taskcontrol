@@ -1247,7 +1247,7 @@ class CommandsBase(UtilsBase, CommandsInterface):
 
     def execute(self, command, mode="subprocess_popen", stdin_mode=False, options={}, *args):
         """
-        TODO: REWRITE \n
+        TODO: ReWrite for inclusion of all arguments \n
         #### COMMON:  ARGUMENTS \n
         `command`: type(str) or type(list) \n
         Any command \n
