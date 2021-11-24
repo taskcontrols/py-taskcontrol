@@ -2,8 +2,7 @@
 from taskcontrol.lib import CommandsBase
 
 c = CommandsBase()
-# cmd = ["ssh", "-i", "./developers.pem", "user@192.168.0.1"]
-cmd = ["ssh", "-i", "C:/Users/gb/Documents/220921-070721/developers.pem", "admin@ec2-3-109-0-135.ap-south-1.compute.amazonaws.com"]
+cmd = ["ssh", "-i", "./developers.pem", "user@192.168.0.1"]
 command = cmd.pop(0)
 
 
