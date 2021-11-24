@@ -1,14 +1,14 @@
 # for git development repo
-from taskcontrol import workflow, Tasks
+from taskcontrol import task, Workflow
 
 # for package
-# from taskcontrol import workflow, Tasks
+# from taskcontrol import workflow, Workflow
 
 
 # Instance of tasks and apis object
 # Every instance will store it own list of tasks
 #       with their before/after middlewares
-sparrow = Tasks()
+sparrow = Workflow()
 
 
 def nesttree(ctx, result, *args, **kwargs):
@@ -19,7 +19,7 @@ def nesttree(ctx, result, *args, **kwargs):
 
 
 # Example one for decorator usage
-@workflow(
+@task(
     name="taskone",
     task_order=1,
     task_instance=sparrow,
@@ -92,7 +92,7 @@ def taskone(ctx, result, *args, **kwargs):
 
 
 # Example two for decorator usage
-@workflow(name="tasktwo",
+@task(name="tasktwo",
           task_instance=sparrow,
           task_order=2,
           shared=False,
@@ -114,7 +114,7 @@ def tasktwo(ctx, result, *args, **kwargs):
 
 
 # Example three for decorator usage
-@workflow(name="taskthree",
+@task(name="taskthree",
           task_instance=sparrow,
           task_order=3,
           shared=True,
@@ -146,7 +146,7 @@ def kwargrunner():
 
 
 # Example four for decorator usage with arg as function
-@workflow(name="taskfour",
+@task(name="taskfour",
           task_instance=sparrow,
           task_order=4,
           shared=False,
@@ -168,7 +168,7 @@ def taskthree(ctx, result, *args, **kwargs):
 
 
 # Example five for decorator usage with kwarg as function
-@workflow(name="taskfive",
+@task(name="taskfive",
           task_instance=sparrow,
           task_order=4,
           shared=False,

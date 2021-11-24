@@ -89,11 +89,11 @@
 ```python
 
 
-from taskcontrol import workflow, Tasks
+from taskcontrol import Workflow, task
 
-sparrow = Tasks()
+sparrow = Workflow()
 
-@workflow(
+@task(
     name="taskname",
     task_instance=sparrow
 )

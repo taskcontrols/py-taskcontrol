@@ -201,7 +201,7 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginBase, UtilsBase):
         return functools.reduce(self.reducer, tasks_to_run_in_task)
 
 
-class Tasks(WorkflowBase):
+class Workflow(WorkflowBase):
 
     def __init__(self):
         super().__init__()
@@ -262,7 +262,7 @@ class Tasks(WorkflowBase):
         return result
 
 
-def workflow(*work_args, **work_kwargs):
+def task(*work_args, **work_kwargs):
 
     def get_decorator(function_):
 
@@ -318,5 +318,5 @@ __all__ = [
     "TimerBase", "LogBase", "CommandsBase", "EventsBase", "QueuesBase", "SocketsBase",
     "HooksBase", "ActionsBase", "EPubSubBase", "IPubSubBase", "WebhooksBase",
     "SSHBase", "AuthenticationBase", "SQLORMBase", "PluginBase", "WorkflowBase",
-    "Tasks", "workflow"
+    "Workflow", "task"
 ]

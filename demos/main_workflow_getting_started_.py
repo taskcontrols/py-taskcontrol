@@ -1,12 +1,14 @@
-from taskcontrol import workflow, Tasks
+from taskcontrol import task, Workflow
 
-sparrow = Tasks()
+sparrow = Workflow()
 
-@workflow(
+@task(
     name="taskname",
     task_instance=sparrow
 )
 def taskone(ctx, result, *args, **kwargs):
     print("Running my task function: taskone", args, kwargs)
+    return args, kwargs
 
-sparrow.run()
+result = sparrow.run()
+print(result)
