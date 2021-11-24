@@ -1257,26 +1257,23 @@ class CommandsBase(UtilsBase, CommandsInterface):
         { subprocess_call, subprocess_popen, subprocess_run, os_popen } [Default: `subprocess_call`] \n
         #### SPECIFIC `option` KEYS for: \n
         `options`: type(dict) [`options` object that will be requested for `subprocess` or `os` functions] \n
-        for `subprocess_call`: \n
-        {
-        `args`, stdin, stdout, stderr, bufsize, universal_newlines, executable, shell, cwd, env,
+        for `subprocess_call` which calls the `subprocess.call()` function: \n
+        { `args`:command options, stdin, stdout, stderr, bufsize, universal_newlines, executable, shell, cwd, env,
         preexec_fn, close_fds, startupinfo, creationflags, restore_signals, start_new_session, pass_fds, timeout
         } \n
-        for `subprocess_popen`: \n
-        { `args`, stdin, stdout, stderr, universal_newlines, bufsize, executable, close_fds, shell, cwd, env, start_new_session, text }
+        for `subprocess_popen` which calls the `subprocess.Popen()` function: \n
+        { `args`:command options, stdin, stdout, stderr, universal_newlines, bufsize, executable, close_fds, shell, cwd, env, start_new_session, text }
          * `POSIX ONLY`
         { preexec_fn, restore_signals, group, extra_groups, pass_fds, umask, user }
          * `WINDOWS ONLY`
         { startupinfo, creationflags } \n\n
-        for `subprocess_run`: \n
-        {
-        `args`, stdin, stdout, stderr, universal_newlines, input, bufsize, executable, preexec_fn, close_fds,
+        for `subprocess_run` which calls the `subprocess.run()` function: \n
+        { `args`:command options, stdin, stdout, stderr, universal_newlines, input, bufsize, executable, preexec_fn, close_fds,
         shell, cwd, env, startupinfo, creationflags, restore_signals, start_new_session,
         pass_fds, capture_output, check, encoding, errors, text, timeout
         } \n\n
-        for `os_popen`: \n
-        {
-        `args`
+        for `os_popen` which calls the `os.popen()` function: \n
+        { `args`:command options
         }
         """
         # https://www.cyberciti.biz/faq/python-run-external-command-and-get-output/
