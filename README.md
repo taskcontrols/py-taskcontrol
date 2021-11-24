@@ -115,7 +115,6 @@ print(result)
 Though it may support Python version 2.x. However, it has not been tested in 2.x. The Syntax and Features of the library supports Python version 2.x. Use at your own risk.
 
 
-
 # Wiki
 
 * [Getting started](https://github.com/taskcontrols/py-taskcontrol/blob/master/docs/users/getting-started.md)
