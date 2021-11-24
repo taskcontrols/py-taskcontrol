@@ -98,7 +98,8 @@ def taskone(ctx, result, *args, **kwargs):
           shared=False,
           args=[1, 2],
           kwargs={},
-          # Declare before/after as an list or an object (if single middleware function)
+          # Declare before/after as an list of definition object or an 
+          #     # individual dict definition object (if single middleware function)
           before={
               "function": nesttree,
               "args": [21, 22],
@@ -120,7 +121,8 @@ def tasktwo(ctx, result, *args, **kwargs):
           shared=True,
           args=[1, 2],
           kwargs={},
-          # Declare before/after as an list or an object (if single middleware function)
+          # Declare before/after as an list of definition object or an 
+          #     # individual dict definition object (if single middleware function)
           before={
               "function": nesttree,
               "args": [21, 22],
@@ -150,11 +152,12 @@ def kwargrunner():
           task_instance=sparrow,
           task_order=4,
           shared=False,
+          # Declare args as a list or a tuple or a function
           args=argrunner,
           kwargs={},
-          # Declare before/after as an list or an object (if single middleware function)
           before={
               "function": nesttree,
+              # Declare args as a list or a tuple or a function
               "args": argrunner,
               "kwargs": {"d": "Before Testing message"},
               "options": {"error": "next", "error_next_value": ""}
@@ -173,11 +176,12 @@ def taskthree(ctx, result, *args, **kwargs):
           task_order=4,
           shared=False,
           args=[1, 2],
+          # Declare kwargs as a dict object or a function
           kwargs=kwargrunner,
-          # Declare before/after as an list or an object (if single middleware function)
           before={
               "function": nesttree,
               "args": [21, 22],
+              # Declare kwargs as a dict object or a function
               "kwargs": kwargrunner,
               "options": {"error": "next", "error_next_value": ""}
           },
