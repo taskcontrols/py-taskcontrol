@@ -1247,14 +1247,35 @@ class CommandsBase(UtilsBase, CommandsInterface):
 
     def execute(self, command, mode="subprocess_popen", stdin_mode=False, options={}, *args):
         """
-        TODO: REWRITE
-        command: command [Default: "commands"] \n
-        stdin_mode: True/False [Default: False. Get input value.] \n
-        stdin_options: [Options object that will be requested for Stdin] \n
-        mode: str("subprocess_call", "subprocess_popen", "subprocess_run", "os_popen") [Default: "subprocess_call"] \n
-        args: list(args to be passed to command) \n
-        https://www.cyberciti.biz/faq/python-run-external-command-and-get-output/ \n
+        TODO: REWRITE \n
+        #### COMMON:  ARGUMENTS \n
+        `command`: type(str) or type(list)  [Default: "commands"] \n
+        `stdin_mode`: type(bool) { True, False } [Default: False. Get input value.] \n
+        `mode`: type(str) \n
+        { subprocess_call, subprocess_popen, subprocess_run, os_popen } [Default: "subprocess_call"] \n
+        #### SPECIFIC `option` KEYS for: \n
+        `options`: type(dict) [`options` object that will be requested for `subprocess` or `os` functions] \n
+        for `subprocess_call`: \n
+        {
+        `args`, stdin, stdout, stderr, bufsize, universal_newlines, executable, shell, cwd, env,
+        preexec_fn, close_fds, startupinfo, creationflags, restore_signals, start_new_session, pass_fds, timeout
+        } \n
+        for `subprocess_popen`: \n
+        { `args`, stdin, stdout, stderr, universal_newlines, bufsize, executable, close_fds, shell, cwd, env, start_new_session, text }
+         * `POSIX ONLY`
+        { preexec_fn, restore_signals, group, extra_groups, pass_fds, umask, user }
+         * `WINDOWS ONLY`
+        { startupinfo, creationflags } \n\n
+        for `subprocess_run`: \n
+        {
+        `args`, stdin, stdout, stderr, universal_newlines, input, bufsize, executable, preexec_fn, close_fds,
+        shell, cwd, env, startupinfo, creationflags, restore_signals, start_new_session,
+        pass_fds, capture_output, check, encoding, errors, text, timeout
+        } \n\n
+        for `os_popen`: \n
+
         """
+        # https://www.cyberciti.biz/faq/python-run-external-command-and-get-output/
         try:
             if self.exists(command):
                 if mode == "subprocess_call" or mode == "subprocess_popen" or mode == "subprocess_run":
