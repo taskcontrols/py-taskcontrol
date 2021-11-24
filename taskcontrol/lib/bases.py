@@ -243,7 +243,7 @@ class Workflow(WorkflowBase):
                 tsk = self.get_all_tasks(t, tsk)
         return tsk
 
-    def run(self, tasks=["1"]):
+    def start(self, tasks=["1"]):
         # "1", 1, "shared:1", "shared:task", "task"
         result = []
 

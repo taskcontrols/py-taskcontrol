@@ -41,7 +41,7 @@
     - `before` and `after` keys are optional and provides before and after middlewares for a specific task
     - `shared` key is optional and defaults to `False`
     - `log` key is optional and default to `False`
-* Run the task when needed using `.run(tasks=['taskname'])` invocation
+* Run the task when needed using `.start(tasks=['taskname'])` invocation
 
 
 ## Demo Usage
@@ -119,13 +119,13 @@ def taskone(ctx, result, *args, **kwargs):
 
 
 # Run single task
-sparrow.run(tasks="taskname")
+sparrow.start(tasks="taskname")
 
 
 # Run all tasks
-sparrow.run()
-# sparrow.run(tasks=["1"])
-# sparrow.run(tasks=["taskname", ..., "anothertask", "shared:runsharedinstancetask"])
+sparrow.start()
+# sparrow.start(tasks=["1"])
+# sparrow.start(tasks=["taskname", ..., "anothertask", "shared:runsharedinstancetask"])
 
 
 ```

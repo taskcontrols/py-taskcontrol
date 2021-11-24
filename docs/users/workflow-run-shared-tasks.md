@@ -120,32 +120,32 @@ def tasktwo(ctx, result, *args, **kwargs):
 
 
 # Multiple Taskcontrol Tasks run
-sparrow.run(tasks=["1"])
-sparrow.run(tasks="1")
+sparrow.start(tasks=["1"])
+sparrow.start(tasks="1")
 
 
 # Shared Taskcontrol Tasks run
-sparrow.run(tasks=["shared:1"])
-sparrow.run(tasks="shared:1")
+sparrow.start(tasks=["shared:1"])
+sparrow.start(tasks="shared:1")
 
 
 # Multiple Taskcontrol Tasks run
-run_1 = sparrow.run(tasks=["shared:taskname", "tasktwo"])
+run_1 = sparrow.start(tasks=["shared:taskname", "tasktwo"])
 # print("sparrow.ctx ",sparrow.ctx)
 print("run_1", run_1)
 
 # Multiple Taskcontrol Tasks run with mix of shared
-sparrow.run(tasks=["taskname", "tasktwo", "shared:taskname"])
+sparrow.start(tasks=["taskname", "tasktwo", "shared:taskname"])
 
 
 # Single Taskcontrol Tasks run
-run_2 = sparrow.run(tasks="shared:taskname")
+run_2 = sparrow.start(tasks="shared:taskname")
 print("run_2", run_2)
 
 
 # TODO: Run Tasks run with shared task
 # Single Taskcontrol Tasks run for shared task
-sparrow.run(tasks="shared:taskname")
+sparrow.start(tasks="shared:taskname")
 
 
 
