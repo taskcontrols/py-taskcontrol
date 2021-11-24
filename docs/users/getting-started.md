@@ -29,11 +29,11 @@
 
 # Demo Usage
 
-* Import workflow and Tasks object from workflow module in taskcontrol package
+* Import Taskcontrol and task object from workflow module in taskcontrol package
 * Create a Task instance
-* Create a workflow definition using `@workflow` decorator
+* Create a task definition using `@task` decorator
     - Usage: 
-        - `@workflow(name, task_order, task_instance, args, kwargs, before, after, shared, log)`
+        - `@task(name, task_order, task_instance, args, kwargs, before, after, shared, log)`
         - `def function(...){...}`
     - `name`, `task_instance` keys definitions are compulsary
     - `args`, `kwargs`, optional for function arguments - throws `TypeError` if wrong args provided
@@ -48,11 +48,11 @@
 ```python
 
 # for package
-from taskcontrol import workflow, Tasks
+from taskcontrol import Taskflow, task
 
 
 # Create an instance of the task you are creating
-sparrow = Tasks()
+sparrow = Taskflow()
 
 
 # Middleware that we are running
@@ -62,8 +62,8 @@ def nesttree(ctx, result, *args, **kwargs):
     print("Running my Middleware Function: nesttree - task items", args, kwargs)
 
 
-# workflow decorator
-@workflow(
+# task decorator
+@task(
     
     # Task name
     name="taskname",

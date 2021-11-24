@@ -201,7 +201,7 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginBase, UtilsBase):
         return functools.reduce(self.reducer, tasks_to_run_in_task)
 
 
-class Workflow(WorkflowBase):
+class Taskflow(WorkflowBase):
 
     def __init__(self):
         super().__init__()
@@ -318,5 +318,5 @@ __all__ = [
     "TimerBase", "LogBase", "CommandsBase", "EventsBase", "QueuesBase", "SocketsBase",
     "HooksBase", "ActionsBase", "EPubSubBase", "IPubSubBase", "WebhooksBase",
     "SSHBase", "AuthenticationBase", "SQLORMBase", "PluginBase", "WorkflowBase",
-    "Workflow", "task"
+    "Taskflow", "task"
 ]

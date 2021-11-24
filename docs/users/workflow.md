@@ -1,10 +1,10 @@
 # taskcontrol
 
 
-## workflow decorator arguments
+## task decorator arguments
 * Usage:
     ```python
-    @workflow(
+    @task(
         name = <str>,
         task_order = <int>,
         task_instance = <object_instance>,

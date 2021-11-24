@@ -91,9 +91,9 @@
 ```python
 
 
-from taskcontrol import Workflow, task
+from taskcontrol import Taskflow, task
 
-sparrow = Workflow()
+sparrow = Taskflow()
 
 @task(
     name="taskname",

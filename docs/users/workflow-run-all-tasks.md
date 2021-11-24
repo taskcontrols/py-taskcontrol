@@ -5,23 +5,23 @@
 
 
 # for git development repo
-# from taskcontrol import workflow, Tasks
+# from taskcontrol import Taskflow, task
 
 # for package
-from taskcontrol import workflow, Tasks
+from taskcontrol import Taskflow, task
 
 
 # Instance of tasks and apis object
 # Every instance will store it own list of tasks
 #       with their before/after middlewares
-sparrow = Tasks()
+sparrow = Taskflow()
 
 
 def nesttree(ctx, result, *args, **kwargs):
     print("Running my Middleware Function: nesttree - task items", args, kwargs)
 
 
-@workflow(
+@task(
     name="taskname",
     task_order=1,
     task_instance=sparrow,
@@ -94,7 +94,7 @@ def taskone(ctx, result, *args, **kwargs):
 
 
 # Example two for decorator usage
-@workflow(name="tasktwo",
+@task(name="tasktwo",
           task_instance=t,
           task_order=2,
           shared=False,
@@ -120,35 +120,35 @@ def tasktwo(ctx, result, *args, **kwargs):
 
 
 # TODO: Run all tasks
-# Multiple Workflow Tasks run
+# Multiple Taskcontrol Tasks run
 sparrow.run(tasks=["1"])
 sparrow.run(tasks="1")
 
 
 # TODO: Run all shared tasks
-# Shared Workflow Tasks run
+# Shared Taskcontrol Tasks run
 sparrow.run(tasks=["shared:1"])
 sparrow.run(tasks="shared:1")
 
 
-# Multiple Workflow Tasks run
+# Multiple Taskcontrol Tasks run
 run_1 = sparrow.run(tasks=["shared:taskname", "tasktwo"])
 # print("sparrow.ctx ",sparrow.ctx)
 print("run_1", run_1)
 
 
 # TODO: Run Tasks run with mix of shared
-# Multiple Workflow Tasks run with mix of shared
+# Multiple Taskcontrol Tasks run with mix of shared
 sparrow.run(tasks=["taskname", "tasktwo", "shared:taskname"])
 
 
-# Single Workflow Tasks run
+# Single Taskcontrol Tasks run
 run_2 = sparrow.run(tasks="shared:taskname")
 print("run_2", run_2)
 
 
 # TODO: Run Tasks run with shared task
-# Single Workflow Tasks run for shared task
+# Single Taskcontrol Tasks run for shared task
 sparrow.run(tasks="shared:taskname")
 
 
