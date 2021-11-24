@@ -22,13 +22,14 @@
 * Access read-only contexts and results of middlewares/tasks
 * Allows merging two instances of task controls with namespace clash handling
 * Run instance, shared, and mix of tasks (individual or all groups)
-* Allows working with Logging, Sockets, Events, Queues, Publisher-Subscriber Architectures, etc
+* Allows working with Logging, Sockets, Events, Queues, etc
+* Allows working with Publisher-Subscriber Architectures, Client-Agent Architectures, Webhooks
 * In-Development:
     * Allows support for / working with Concurrency
     * Allows working with Commands & Scripts (T), SSH (T), etc
     * Allows working with Scheduling (T), Files (T - normal, yaml, ini, and csv), etc
     * Allows working with ORMs/Databases (T), Authentication (T)
-    * Allows creating, registering, and using tasks/workflows as a plugin
+    * Allows creating, registering, and using tasks / workflows as a plugin
     * Planned Integrations with Subversioning, Build Tools, Deployment
     * Planned Integrations with Data Transformation / Analytics Tooling
     * Planned Integrations with Testing, and Infrastructure Automation toolings
