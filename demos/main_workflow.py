@@ -1,14 +1,14 @@
 # for git development repo
-from taskcontrol import task, Taskflow
+from taskcontrol import task, Workflow
 
 # for package
-# from taskcontrol import task, Taskflow
+# from taskcontrol import task, Workflow
 
 
 # Instance of tasks and apis object
 # Every instance will store it own list of tasks
 #       with their before/after middlewares
-sparrow = Taskflow()
+sparrow = Workflow()
 
 
 def nesttree(ctx, result, *args, **kwargs):

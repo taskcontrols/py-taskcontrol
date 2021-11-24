@@ -1,6 +1,6 @@
 # taskcontrol
 
-    Create named shared / isolated Taskflow task controls, and run them with respective before/after middlewares. taskcontrols also supports plugins, concurrency, and authentication  
+    Create named shared / isolated Workflow task controls, and run them with respective before/after middlewares. taskcontrols also supports plugins, concurrency, and authentication  
 
 
 # Features Details
@@ -30,8 +30,8 @@
 
 # Demo Usage
 
-* Import `Taskflow` and `task` object from `lib` module in taskcontrol package
-* Create a Task instance using the `Taskflow` class
+* Import `Workflow` and `task` object from `lib` module in taskcontrol package
+* Create a Task instance using the `Workflow` class
 * Create a task definition using `@task` decorator
     - Usage: 
         - `@task(name, task_order, task_instance, args, kwargs, before, after, shared, log)`
@@ -49,11 +49,11 @@
 ```python
 
 # for package
-from taskcontrol import Taskflow, task
+from taskcontrol import Workflow, task
 
 
 # Create an instance of the task you are creating
-sparrow = Taskflow()
+sparrow = Workflow()
 
 
 # Middleware that we are running

@@ -1,6 +1,6 @@
-from taskcontrol import task, Taskflow
+from taskcontrol import task, Workflow
 
-sparrow = Taskflow()
+sparrow = Workflow()
 
 @task(
     name="taskname",
