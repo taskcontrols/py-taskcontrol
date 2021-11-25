@@ -11,78 +11,85 @@ from taskcontrol.lib.interfaces import PluginsInterface
 
 
 class PluginBase(UtilsBase, PluginsInterface):
+    """
+    Plugins Base class to create a plugin. Retuns a verified plugins object \n
+    TODO: Allow invocation of workflow or task from within plugin \n
+    """
 
     # return plugin instance/module (plugin_instance)
-    def plugin_create(self, name, task_instance):
+    def plugin_create(self, name, definition):
+        """
+        Define and Create a plugin using plugin_create \n
+        { `name` (str), `definition` (dict) }
+        `name`: type(str) \n
+        Name of the plugin to create \n
+        `definition`: type(dict) \n
+        Definition of the plugin object \n
+        { `config` (dict), `ctx` (dict), `plugins` (dict), `shared` (dict),  `tasks` (dict),  `workflows` (dict) } \n
+            `config`: type(dict)
+            `ctx`: type(dict)
+            `plugins`: type(dict)
+            `shared`: type(dict)
+            `tasks`: type(dict)
+            `workflows`: type(dict)
+        """
 
         # TODO: Apply multiple instances (Allow seperate and merged instances)
         # Low priority
-        if type(task_instance) != dict:
+        if type(definition) != dict:
             raise TypeError("plugins definition has an issue")
 
-        if type(task_instance) == dict:
-            if not task_instance.get("config"):
+        if type(definition) == dict:
+            if not definition.get("config"):
                 raise ValueError("config definition has an issue")
-            if not task_instance.get("ctx"):
+            if not definition.get("ctx"):
                 raise ValueError("ctx definition has an issue")
-            if not task_instance.get("plugins"):
+            if not definition.get("plugins"):
                 raise ValueError("internal plugins definition has an issue")
-            if not task_instance.get("shared"):
+            if not definition.get("shared"):
                 raise ValueError("shared definition has an issue")
-            if not task_instance.get("tasks"):
+            if not definition.get("tasks"):
                 raise ValueError("tasks definition has an issue")
-            if not task_instance.get("workflows"):
+            if not definition.get("workflows"):
                 raise ValueError("workflows definition has an issue")
 
         if type(name) == str:
             return {
                 name: {
-                    "config": task_instance.get("config"),
-                    "ctx": task_instance.get("ctx"),
-                    "plugins": task_instance.get("plugins"),
-                    "shared": task_instance.get("shared"),
-                    "tasks": task_instance.get("tasks"),
-                    "workflows": task_instance.get("workflows")
+                    "config": definition.get("config"),
+                    "ctx": definition.get("ctx"),
+                    "plugins": definition.get("plugins"),
+                    "shared": definition.get("shared"),
+                    "tasks": definition.get("tasks"),
+                    "workflows": definition.get("workflows")
                 }
             }
 
 
 class WorkflowBase(ClosureBase, ConcurencyBase, PluginBase, UtilsBase):
+    """
+    WorkflowBase to run the defined workflow. \n
+    Use the Workflow Class to work with your class. This is intended to be the library logic file. \n
+    """
 
     def __init__(self):
+        """
+        """
         super().__init__()
         # ConcurencyBase.__init__(self)
         # PluginsBase.__init__(self)
         self.shared = SharedBase.getInstance()
         self.getter, self.setter, self.deleter = self.class_closure(
             tasks={}, plugins={}, ctx={})
-        """middleware_task_ Structure: name, function, args, kwargs, options"""
-        """workflow_kwargs: name, task_instance, task_order, shared, args, kwargs, before, after, log"""
-
-    # def clean_args(self, function_, function_args, function_kwargs):
-
-    #     arg_list = function_.__code__.co_varnames
-    #     fnc_kwa_keys = function_kwargs.keys()
-
-    #     len_tpl, len_fnc_args, len_fnc_kwa_keys = len(arg_list), len(
-    #         function_args), len(fnc_kwa_keys)
-
-    #     if arg_list[1] == "result" and arg_list[0] == "ctx":
-    #         if (len_tpl == len_fnc_args + len_fnc_kwa_keys + 2):
-    #             for k in fnc_kwa_keys:
-    #                 if not arg_list.index(k) >= len_fnc_args:
-    #                     return False
-    #             return True
-    #     else:
-    #         raise TypeError(
-    #             "First two args of a function/middleware has to be ctx and result")
-    #     return False
 
     def merge_tasks(self, tasks, inst, shared=None, clash_prefix=None):
+        """
+        """
         pass
 
     def reducer(self, result, task):
-
+        """
+        """
         if type(task) == dict:
             if len(task.keys()) == 0:
                 raise TypeError("Task structure error")
@@ -141,6 +148,8 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginBase, UtilsBase):
         return {"result": result.get("result")}
 
     def run_task(self, task):
+        """
+        """
         if task == None:
             return {"result": "Task not found error", "type": str(type(task))}
         log_ = task.get("log")
@@ -202,20 +211,38 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginBase, UtilsBase):
 
 
 class Workflow(WorkflowBase):
-
+    """
+    `Workflow` class to define a workflow
+    """
     def __init__(self):
         super().__init__()
 
     def plugin_register(self, plugin_instance):
+        """
+        Register a defined plugin using `.plugin_register` \n
+        { `plugin_instance` (`plugin` instance) } \n
+        """
         pass
 
     def merge(self, inst, shared=False, clash_prefix=None):
+        """
+        Merge an Workflow with instance using `.merge` \n
+        { `inst` (`plugin` instance), `shared` (bool), `clash_prefix` (str) } \n
+        """
         pass
 
     def create_workflow(self, name, workflows, options):
+        """
+        Create an Workflow with definitions using `.create_workflow` \n
+        { `name` (str), `workflows` (), `options` () }
+        """
         pass
 
     def get_all_tasks(self, tasks, tsk=[]):
+        """
+        Get all tasks that you define from the workflow instance using `.get_all_tasks` \n
+        { `tasks` (str) or (list) or (tuple), `tsk` (list) } \n
+        """
         if type(tasks) == int:
             if tasks == 1:
                 l = self.getter("tasks", 1)
@@ -244,7 +271,12 @@ class Workflow(WorkflowBase):
         return tsk
 
     def start(self, tasks=["1"]):
-        # "1", 1, "shared:1", "shared:task", "task"
+        """
+        Start the workflow tasks initantiation using `.start` \n
+        `tasks`: type(str) or type(int) or type(list) or type(tuple) \n
+        Tasks that need to be run \n
+        Value Options: [ "1", 1, "shared:1", "shared:task", "task", ["shared:task", "task"], ("shared:task", "task") ] [Default: 1] \n
+        """
         result = []
 
         tsk = self.get_all_tasks(tasks, [])
@@ -263,7 +295,26 @@ class Workflow(WorkflowBase):
 
 
 def task(*work_args, **work_kwargs):
-
+    """
+    `task` Decorator to create a task \n
+    `task` named kwargs: \n
+    { `name` (str), `task_instance` (`Workflow` instance), `task_order` (int), `shared` (bool), `args` (list) or (tuple) or (function), `kwargs` (dict) or (function), `before` (tuple) or (list) or (dict), `after` (tuple) or (list) or (dict), `log` (bool) } \n
+    ##### `task` NAMED KWARGS DEFINITION:
+    `name`: type(str) \n
+    `task_instance`: type(`Workflow` instance) \n
+    `task_order`: type(int) \n
+    [Default is int 1] \n
+    `shared`: type(bool) \n
+    Value Options [ True, False ] [Default is bool False] \n
+    `args`: type(list) or type(tuple) or type(function) \n
+    [Default is a empty list [] ] \n
+    `kwargs`: type(dict) or type(function) \n
+    [Default is a empty dict {}] \n
+    `before` or `after` middleware task dict keys as a dict or list: \n
+    Middleware object structure: { name, function, args, kwargs, options } [Default is empty list []] \n
+    `log`: type(bool) \n
+    Value Options [ True or False ].  [Default is bool False]
+    """
     def get_decorator(function_):
 
         def add_tasks(*function_args, **function_kwargs):

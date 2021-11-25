@@ -1225,9 +1225,14 @@ class CommandsBase(UtilsBase, CommandsInterface):
 
     def __init__(self, object_name="commands", validations={}, commands={}):
         """
-        object_name: command [Default: "commands". Instance's object_name used for differentiating class object instances] \n
-        validations: create, add, fetch, update, delete \n
-        commands: type(command) -> name, command, options(options:arguments) \n
+        { `object_name` (str), `validations` (dict), `commands` (dict) } \n
+        ##### Definition details \n
+        `object_name`: type(str) \n
+        instance name of the object [Default: "commands"] \n
+        `validations`: type(dict) \n
+        { `create` (list), `add` (list), `fetch` (list), `update` (list), `delete` (list) } \n
+        `commands`: type(dict) \n
+        command object: { `name` (str), `command` (str), `options`(dict -> options:arguments) } \n
         """
         self.v = ["name", "command", "options", "workflow_kwargs"]
         super().__init__(object_name, validations={
@@ -1235,13 +1240,15 @@ class CommandsBase(UtilsBase, CommandsInterface):
 
     def exists(self, command):
         """
-        command: command [Executable or command that needs to be checked for presence]
+        `command`: type(str) \n
+        command [Executable or command that needs to be checked for presence]
         """
         return shutil.which(command) is not None
 
     def path(self, command):
         """
-        command: command [Executable or command that needs to be path mapped]
+        `command`: type(str) \n
+        command [Executable or command that needs to be path mapped]
         """
         return shutil.which(command)
 
@@ -1250,30 +1257,37 @@ class CommandsBase(UtilsBase, CommandsInterface):
         `TODO`: ReWrite for inclusion of all arguments \n
         #### COMMON:  ARGUMENTS \n
         `command`: type(str) or type(list) \n
-        Any command \n
+        Any command or command with arguments and options as a list \n
         `stdin_mode`: type(bool) \n
-        { True, False } [Default: `False`. Get input value.] \n
+        Get input value for the shell \n
+        Value Options: [ True, False ] [Default is bool False] \n
         `mode`: type(str) \n
-        { subprocess_call, subprocess_popen, subprocess_run, os_popen } [Default: `subprocess_call`] \n
-        #### SPECIFIC `option` KEYS for: \n
-        `options`: type(dict) [`options` object that will be requested for `subprocess` or `os` functions] \n
+        Value Options: [ subprocess_call, subprocess_popen, subprocess_run, os_popen ] [Default is str subprocess_call] \n
+        `options`: type(dict) \n
+        `options` object that will be requested for `subprocess` or `os` functions \n
+
+        #### SPECIFIC `option` Object Keys for: \n
+        
         for `subprocess_call` which calls the `subprocess.call()` function: \n
-        { `args`:command options, stdin, stdout, stderr, bufsize, universal_newlines, executable, shell, cwd, env,
-        preexec_fn, close_fds, startupinfo, creationflags, restore_signals, start_new_session, pass_fds, timeout
+        { `args`:command argument and/or options, `stdin, stdout, stderr, bufsize, universal_newlines, executable, shell, cwd, env,
+        preexec_fn, close_fds, startupinfo, creationflags, restore_signals, start_new_session, pass_fds, timeout`
         } \n
-        for `subprocess_popen` which calls the `subprocess.Popen()` function: \n
-        { `args`:command options, stdin, stdout, stderr, universal_newlines, bufsize, executable, close_fds, shell, cwd, env, start_new_session, text }
-         * `POSIX ONLY`
-        { preexec_fn, restore_signals, group, extra_groups, pass_fds, umask, user }
-         * `WINDOWS ONLY`
-        { startupinfo, creationflags } \n\n
-        for `subprocess_run` which calls the `subprocess.run()` function: \n
-        { `args`:command options, stdin, stdout, stderr, universal_newlines, input, bufsize, executable, preexec_fn, close_fds,
+        
+        * for `subprocess_popen` which calls the `subprocess.Popen()` function: \n
+        { `args`:command argument and/or options, `stdin, stdout, stderr, universal_newlines, bufsize, executable, close_fds, shell, cwd, env, start_new_session, text` }
+            -- `POSIX` ONLY \n
+        { `preexec_fn, restore_signals, group, extra_groups, pass_fds, umask, user` }
+            -- `WINDOWS` ONLY \n
+        { `startupinfo`, `creationflags` } \n\n
+
+        * for `subprocess_run` which calls the `subprocess.run()` function: \n
+        { `args`:command argument and/or options, `stdin, stdout, stderr, universal_newlines, input, bufsize, executable, preexec_fn, close_fds,
         shell, cwd, env, startupinfo, creationflags, restore_signals, start_new_session,
-        pass_fds, capture_output, check, encoding, errors, text, timeout
+        pass_fds, capture_output, check, encoding, errors, text, timeout`
         } \n\n
-        for `os_popen` which calls the `os.popen()` function: \n
-        { `args`:command options
+
+        * for `os_popen` which calls the `os.popen()` function: \n
+        { `args`:command argument and/or options
         }
         """
         # https://www.cyberciti.biz/faq/python-run-external-command-and-get-output/
@@ -1397,7 +1411,8 @@ class QueuesBase(UtilsBase, QueuesInterface):
 
     def __init__(self, queues={}):
         """
-        queues: type(queue) -> [name, maxsize, queue_type, queue] \n
+        `queues`: type(dict) \n
+        { `name` (str), `maxsize` (int), `queue_type` (str), `queue` (`queue` instance) } \n
         """
         self.v = ["name", "maxsize", "queue_type", "queue", "workflow_kwargs"]
         super().__init__("queues", validations={
@@ -1405,7 +1420,9 @@ class QueuesBase(UtilsBase, QueuesInterface):
 
     def new(self, config):
         """
-        config: type(queue)
+        Create or define a new `queue` using `.new` \n
+        `config`: type(dict) following queues dict \n
+        { `name` (str), `maxsize` (int), `queue_type` (str), `queue` (`queue` instance) } \n
         """
         if self.validate_object(config, values=["name", "maxsize", "queue_type", "queue"]):
             if config.get("queue_type") == "queue":
@@ -1417,10 +1434,18 @@ class QueuesBase(UtilsBase, QueuesInterface):
 
     def add(self, name, item, index=0, nowait=True):
         """
-        name: name \n
-        item: type(item) [] \n
-        index: [Default: 0] \n
-        nowait: True/False [Default: True] \n
+        Add an `queue` from `.add` \n 
+        { `name` (str), `item` (list), `index` (int), `nowait` (bool) } \n
+        `name`: type(str) \n
+        name of the queue to be added \n
+        `item`: type() \n
+        item to be added \n
+        `index`: type(int) \n 
+        index of the item to be added
+        [Default is int `0`] \n
+        `nowait`: type(bool) \n
+        whether there should be any wait (python lang queue/deque definition of nowait) \n
+        Value Options: [ True, False ] [Default is bool `True`] \n
         """
         q = self.fetch(name)
         o = q["queue"]
@@ -1444,9 +1469,15 @@ class QueuesBase(UtilsBase, QueuesInterface):
 
     def get(self, name, index=0, nowait=True):
         """
-        name: name \n
-        index: [Default: 0] \n
-        nowait: True/False [Default: True] \n
+        Get an `queue` from the instance using `.get` \n
+        { `name` (str), `index` (int), `nowait` (bool) } \n
+        `name`: type(str) \n
+        name of the queue to fetch \n
+        `index`: type(int) \n
+        index of the item to fetch [Default is  int `0`] \n
+        `nowait`: type(bool) \n
+        on the fly redefinition of whether there should be any wait (python lang queue/deque definition of nowait) \n
+        Value Options: [ True, False ] [Default is bool `True`] \n
         """
         q = self.fetch(name)
         o = q["queue"]
@@ -1485,11 +1516,14 @@ class EventsBase(UtilsBase, EventsInterface):
 
     def event_register(self, event_object):
         """
-        event_object: name (str), event (func), listening (bool), listeners (dict)
-            event (func): function to execute when event is invoked
-            listening (bool): if function needs to be listening to events
-            listeners (dict): dictionary of listener objects
-        TODO: This is blocking event object. Needs to allow non-blocking and non-blocking multithreaded/multiprocess
+        Create or define an event using `.event_register` \n
+        `event_object`: type(dict) \n
+        { `name` (str), `event` (function), `listening` (bool), `listeners` (dict) } \n
+
+            `event` (func): function to execute when event is invoked \n
+            `listening` (bool): if function needs to be listening to events \n
+            `listeners` (dict): dictionary of listener objects \n
+        TODO: This is blocking event object. Needs to allow non-blocking and non-blocking multithreaded / multiprocess
         """
         # Change this to different ways of using events/actions
         event_func = event_object.get("event")
@@ -1522,14 +1556,16 @@ class EventsBase(UtilsBase, EventsInterface):
 
     def event_unregister(self, event_name):
         """
-
+        Create or define an event using `.event_unregister` \n
+        { `event_name` (str) } \n
         """
         print("Deleting event: ", event_name)
         return self.delete(event_name)
 
     def listener_register(self, listener_object):
         """
-
+        Create or define an event using `.listener_register` \n
+        { `listener_object` (dict) } \n
         """
         try:
             if self.validate_object(listener_object, ["name", "event_name", "listener"]):
@@ -1543,13 +1579,15 @@ class EventsBase(UtilsBase, EventsInterface):
 
     def on(self, event_name, name, handler):
         """
-
+        Create or define an event using `.on` \n
+        { `event_name` (str), `name` (str), `handler` (function) } \n
         """
         return self.listener_register({"name": name, "event_name": event_name, "listener": handler})
 
     def listener_unregister(self, listener_object):
         """
-
+        Listen to an event using `.listener_unregister` \n
+        { `listener_object` (dict) } \n
         """
         event_name = listener_object.get("event_name")
         a_name = listener_object.get("name")
@@ -1565,7 +1603,8 @@ class EventsBase(UtilsBase, EventsInterface):
 
     def get_state(self, event_name):
         """
-
+        Get an event state using `.get_state` \n
+        { `event_name` (str) } \n
         """
         try:
             e = self.fetch(event_name)
@@ -1577,7 +1616,8 @@ class EventsBase(UtilsBase, EventsInterface):
 
     def set_state(self, event_name, state):
         """
-
+        Set an event state using `.set_state` \n
+        { `event_name` (str), `state` (bool) } \n
         """
         try:
             event = self.fetch(event_name)
@@ -1589,19 +1629,22 @@ class EventsBase(UtilsBase, EventsInterface):
 
     def listen(self, event_name):
         """
-
+        Listen an event using `.listen` \n
+        { `event_name` (str) } \n
         """
         return self.set_state(event_name, True)
 
     def stop(self, event_name):
         """
-
+        Stop Listening to an event using `.stop` \n
+        { `event_name` (str) } \n
         """
         return self.set_state(event_name, False)
 
     def send(self, message_object):
         """
-
+        Send an event using `.send` \n
+        { `message_object` (dict) } \n
         """
         try:
             action = self.fetch(message_object.get("event_name"))
@@ -1614,7 +1657,8 @@ class EventsBase(UtilsBase, EventsInterface):
 
     def emit(self, event_name, message):
         """
-
+        Emit an event using `.emit` \n
+        { `event_name` (str), `message` (any object) } \n
         """
         return self.send({"event_name": event_name, "message": message})
 
