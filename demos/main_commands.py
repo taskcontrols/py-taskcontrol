@@ -23,5 +23,7 @@ print(result_run.__dict__.get("stdout"))
 # result = c.execute(command, mode="subprocess_call", stdin_mode=True, options={"args": cmd, "stdin_input": "touch tests"})
 # print("RUNNING RESULT FOR CALL:\n")
 
-# TODO: os_popen
-
+# # TODO: os_popen
+# result_run = c.execute(command, mode="os_open", stdin_mode=True, options={"args": cmd, "stdin_input": "touch tests"})
+# print("RUNNING RESULT FOR RUN [CompletedProcess Object - key:'stdout' type(str)]:\n")
+# print(result_run.__dict__.get("stdout"))

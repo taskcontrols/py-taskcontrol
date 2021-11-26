@@ -38,6 +38,9 @@ class ClosureBase():
     `ClosureBase` class to create true privacy for closure_val dict object \n
     LIBRARY CORE: Do not modify \n
     Use for creating closures, if need for your app or use case. \n
+
+    ##### Methods
+    @class_closure() -> (@getter, @setter, @deleter)
     """
 
     def class_closure(self, **kwargs):
@@ -170,7 +173,14 @@ class ClosureBase():
 
 
 class SharedBase(ClosureBase):
+    """
+    SharedBase class is used to share a common instance across different objects across module. Follows a singleton pattern \n
 
+    ##### Static Methods
+    @getInstance \n
+    Usage: \n
+    SharedBase.getInstance()
+    """
     __instance = None
 
     def __init__(self):
@@ -243,14 +253,13 @@ class RProcessBase(multiprocessing.Process):
 
 class ConcurencyBase():
     """
-    Description of ConcurencyBase
-
-    Different ways of working with concurrency \n
-    Includes: \n
-        # @staticmethod Futures: ConcurencyBase.futures
-        # @staticmethod Asyncio: ConcurencyBase.asyncio
-        # @staticmethod Thread: ConcurencyBase.thread
-        # @staticmethod Process: ConcurencyBase.process
+    `ConcurencyBase` allows working with different ways of working with concurrency \n
+    
+    ##### Methods
+    @staticmethod Futures: `ConcurencyBase.futures` [todo]
+    @staticmethod Asyncio: `ConcurencyBase.asyncio` [todo]
+    @staticmethod Thread: `ConcurencyBase.thread`
+    @staticmethod Process: `ConcurencyBase.process`
 
     """
     @staticmethod
@@ -486,6 +495,26 @@ class ConcurencyBase():
 
 
 class UtilsBase(ObjectModificationInterface):
+    """
+    UtilsBase class is used for extending most common logics around the taskcontrols library. \n
+
+    ##### Methods
+    Provides a `validate_object` to validate an dictionary object to verify a specific list of keys
+    @validate_object
+    @append_update_dict \n
+    Provides a `create`, `fetch`, `update`, and `delete` functions to modify private stored objects (implementation of ClosureBase) in the instance \n
+    @create
+    @fetch
+    @update
+    @delete
+
+    ClosureBase Implemented (Not Inherited) Available Methods: \n
+    Provides a `getter`, `setter`, and `delete` functions inheritence due to the ClosureBase implementation within \n
+    @getter
+    @setter
+    @deleter
+    """
+
     object_name = None
 
     def __init__(self, object_name="", validations={}, **kwargs):
@@ -586,7 +615,15 @@ class UtilsBase(ObjectModificationInterface):
 
     def create(self, config):
         """
-
+        `.create` function helps create a key stored in the list of all objects \n
+        { `config` (dict) }
+        
+        `config`: type(dict) \n
+        { `name` (str), `workflow_kwargs` (dict), ...your object structure... }
+        ##### config structure details below
+        `name`: type(str) \n
+        `workflow_kwargs`: type(dict) is optional key \n
+        -- `shared`: type(bool) \n
         """
         config["workflow_kwargs"] = config.get("workflow_kwargs", {})
         config["workflow_kwargs"]["shared"] = config.get(
@@ -601,7 +638,10 @@ class UtilsBase(ObjectModificationInterface):
 
     def fetch(self, name):
         """
-
+        `.fetch` function helps fetch a key stored in the list of all objects \n
+        { `name` (str) } \n
+        `name`: type(str) \n
+        Name of the key to be fetched from the all the stored objects 
         """
         try:
             return self.getter(self.object_name, name)[0]
@@ -611,7 +651,14 @@ class UtilsBase(ObjectModificationInterface):
 
     def update(self, config):
         """
+        `.update` function helps update a key stored in the list of all objects \n
+        { `config` (dict) } \n
 
+        `config`: type(dict) \n
+        { `name` (str), `workflow_kwargs` (dict), ...your object structure... }
+        ##### config structure details below
+        `name`: type(str) \n
+        
         """
         try:
             o = self.getter(self.object_name, config.get("name"))[0]
@@ -625,7 +672,10 @@ class UtilsBase(ObjectModificationInterface):
 
     def delete(self, name):
         """
-
+        `.delete` function helps deleting a key stored in the list of all objects \n
+        { `name` (str) } \n
+        `name`: type(str) \n
+        Name of the key to be deleted from the all the stored objects 
         """
         try:
             return self.deleter(self.object_name, name)
@@ -635,7 +685,19 @@ class UtilsBase(ObjectModificationInterface):
 
 
 class TimerBase(UtilsBase, TimeInterface):
+    """
+    TimerBase class is used to time execution of specific programing logic you need \n
 
+    ##### Methods
+    @timer_create
+    @time
+    @elapsed_time
+    @curent_elapsed_time
+    @reset
+    @start
+    @stop
+    """
+    
     def __init__(self, timers={}):
         """
 
@@ -1125,6 +1187,13 @@ class CSVReaderBase(FileReaderBase, CSVReaderInterface):
 
 
 class LogBase(UtilsBase, LogsInterface):
+    """
+    LogBase class is used to store loggers and log data using predefined loggers \n
+
+    ##### Methods:
+    @logger_create
+    @log
+    """
 
     def __init__(self, loggers={}):
         """
@@ -1158,13 +1227,15 @@ class LogBase(UtilsBase, LogsInterface):
 
     def logger_create(self, config):
         """
-
+        `.logger_create` is use to create and store a logger instance in the LogBase instance \n
+        
+        `config`: type(dict) \n
+        `{ "name":"name",
+           "handlers": {"handler": {"type": "file", "file": "filename.log"}, "format": "", "level": logging.INFO},
+           "handlers": [{"handler": {"type": "file", "file": "filename.log"}, "format": "", "level": logging.DEBUG}]
+        }`
         """
-        # Config object expected
-        # { "name":"name",
-        #   "handlers": {"handler": {"type": "file", "file": "filename.log"}, "format": "", "level": logging.INFO},
-        #   "handlers": [{"handler": {"type": "file", "file": "filename.log"}, "format": "", "level": logging.DEBUG}]
-        # }
+        
 
         # Use config here. config contains network info if logging needed to network
         try:
@@ -1220,6 +1291,13 @@ class LogBase(UtilsBase, LogsInterface):
 
     def log(self, options):
         """
+        `.log` is used to make a log
+
+        `options`: type(dict) \n
+        { `name` (str), `level` (str), `message` (str)} \n
+
+        ##### Argument specifications: \n
+        Value Options for `level`: [ critical, error, info, warning, debug ] [Default is str info] \n
 
         """
         # TODO: Concurrency can be added
@@ -1251,6 +1329,11 @@ class LogBase(UtilsBase, LogsInterface):
 
 
 class PicklesBase(UtilsBase, PicklesInterface):
+    """
+
+    ##### Methods:
+
+    """
     # Consider PickleBase class for ORM and Authentication
     def __init__(self, pickles={}):
         """
@@ -1300,6 +1383,15 @@ class PicklesBase(UtilsBase, PicklesInterface):
 
 
 class CommandsBase(UtilsBase, CommandsInterface):
+    """
+    CommandsBase class allows for running commands you specify programmatically. \n
+    All ways of subprocess.call, subprocess.popen, subprocess.run, os.popen [TODO] are intended to be supported. \n
+
+    ##### Methods:
+    @exists
+    @path
+    @execute
+    """
 
     def __init__(self, object_name="commands", validations={}, commands={}):
         """
@@ -1330,7 +1422,7 @@ class CommandsBase(UtilsBase, CommandsInterface):
         """
         return shutil.which(command)
 
-    def execute(self, command, mode="subprocess_popen", stdin_mode=False, options={}, *args):
+    def execute(self, command, mode="subprocess_popen", stdin_mode=False, options={}):
         """
         `TODO`: ReWrite for inclusion of all arguments \n
         #### COMMON:  ARGUMENTS \n
@@ -1343,6 +1435,7 @@ class CommandsBase(UtilsBase, CommandsInterface):
         Value Options: [ subprocess_call, subprocess_popen, subprocess_run, os_popen ] [Default is str subprocess_call] \n
         `options`: type(dict) \n
         `options` object that will be requested for `subprocess` or `os` functions \n
+        Details of the same in the section below. \n
 
         #### SPECIFIC `option` Object Keys for: \n
 
@@ -1474,9 +1567,9 @@ class CommandsBase(UtilsBase, CommandsInterface):
                             input=input, bufsize=bufsize, timeout=timeout
                         )
                 elif mode == "os_popen":
-                    proc = os.popen([command, *args])
+                    proc = os.popen([command, *options.get("args")])
                 elif mode == "os_popen":
-                    proc = os.popen([command, *args])
+                    proc = os.popen([command, *options.get("args")])
                     # r = proc.read()
                 return proc
             raise Exception
@@ -1485,6 +1578,15 @@ class CommandsBase(UtilsBase, CommandsInterface):
 
 
 class QueuesBase(UtilsBase, QueuesInterface):
+    """
+    QueuesBase allows you to create a list of queues to work with \n
+    All ways of List, Queue, LifoQueue, PriorityQueue, SimpleQueue are supported \n
+
+    ##### Methods:
+    @new
+    @add
+    @get
+    """
     tmp = {}
 
     def __init__(self, queues={}):
