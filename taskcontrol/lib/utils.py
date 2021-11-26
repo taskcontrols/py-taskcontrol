@@ -1125,6 +1125,13 @@ class CSVReaderBase(FileReaderBase, CSVReaderInterface):
 
 
 class LogBase(UtilsBase, LogsInterface):
+    """
+    LogBase class is used to store loggers and log data using predefined loggers \n
+
+    ##### Methods:
+    @logger_create
+    @log
+    """
 
     def __init__(self, loggers={}):
         """
@@ -1158,13 +1165,15 @@ class LogBase(UtilsBase, LogsInterface):
 
     def logger_create(self, config):
         """
-
+        `.logger_create` is use to create and store a logger instance in the LogBase instance \n
+        
+        `config`: type(dict) \n
+        `{ "name":"name",
+           "handlers": {"handler": {"type": "file", "file": "filename.log"}, "format": "", "level": logging.INFO},
+           "handlers": [{"handler": {"type": "file", "file": "filename.log"}, "format": "", "level": logging.DEBUG}]
+        }`
         """
-        # Config object expected
-        # { "name":"name",
-        #   "handlers": {"handler": {"type": "file", "file": "filename.log"}, "format": "", "level": logging.INFO},
-        #   "handlers": [{"handler": {"type": "file", "file": "filename.log"}, "format": "", "level": logging.DEBUG}]
-        # }
+        
 
         # Use config here. config contains network info if logging needed to network
         try:
@@ -1220,6 +1229,13 @@ class LogBase(UtilsBase, LogsInterface):
 
     def log(self, options):
         """
+        `.log` is used to make a log
+
+        `options`: type(dict) \n
+        { `name` (str), `level` (str), `message` (str)} \n
+
+        ##### Argument specifications: \n
+        Value Options for `level`: [ critical, error, info, warning, debug ] [Default is str info] \n
 
         """
         # TODO: Concurrency can be added
@@ -1251,6 +1267,11 @@ class LogBase(UtilsBase, LogsInterface):
 
 
 class PicklesBase(UtilsBase, PicklesInterface):
+    """
+
+    ##### Methods:
+
+    """
     # Consider PickleBase class for ORM and Authentication
     def __init__(self, pickles={}):
         """
@@ -1300,6 +1321,15 @@ class PicklesBase(UtilsBase, PicklesInterface):
 
 
 class CommandsBase(UtilsBase, CommandsInterface):
+    """
+    CommandsBase class allows for running commands you specify programmatically. \n
+    All ways of subprocess.call, subprocess.popen, subprocess.run, os.popen [TODO] are intended to be supported. \n
+
+    ##### Methods:
+    @exists
+    @path
+    @execute
+    """
 
     def __init__(self, object_name="commands", validations={}, commands={}):
         """
@@ -1486,6 +1516,15 @@ class CommandsBase(UtilsBase, CommandsInterface):
 
 
 class QueuesBase(UtilsBase, QueuesInterface):
+    """
+    QueuesBase allows you to create a list of queues to work with \n
+    All ways of List, Queue, LifoQueue, PriorityQueue, SimpleQueue are supported \n
+
+    ##### Methods:
+    @new
+    @add
+    @get
+    """
     tmp = {}
 
     def __init__(self, queues={}):
