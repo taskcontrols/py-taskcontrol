@@ -34,15 +34,42 @@ from taskcontrol.lib.interfaces import QueuesInterface, EventsInterface, PubSubs
 
 
 class ClosureBase():
+    """
+    `ClosureBase` class to create true privacy for closure_val dict object \n
+    LIBRARY CORE: Do not modify \n
+    Use for creating closures, if need for your app or use case. \n
+    """
+
     def class_closure(self, **kwargs):
         """
-
+        `class_closure` Function to store needed objects private in instances in `truely private and immutable` object \n
+        `LIBRARY CORE`: `do not modify` \n
+        Use for creating closures, if need for your app or use case. Function invocation returns a `getter`, `setter`, and `deleter` tuple for the variable `closure_val` \n
+        `kwargs`: type(dict) \n
+        kwargs are of type dict that can be used for storing true immutable private values. \n
+        They are modifiable only using `getter`, `setter`, and `deleter` functions returned by the `class_closure` function after invocation. \n
+        """
+        """
+        private, immutable variable closure_val
         """
         closure_val = kwargs
 
         def getter(key, value=None):
             """
-
+            Function `getter` gets the `value` (key name or list of key names) from the `key` dict object stored inside `closure_val` \n
+            { `key` (str), `value` (str) or (list) or (int -> 1) } \n
+            #### args definition: \n
+            `key`: type(str) \n
+            key is the key of the dict object you want to fetch from `closure_val`. Read details of fetch using `closure_val object structure` and `usage` details below. \n
+            `value`: type(list) or type(str) or type(int -> 1) \n
+            value is key of the dict object stored in `key` of `closure_val` \n
+            #### closure_val object structure:
+            `closure_val` = \n
+            `{"keyone":{"value_one":{},"value_two":[]},"keytwo":{"value_one":1,"value_two":"myvalue"}}`
+            #### usage:
+            `getter(key="keyone", value=["value_one", "value_two"])` \n
+            `getter(key="keyone", value="value_one")` \n
+            `getter(key="keyone", value=1)` \n
             """
             try:
                 if (type(value) == int and value == 1) or (type(value) == str and value == "1"):
@@ -73,7 +100,22 @@ class ClosureBase():
 
         def setter(key, value=None, inst=None):
             """
-
+            Function `setter` is used to set a dict value `value` to key named `key` in `closure_val` \n
+            { `key` (str), `value` (str) or (list) or (int -> 1) } \n
+            #### args definition: \n
+            `key`: type(str) \n
+            key is the key of the dict object you want to fetch from `closure_val`. Read details of fetch using `closure_val object structure` and `usage` details below. \n
+            `value`: type(dict) \n
+            value is key of the dict object stored in `key` of `closure_val` \n
+            { name, **other_keys } \n
+            `inst`: type(instance) \n
+            inst is instance of your own `ClosureBase` extended class object used to stored the `key` and `value` in a private, immutable dict `closure_val` \n
+            #### closure_val object structure:
+            `closure_val` = \n
+            `{"keyone":{"value_one":{},"value_two":[]},"keytwo":{"value_one":1,"value_two":"myvalue"}}`
+            #### usage:
+            `setter(key="keyone", value={"value_one":[], "value_two":10})` \n
+            `setter(key="keyone", value={"value_one":"test","value_two":True})` \n
             """
             try:
                 if type(value) == dict and inst != None:
@@ -93,7 +135,19 @@ class ClosureBase():
 
         def deleter(key, value=None):
             """
-
+            Function `deleter` is used to delete the value or list of values (`value` argument) from the `key` dict stored in the `closure_val` (dict) \n
+            { `key` (str), `value` (str) or (int -> 1) } \n
+            #### args definition: \n
+            `key`: type(str) \n
+            key is the key of the dict object you want to fetch from `closure_val`. Read details of fetch using `closure_val object structure` and `usage` details below. \n
+            `value`: type(dict) \n
+            value is key of the dict object stored in `key` of `closure_val` \n
+            #### closure_val object structure:
+            `closure_val` = \n
+            `{"keyone":{"value_one":{},"value_two":[]},"keytwo":{"value_one":1,"value_two":"myvalue"}}`
+            #### usage:
+            `deleter(key="keyone", value="value_one")` \n
+            `deleter(key="keyone", value=1)` \n
             """
             try:
                 if type(value) == str:
@@ -224,21 +278,29 @@ class ConcurencyBase():
     @staticmethod
     def thread(group=None, target=None, name=None, args=(), kwargs={}, daemon=False, options={}):
         """
-        https://analyticsindiamag.com/run-python-code-in-parallel-using-multiprocessing/
-        Description of thread
-        asynchronous & 
-        needs 'join':True or False
+        Description of thread \n
+        asynchronous & \n
+        needs 'join': Value Options [True, False] \n
 
-        Args:
-            name: str (default is None)
-            group: (default is None)
-            target: type(function)
-            args: list / tuple (default is blank tuple () )
-            kwargs: dict (default is blank dict {}) 
-            daemon: bool (default is False) 
-            options {lock, share_value, needs_return, join, Verbose}: dict
+        { `name` (str), `group` (), `target` (function), `args` (list) or (tuple), `kwargs` (dict), `daemon` (bool), `options` (dict) } \n
+
+        ##### process args and kwargs definitions 
+        `name`: str \n
+        [Default is None] \n
+        `group`: \n
+        [Default is None] \n
+        `target`: type(function) \n
+        `args`: list / tuple \n
+        [Default is blank tuple () ] \n
+        `kwargs`: dict \n
+        [Default is blank dict {}] \n
+        `daemon`: bool \n
+        [Default is bool False] \n
+        `options`: dict \n
+        { `lock` (bool), `share_value` (str), `needs_return` (bool), `join` (bool), `terminate` (bool), `Verbose` () } \n
 
         """
+        # https://analyticsindiamag.com/run-python-code-in-parallel-using-multiprocessing/
         if type(options) != dict:
             raise TypeError
 
@@ -273,18 +335,26 @@ class ConcurencyBase():
     @staticmethod
     def process(group=None, target=None, name=None, args=(), kwargs={}, daemon=False, options={}):
         """
-        Description of process
-        asynchronous & 
-        needs 'join':True or False
+        Description of process \n
+        asynchronous &  \n
+        needs 'join': Value Options [ True, False ] \n
 
-        Args:
-            name: str (default is None)
-            group: (default is None)
-            target: type(function)
-            args: list / tuple (default is blank tuple () )
-            kwargs: dict (default is blank dict {}) 
-            daemon: bool (default is False) 
-            options {lock, share_value, needs_return, join, terminate, Verbose}: dict
+        { `name` (str), `group` (), `target` (function), `args` (list) or (tuple), `kwargs` (dict), `daemon` (bool), `options` (dict) }` \n
+
+        ##### process args and kwargs definitions 
+        `name`: str \n
+        [Default is None] \n
+        `group`: \n
+        [Default is None] \n
+        `target`: type(function) \n
+        `args`: list / tuple \n
+        [Default is blank tuple () ] \n
+        `kwargs`: dict \n
+        [Default is blank dict {}] \n
+        `daemon`: bool \n
+        [Default is bool False] \n
+        `options`: \n
+        { `lock` (bool), `share_value` (str), `needs_return` (bool), `join` (bool), `terminate` (bool), `Verbose` () } \n
 
         """
         if type(options) != dict:
@@ -344,13 +414,21 @@ class ConcurencyBase():
         asynchronous and needs 'join':True or False
         https://stackoverflow.com/questions/8804830/python-multiprocessing-picklingerror-cant-pickle-type-function
 
-        Args:
-        args: list (default is ())
-        kwargs: dict (default is {})
-        options {processes, mode}: dict
-            * default processes is 1
-            * mode options: apply, apply_async, map, map_async, manager
-            * default mode is `apply`
+        { `args` (list), `kwargs` (dict), `options` (dict) } \n
+
+        ##### process_pool args and kwargs 
+        
+        `args`: type(list) \n
+        [Default is empty tuple ()] \n
+        `kwargs`: type(dict) \n
+        [Default is empty dict {}] \n
+        `options`: type(dict) \n
+        { `processes` (int), `mode` (str) } \n
+            -- `processes`: type(int) \n
+            [Default is int 1]
+            -- `mode`: type(dict) \n
+            Value Options [ apply, apply_async, map, map_async, manager ] \n
+            [Default is str apply]
         """
         if type(options) != dict:
             raise TypeError
@@ -1267,12 +1345,12 @@ class CommandsBase(UtilsBase, CommandsInterface):
         `options` object that will be requested for `subprocess` or `os` functions \n
 
         #### SPECIFIC `option` Object Keys for: \n
-        
+
         for `subprocess_call` which calls the `subprocess.call()` function: \n
         { `args`:command argument and/or options, `stdin, stdout, stderr, bufsize, universal_newlines, executable, shell, cwd, env,
         preexec_fn, close_fds, startupinfo, creationflags, restore_signals, start_new_session, pass_fds, timeout`
         } \n
-        
+
         * for `subprocess_popen` which calls the `subprocess.Popen()` function: \n
         { `args`:command argument and/or options, `stdin, stdout, stderr, universal_newlines, bufsize, executable, close_fds, shell, cwd, env, start_new_session, text` }
             -- `POSIX` ONLY \n

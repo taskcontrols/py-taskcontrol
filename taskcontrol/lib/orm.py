@@ -13,13 +13,17 @@ from taskcontrol.lib.utils import UtilsBase
 
 
 class SQLORMBase(UtilsBase, SQLInterface):
-
+    """
+    Base for the inbuilt mini `SQL ORM` which can be redefined as per their own needs using an `SQLInterface` using a different `ORM` that plugs into the application as a `Plugin`
+    """
     def __init__(self, dbs={}):
         self.v = ["name"]
         super().__init__("orms", validations={"add": self.v, "create": self.v,
                                               "update": self.v, "delete": ["name"]}, dbs=dbs)
 
     def has_sql(self, options, run="check", action="search"):
+        """
+        """
         sql = options.get("sql")
         if action == "check":
             if type(sql) == str and len(sql) > 0:
@@ -34,6 +38,8 @@ class SQLORMBase(UtilsBase, SQLInterface):
                       " {0}ed successfully".format(action))
 
     def row_insert(self, conn, options):
+        """
+        """
         try:
             if self.has_sql(options, run="check"):
                 sql = options.get("sql")
@@ -57,6 +63,8 @@ class SQLORMBase(UtilsBase, SQLInterface):
         return True
 
     def row_find(self, conn, options):
+        """
+        """
         try:
             if self.has_sql(options, run="check"):
                 sql = options.get("sql")
@@ -98,6 +106,8 @@ class SQLORMBase(UtilsBase, SQLInterface):
         return True
 
     def row_update(self, conn, options):
+        """
+        """
         try:
             if self.has_sql(options, run="check"):
                 sql = options.get("sql")
@@ -125,6 +135,8 @@ class SQLORMBase(UtilsBase, SQLInterface):
         return True
 
     def row_delete(self, conn, options):
+        """
+        """
         try:
             if self.has_sql(options, run="check"):
                 sql = options.get("sql")
@@ -162,27 +174,43 @@ class SQLORMBase(UtilsBase, SQLInterface):
         return True
 
     def db_create(self, conn, options):
+        """
+        """
         pass
 
     def db_alter(self, conn, options):
+        """
+        """
         pass
 
     def db_delete(self, conn, options):
+        """
+        """
         pass
 
     def db_find(self, conn, options):
+        """
+        """
         pass
 
     def table_create(self, conn, options):
+        """
+        """
         pass
 
     def table_alter(self, conn, options):
+        """
+        """
         pass
 
     def table_delete(self, conn, options):
+        """
+        """
         pass
 
     def table_find(self, conn, options):
+        """
+        """
         pass
 
 
