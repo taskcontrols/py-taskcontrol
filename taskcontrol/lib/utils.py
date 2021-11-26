@@ -38,6 +38,9 @@ class ClosureBase():
     `ClosureBase` class to create true privacy for closure_val dict object \n
     LIBRARY CORE: Do not modify \n
     Use for creating closures, if need for your app or use case. \n
+
+    ##### Methods
+    @class_closure() -> (@getter, @setter, @deleter)
     """
 
     def class_closure(self, **kwargs):
