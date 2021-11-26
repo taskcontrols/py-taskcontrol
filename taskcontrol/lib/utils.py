@@ -170,7 +170,14 @@ class ClosureBase():
 
 
 class SharedBase(ClosureBase):
+    """
+    SharedBase class is used to share a common instance across different objects across module. Follows a singleton pattern \n
 
+    ##### Static Methods
+    @getInstance \n
+    Usage: \n
+    SharedBase.getInstance()
+    """
     __instance = None
 
     def __init__(self):
