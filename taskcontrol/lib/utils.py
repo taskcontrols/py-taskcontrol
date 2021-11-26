@@ -1330,7 +1330,7 @@ class CommandsBase(UtilsBase, CommandsInterface):
         """
         return shutil.which(command)
 
-    def execute(self, command, mode="subprocess_popen", stdin_mode=False, options={}, *args):
+    def execute(self, command, mode="subprocess_popen", stdin_mode=False, options={}):
         """
         `TODO`: ReWrite for inclusion of all arguments \n
         #### COMMON:  ARGUMENTS \n
@@ -1343,6 +1343,7 @@ class CommandsBase(UtilsBase, CommandsInterface):
         Value Options: [ subprocess_call, subprocess_popen, subprocess_run, os_popen ] [Default is str subprocess_call] \n
         `options`: type(dict) \n
         `options` object that will be requested for `subprocess` or `os` functions \n
+        Details of the same in the section below. \n
 
         #### SPECIFIC `option` Object Keys for: \n
 
@@ -1474,9 +1475,9 @@ class CommandsBase(UtilsBase, CommandsInterface):
                             input=input, bufsize=bufsize, timeout=timeout
                         )
                 elif mode == "os_popen":
-                    proc = os.popen([command, *args])
+                    proc = os.popen([command, *options.get("args")])
                 elif mode == "os_popen":
-                    proc = os.popen([command, *args])
+                    proc = os.popen([command, *options.get("args")])
                     # r = proc.read()
                 return proc
             raise Exception
