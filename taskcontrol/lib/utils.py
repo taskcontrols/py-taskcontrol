@@ -500,7 +500,7 @@ class UtilsBase(ObjectModificationInterface):
     @delete
 
     ClosureBase Implemented (Not Inherited) Available Methods: \n
-    Provides a `getter`, `setter`, `fetch`, and `delete` functions inheritence due to the ClosureBase implementation within \n
+    Provides a `getter`, `setter`, and `delete` functions inheritence due to the ClosureBase implementation within \n
     @getter
     @setter
     @deleter
@@ -606,7 +606,15 @@ class UtilsBase(ObjectModificationInterface):
 
     def create(self, config):
         """
-
+        `.create` function helps create a key stored in the list of all objects \n
+        { `config` (dict) }
+        
+        `config`: type(dict) \n
+        { `name` (str), `workflow_kwargs` (dict), ...your object structure... }
+        ##### config structure details below
+        `name`: type(str) \n
+        `workflow_kwargs`: type(dict) is optional key \n
+        -- `shared`: type(bool) \n
         """
         config["workflow_kwargs"] = config.get("workflow_kwargs", {})
         config["workflow_kwargs"]["shared"] = config.get(
@@ -621,7 +629,10 @@ class UtilsBase(ObjectModificationInterface):
 
     def fetch(self, name):
         """
-
+        `.fetch` function helps fetch a key stored in the list of all objects \n
+        { `name` (str) } \n
+        `name`: type(str) \n
+        Name of the key to be fetched from the all the stored objects 
         """
         try:
             return self.getter(self.object_name, name)[0]
@@ -631,11 +642,14 @@ class UtilsBase(ObjectModificationInterface):
 
     def update(self, config):
         """
-        .update function helps update a key stored in the list of all objects \n
-        { `config` (dict) }
-        
-        ##### config structure details below
+        `.update` function helps update a key stored in the list of all objects \n
+        { `config` (dict) } \n
 
+        `config`: type(dict) \n
+        { `name` (str), `workflow_kwargs` (dict), ...your object structure... }
+        ##### config structure details below
+        `name`: type(str) \n
+        
         """
         try:
             o = self.getter(self.object_name, config.get("name"))[0]
@@ -649,9 +663,9 @@ class UtilsBase(ObjectModificationInterface):
 
     def delete(self, name):
         """
-        .delete function helps deleting a key stored in the list of all objects \n
+        `.delete` function helps deleting a key stored in the list of all objects \n
         { `name` (str) } \n
-        name: type(str) \n
+        `name`: type(str) \n
         Name of the key to be deleted from the all the stored objects 
         """
         try:
