@@ -253,14 +253,13 @@ class RProcessBase(multiprocessing.Process):
 
 class ConcurencyBase():
     """
-    Description of ConcurencyBase
-
-    Different ways of working with concurrency \n
-    Includes: \n
-        # @staticmethod Futures: ConcurencyBase.futures
-        # @staticmethod Asyncio: ConcurencyBase.asyncio
-        # @staticmethod Thread: ConcurencyBase.thread
-        # @staticmethod Process: ConcurencyBase.process
+    `ConcurencyBase` allows working with different ways of working with concurrency \n
+    
+    ##### Methods
+    @staticmethod Futures: `ConcurencyBase.futures` [todo]
+    @staticmethod Asyncio: `ConcurencyBase.asyncio` [todo]
+    @staticmethod Thread: `ConcurencyBase.thread`
+    @staticmethod Process: `ConcurencyBase.process`
 
     """
     @staticmethod
