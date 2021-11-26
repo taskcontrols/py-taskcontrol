@@ -486,6 +486,26 @@ class ConcurencyBase():
 
 
 class UtilsBase(ObjectModificationInterface):
+    """
+    UtilsBase class is used for extending most common logics around the taskcontrols library. \n
+
+    ##### Methods
+    Provides a `validate_object` to validate an dictionary object to verify a specific list of keys
+    @validate_object
+    @append_update_dict \n
+    Provides a `create`, `fetch`, `update`, and `delete` functions to modify private stored objects (implementation of ClosureBase) in the instance \n
+    @create
+    @fetch
+    @update
+    @delete
+
+    ClosureBase Implemented (Not Inherited) Available Methods: \n
+    Provides a `getter`, `setter`, `fetch`, and `delete` functions inheritence due to the ClosureBase implementation within \n
+    @getter
+    @setter
+    @deleter
+    """
+
     object_name = None
 
     def __init__(self, object_name="", validations={}, **kwargs):
@@ -611,6 +631,10 @@ class UtilsBase(ObjectModificationInterface):
 
     def update(self, config):
         """
+        .update function helps update a key stored in the list of all objects \n
+        { `config` (dict) }
+        
+        ##### config structure details below
 
         """
         try:
@@ -625,7 +649,10 @@ class UtilsBase(ObjectModificationInterface):
 
     def delete(self, name):
         """
-
+        .delete function helps deleting a key stored in the list of all objects \n
+        { `name` (str) } \n
+        name: type(str) \n
+        Name of the key to be deleted from the all the stored objects 
         """
         try:
             return self.deleter(self.object_name, name)
@@ -635,7 +662,19 @@ class UtilsBase(ObjectModificationInterface):
 
 
 class TimerBase(UtilsBase, TimeInterface):
+    """
+    TimerBase class is used to time execution of specific programing logic you need \n
 
+    ##### Methods
+    @timer_create
+    @time
+    @elapsed_time
+    @curent_elapsed_time
+    @reset
+    @start
+    @stop
+    """
+    
     def __init__(self, timers={}):
         """
 
