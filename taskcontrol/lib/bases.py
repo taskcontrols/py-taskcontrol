@@ -12,8 +12,12 @@ from taskcontrol.lib.interfaces import PluginsInterface
 
 class PluginBase(UtilsBase, PluginsInterface):
     """
-    Plugins Base class to create a plugin. Retuns a verified plugins object \n
-    TODO: Allow invocation of workflow or task from within plugin \n
+    `PluginsBase` class to create a plugin. Retuns a verified plugins object \n
+    Allow invocation of workflow [todo] or task from within plugin \n
+
+    ##### Instance Methods
+    `@plugin_create` \n
+
     """
 
     # return plugin instance/module (plugin_instance)
@@ -68,8 +72,14 @@ class PluginBase(UtilsBase, PluginsInterface):
 
 class WorkflowBase(ClosureBase, ConcurencyBase, PluginBase, UtilsBase):
     """
-    WorkflowBase to run the defined workflow. \n
+    `WorkflowBase` to run the defined workflow. \n
     Use the Workflow Class to work with your class. This is intended to be the library logic file. \n
+
+    ##### Instance Methods
+    @`merge_tasks` \n
+    @`reducer` \n
+    @`run_task` \n
+
     """
 
     def __init__(self):
@@ -213,6 +223,14 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginBase, UtilsBase):
 class Workflow(WorkflowBase):
     """
     `Workflow` class to define a workflow
+
+    ##### Instance Methods
+    @`plugin_register` \n
+    @`merge` \n
+    @`create_workflow` \n
+    @`get_all_tasks` \n
+    @`start` \n
+
     """
     def __init__(self):
         super().__init__()
