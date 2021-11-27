@@ -254,7 +254,7 @@ class RProcessBase(multiprocessing.Process):
 class ConcurencyBase():
     """
     `ConcurencyBase` allows working with different ways of working with concurrency \n
-    
+
     ##### Methods
     @staticmethod Futures: `ConcurencyBase.futures` [todo]
     @staticmethod Asyncio: `ConcurencyBase.asyncio` [todo]
@@ -426,7 +426,7 @@ class ConcurencyBase():
         { `args` (list), `kwargs` (dict), `options` (dict) } \n
 
         ##### process_pool args and kwargs 
-        
+
         `args`: type(list) \n
         [Default is empty tuple ()] \n
         `kwargs`: type(dict) \n
@@ -617,7 +617,7 @@ class UtilsBase(ObjectModificationInterface):
         """
         `.create` function helps create a key stored in the list of all objects \n
         { `config` (dict) }
-        
+
         `config`: type(dict) \n
         { `name` (str), `workflow_kwargs` (dict), ...your object structure... }
         ##### config structure details below
@@ -658,7 +658,7 @@ class UtilsBase(ObjectModificationInterface):
         { `name` (str), `workflow_kwargs` (dict), ...your object structure... }
         ##### config structure details below
         `name`: type(str) \n
-        
+
         """
         try:
             o = self.getter(self.object_name, config.get("name"))[0]
@@ -686,7 +686,7 @@ class UtilsBase(ObjectModificationInterface):
 
 class TimerBase(UtilsBase, TimeInterface):
     """
-    TimerBase class is used to time execution of specific programing logic you need \n
+    `TimerBase` class is used to time execution of specific programing logic you need \n
 
     ##### Methods
     @timer_create
@@ -697,9 +697,12 @@ class TimerBase(UtilsBase, TimeInterface):
     @start
     @stop
     """
-    
+
     def __init__(self, timers={}):
         """
+        Instantiation for timers in the instance \n
+        `timers` objects in keys \n
+        single timer object: { `name`, `_start_time`, `_elapsed_time`, `_accumulated` } \n
 
         """
         self.v = ["name", "_start_time", "_elapsed_time",
@@ -711,14 +714,25 @@ class TimerBase(UtilsBase, TimeInterface):
 
     def timer_create(self, config):
         """
+        `.timer_create()` function creates and stores an timer config into the `TimerBase` instance \n
+        { `config` (dict) }
+        { `name` (str), `_start_time` (float), `_elapsed_time` (float), `_accumulated` (float), `workflow_kwargs` (dict): { `shared` (bool) } }
+
+        ##### Argument details
+        `name`: type(str) \n
+        `_start_time`: type(int) optional \n
+        `_elapsed_time`: type(int) optional \n
+        `_accumulated`: type(int) optional \n
 
         """
+        if not config.get("name"):
+            raise TypeError("Name argument has to be provided")
+        
         config.update({
-            "_start_time": 0.0,
-            "_elapsed_time": 0.0,
-            "_accumulated": 0.0
+            "_start_time": config.get("_start_time", 0.0),
+            "_elapsed_time": config.get("_elapsed_time", 0.0),
+            "_accumulated": config.get("_accumulated", 0.0)
         })
-        print(config)
         u = self.create(config)
         if u:
             return True
@@ -726,13 +740,18 @@ class TimerBase(UtilsBase, TimeInterface):
 
     def time(self):
         """
-
+        `.time()` function returns an pure python timer `time.perf_counter` instance \n
         """
         return time.perf_counter()
 
     def elapsed_time(self, name):
         """
+        `.elapsed_time()` function returns the stored elapsed time of the timer name instance requested \n
 
+        { `name` (str) }
+        `name`: type(str) \n
+        Name of the timer instance's last elapsed time to return stored after a stop method last used for the name of the instance stored. \n
+        Will return 0 if the timer instance has been started and has not been stopped atleast once. \n
         """
         t = self.fetch(name)
         if not t:
@@ -742,7 +761,11 @@ class TimerBase(UtilsBase, TimeInterface):
 
     def curent_elapsed_time(self, name):
         """
+        `.curent_elapsed_time()` function returns the elapsed time of the timer name requested \n
 
+        { `name` (str) }
+        `name`: type(str) \n
+        Name of the timer instance's current elapsed time to return from the instance stored in the instance \n
         """
         t = self.fetch(name)
         if not t:
@@ -751,7 +774,11 @@ class TimerBase(UtilsBase, TimeInterface):
 
     def reset(self, name):
         """
+        `.reset()` function resets the timer \n
 
+        { `name` (str) }
+        `name`: type(str) \n
+        Name of the timer instance to reset that is stored in the instance \n
         """
         t = self.fetch(name)
         if t:
@@ -765,7 +792,11 @@ class TimerBase(UtilsBase, TimeInterface):
 
     def start(self, name):
         """
+        `.start()` function starts the timer \n
 
+        { `name` (str) }
+        `name`: type(str) \n
+        Name of the timer instance to start that is stored in the instance \n
         """
         # options object : {"name":"name", "timer": None}
         t = self.fetch(name)
@@ -782,7 +813,11 @@ class TimerBase(UtilsBase, TimeInterface):
 
     def stop(self, name):
         """
+        `.stop()` function stops the timer \n
 
+        { `name` (str) }
+        `name`: type(str) \n
+        Name of the timer instance to stop that is stored in the instance \n
         """
         # options object : {"name":"name", "timer": None}
         t = self.fetch(name)
@@ -1228,14 +1263,13 @@ class LogBase(UtilsBase, LogsInterface):
     def logger_create(self, config):
         """
         `.logger_create` is use to create and store a logger instance in the LogBase instance \n
-        
+
         `config`: type(dict) \n
         `{ "name":"name",
            "handlers": {"handler": {"type": "file", "file": "filename.log"}, "format": "", "level": logging.INFO},
            "handlers": [{"handler": {"type": "file", "file": "filename.log"}, "format": "", "level": logging.DEBUG}]
         }`
         """
-        
 
         # Use config here. config contains network info if logging needed to network
         try:
@@ -1335,6 +1369,7 @@ class PicklesBase(UtilsBase, PicklesInterface):
 
     """
     # Consider PickleBase class for ORM and Authentication
+
     def __init__(self, pickles={}):
         """
 
