@@ -1466,7 +1466,7 @@ class CommandsBase(UtilsBase, CommandsInterface):
     def execute(self, command, mode="subprocess_popen", stdin_mode=False, options={}):
         """
         `TODO`: ReWrite for inclusion of all arguments \n
-        #### COMMON:  ARGUMENTS \n
+        #### `.execute` ARGUMENTS \n
         `command`: type(str) or type(list) \n
         Any command or command with arguments and options as a list \n
         `stdin_mode`: type(bool) \n
@@ -1475,10 +1475,11 @@ class CommandsBase(UtilsBase, CommandsInterface):
         `mode`: type(str) \n
         Value Options: [ subprocess_call, subprocess_popen, subprocess_run, os_popen ] [Default is str subprocess_call] \n
         `options`: type(dict) \n
-        `options` object that will be requested for `subprocess` or `os` functions \n
-        Details of the same in the section below. \n
+        Details of the same in the section `option Object keys details` below. \n
+        `options` object that are needed for `subprocess` or `os` functions \n
+        
 
-        #### SPECIFIC `option` Object Keys for: \n
+        #### `option` object keys Details: \n
 
         for `subprocess_call` which calls the `subprocess.call()` function: \n
         { `args`:command argument and/or options, `stdin, stdout, stderr, bufsize, universal_newlines, executable, shell, cwd, env,
