@@ -1726,8 +1726,20 @@ class QueuesBase(UtilsBase, QueuesInterface):
 
 class EventsBase(UtilsBase, EventsInterface):
     """
+    `EventsBase` class can be used to work with events \n
 
     ##### Instance Methods:
+    @event_register
+    @event_unregister
+    @listener_register
+    @on
+    @listener_unregister
+    @get_state
+    @set_state
+    @listen
+    @stop
+    @send
+    @emit
 
     """
 
@@ -1746,9 +1758,13 @@ class EventsBase(UtilsBase, EventsInterface):
         `event_object`: type(dict) \n
         { `name` (str), `event` (function), `listening` (bool), `listeners` (dict) } \n
 
-            `event` (func): function to execute when event is invoked \n
-            `listening` (bool): if function needs to be listening to events \n
-            `listeners` (dict): dictionary of listener objects \n
+        ##### event_object Keyword Arguments Details
+        `event`: type(func) \n
+        Function to execute when event is invoked \n
+        `listening`: type(bool) \n
+        If function needs to be listening to events \n
+        `listeners`: type(dict) \n
+        Dictionary of listener objects \n
         TODO: This is blocking event object. Needs to allow non-blocking and non-blocking multithreaded / multiprocess
         """
         # Change this to different ways of using events/actions
@@ -1784,6 +1800,9 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Create or define an event using `.event_unregister` \n
         { `event_name` (str) } \n
+
+        ##### Arguments Details
+        `event_name`: type(str) \n
         """
         print("Deleting event: ", event_name)
         return self.delete(event_name)
@@ -1792,6 +1811,15 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Create or define an event using `.listener_register` \n
         { `listener_object` (dict) } \n
+
+        ##### Arguments Details
+        `listener_object`: type(dict) \n
+        { `name` (str), `event_name` (str), `listener` (bool) } \n
+
+        ##### listener_object Keyword Arguments
+        `name`: type(str) \n
+        `event_name`: type(str) \n
+        `listener`: type(bool) \n
         """
         try:
             if self.validate_object(listener_object, ["name", "event_name", "listener"]):
@@ -1807,6 +1835,12 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Create or define an event using `.on` \n
         { `event_name` (str), `name` (str), `handler` (function) } \n
+
+        ##### Arguments Details
+        `event_name`: type(str) \n
+        `name`: type(str) \n
+        `handler`: type(function) \n
+
         """
         return self.listener_register({"name": name, "event_name": event_name, "listener": handler})
 
@@ -1814,6 +1848,14 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Listen to an event using `.listener_unregister` \n
         { `listener_object` (dict) } \n
+        
+        ##### Arguments Details
+        `listener_object`: type(dict) \n
+        { `name` (str), `event_name` (str) } \n
+
+        ##### listener_object Keyword Argument Details
+        `name`: type(str) \n
+        `event_name`: type(str) \n 
         """
         event_name = listener_object.get("event_name")
         a_name = listener_object.get("name")
@@ -1831,6 +1873,10 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Get an event state using `.get_state` \n
         { `event_name` (str) } \n
+
+        ##### Arguments Details
+        `event_name`: type(str) \n
+
         """
         try:
             e = self.fetch(event_name)
@@ -1844,6 +1890,10 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Set an event state using `.set_state` \n
         { `event_name` (str), `state` (bool) } \n
+
+        ##### Arguments Details
+        `event_name` type(str): \n
+        `state` type(bool): \n
         """
         try:
             event = self.fetch(event_name)
@@ -1857,6 +1907,9 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Listen an event using `.listen` \n
         { `event_name` (str) } \n
+        
+        ##### Arguments Details
+        `event_name` type(str): \n
         """
         return self.set_state(event_name, True)
 
@@ -1864,6 +1917,9 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Stop Listening to an event using `.stop` \n
         { `event_name` (str) } \n
+
+        ##### Arguments Details
+        `event_name` type(str): \n
         """
         return self.set_state(event_name, False)
 
@@ -1871,6 +1927,15 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Send an event using `.send` \n
         { `message_object` (dict) } \n
+
+        ##### Arguments Details
+        `message_object` type(dict): \n
+        { `event_name` (str), `message` (any object) } \n
+
+        ##### `message_object` Keyword Arguments Details
+        `event_name`: type(str) \n
+        `message`: type(any object) \n
+
         """
         try:
             action = self.fetch(message_object.get("event_name"))
@@ -1885,6 +1950,12 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Emit an event using `.emit` \n
         { `event_name` (str), `message` (any object) } \n
+
+        ##### Arguments Details
+        `event_name`: type(str): \n
+        
+        `message` type(any object): \n
+
         """
         return self.send({"event_name": event_name, "message": message})
 
