@@ -39,7 +39,7 @@ class ClosureBase():
     LIBRARY CORE: Do not modify \n
     Use for creating closures, if need for your app or use case. \n
 
-    ##### Methods
+    ##### Instance Methods
     @class_closure() -> (@getter, @setter, @deleter)
     """
 
@@ -255,7 +255,7 @@ class ConcurencyBase():
     """
     `ConcurencyBase` allows working with different ways of working with concurrency \n
 
-    ##### Methods
+    ##### Instance Methods
     @staticmethod Futures: `ConcurencyBase.futures` [todo]
     @staticmethod Asyncio: `ConcurencyBase.asyncio` [todo]
     @staticmethod Thread: `ConcurencyBase.thread`
@@ -498,7 +498,7 @@ class UtilsBase(ObjectModificationInterface):
     """
     UtilsBase class is used for extending most common logics around the taskcontrols library. \n
 
-    ##### Methods
+    ##### Instance Methods
     Provides a `validate_object` to validate an dictionary object to verify a specific list of keys
     @validate_object
     @append_update_dict \n
@@ -688,7 +688,7 @@ class TimerBase(UtilsBase, TimeInterface):
     """
     `TimerBase` class is used to time execution of specific programing logic you need \n
 
-    ##### Methods
+    ##### Instance Methods
     @timer_create
     @time
     @elapsed_time
@@ -1223,9 +1223,9 @@ class CSVReaderBase(FileReaderBase, CSVReaderInterface):
 
 class LogBase(UtilsBase, LogsInterface):
     """
-    LogBase class is used to store loggers and log data using predefined loggers \n
+    `LogBase` class is used to store loggers and log data using predefined loggers \n
 
-    ##### Methods:
+    ##### Instance Methods:
     @logger_create
     @log
     """
@@ -1364,9 +1364,15 @@ class LogBase(UtilsBase, LogsInterface):
 
 class PicklesBase(UtilsBase, PicklesInterface):
     """
+    `PicklesBase` class is used for managing and working with Pickle files \n
 
-    ##### Methods:
-
+    ##### Instance Methods:
+    @row_insert 
+    @row_append
+    @row_update
+    @row_delete
+    @search
+    @connection
     """
     # Consider PickleBase class for ORM and Authentication
 
@@ -1422,7 +1428,7 @@ class CommandsBase(UtilsBase, CommandsInterface):
     CommandsBase class allows for running commands you specify programmatically. \n
     All ways of subprocess.call, subprocess.popen, subprocess.run, os.popen [TODO] are intended to be supported. \n
 
-    ##### Methods:
+    ##### Instance Methods:
     @exists
     @path
     @execute
@@ -1617,7 +1623,7 @@ class QueuesBase(UtilsBase, QueuesInterface):
     QueuesBase allows you to create a list of queues to work with \n
     All ways of List, Queue, LifoQueue, PriorityQueue, SimpleQueue are supported \n
 
-    ##### Methods:
+    ##### Instance Methods:
     @new
     @add
     @get
@@ -1719,6 +1725,11 @@ class QueuesBase(UtilsBase, QueuesInterface):
 
 
 class EventsBase(UtilsBase, EventsInterface):
+    """
+
+    ##### Instance Methods:
+
+    """
 
     def __init__(self, event={}):
         """
@@ -1880,7 +1891,17 @@ class EventsBase(UtilsBase, EventsInterface):
 
 class SchedularBase(UtilsBase):
     """
-    SchedularBase
+    `SchedularBase` class can be used to work with schedulars
+
+    ##### Private Instance Methods
+    @__runschedular
+    @__schedular
+
+    ##### Instance Methods
+    @manual
+    @start
+    @stop
+
     """
     #  EventsBase Send events for running schedular at a specific interval or time or day or manually
 
@@ -1900,9 +1921,15 @@ class SchedularBase(UtilsBase):
 
     def __runschedular(self, name, func, interval):
         """
-        name:
-        func:
-        interval:
+        `__runschedular` function \n
+        { `name` (str), `func` (function), `interval` (int) }
+
+        `name`: type(str) \n
+        
+        `func`: type(function) \n
+        
+        `interval`: type(int) \n
+
         """
         try:
             o = self.fetch(name)
@@ -1930,7 +1957,9 @@ class SchedularBase(UtilsBase):
 
     def __schedular(self, sch):
         """
-        sch
+        `__schedular` function \n
+        { `sch` (dict) } \n
+
         """
         if sch.get("interval") == "repeated" and sch.get("active") == True:
             sobj = self.__runschedular(
@@ -1943,7 +1972,8 @@ class SchedularBase(UtilsBase):
 
     def manual(self, name):
         """
-
+        `.manual` function \n
+        { `name` (str) } \n
         """
         try:
             o = self.fetch(name)
@@ -1962,6 +1992,8 @@ class SchedularBase(UtilsBase):
 
     def start(self, name):
         """
+        `.start` function \n
+        { `name` (str) } \n
 
         """
         sch = self.fetch(name)
@@ -1976,6 +2008,8 @@ class SchedularBase(UtilsBase):
 
     def stop(self, name):
         """
+        `.stop` function \n
+        { `name` (str) } \n
 
         """
         sc = self.fetch(name)
@@ -1988,7 +2022,22 @@ class SchedularBase(UtilsBase):
 
 
 class SocketsBase(UtilsBase, SocketsInterface):
+    """
+    `SocketsBase` class is used to work with sockets \n
+    SocketsBase works with any type of protocol supported by Python sockets \n
 
+    ##### Instance Methods
+    @socket_create
+    @socket_listen
+    @socket_accept
+    @socket_multi_server_connect
+    @socket_connect
+    @socket_close
+    @socket_delete
+    @send
+    @receive
+
+    """
     def __init__(self, socket={}):
         """
         socket: 
@@ -2264,7 +2313,32 @@ class SocketsBase(UtilsBase, SocketsInterface):
 
 class EPubSubBase(UtilsBase, PubSubsInterface):
     """
-    EPubSubBase
+    `EPubSubBase` class to work with a socket/ network based `Publish-Server-Subscriber` event architecture \n
+    EPubSubBase runs a queue in all `Publisher`, `Server`, and `Subscriber` event object instances \n
+
+    ##### Private Instance Methods
+    @__process
+    @__schedular
+    @__handler
+    @__publish_handler
+    @__receive_handler
+
+    ##### Instance Methods
+    @pubsub_create
+    @pubsub_delete
+    @queue_create
+    @queue_delete
+    @register_publisher
+    @unregister_publisher
+    @register_subscriber
+    @unregister_subscriber
+    @register_event
+    @unregister_event
+    @listen
+    @stop
+    @send
+    @receive
+
     """
     type = "epubsub"
     # agent options: application, publisher, server, subscriber
@@ -2581,7 +2655,36 @@ class EPubSubBase(UtilsBase, PubSubsInterface):
 
 
 class IPubSubBase(EPubSubBase):
+    """
+    `IPubSubBase` class to work with a socket/ network based `Publish-Server-Subscriber` server architecture \n
+    IPubSubBase runs a queue in all `Publisher`, `Server`, and `Subscriber` sockets \n
 
+    ##### Private Instance Methods
+    @__process
+    @__schedular
+    @__handler
+    @__publish_handler
+    @__receive_handler
+
+    ##### Instance Methods
+    @pubsub_create
+    @pubsub_delete
+    @queue_create
+    @queue_delete
+    @register_publisher
+    @unregister_publisher
+    @register_subscriber
+    @unregister_subscriber
+    @register_event
+    @unregister_event
+    @listen
+    @stop
+    @send
+    @receive
+    @publisher_socket
+    @subscriber_socket
+    @server_socket
+    """
     type = "ipubsub"
     # agent options: application, publisher, server, subscriber
     # TODO: Implement threading/processing
@@ -2977,7 +3080,12 @@ class IPubSubBase(EPubSubBase):
 
 
 class ActionsBase(UtilsBase):
+    """
+    `ActionsBase` class to work with actions within the application \n
 
+    ##### Instance Methods
+
+    """
     def __init__(self, action={}):
         """
 
@@ -2986,7 +3094,11 @@ class ActionsBase(UtilsBase):
 
 
 class HooksBase(UtilsBase, HooksInterface):
+    """
+    HooksBase class [TODO] to work with hooks \n
+    ##### Instance Methods
 
+    """
     server = None
 
     def __init__(self, validations={}, hooks={}, socketsbase=SocketsBase):
@@ -3076,7 +3188,12 @@ class HooksBase(UtilsBase, HooksInterface):
 
 
 class WebhooksBase(UtilsBase):
+    """
+    `WebhooksBase` class [TODO] for working with a webhooks server \n
 
+    ##### Instance Methods
+
+    """
     def __init__(self, action={}):
         """
 
@@ -3085,7 +3202,15 @@ class WebhooksBase(UtilsBase):
 
 
 class SSHBase(CommandsBase, SSHInterface):
+    """
+    `SSHBase` class is used to work with ssh, scp. Needs `OpenSSH` installed \n
 
+    ##### Instance Methods
+    @connect
+    @execute
+    @close
+
+    """
     server = None
 
     def __init__(self, validations={}, pubsub={}, socketsbase=SocketsBase):
