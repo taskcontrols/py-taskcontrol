@@ -1499,8 +1499,8 @@ class CommandsBase(UtilsBase, CommandsInterface):
         } \n\n
 
         * for `os_popen` which calls the `os.popen()` function: \n
-        { `args`:command argument and/or options
-        }
+        { `args` (str): command argument and/or options, `mode` (str), `buffsize` (int) } \n
+
         """
         # https://www.cyberciti.biz/faq/python-run-external-command-and-get-output/
         try:
@@ -1608,12 +1608,10 @@ class CommandsBase(UtilsBase, CommandsInterface):
                             input=input, bufsize=bufsize, timeout=timeout
                         )
                 elif mode == "os_popen":
-                    proc = os.popen([command, *options.get("args")])
-                elif mode == "os_popen":
-                    proc = os.popen([command, *options.get("args")])
-                    # r = proc.read()
+                    proc = os.popen([command, *options.get("args", [])], mode=options.get("mode", "r"), buffsize=options.get("buffsize", 0))
+                else:
+                    raise Exception
                 return proc
-            raise Exception
         except Exception:
             return False
 
