@@ -50,7 +50,7 @@
 
 ##### Version:
 
-    In Development Version: 1.2.6 (functional - production ready with plugin and concurrency support, fully tested)
+    In Development Version: 1.3.0 (functional - production ready with plugin and concurrency support, fully tested)
     Current Version: 1.2.5 (functional - production ready with most planned features with MVP, partly tested)
     Previous Version: 1.1.2 (functional - production ready minor issues)
     Previous Version: 1.1.0/1.1.1 (functional - not production ready - minor bug. Please upgrade to v1.1.2)
@@ -171,7 +171,7 @@ functools.reduce(red, ls)
 
 # Status
 
-* In Active Development (taskcontrol version 1.2.6 and Common Integrations and Activities as Plugins)
+* In Active Development (taskcontrol version 1.3.0 and Common Integrations and Activities as Plugins)
 
 # Support
 
