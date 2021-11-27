@@ -16,7 +16,7 @@ class PluginBase(UtilsBase, PluginsInterface):
     Allow invocation of workflow [todo] or task from within plugin \n
 
     ##### Instance Methods
-    `@plugin_create` \n
+    @`plugin_create` \n
 
     """
 

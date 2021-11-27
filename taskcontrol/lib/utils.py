@@ -40,7 +40,7 @@ class ClosureBase():
     Use for creating closures, if need for your app or use case. \n
 
     ##### Instance Methods
-    @class_closure() -> (@getter, @setter, @deleter)
+    @`class_closure()` -> `(@getter, @setter, @deleter)`
     """
 
     def class_closure(self, **kwargs):
@@ -177,9 +177,9 @@ class SharedBase(ClosureBase):
     SharedBase class is used to share a common instance across different objects across module. Follows a singleton pattern \n
 
     ##### Static Methods
-    @getInstance \n
+    @`getInstance` \n
     Usage: \n
-    SharedBase.getInstance()
+    `SharedBase.getInstance()`
     """
     __instance = None
 
@@ -496,23 +496,23 @@ class ConcurencyBase():
 
 class UtilsBase(ObjectModificationInterface):
     """
-    UtilsBase class is used for extending most common logics around the taskcontrols library. \n
+    `UtilsBase` class is used for extending most common logics around the taskcontrols library. \n
 
     ##### Instance Methods
     Provides a `validate_object` to validate an dictionary object to verify a specific list of keys
-    @validate_object
-    @append_update_dict \n
+    @`validate_object`
+    @`append_update_dict` \n
     Provides a `create`, `fetch`, `update`, and `delete` functions to modify private stored objects (implementation of ClosureBase) in the instance \n
-    @create
-    @fetch
-    @update
-    @delete
+    @`create`
+    @`fetch`
+    @`update`
+    @`delete`
 
     ClosureBase Implemented (Not Inherited) Available Methods: \n
     Provides a `getter`, `setter`, and `delete` functions not due to inheritence due to the ClosureBase implementation within \n
-    @getter
-    @setter
-    @deleter
+    @`getter`
+    @`setter`
+    @`deleter`
     """
 
     object_name = None
@@ -689,13 +689,13 @@ class TimerBase(UtilsBase, TimeInterface):
     `TimerBase` class is used for time execution captures of specific programing logic you need \n
 
     ##### Instance Methods
-    @timer_create
-    @time
-    @elapsed_time
-    @curent_elapsed_time
-    @reset
-    @start
-    @stop
+    @`timer_create`
+    @`time`
+    @`elapsed_time`
+    @`curent_elapsed_time`
+    @`reset`
+    @`start`
+    @`stop`
     """
 
     def __init__(self, timers={}):
@@ -1226,8 +1226,8 @@ class LogBase(UtilsBase, LogsInterface):
     `LogBase` class is used to store logger instances and log data to file using predefined loggers \n
 
     ##### Instance Methods:
-    @logger_create
-    @log
+    @`logger_create`
+    @`log`
     """
 
     def __init__(self, loggers={}):
@@ -1367,12 +1367,12 @@ class PicklesBase(UtilsBase, PicklesInterface):
     `PicklesBase` class is used for managing and working with Pickle files \n
 
     ##### Instance Methods:
-    @row_insert 
-    @row_append
-    @row_update
-    @row_delete
-    @search
-    @connection
+    @`row_insert`
+    @`row_append`
+    @`row_update`
+    @`row_delete`
+    @`search`
+    @`connection`
     """
     # Consider PickleBase class for ORM and Authentication
 
@@ -1429,9 +1429,9 @@ class CommandsBase(UtilsBase, CommandsInterface):
     All ways of `subprocess.call`, `subprocess.popen`, `subprocess.run`, `os.popen` [todo] are intended to be supported. \n
 
     ##### Instance Methods:
-    @exists
-    @path
-    @execute
+    @`exists`
+    @`path`
+    @`execute`
     """
 
     def __init__(self, object_name="commands", validations={}, commands={}):
@@ -1622,9 +1622,9 @@ class QueuesBase(UtilsBase, QueuesInterface):
     All ways of `list`, `Queue`, `LifoQueue`, `PriorityQueue`, `SimpleQueue` are supported \n
 
     ##### Instance Methods:
-    @new
-    @add
-    @get
+    @`new`
+    @`add`
+    @`get`
     """
     tmp = {}
 
@@ -1728,17 +1728,17 @@ class EventsBase(UtilsBase, EventsInterface):
     [TODO] Implementation of Asynchronous behaviour using concurrency class \n
 
     ##### Instance Methods:
-    @event_register
-    @event_unregister
-    @listener_register
-    @on
-    @listener_unregister
-    @get_state
-    @set_state
-    @listen
-    @stop
-    @send
-    @emit
+    @`event_register`
+    @`event_unregister`
+    @`listener_register`
+    @`on`
+    @`listener_unregister`
+    @`get_state`
+    @`set_state`
+    @`listen`
+    @`stop`
+    @`send`
+    @`emit`
 
     """
 
@@ -1964,13 +1964,13 @@ class SchedularBase(UtilsBase):
     `SchedularBase` class can be used to work with schedulars
 
     ##### Private Instance Methods
-    @__runschedular
-    @__schedular
+    @`__runschedular`
+    @`__schedular`
 
     ##### Instance Methods
-    @manual
-    @start
-    @stop
+    @`manual`
+    @`start`
+    @`stop`
 
     """
     #  EventsBase Send events for running schedular at a specific interval or time or day or manually
@@ -2097,15 +2097,15 @@ class SocketsBase(UtilsBase, SocketsInterface):
     SocketsBase works with any type of protocol supported by Python sockets \n
 
     ##### Instance Methods
-    @socket_create
-    @socket_listen
-    @socket_accept
-    @socket_multi_server_connect
-    @socket_connect
-    @socket_close
-    @socket_delete
-    @send
-    @receive
+    @`socket_create`
+    @`socket_listen`
+    @`socket_accept`
+    @`socket_multi_server_connect`
+    @`socket_connect`
+    @`socket_close`
+    @`socket_delete`
+    @`send`
+    @`receive`
 
     """
     def __init__(self, socket={}):
@@ -2387,27 +2387,27 @@ class EPubSubBase(UtilsBase, PubSubsInterface):
     EPubSubBase runs a queue in all `Publisher`, `Server`, and `Subscriber` event object instances \n
 
     ##### Private Instance Methods
-    @__process
-    @__schedular
-    @__handler
-    @__publish_handler
-    @__receive_handler
+    @`__process`
+    @`__schedular`
+    @`__handler`
+    @`__publish_handler`
+    @`__receive_handler`
 
     ##### Instance Methods
-    @pubsub_create
-    @pubsub_delete
-    @queue_create
-    @queue_delete
-    @register_publisher
-    @unregister_publisher
-    @register_subscriber
-    @unregister_subscriber
-    @register_event
-    @unregister_event
-    @listen
-    @stop
-    @send
-    @receive
+    @`pubsub_create`
+    @`pubsub_delete`
+    @`queue_create`
+    @`queue_delete`
+    @`register_publisher`
+    @`unregister_publisher`
+    @`register_subscriber`
+    @`unregister_subscriber`
+    @`register_event`
+    @`unregister_event`
+    @`listen`
+    @`stop`
+    @`send`
+    @`receive`
 
     """
     type = "epubsub"
@@ -2730,30 +2730,31 @@ class IPubSubBase(EPubSubBase):
     IPubSubBase runs a queue in all `Publisher`, `Server`, and `Subscriber` sockets \n
 
     ##### Private Instance Methods
-    @__process
-    @__schedular
-    @__handler
-    @__publish_handler
-    @__receive_handler
+    @`__process`
+    @`__schedular`
+    @`__handler`
+    @`__publish_handler`
+    @`__receive_handler`
 
     ##### Instance Methods
-    @pubsub_create
-    @pubsub_delete
-    @queue_create
-    @queue_delete
-    @register_publisher
-    @unregister_publisher
-    @register_subscriber
-    @unregister_subscriber
-    @register_event
-    @unregister_event
-    @listen
-    @stop
-    @send
-    @receive
-    @publisher_socket
-    @subscriber_socket
-    @server_socket
+    @`pubsub_create`
+    @`pubsub_delete`
+    @`queue_create`
+    @`queue_delete`
+    @`register_publisher`
+    @`unregister_publisher`
+    @`register_subscriber`
+    @`unregister_subscriber`
+    @`register_event`
+    @`unregister_event`
+    @`listen`
+    @`stop`
+    @`send`
+    @`receive`
+    @`publisher_socket`
+    @`subscriber_socket`
+    @`server_socket`
+
     """
     type = "ipubsub"
     # agent options: application, publisher, server, subscriber
@@ -3165,7 +3166,7 @@ class ActionsBase(UtilsBase):
 
 class HooksBase(UtilsBase, HooksInterface):
     """
-    HooksBase class [TODO] to work with hooks \n
+    `HooksBase` class [TODO] to work with hooks \n
     ##### Instance Methods
 
     """
@@ -3276,9 +3277,9 @@ class SSHBase(CommandsBase, SSHInterface):
     `SSHBase` class is used to work with `ssh`, `scp`. Needs `OpenSSH` installed \n
 
     ##### Instance Methods
-    @connect
-    @execute
-    @close
+    @`connect`
+    @`execute`
+    @`close`
 
     """
     server = None
