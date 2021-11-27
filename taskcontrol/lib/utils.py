@@ -509,7 +509,7 @@ class UtilsBase(ObjectModificationInterface):
     @delete
 
     ClosureBase Implemented (Not Inherited) Available Methods: \n
-    Provides a `getter`, `setter`, and `delete` functions inheritence due to the ClosureBase implementation within \n
+    Provides a `getter`, `setter`, and `delete` functions not due to inheritence due to the ClosureBase implementation within \n
     @getter
     @setter
     @deleter
@@ -686,7 +686,7 @@ class UtilsBase(ObjectModificationInterface):
 
 class TimerBase(UtilsBase, TimeInterface):
     """
-    `TimerBase` class is used to time execution of specific programing logic you need \n
+    `TimerBase` class is used for time execution captures of specific programing logic you need \n
 
     ##### Instance Methods
     @timer_create
@@ -1223,7 +1223,7 @@ class CSVReaderBase(FileReaderBase, CSVReaderInterface):
 
 class LogBase(UtilsBase, LogsInterface):
     """
-    `LogBase` class is used to store loggers and log data using predefined loggers \n
+    `LogBase` class is used to store logger instances and log data to file using predefined loggers \n
 
     ##### Instance Methods:
     @logger_create
@@ -1425,8 +1425,8 @@ class PicklesBase(UtilsBase, PicklesInterface):
 
 class CommandsBase(UtilsBase, CommandsInterface):
     """
-    CommandsBase class allows for running commands you specify programmatically. \n
-    All ways of subprocess.call, subprocess.popen, subprocess.run, os.popen [TODO] are intended to be supported. \n
+    `CommandsBase` class allows for running commands you specify programmatically. \n
+    All ways of `subprocess.call`, `subprocess.popen`, `subprocess.run`, `os.popen` [todo] are intended to be supported. \n
 
     ##### Instance Methods:
     @exists
@@ -1620,8 +1620,8 @@ class CommandsBase(UtilsBase, CommandsInterface):
 
 class QueuesBase(UtilsBase, QueuesInterface):
     """
-    QueuesBase allows you to create a list of queues to work with \n
-    All ways of List, Queue, LifoQueue, PriorityQueue, SimpleQueue are supported \n
+    `QueuesBase` allows you to create a list of queues to work with \n
+    All ways of `list`, `Queue`, `LifoQueue`, `PriorityQueue`, `SimpleQueue` are supported \n
 
     ##### Instance Methods:
     @new
@@ -1727,6 +1727,7 @@ class QueuesBase(UtilsBase, QueuesInterface):
 class EventsBase(UtilsBase, EventsInterface):
     """
     `EventsBase` class can be used to work with events \n
+    [TODO] Implementation of Asynchronous behaviour using concurrency class \n
 
     ##### Instance Methods:
     @event_register
@@ -2384,7 +2385,7 @@ class SocketsBase(UtilsBase, SocketsInterface):
 
 class EPubSubBase(UtilsBase, PubSubsInterface):
     """
-    `EPubSubBase` class to work with a socket/ network based `Publish-Server-Subscriber` event architecture \n
+    `EPubSubBase` class to work with a socket/ network based `Publish-Server-Subscriber` event architecture within an application \n
     EPubSubBase runs a queue in all `Publisher`, `Server`, and `Subscriber` event object instances \n
 
     ##### Private Instance Methods
@@ -2727,7 +2728,7 @@ class EPubSubBase(UtilsBase, PubSubsInterface):
 
 class IPubSubBase(EPubSubBase):
     """
-    `IPubSubBase` class to work with a socket/ network based `Publish-Server-Subscriber` server architecture \n
+    `IPubSubBase` class to work with a socket/ network based `Publish-Server-Subscriber` server architecture across servers \n
     IPubSubBase runs a queue in all `Publisher`, `Server`, and `Subscriber` sockets \n
 
     ##### Private Instance Methods
@@ -3260,7 +3261,7 @@ class HooksBase(UtilsBase, HooksInterface):
 
 class WebhooksBase(UtilsBase):
     """
-    `WebhooksBase` class [TODO] for working with a webhooks server \n
+    `WebhooksBase` class [todo] for working with a webhooks server \n
 
     ##### Instance Methods
 
@@ -3274,7 +3275,7 @@ class WebhooksBase(UtilsBase):
 
 class SSHBase(CommandsBase, SSHInterface):
     """
-    `SSHBase` class is used to work with ssh, scp. Needs `OpenSSH` installed \n
+    `SSHBase` class is used to work with `ssh`, `scp`. Needs `OpenSSH` installed \n
 
     ##### Instance Methods
     @connect
