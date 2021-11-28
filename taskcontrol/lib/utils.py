@@ -500,19 +500,20 @@ class UtilsBase(ObjectModificationInterface):
 
     ##### Instance Methods
     Provides a `validate_object` to validate an dictionary object to verify a specific list of keys
-    @`validate_object`
+    @`validate_object` \n
     @`append_update_dict` \n
     Provides a `create`, `fetch`, `update`, and `delete` functions to modify private stored objects (implementation of ClosureBase) in the instance \n
-    @`create`
-    @`fetch`
-    @`update`
-    @`delete`
+    @`create` \n
+    @`fetch` \n
+    @`update` \n
+    @`delete` \n
 
     ClosureBase Implemented (Not Inherited) Available Methods: \n
     Provides a `getter`, `setter`, and `delete` functions not due to inheritence due to the ClosureBase implementation within \n
-    @`getter`
-    @`setter`
-    @`deleter`
+    @`getter` \n
+    @`setter` \n
+    @`deleter` \n
+
     """
 
     object_name = None
@@ -620,17 +621,20 @@ class UtilsBase(ObjectModificationInterface):
         node = ET.Element(tag)
         _to_etree(body, node)
         return ET.tostring(node)
-    
+
+    @staticmethod
     def dictify_xml(r, root=True):
+        """
+        """
         if root:
-            return {r.tag : dictify(r, False)}
-        d=copy(r.attrib)
+            return {r.tag: dictify(r, False)}
+        d = copy(r.attrib)
         if r.text:
-            d["_text"]=r.text
+            d["_text"] = r.text
         for x in r.findall("./*"):
             if x.tag not in d:
-                d[x.tag]=[]
-            d[x.tag].append(dictify(x,False))
+                d[x.tag] = []
+            d[x.tag].append(dictify(x, False))
         return d
 
     @staticmethod
@@ -656,10 +660,33 @@ class UtilsBase(ObjectModificationInterface):
         """
         pass
 
+    @staticmethod
+    def csv_to_json():
+        """
+
+        """
+        # https://dzone.com/articles/full-stack-development-tutorial-sending-pandas-dat
+        pass
+
+    @staticmethod
+    def csv_to_xml():
+        """
+
+        """
+        # https://dzone.com/articles/using-python-pandas-for-log-analysis
+        # https://pbpython.com/pdf-reports.html
+        pass
+
+    @staticmethod
     def string_to_json(self, string):
+        """
+        """
         return json.loads(string)
 
+    @staticmethod
     def json_to_string(self, json):
+        """
+        """
         return str(json)
 
     def append_update_dict(self, main_object, update_object):
@@ -1195,7 +1222,25 @@ class FileReaderBase(UtilsBase, FileReaderInterface):
 
 
 class CSVReaderBase(FileReaderBase, CSVReaderInterface):
+    """
+    `CSVReaderBase` class can be used to read, write, append to a file. \n
+    CSVReaderBase class can also be used to insert, update, append, delete rows in a file and to search rows in a file that match a regex pattern. \n
+    [TODO] row methods to be modified \n
 
+    ##### Instance Methods
+    @`exists` \n
+    @`is_file` \n
+    @`file_store` \n
+    @`file_read` \n
+    @`file_write` \n
+    @`file_append` \n
+    @`row_insert` \n
+    @`row_append` \n
+    @`row_update` \n
+    @`row_delete` \n
+    @`row_search` \n
+
+    """
     def __init__(self, csvs={}):
         """
 
@@ -1210,21 +1255,6 @@ class CSVReaderBase(FileReaderBase, CSVReaderInterface):
             "delete": self.v
         }
         super().__init__(validations=self.vd, fileobjects=csvs)
-
-    def csv_to_json():
-        """
-
-        """
-        # https://dzone.com/articles/full-stack-development-tutorial-sending-pandas-dat
-        pass
-
-    def csv_to_xml():
-        """
-
-        """
-        # https://dzone.com/articles/using-python-pandas-for-log-analysis
-        # https://pbpython.com/pdf-reports.html
-        pass
 
     def row_insert(self, name, head, params):
         """
