@@ -5,7 +5,7 @@ from taskcontrol.lib import UtilsBase
 class CLI(UtilsBase):
     def __init__(self, **kwargs):
         super().__init__("taskcontrolcli", {}, **kwargs)
-        self.create({"name": "a", "action": lambda x: print(x)})
+        self.create({ "name": "a", "action": lambda x: print(x) })
 
     def run(self, commands):
         cmd_list = commands.strip(" ").split(",")
