@@ -620,18 +620,18 @@ class UtilsBase(ObjectModificationInterface):
         node = ET.Element(tag)
         _to_etree(body, node)
         return ET.tostring(node)
-
-    # def dictify_xml(r,root=True):
-    #     if root:
-    #         return {r.tag : dictify(r, False)}
-    #     d=copy(r.attrib)
-    #     if r.text:
-    #         d["_text"]=r.text
-    #     for x in r.findall("./*"):
-    #         if x.tag not in d:
-    #             d[x.tag]=[]
-    #         d[x.tag].append(dictify(x,False))
-    #     return d
+    
+    def dictify_xml(r, root=True):
+        if root:
+            return {r.tag : dictify(r, False)}
+        d=copy(r.attrib)
+        if r.text:
+            d["_text"]=r.text
+        for x in r.findall("./*"):
+            if x.tag not in d:
+                d[x.tag]=[]
+            d[x.tag].append(dictify(x,False))
+        return d
 
     @staticmethod
     def dict_to_csv(csv_filename, headers=[], diction_list=[]):
@@ -967,6 +967,25 @@ class TimerBase(UtilsBase, TimeInterface):
 
 
 class FileReaderBase(UtilsBase, FileReaderInterface):
+    """
+    `FileReaderBase` class can be used to read, write, append to a file. \n
+    FileReaderBase class can also be used to insert, update, append, delete rows in a file and to search rows in a file that match a regex pattern. \n
+    [TODO] row methods to be modified \n
+
+    ##### Instance Methods
+    @`exists` \n
+    @`is_file` \n
+    @`file_store` \n
+    @`file_read` \n
+    @`file_write` \n
+    @`file_append` \n
+    @`row_insert` \n
+    @`row_append` \n
+    @`row_update` \n
+    @`row_delete` \n
+    @`row_search` \n
+
+    """
 
     def __init__(self, validations={}, fileobjects={}):
         """
