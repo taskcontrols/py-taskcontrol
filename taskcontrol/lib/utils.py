@@ -1010,7 +1010,7 @@ class FileReaderBase(UtilsBase, FileReaderInterface):
 
         """
         config = self.fetch(name)
-        with open(config.get("file"), "r") as obj:
+        with open(config.get("file"), mode="r", encoding=config.get("encoding")) as obj:
             try:
                 if way == "read":
                     if index:
@@ -1039,7 +1039,7 @@ class FileReaderBase(UtilsBase, FileReaderInterface):
 
         """
         config = self.fetch(name)
-        with open(config.get("file"), "w+") as obj:
+        with open(config.get("file"), mode="w+", encoding=config.get("encoding")) as obj:
             try:
                 if way == "write":
                     obj.write(items)
@@ -1057,7 +1057,7 @@ class FileReaderBase(UtilsBase, FileReaderInterface):
 
         """
         config = self.fetch(name)
-        with open(config.get("file"), "a") as obj:
+        with open(config.get("file"), mode="a", encoding=config.get("encoding")) as obj:
             try:
                 if way == "write":
                     obj.write(items)

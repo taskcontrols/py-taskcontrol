@@ -5,13 +5,15 @@ fr = FileReaderBase()
 logfile = {
     "name": "logtest",
     "file": "./demos/logs/filereaderdemo.log",
-    "mode": "r"
+    "mode": "r",
+    "encoding": "UTF-8"
 }
 
 writelogfile = {
     "name": "filetest",
     "file": "./demos/logs/filereaderdemo_filename.log",
-    "mode": "a"
+    "mode": "a",
+    "encoding": "UTF-8"
 }
 
 if fr:
