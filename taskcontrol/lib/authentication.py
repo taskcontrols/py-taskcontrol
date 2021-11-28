@@ -21,18 +21,52 @@ from taskcontrol.lib.orm import SQLORMBase
 
 
 class AuthenticationBase(UtilsBase, AuthsInterface):
+    """
+    `AuthenticationBase` class can be used to authenticate and authorize users within the application \n
+    Implements an ORM not as a Inheritance but as an class instance variable. \n
+    The Default ORM is `SQLORMBase`. However, you can use any orm and `AuthsInterface` to implement and use your own implementation \n
+    
+    ##### Instance Methods
+    
+    @`init_db` \n
+    @`init_tables` \n
+    @`init_superuser` \n
+    @`init_pickle` \n
+    @`init_ptables` \n
+    @`init_psuperuser` \n
+    @`create_user` \n
+    @`update_user` \n
+    @`delete_user` \n
+    @`get_user` \n
+    @`change_password` \n
+    @`create_permissions` \n
+    @`update_permissions` \n
+    @`delete_permissions` \n
+    @`get_permissions` \n
+    @`create_role` \n
+    @`get_user_permissions` \n
+    @`has_permissions` \n
+    @`is_loggedin` \n
+    @`is_authenticated` \n
+
+    """
 
     def __init__(self, orm=SQLORMBase, **kwargs):
-        self.getter, self.setter, self.deleter = self.class_closure(
-            dbs={}, pickles={})
+        super().__init__(object_name="", validations={}, dbs=kwargs.get("dbs", {}), pickles=kwargs.get("pickles", {}))
         self.orm = orm()
 
     def init_db(self, path, name):
+        """
+        
+        """
         conn = sqlite3.connect(path + name + '.db')
         # add connection to db_connections
         return conn
 
     def init_tables(self, conn):
+        """
+        
+        """
         try:
             try:
                 sql = """
@@ -85,6 +119,9 @@ class AuthenticationBase(UtilsBase, AuthsInterface):
         return True
 
     def init_superuser(self, conn, options):
+        """
+        
+        """
         # username, password, role, activity, permission
         try:
             # error here on string format?
@@ -130,64 +167,115 @@ class AuthenticationBase(UtilsBase, AuthsInterface):
         return True
 
     def init_pickle(self, path, name):
+        """
+        
+        """
         out = open(path + name + ".pickle", "wb")
         return out
 
     def init_ptables(self, conn):
+        """
+        
+        """
         pass
 
     def init_psuperuser(self, conn):
+        """
+        
+        """
         pass
 
     def create_user(self, conn, options):
+        """
+        
+        """
         self.verify_options_structure(options)
 
     def update_user(self, conn, options):
+        """
+        
+        """
         self.verify_options_structure(options)
 
     def delete_user(self, conn, options):
+        """
+        
+        """
         self.verify_options_structure(options)
 
     def get_user(self, conn, options):
+        """
+        
+        """
         self.verify_options_structure(options)
 
     def change_password(self, conn, options):
+        """
+        
+        """
         self.verify_options_structure(options)
 
     def create_permissions(self, conn, options):
+        """
+        
+        """
         # user/role, action, permissions
         self.verify_options_structure(options)
         return False
 
     def update_permissions(self, conn, options):
+        """
+        
+        """
         self.verify_options_structure(options)
         return False
 
     def delete_permissions(self, conn, options):
+        """
+        
+        """
         self.verify_options_structure(options)
         return False
 
     def get_permissions(self, conn, options):
+        """
+        
+        """
         self.verify_options_structure(options)
         return {}
 
     def create_role(self, conn, options):
+        """
+        
+        """
         self.verify_options_structure(options)
         # create role from db
 
     def update_role(self, conn, options):
+        """
+        
+        """
         self.verify_options_structure(options)
         # update role from db
 
     def delete_role(self, conn, options):
+        """
+        
+        """
         self.verify_options_structure(options)
         # delete role from db
 
     def get_role(self, conn, options):
+        """
+        
+        """
         self.verify_options_structure(options)
         # get role from db
 
     def get_user_permissions(self, conn, options):
+        """
+        
+        """
         # user, role, action, permissions
         self.verify_options_structure(options)
         permissions = self.get_permissions(conn, options)
@@ -196,6 +284,9 @@ class AuthenticationBase(UtilsBase, AuthsInterface):
         return False
 
     def has_permissions(self, conn, options):
+        """
+        
+        """
         # user, role, action, permissions for action/user
         self.verify_options_structure(options)
         # get_user_permissions
@@ -204,6 +295,9 @@ class AuthenticationBase(UtilsBase, AuthsInterface):
         return False
 
     def is_loggedin(self, conn, options):
+        """
+        
+        """
         # id or username, password
         self.verify_options_structure(options)
 
@@ -217,6 +311,9 @@ class AuthenticationBase(UtilsBase, AuthsInterface):
         return False
 
     def is_authenticated(self, conn, options):
+        """
+        
+        """
         # id or username, password
         # action, user
         self.verify_options_structure(options)

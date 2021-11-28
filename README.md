@@ -22,7 +22,7 @@
 * Access read-only contexts and results of middlewares/tasks
 * Allows merging two instances of task controls with namespace clash handling
 * Run instance, shared, and mix of tasks (individual or all groups)
-* Allows working with Logging, Sockets, Events, Queues, etc
+* Allows working with Logging, Sockets, Events, Queues etc
 * Allows working with Publisher-Subscriber Architectures, Client-Agent Architectures, Webhooks
 * In-Development:
     * Allows support for / working with Concurrency
@@ -35,6 +35,7 @@
     * Planned Integrations with Testing, and Infrastructure Automation toolings
     * Monitoring Support
     * Allows working with best practices like Dependency Injection (T) within the library (including Tasks, Workflow)
+    * Hooks support after dependency-injection package integration
     * Provided in and Allows plugins support for Python, Javascript languages
 
 
@@ -50,8 +51,9 @@
 
 ##### Version:
 
-    In Development Version: 1.3.0 (functional - production ready with plugin and concurrency support, fully tested)
-    Current Version: 1.2.5 (functional - production ready with most planned features with MVP, partly tested)
+    In Development Version: 1.3.0b1 (functional - production ready with plugin and concurrency support, with demos)
+    Current Version: 1.3.0b0 (functional - production ready with most planned features with MVP, with demos)
+    Previous Version: 1.2.5 (functional - production ready with most planned features with MVP, with demos)
     Previous Version: 1.1.2 (functional - production ready minor issues)
     Previous Version: 1.1.0/1.1.1 (functional - not production ready - minor bug. Please upgrade to v1.1.2)
 
