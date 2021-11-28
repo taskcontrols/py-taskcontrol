@@ -997,7 +997,7 @@ class FileReaderBase(UtilsBase, FileReaderInterface):
     """
     `FileReaderBase` class can be used to read, write, append to a file. \n
     FileReaderBase class can also be used to insert, update, append, delete rows in a file and to search rows in a file that match a regex pattern. \n
-    [TODO] row methods to be modified \n
+    [todo] row methods to be modified \n
 
     ##### Instance Methods
     @`exists` \n
@@ -1225,7 +1225,7 @@ class CSVReaderBase(FileReaderBase, CSVReaderInterface):
     """
     `CSVReaderBase` class can be used to read, write, append to a file. \n
     CSVReaderBase class can also be used to insert, update, append, delete rows in a file and to search rows in a file that match a regex pattern. \n
-    [TODO] row methods to be modified \n
+    [todo] row methods to be modified \n
 
     ##### Instance Methods
     @`exists` \n
@@ -1241,6 +1241,7 @@ class CSVReaderBase(FileReaderBase, CSVReaderInterface):
     @`row_search` \n
 
     """
+
     def __init__(self, csvs={}):
         """
 
