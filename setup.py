@@ -24,7 +24,7 @@ setup(
     author="taskcontrols",
     author_email="taskcontrols@gmail.com",
     maintainer="Ganesh B",
-    maintainer_email="ganeshsurfs@gmail.com",
+    maintainer_email="taskcontrols@gmail.com",
     description="Workflow Automation Library with support for Concurrent or Event based processes or activities in Local or Network Automation Tasks, including CI CD activities",
     long_description=long_description,
     long_description_content_type="text/markdown",
