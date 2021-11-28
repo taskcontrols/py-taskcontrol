@@ -1,3 +1,3 @@
-from taskcontrol import run
+from taskcontrol.run import run
 
-
+run()
