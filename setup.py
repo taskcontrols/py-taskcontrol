@@ -14,7 +14,7 @@ with open("requirements.txt") as requirements_file:
     requirements = requirements_file.readlines()
 
 # Getting version:
-with open("src/taskcontrol/__init__.py") as init_file:
+with open("./taskcontrol/__init__.py") as init_file:
     version = re.search("__version__ = \"(.*?)\"", init_file.read()).group(1)
 
 setup(
