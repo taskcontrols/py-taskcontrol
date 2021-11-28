@@ -624,6 +624,8 @@ class UtilsBase(ObjectModificationInterface):
         `name`: type(str) \n
         `workflow_kwargs`: type(dict) is optional key \n
         -- `shared`: type(bool) \n
+        `any-other-keys-you-need-to-specify-and-store`: any other keys you need to specify and store \n
+
         """
         config["workflow_kwargs"] = config.get("workflow_kwargs", {})
         config["workflow_kwargs"]["shared"] = config.get(
@@ -727,7 +729,7 @@ class TimerBase(UtilsBase, TimeInterface):
         """
         if not config.get("name"):
             raise TypeError("Name argument has to be provided")
-        
+
         config.update({
             "_start_time": config.get("_start_time", 0.0),
             "_elapsed_time": config.get("_elapsed_time", 0.0),
@@ -1477,7 +1479,7 @@ class CommandsBase(UtilsBase, CommandsInterface):
         `options`: type(dict) \n
         Details of the same in the section `option Object keys details` below. \n
         `options` object that are needed for `subprocess` or `os` functions \n
-        
+
 
         #### `option` object keys Details: \n
 
@@ -1609,7 +1611,8 @@ class CommandsBase(UtilsBase, CommandsInterface):
                             input=input, bufsize=bufsize, timeout=timeout
                         )
                 elif mode == "os_popen":
-                    proc = os.popen([command, *options.get("args", [])], mode=options.get("mode", "r"), buffsize=options.get("buffsize", 0))
+                    proc = os.popen([command, *options.get("args", [])], mode=options.get(
+                        "mode", "r"), buffsize=options.get("buffsize", 0))
                 else:
                     raise Exception
                 return proc
@@ -1848,7 +1851,7 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Listen to an event using `.listener_unregister` \n
         { `listener_object` (dict) } \n
-        
+
         ##### Arguments Details
         `listener_object`: type(dict) \n
         { `name` (str), `event_name` (str) } \n
@@ -1907,7 +1910,7 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Listen an event using `.listen` \n
         { `event_name` (str) } \n
-        
+
         ##### Arguments Details
         `event_name` type(str): \n
         """
@@ -1953,7 +1956,7 @@ class EventsBase(UtilsBase, EventsInterface):
 
         ##### Arguments Details
         `event_name`: type(str): \n
-        
+
         `message` type(any object): \n
 
         """
@@ -1996,9 +1999,9 @@ class SchedularBase(UtilsBase):
         { `name` (str), `func` (function), `interval` (int) }
 
         `name`: type(str) \n
-        
+
         `func`: type(function) \n
-        
+
         `interval`: type(int) \n
 
         """
@@ -2109,6 +2112,7 @@ class SocketsBase(UtilsBase, SocketsInterface):
     @`receive`
 
     """
+
     def __init__(self, socket={}):
         """
         socket: 
@@ -3158,6 +3162,7 @@ class ActionsBase(UtilsBase):
     ##### Instance Methods
 
     """
+
     def __init__(self, action={}):
         """
 
@@ -3266,6 +3271,7 @@ class WebhooksBase(UtilsBase):
     ##### Instance Methods
 
     """
+
     def __init__(self, action={}):
         """
 
