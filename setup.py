@@ -16,9 +16,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/taskcontrols/taskcontrol",
     packages=setuptools.find_packages(),
-    install_requires=[
-        'pytest=5.4.2'
-    ],
+    install_requires=[],
     entry_points={
         'console_scripts': [
             'tasks=run:run'
