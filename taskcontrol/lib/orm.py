@@ -14,7 +14,24 @@ from taskcontrol.lib.utils import UtilsBase
 
 class SQLORMBase(UtilsBase, SQLInterface):
     """
-    Base for the inbuilt mini `SQL ORM` which can be redefined as per their own needs using an `SQLInterface` using a different `ORM` that plugs into the application as a `Plugin`
+    `SQLORMBase` class is a Base for the inbuilt mini SQL ORM which can be redefined as per their own needs using an `SQLInterface` using a different `ORM` that plugs into the application as a `Plugin` \n
+
+    ##### Instance Methods
+
+    @`has_sql` \n
+    @`row_insert` \n
+    @`row_find` \n
+    @`row_update` \n
+    @`row_delete` \n
+    @`db_create` \n
+    @`db_alter` \n
+    @`db_delete` \n
+    @`db_find` \n
+    @`table_create` \n
+    @`table_alter` \n
+    @`table_delete` \n
+    @`table_find` \n
+
     """
     def __init__(self, dbs={}):
         self.v = ["name"]
