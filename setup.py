@@ -19,7 +19,7 @@ with open("src/taskcontrol/__init__.py") as init_file:
 
 setup(
     name='taskcontrol',
-    version='1.2.1',
+    version=version,
     scripts=[],
     author="taskcontrols",
     author_email="taskcontrols@gmail.com",
