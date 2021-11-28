@@ -219,6 +219,10 @@ class SharedBase(ClosureBase):
 
 
 class RThreadBase(threading.Thread):
+    """
+    `RThreadBase`
+    """
+
     def __init__(self, group=None, target=None, name=None,
                  args=(), kwargs={}, daemon=False, Verbose=None):
         threading.Thread.__init__(self, group=group, target=target,
@@ -226,16 +230,27 @@ class RThreadBase(threading.Thread):
         self._return = None
 
     def run(self):
+        """
+        .run() function is used to store returns to fetch from a join implementation
+        """
         if self._target is not None:
             self._return = self._target(*self._args, **self._kwargs)
 
     def join(self, *args):
+        """
+        .join() function can be used to get returns from a join implementation
+
+        """
         threading.Thread.join(self, *args, timeout=-1)
         return self._return
 
 
 class RProcessBase(multiprocessing.Process):
+    """
+    `RProcessBase`
+    """
     # https://analyticsindiamag.com/run-python-code-in-parallel-using-multiprocessing/
+
     def __init__(self, group=None, target=None, name=None,
                  args=(), kwargs={}, daemon=False, Verbose=None):
         multiprocessing.Process.__init__(self, group=group, target=target,
@@ -243,10 +258,16 @@ class RProcessBase(multiprocessing.Process):
         self._return = None
 
     def run(self):
+        """
+        .run() function is used to store returns to fetch from a join implementation
+        """
         if self._target is not None:
             self._return = self._target(*self._args, **self._kwargs)
 
     def join(self, *args):
+        """
+        .join() function can be used to get returns from a join implementation
+        """
         multiprocessing.Process.join(self, *args, timeout=-1)
         return self._return
 
