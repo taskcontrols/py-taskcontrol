@@ -14,17 +14,17 @@ with open("requirements.txt") as requirements_file:
     requirements = requirements_file.readlines()
 
 # Getting version:
-with open("src/taskcontrol/__init__.py") as init_file:
+with open("./taskcontrol/__init__.py") as init_file:
     version = re.search("__version__ = \"(.*?)\"", init_file.read()).group(1)
 
 setup(
     name='taskcontrol',
-    version='1.2.1',
+    version=version,
     scripts=[],
     author="taskcontrols",
     author_email="taskcontrols@gmail.com",
     maintainer="Ganesh B",
-    maintainer_email="ganeshsurfs@gmail.com",
+    maintainer_email="taskcontrols@gmail.com",
     description="Workflow Automation Library with support for Concurrent or Event based processes or activities in Local or Network Automation Tasks, including CI CD activities",
     long_description=long_description,
     long_description_content_type="text/markdown",
