@@ -527,6 +527,135 @@ class UtilsBase(ObjectModificationInterface):
         self.getter, self.setter, self.deleter = ClosureBase().class_closure(
             **kwargs)
 
+    @staticmethod
+    def csv_to_dict(csvfile):
+        """
+
+        """
+        return csv.DictReader(open(csvfile))
+
+    @staticmethod
+    def yml_to_dict(ymlfile):
+        """
+
+        """
+        # with open(ymlfile) as inf:
+        #     content = yaml.load(inf, Loader=yaml.Loader)
+        #     return content
+        pass
+
+    @staticmethod
+    def xml_to_dict(node):
+        """
+
+        """
+        # # https://stackoverflow.com/questions/2148119/how-to-convert-an-xml-string-to-a-dictionary
+        # d = {t.tag: {} if t.attrib else None}
+        # children = list(t)
+        # if children:
+        #     dd = defaultdict(list)
+        #     for dc in map(FileReaderBase.xml_to_dict, children):
+        #         for k, v in dc.items():
+        #             dd[k].append(v)
+        #     d = {t.tag: {k:v[0] if len(v) == 1 else v for k, v in dd.items()}}
+        # if t.attrib:
+        #     d[t.tag].update(('@' + k, v) for k, v in t.attrib.items())
+        # if t.text:
+        #     text = t.text.strip()
+        #     if children or t.attrib:
+        #         if text:
+        #             d[t.tag]['#text'] = text
+        #     else:
+        #         d[t.tag] = text
+        # return d
+        return {'tag': node.tag, 'text': node.text, 'attrib': node.attrib, 'children': {child.tag: FileReaderBase.xml_to_dict(child) for child in node}}
+
+    @staticmethod
+    def json_to_dict(node):
+        """
+
+        """
+        return json.loads(node)
+
+    @staticmethod
+    def dict_to_json(node):
+        """
+
+        """
+        return json.dumps(node)
+
+    @staticmethod
+    def dict_to_xml(diction):
+        """
+
+        """
+        try:
+            basestring
+        except NameError:
+            basestring = str
+
+        def _to_etree(diction, root):
+            if not diction:
+                pass
+            elif isinstance(diction, basestring):
+                root.text = diction
+            elif isinstance(diction, dict):
+                for k, v in diction.items():
+                    assert isinstance(k, basestring)
+                    if k.startswith('#'):
+                        assert k == '#text' and isinstance(v, basestring)
+                        root.text = v
+                    elif k.startswith('@'):
+                        assert isinstance(v, basestring)
+                        root.set(k[1:], v)
+                    elif isinstance(v, list):
+                        for e in v:
+                            _to_etree(e, ET.SubElement(root, k))
+                    else:
+                        _to_etree(v, ET.SubElement(root, k))
+            else:
+                raise TypeError('invalid type: ' + str(type(diction)))
+        assert isinstance(diction, dict) and len(diction) == 1
+        tag, body = next(iter(diction.items()))
+        node = ET.Element(tag)
+        _to_etree(body, node)
+        return ET.tostring(node)
+
+    # def dictify_xml(r,root=True):
+    #     if root:
+    #         return {r.tag : dictify(r, False)}
+    #     d=copy(r.attrib)
+    #     if r.text:
+    #         d["_text"]=r.text
+    #     for x in r.findall("./*"):
+    #         if x.tag not in d:
+    #             d[x.tag]=[]
+    #         d[x.tag].append(dictify(x,False))
+    #     return d
+
+    @staticmethod
+    def dict_to_csv(csv_filename, headers=[], diction_list=[]):
+        """
+
+        """
+        try:
+            with open(csv_filename, 'w') as csvfile:
+                writer = csv.DictWriter(csvfile, fieldnames=headers)
+                writer.writeheader()
+                # Every data in the list will be a
+                #       dictionary with matching columns
+                for data in diction_list:
+                    writer.writerow(data)
+        except IOError:
+            print("I/O error")
+
+    @staticmethod
+    def dict_yml(yml_filename, diction):
+        """
+
+        """
+        pass
+
     def string_to_json(self, string):
         return json.loads(string)
 
@@ -870,196 +999,76 @@ class FileReaderBase(UtilsBase, FileReaderInterface):
         path = Path(file_path)
         return path.is_file()
 
-    @staticmethod
-    def csv_to_dict(csvfile):
-        """
-
-        """
-        return csv.DictReader(open(csvfile))
-
-    @staticmethod
-    def yml_to_dict(ymlfile):
-        """
-
-        """
-        # with open(ymlfile) as inf:
-        #     content = yaml.load(inf, Loader=yaml.Loader)
-        #     return content
-        pass
-
-    @staticmethod
-    def xml_to_dict(node):
-        """
-
-        """
-        # # https://stackoverflow.com/questions/2148119/how-to-convert-an-xml-string-to-a-dictionary
-        # d = {t.tag: {} if t.attrib else None}
-        # children = list(t)
-        # if children:
-        #     dd = defaultdict(list)
-        #     for dc in map(FileReaderBase.xml_to_dict, children):
-        #         for k, v in dc.items():
-        #             dd[k].append(v)
-        #     d = {t.tag: {k:v[0] if len(v) == 1 else v for k, v in dd.items()}}
-        # if t.attrib:
-        #     d[t.tag].update(('@' + k, v) for k, v in t.attrib.items())
-        # if t.text:
-        #     text = t.text.strip()
-        #     if children or t.attrib:
-        #         if text:
-        #             d[t.tag]['#text'] = text
-        #     else:
-        #         d[t.tag] = text
-        # return d
-        return {'tag': node.tag, 'text': node.text, 'attrib': node.attrib, 'children': {child.tag: FileReaderBase.xml_to_dict(child) for child in node}}
-
-    @staticmethod
-    def json_to_dict(node):
-        """
-
-        """
-        return json.loads(node)
-
-    @staticmethod
-    def dict_to_json(node):
-        """
-
-        """
-        return json.dumps(node)
-
-    @staticmethod
-    def dict_to_xml(diction):
-        """
-
-        """
+    def file_store(self, config):
         try:
-            basestring
-        except NameError:
-            basestring = str
+            return self.create(config)
+        except:
+            return False
 
-        def _to_etree(diction, root):
-            if not diction:
-                pass
-            elif isinstance(diction, basestring):
-                root.text = diction
-            elif isinstance(diction, dict):
-                for k, v in diction.items():
-                    assert isinstance(k, basestring)
-                    if k.startswith('#'):
-                        assert k == '#text' and isinstance(v, basestring)
-                        root.text = v
-                    elif k.startswith('@'):
-                        assert isinstance(v, basestring)
-                        root.set(k[1:], v)
-                    elif isinstance(v, list):
-                        for e in v:
-                            _to_etree(e, ET.SubElement(root, k))
-                    else:
-                        _to_etree(v, ET.SubElement(root, k))
-            else:
-                raise TypeError('invalid type: ' + str(type(diction)))
-        assert isinstance(diction, dict) and len(diction) == 1
-        tag, body = next(iter(diction.items()))
-        node = ET.Element(tag)
-        _to_etree(body, node)
-        return ET.tostring(node)
-
-    # def dictify_xml(r,root=True):
-    #     if root:
-    #         return {r.tag : dictify(r, False)}
-    #     d=copy(r.attrib)
-    #     if r.text:
-    #         d["_text"]=r.text
-    #     for x in r.findall("./*"):
-    #         if x.tag not in d:
-    #             d[x.tag]=[]
-    #         d[x.tag].append(dictify(x,False))
-    #     return d
-
-    @staticmethod
-    def dict_to_csv(csv_filename, headers=[], diction_list=[]):
-        """
-
-        """
-        try:
-            with open(csv_filename, 'w') as csvfile:
-                writer = csv.DictWriter(csvfile, fieldnames=headers)
-                writer.writeheader()
-                # Every data in the list will be a
-                #       dictionary with matching columns
-                for data in diction_list:
-                    writer.writerow(data)
-        except IOError:
-            print("I/O error")
-
-    @staticmethod
-    def dict_yml(yml_filename, diction):
-        """
-
-        """
-        pass
-
-    def file_open(self, name):
+    def file_read(self, name, way, index=None):
         """
 
         """
         config = self.fetch(name)
-        try:
-            # return open(config.get("file"), config.get("mode"), config.get("encoding"))
-            return open(config.get("file"), config.get("mode"))
-        except Exception as e:
-            return False
+        with open(config.get("file"), "r") as obj:
+            try:
+                if way == "read":
+                    if index:
+                        return obj.read(index)
+                    else:
+                        return obj.read()
+                elif way == "readline":
+                    if index:
+                        return obj.readline(index)
+                    else:
+                        return obj.readline()
+                elif way == "readlines":
+                    return obj.readlines()
+                elif way == "file":
+                    a = []
+                    for i in obj:
+                        a.append(i)
+                    return a
+                obj.close()
+                return False
+            except Exception as e:
+                return False
 
-    def file_read(self, obj, way, index=None):
+    def file_write(self, name, items, way):
         """
 
         """
-        try:
-            if way == "read":
-                if index:
-                    return obj.read(index)
-                else:
-                    return obj.read()
-            elif way == "readline":
-                if index:
-                    return obj.readline(index)
-                else:
-                    return obj.readline()
-            elif way == "readlines":
-                return obj.readlines()
-            elif way == "file":
-                a = []
-                for i in obj:
-                    a.append(i)
-                return a
-            return False
-        except Exception as e:
-            return False
+        config = self.fetch(name)
+        with open(config.get("file"), "w+") as obj:
+            try:
+                if way == "write":
+                    obj.write(items)
+                elif way == "writeline":
+                    obj.writeline(items)
+                elif way == "writelines":
+                    obj.writelines(items)
+                obj.close()
+                return True
+            except Exception as e:
+                return False
 
-    def file_write(self, obj, items, way):
+    def file_append(self, name, items, way):
         """
 
         """
-        try:
-            if way == "write":
-                obj.write(items)
-            elif way == "writeline":
-                obj.writeline(items)
-            elif way == "writelines":
-                obj.writelines(items)
-            return True
-        except Exception as e:
-            return False
-
-    def file_close(self, obj):
-        """
-
-        """
-        try:
-            obj.close()
-            return True
-        except Exception as e:
-            return False
+        config = self.fetch(name)
+        with open(config.get("file"), "a") as obj:
+            try:
+                if way == "write":
+                    obj.write(items)
+                elif way == "writeline":
+                    obj.writeline(items)
+                elif way == "writelines":
+                    obj.writelines(items)
+                obj.close()
+                return True
+            except Exception as e:
+                return False
 
     def row_insert(self, name, item, row=None):
         """
@@ -1968,13 +1977,14 @@ class SchedularBase(UtilsBase):
     `SchedularBase` class can be used to work with schedulars
 
     ##### Private Instance Methods
-    @`__runschedular`
-    @`__schedular`
+    @`__runschedular` \n
+    @`__schedular` \n
 
     ##### Instance Methods
-    @`manual`
-    @`start`
-    @`stop`
+    @`manual` \n
+    @`start` \n
+    @`stop` \n
+    @`iterate` \n
 
     """
     #  EventsBase Send events for running schedular at a specific interval or time or day or manually
@@ -2093,6 +2103,31 @@ class SchedularBase(UtilsBase):
             if u:
                 return True
         return False
+
+    def iterate(self, function=lambda x: print(x), count=1):
+        """
+        `.iterate()` function can be used to iterate the same function n (`count`) number of times \n
+        { `function` (function) or (str), `count` (int) } \n
+
+        ##### Arguments
+        `function`: type(function) or type(str) \n
+        The function name that is stored in the instance or the function that needs to be run \n
+
+        `count`: type(str) \n
+        Count or frequency of repetition of a task
+
+        """
+        if type(function) == str:
+            function_ = self.fetch(function)
+        elif hasattr(function, '__call__'):
+            function_ = function
+        else:
+            return False
+
+        r = []
+        for _ in range(count):
+            r.append(function_())
+        return r
 
 
 class SocketsBase(UtilsBase, SocketsInterface):
