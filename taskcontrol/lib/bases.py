@@ -5,8 +5,7 @@ import copy
 from taskcontrol.lib.utils import ClosureBase, SharedBase, UtilsBase, ConcurencyBase, TimerBase, LogBase, CommandsBase
 from taskcontrol.lib.utils import EventsBase, QueuesBase, SocketsBase, HooksBase, ActionsBase
 from taskcontrol.lib.utils import EPubSubBase, IPubSubBase, WebhooksBase, SSHBase
-from taskcontrol.lib.authentication import AuthenticationBase
-from taskcontrol.lib.orm import SQLORMBase
+from taskcontrol.lib.orm import SQLORMBase, AuthenticationBase
 from taskcontrol.lib.interfaces import PluginsInterface
 
 
@@ -376,10 +375,6 @@ def task(*work_args, **work_kwargs):
 
         return add_tasks()
     return get_decorator
-
-
-if __name__ == "__main__":
-    plugin = PluginBase()
 
 
 __all__ = [

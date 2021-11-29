@@ -699,16 +699,40 @@ class UtilsBase(ObjectModificationInterface):
         pass
 
     @staticmethod
-    def string_to_json(self, string):
+    def string_to_json(string):
         """
         """
         return json.loads(string)
 
     @staticmethod
-    def json_to_string(self, json):
+    def json_to_string(json):
         """
         """
         return str(json)
+
+    @staticmethod
+    def iterate(function, iterations):
+        """
+        `.iterate()` function can be used to iterate the same function n (`iterations`) number of times \n
+        { `function` (function) or (str), `count` (int) } \n
+
+        ##### Arguments
+        `function`: type(function) \n
+        The function name that is stored in the instance or the function that needs to be run \n
+
+        `iterations`: type(str) \n
+        Counts or iterations or frequency of repetition of a task
+
+        """
+        if not hasattr(function, '__call__'):
+            raise TypeError
+        try:
+            r = []
+            for i in range(iterations):
+                r.append(function())
+            return r
+        except Exception as e:
+            return False
 
     def append_update_dict(self, main_object, update_object):
         """
@@ -1514,6 +1538,10 @@ class CommandsBase(UtilsBase, CommandsInterface):
     @`exists`
     @`path`
     @`execute`
+
+    ##### Static Instance Methods (UtilsBase Inherited)
+    @`iterate` \n
+
     """
 
     def __init__(self, object_name="commands", validations={}, commands={}):
@@ -1698,6 +1726,15 @@ class CommandsBase(UtilsBase, CommandsInterface):
                 return proc
         except Exception:
             return False
+
+    def shell(self, file, target="", options={}):
+        """
+        file: bash shell `.sh`, powershell `.ps1` `.psm` `.ps1xml`, bat `.bat` file
+        `target`: local, remote
+        `options`: { dir, remote { ip, port, protocol } }
+        """
+        # https://docs.microsoft.com/en-us/powershell/scripting/windows-powershell/ise/how-to-write-and-run-scripts-in-the-windows-powershell-ise?view=powershell-7.2
+        pass
 
 
 class QueuesBase(UtilsBase, QueuesInterface):
@@ -2055,6 +2092,8 @@ class SchedularBase(UtilsBase):
     @`manual` \n
     @`start` \n
     @`stop` \n
+
+    ##### Static Instance Methods (UtilsBase Inherited)
     @`iterate` \n
 
     """
@@ -2074,7 +2113,7 @@ class SchedularBase(UtilsBase):
                                       "update": self.v, "delete": ["name"]},
                          schedulars=schedulars)
 
-    def __runschedular(self, name, func, interval):
+    def __runschedular(self, name, func, interval, *args, **kwargs):
         """
         `__runschedular` function \n
         { `name` (str), `func` (function), `interval` (int) }
@@ -2118,9 +2157,21 @@ class SchedularBase(UtilsBase):
         """
         if sch.get("interval") == "repeated" and sch.get("active") == True:
             sobj = self.__runschedular(
-                sch.get("name"), sch.get("function"), sch.get("time"))
+                sch.get("name"), sch.get("function"), sch.get("time"),
+                args=[*sch.get("args", [])],
+                kwargs={**sch.get("kwargs", {})}
+            )
+        if sch.get("interval") == "iterate" and sch.get("active") == True:
+            sobj = self.iterate(
+                sch.get("function"), sch.get("time"),
+                args=[*sch.get("args", [])],
+                kwargs={**sch.get("kwargs", {})}
+            )
         elif sch.get("interval") == "single" and sch.get("active") == True:
-            sobj = sch.get("function")()
+            sobj = sch.get("function")(
+                args=[*sch.get("args", [])],
+                kwargs={**sch.get("kwargs", {})}
+            )
         if sobj:
             return sobj
         return False
@@ -2174,31 +2225,6 @@ class SchedularBase(UtilsBase):
             if u:
                 return True
         return False
-
-    def iterate(self, function=lambda x: print(x), count=1):
-        """
-        `.iterate()` function can be used to iterate the same function n (`count`) number of times \n
-        { `function` (function) or (str), `count` (int) } \n
-
-        ##### Arguments
-        `function`: type(function) or type(str) \n
-        The function name that is stored in the instance or the function that needs to be run \n
-
-        `count`: type(str) \n
-        Count or frequency of repetition of a task
-
-        """
-        if type(function) == str:
-            function_ = self.fetch(function)
-        elif hasattr(function, '__call__'):
-            function_ = function
-        else:
-            return False
-
-        r = []
-        for _ in range(count):
-            r.append(function_())
-        return r
 
 
 class SocketsBase(UtilsBase, SocketsInterface):
@@ -3394,6 +3420,9 @@ class SSHBase(CommandsBase, SSHInterface):
     @`execute`
     @`close`
 
+    ##### Static Instance Methods (UtilsBase Inherited)
+    @`iterate` \n
+
     """
     server = None
 
@@ -3424,159 +3453,6 @@ class SSHBase(CommandsBase, SSHInterface):
         pass
 
 
-if __name__ == "__main__":
-    c = ClosureBase("Test", {})
-
-
-if __name__ == "__main__":
-    concurrency = ConcurencyBase()
-
-
-if __name__ == "__main__":
-    s = SharedBase("Test", {})
-
-
-if __name__ == "__main__":
-    t = TimerBase({}, {})
-
-
-if __name__ == "__main__":
-    l = LogBase({}, {})
-
-
-if __name__ == "__main__":
-    c = CommandsBase({}, {})
-
-
-if __name__ == "__main__":
-    Socket = SocketsBase()
-
-
-if __name__ == "__main__":
-
-    config = {"name": "test", "maxsize": 10,
-              "queue_type": "queue", "queue": None}
-    queue = QueuesBase()
-    q = queue.new(config)
-    config["queue"] = q
-    # print(config)
-    c = queue.create(config)
-    print(c, queue.validate_add)
-    print(queue.add("test", "test1"))
-    print(queue.add("test", "test2"))
-    print(queue.add("test", "test3"))
-    print(queue.add("test", "test4"))
-    print(queue.add("test", "test5"))
-    print(queue.add("test", "test6"))
-    print(queue.add("test", "test7"))
-    print(queue.add("test", "test8"))
-    print(queue.add("test", "test9"))
-    print(queue.add("test", "test10"))
-    print(queue.add("test", "test11"))
-    print(queue.add("test", "test10"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-
-
-if __name__ == "__main__":
-
-    print("\nActions:\nDemonstrating Action and Action Listeners")
-    event = EventsBase()
-
-    def run(data):
-        print("Run Action Handler ->", data)
-
-    c = event.event_register({"name": "new", "event": run})
-    if c:
-        event.listener_register(
-            {"name": "run", "event_name": "new", "listener": run})
-        event.on("new", "runner", lambda data: print(
-            "Second Listener running -> ", data))
-        event.listen("new")
-        print("'new' event state is", event.get_state("new"))
-        event.set_state("new", False)
-        print("'new' event state is", event.get_state("new"))
-        event.set_state("new", True)
-        print("'new' event state is", event.get_state("new"))
-        event.send({"event_name": "new", "message": "Testing message"})
-        event.emit("new", "Testing message")
-        event.listener_register({"event_name": "new", "name": "run"})
-        event.stop("new")
-        event.event_unregister("new")
-
-
-if __name__ == "__main__":
-
-    def run(data):
-        print("Running Pubsub ", data)
-
-    def publisher(data):
-        print("Running publisher ", data)
-
-    def subscriber(data):
-        print("Running subscriber ", data)
-
-    config = {"name": "new", "handler": run, "queue": None, "maxsize": 10,
-              "queue_type": "queue", "processing_flag": False,  "batch_interval": 5, "events": {}}
-    name = config.get("name")
-
-    pb = EPubSubBase()
-    p = pb.pubsub_create(config)
-
-    if p:
-        print("Event register ", pb.register_event(
-            name, {"name": "testevent", "event": run}))
-        print("Event listen ", pb.listen(name, "testevent"))
-        print("Publish register ", pb.register_publisher(
-            name, {"name": "pubone", "event_name": "testevent", "publisher": publisher}))
-        print("Subscribers register ", pb.register_subscriber(
-            name, {"name": "subone", "event_name": "testevent", "subscriber": subscriber}))
-        print("Subscribers register ", pb.register_subscriber(
-            name, {"name": "subtwo", "event_name": "testevent", "subscriber": subscriber}))
-        print("Event sending ", pb.send(
-            {"event_name": "testevent", "queue_name": "new", "message": "Testing event testevent", "publisher": "pubone"}))
-        print("Publisher unregister ", pb.unregister_publisher(
-            name, {"name": "pubone", "event_name": "testevent"}))
-        print("Subscriber unregister ", pb.unregister_subscriber(
-            name, {"name": "subone", "event_name": "testevent"}))
-        print("Subscriber unregister ", pb.unregister_subscriber(
-            name, {"name": "subtwo", "event_name": "testevent"}))
-        print("Pubsub Object PRINT FROM SCRIPT: ", pb.fetch(name))
-        print("Event unlisten ", pb.stop(name, "testevent"))
-        print("Pubsub Object Deleted ", pb.pubsub_delete(name))
-        print("Pubsub Object ", pb.fetch(name))
-
-
-if __name__ == "__main__":
-
-    action = ActionsBase()
-
-
-if __name__ == "__main__":
-
-    hook = HooksBase(socketsbase=SocketsBase)
-
-
-if __name__ == "__main__":
-
-    webhook = WebhooksBase(socketsbase=SocketsBase)
-
-
-if __name__ == "__main__":
-
-    ssh = SSHBase()
-
-
 __all__ = [
     "SharedBase", "ClosureBase", "UtilsBase",
     "TimerBase", "FileReaderBase", "CSVReaderBase",
@@ -3586,6 +3462,3 @@ __all__ = [
     "WebhooksBase", "EPubSubBase", "IPubSubBase",
     "SSHBase"
 ]
-
-
-# 1, 3, 5, (26)
