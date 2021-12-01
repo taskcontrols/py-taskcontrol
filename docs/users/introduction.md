@@ -20,26 +20,20 @@
 ```python
 
 
-# for package
 from taskcontrol import Workflow, task
 
-# Create an instance of the task you are creating
 sparrow = Workflow()
 
-# task decorator
 @task(
-    # Task name
     name="migrate",
-    # Task instance
     task_instance=sparrow
 )
-# Main function for the task
 def taskone(ctx, result, *args, **kwargs):
     print("Running my task function: migrate", args, kwargs)
 
-# Run single task
+# Run one tasks
 sparrow.start(tasks="migrate")
-# sparrow.start(tasks=["taskname"])
+# sparrow.start(tasks=["migrate"])
 
 # Run all tasks
 sparrow.start()
