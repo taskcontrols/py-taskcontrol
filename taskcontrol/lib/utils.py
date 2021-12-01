@@ -699,16 +699,40 @@ class UtilsBase(ObjectModificationInterface):
         pass
 
     @staticmethod
-    def string_to_json(self, string):
+    def string_to_json(string):
         """
         """
         return json.loads(string)
 
     @staticmethod
-    def json_to_string(self, json):
+    def json_to_string(json):
         """
         """
         return str(json)
+
+    @staticmethod
+    def iterate(function, iterations):
+        """
+        `.iterate()` function can be used to iterate the same function n (`iterations`) number of times \n
+        { `function` (function) or (str), `count` (int) } \n
+
+        ##### Arguments
+        `function`: type(function) \n
+        The function name that is stored in the instance or the function that needs to be run \n
+
+        `iterations`: type(str) \n
+        Counts or iterations or frequency of repetition of a task
+
+        """
+        if not hasattr(function, '__call__'):
+            raise TypeError
+        try:
+            r = []
+            for i in range(iterations):
+                r.append(function())
+            return r
+        except Exception as e:
+            return False
 
     def append_update_dict(self, main_object, update_object):
         """
@@ -1514,6 +1538,10 @@ class CommandsBase(UtilsBase, CommandsInterface):
     @`exists`
     @`path`
     @`execute`
+
+    ##### Static Instance Methods (UtilsBase Inherited)
+    @`iterate` \n
+
     """
 
     def __init__(self, object_name="commands", validations={}, commands={}):
@@ -1555,7 +1583,7 @@ class CommandsBase(UtilsBase, CommandsInterface):
         Get input value for the shell \n
         Value Options: [ True, False ] [Default is bool False] \n
         `mode`: type(str) \n
-        Value Options: [ subprocess_call, subprocess_popen, subprocess_run, os_popen ] [Default is str subprocess_call] \n
+        Value Options: [ subprocess_call, subprocess_popen, subprocess_run, os_popen, os_system ] [Default is str subprocess_popen] \n
         `options`: type(dict) \n
         Details of the same in the section `option Object keys details` below. \n
         `options` object that are needed for `subprocess` or `os` functions \n
@@ -1583,6 +1611,9 @@ class CommandsBase(UtilsBase, CommandsInterface):
 
         * for `os_popen` which calls the `os.popen()` function: \n
         { `args` (str): command argument and/or options, `mode` (str), `buffsize` (int) } \n
+
+        * for `os_system` which calls the `os.system()` function: \n
+        { `command` (str), `args` (str): command argument and/or options } \n
 
         """
         # https://www.cyberciti.biz/faq/python-run-external-command-and-get-output/
@@ -1616,13 +1647,15 @@ class CommandsBase(UtilsBase, CommandsInterface):
                     check = options.get("check", False)
                     encoding = options.get("encoding", None)
                     errors = options.get("errors", None)
-                    input = options.get("stdin_input", None)
+                    cargs = options.get("args", [])
+                    stdin_input = options.get("stdin_input", None)
+                    input = options.get("input", None)
+                    result = None
 
                 if mode == "subprocess_call":
                     proc = subprocess.call(
-                        [command, *options.get("args")],
-                        stdin=stdin,
-                        stdout=stdout, stderr=stderr,
+                        [command, *cargs],
+                        stdin=stdin, stdout=stdout, stderr=stderr,
                         bufsize=bufsize, universal_newlines=universal_newlines,
                         executable=executable, shell=shell,
                         cwd=cwd, env=env
@@ -1652,51 +1685,87 @@ class CommandsBase(UtilsBase, CommandsInterface):
                     # list(map(a.__delitem__, filter(a.__contains__, l)))
 
                     proc = subprocess.Popen(
-                        [command, *options.get("args")],
+                        [command, *cargs],
                         stdin=stdin, stdout=stdout, stderr=stderr,
                         universal_newlines=universal_newlines, bufsize=bufsize,
                         executable=executable, close_fds=close_fds, shell=shell,
                         cwd=cwd, env=env, start_new_session=start_new_session, text=text
                     )
                     if stdin_mode:
-                        # proc.stdin.write(input)
-                        c = proc.communicate(input=input)[0]
+                        result = proc.communicate(input=stdin_input)[0]
                         proc.stdin.close()
+                    if options.get("wait"):
+                        proc.wait()
                 elif mode == "subprocess_run":
-                    # a = {
-                    #     "stdin": stdin, "stdout": stdout, "stderr": stderr,
-                    #     "universal_newlines": universal_newlines,
-                    #     "input": input, "bufsize": bufsize, "executable": executable,
-                    #     "preexec_fn": preexec_fn, "close_fds": close_fds, "shell": shell,
-                    #     "cwd": cwd, "env": env, "startupinfo": startupinfo,
-                    #     "creationflags": creationflags, "restore_signals": restore_signals,
-                    #     "start_new_session": start_new_session, "pass_fds": pass_fds,
-                    #     "capture_output": capture_output, "check": check, "encoding": encoding,
-                    #     "errors": errors, "text": text, "timeout": timeout
-                    # }
-                    if not input:
-                        proc = subprocess.run(
-                            [command, *options.get("args")],
-                            stdin=stdin, stdout=stdout, stderr=stderr,
-                            universal_newlines=universal_newlines,
-                            bufsize=bufsize, timeout=timeout
-                        )
+                    a = {
+                        "stdin": stdin, "stdout": stdout, "stderr": stderr,
+                        "universal_newlines": universal_newlines,
+                        "input": input, "bufsize": bufsize, "executable": executable,
+                        "preexec_fn": preexec_fn, "close_fds": close_fds, "shell": shell,
+                        "cwd": cwd, "env": env, "startupinfo": startupinfo,
+                        "creationflags": creationflags, "restore_signals": restore_signals,
+                        "start_new_session": start_new_session, "pass_fds": pass_fds,
+                        "capture_output": capture_output, "check": check, "encoding": encoding,
+                        "errors": errors, "text": text, "timeout": timeout
+                    }
+                    if not input and stdin_input:
+                        rm = ["input", "executable", "preexec_fn", "close_fds", "shell", "cwd", "env", "startupinfo",
+                              "creationflags", "restore_signals", "start_new_session", "pass_fds",
+                              "capture_output", "check", "encoding", "errors", "text"]
+                        {a.pop(r) for r in rm}
+                        proc = subprocess.run([command, *cargs], **a)
+                        # # Following has Error in implementation
+                        # # TODO: Following does not send input from the PIPE - .communicate and stdin.write does not work
+                        # # # # - Following does not capture the Output from the PIPE
+                        # # # # - Have to use input instead of std_input to send and get the stdin and stdout
+                        # # # #
                         if stdin_mode:
+                            # result = proc.communicate(input=stdin_input)
+                            # proc.stdin.write(stdin_input)
+                            # proc.stdin.close()
                             pass
+                    elif input and not stdin_input:
+                        rm = ["stdin", "executable", "preexec_fn", "close_fds", "shell", "cwd", "env", "startupinfo",
+                              "creationflags", "restore_signals", "start_new_session", "pass_fds",
+                              "capture_output", "check", "encoding", "errors", "text", "timeout"]
+                        {a.pop(r) for r in rm}
+                        proc = subprocess.run([command, *cargs], **a)
                     else:
-                        proc = subprocess.run(
-                            [command, *options.get("args")],
-                            stdout=stdout, stderr=stderr,
-                            universal_newlines=universal_newlines,
-                            input=input, bufsize=bufsize, timeout=timeout
-                        )
+                        raise Exception("input and stdin_input not provided")
                 elif mode == "os_popen":
                     proc = os.popen([command, *options.get("args", [])], mode=options.get(
                         "mode", "r"), buffsize=options.get("buffsize", 0))
+                elif mode == "os_system":
+                    proc = os.system(
+                        "".join([command, *options.get("args", [])]))
                 else:
-                    raise Exception
-                return proc
-        except Exception:
+                    raise Exception("Raising Exception due to wrong option")
+                return proc, result
+        except Exception as e:
+            print("Raising Exception due to error ", e)
+            return False
+
+    def shell(self, file, target="", options={}):
+        """
+        file: bash shell `.sh`, powershell `.ps1` `.psm` `.ps1xml`, bat `.bat` file
+        `target`: local, remote
+        `options`: { dir, remote { ip, port, protocol } }
+
+        """
+        # https://docs.microsoft.com/en-us/powershell/scripting/windows-powershell/ise/how-to-write-and-run-scripts-in-the-windows-powershell-ise?view=powershell-7.2
+        try:
+            if target == "local":
+                return self.execute(
+                    file,
+                    mode="subprocess_call",
+                    stdin_mode=options.get("stdin_mode", False),
+                    options=options.get("options")
+                )
+            elif target == "remote":
+                pass
+            else:
+                raise Exception
+        except Exception as E:
             return False
 
 
@@ -2055,6 +2124,8 @@ class SchedularBase(UtilsBase):
     @`manual` \n
     @`start` \n
     @`stop` \n
+
+    ##### Static Instance Methods (UtilsBase Inherited)
     @`iterate` \n
 
     """
@@ -2074,7 +2145,7 @@ class SchedularBase(UtilsBase):
                                       "update": self.v, "delete": ["name"]},
                          schedulars=schedulars)
 
-    def __runschedular(self, name, func, interval):
+    def __runschedular(self, name, func, interval, *args, **kwargs):
         """
         `__runschedular` function \n
         { `name` (str), `func` (function), `interval` (int) }
@@ -2118,9 +2189,21 @@ class SchedularBase(UtilsBase):
         """
         if sch.get("interval") == "repeated" and sch.get("active") == True:
             sobj = self.__runschedular(
-                sch.get("name"), sch.get("function"), sch.get("time"))
+                sch.get("name"), sch.get("function"), sch.get("time"),
+                args=[*sch.get("args", [])],
+                kwargs={**sch.get("kwargs", {})}
+            )
+        if sch.get("interval") == "iterate" and sch.get("active") == True:
+            sobj = self.iterate(
+                sch.get("function"), sch.get("time"),
+                args=[*sch.get("args", [])],
+                kwargs={**sch.get("kwargs", {})}
+            )
         elif sch.get("interval") == "single" and sch.get("active") == True:
-            sobj = sch.get("function")()
+            sobj = sch.get("function")(
+                args=[*sch.get("args", [])],
+                kwargs={**sch.get("kwargs", {})}
+            )
         if sobj:
             return sobj
         return False
@@ -2174,31 +2257,6 @@ class SchedularBase(UtilsBase):
             if u:
                 return True
         return False
-
-    def iterate(self, function=lambda x: print(x), count=1):
-        """
-        `.iterate()` function can be used to iterate the same function n (`count`) number of times \n
-        { `function` (function) or (str), `count` (int) } \n
-
-        ##### Arguments
-        `function`: type(function) or type(str) \n
-        The function name that is stored in the instance or the function that needs to be run \n
-
-        `count`: type(str) \n
-        Count or frequency of repetition of a task
-
-        """
-        if type(function) == str:
-            function_ = self.fetch(function)
-        elif hasattr(function, '__call__'):
-            function_ = function
-        else:
-            return False
-
-        r = []
-        for _ in range(count):
-            r.append(function_())
-        return r
 
 
 class SocketsBase(UtilsBase, SocketsInterface):
@@ -3394,6 +3452,9 @@ class SSHBase(CommandsBase, SSHInterface):
     @`execute`
     @`close`
 
+    ##### Static Instance Methods (UtilsBase Inherited)
+    @`iterate` \n
+
     """
     server = None
 
@@ -3424,159 +3485,6 @@ class SSHBase(CommandsBase, SSHInterface):
         pass
 
 
-if __name__ == "__main__":
-    c = ClosureBase("Test", {})
-
-
-if __name__ == "__main__":
-    concurrency = ConcurencyBase()
-
-
-if __name__ == "__main__":
-    s = SharedBase("Test", {})
-
-
-if __name__ == "__main__":
-    t = TimerBase({}, {})
-
-
-if __name__ == "__main__":
-    l = LogBase({}, {})
-
-
-if __name__ == "__main__":
-    c = CommandsBase({}, {})
-
-
-if __name__ == "__main__":
-    Socket = SocketsBase()
-
-
-if __name__ == "__main__":
-
-    config = {"name": "test", "maxsize": 10,
-              "queue_type": "queue", "queue": None}
-    queue = QueuesBase()
-    q = queue.new(config)
-    config["queue"] = q
-    # print(config)
-    c = queue.create(config)
-    print(c, queue.validate_add)
-    print(queue.add("test", "test1"))
-    print(queue.add("test", "test2"))
-    print(queue.add("test", "test3"))
-    print(queue.add("test", "test4"))
-    print(queue.add("test", "test5"))
-    print(queue.add("test", "test6"))
-    print(queue.add("test", "test7"))
-    print(queue.add("test", "test8"))
-    print(queue.add("test", "test9"))
-    print(queue.add("test", "test10"))
-    print(queue.add("test", "test11"))
-    print(queue.add("test", "test10"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-
-
-if __name__ == "__main__":
-
-    print("\nActions:\nDemonstrating Action and Action Listeners")
-    event = EventsBase()
-
-    def run(data):
-        print("Run Action Handler ->", data)
-
-    c = event.event_register({"name": "new", "event": run})
-    if c:
-        event.listener_register(
-            {"name": "run", "event_name": "new", "listener": run})
-        event.on("new", "runner", lambda data: print(
-            "Second Listener running -> ", data))
-        event.listen("new")
-        print("'new' event state is", event.get_state("new"))
-        event.set_state("new", False)
-        print("'new' event state is", event.get_state("new"))
-        event.set_state("new", True)
-        print("'new' event state is", event.get_state("new"))
-        event.send({"event_name": "new", "message": "Testing message"})
-        event.emit("new", "Testing message")
-        event.listener_register({"event_name": "new", "name": "run"})
-        event.stop("new")
-        event.event_unregister("new")
-
-
-if __name__ == "__main__":
-
-    def run(data):
-        print("Running Pubsub ", data)
-
-    def publisher(data):
-        print("Running publisher ", data)
-
-    def subscriber(data):
-        print("Running subscriber ", data)
-
-    config = {"name": "new", "handler": run, "queue": None, "maxsize": 10,
-              "queue_type": "queue", "processing_flag": False,  "batch_interval": 5, "events": {}}
-    name = config.get("name")
-
-    pb = EPubSubBase()
-    p = pb.pubsub_create(config)
-
-    if p:
-        print("Event register ", pb.register_event(
-            name, {"name": "testevent", "event": run}))
-        print("Event listen ", pb.listen(name, "testevent"))
-        print("Publish register ", pb.register_publisher(
-            name, {"name": "pubone", "event_name": "testevent", "publisher": publisher}))
-        print("Subscribers register ", pb.register_subscriber(
-            name, {"name": "subone", "event_name": "testevent", "subscriber": subscriber}))
-        print("Subscribers register ", pb.register_subscriber(
-            name, {"name": "subtwo", "event_name": "testevent", "subscriber": subscriber}))
-        print("Event sending ", pb.send(
-            {"event_name": "testevent", "queue_name": "new", "message": "Testing event testevent", "publisher": "pubone"}))
-        print("Publisher unregister ", pb.unregister_publisher(
-            name, {"name": "pubone", "event_name": "testevent"}))
-        print("Subscriber unregister ", pb.unregister_subscriber(
-            name, {"name": "subone", "event_name": "testevent"}))
-        print("Subscriber unregister ", pb.unregister_subscriber(
-            name, {"name": "subtwo", "event_name": "testevent"}))
-        print("Pubsub Object PRINT FROM SCRIPT: ", pb.fetch(name))
-        print("Event unlisten ", pb.stop(name, "testevent"))
-        print("Pubsub Object Deleted ", pb.pubsub_delete(name))
-        print("Pubsub Object ", pb.fetch(name))
-
-
-if __name__ == "__main__":
-
-    action = ActionsBase()
-
-
-if __name__ == "__main__":
-
-    hook = HooksBase(socketsbase=SocketsBase)
-
-
-if __name__ == "__main__":
-
-    webhook = WebhooksBase(socketsbase=SocketsBase)
-
-
-if __name__ == "__main__":
-
-    ssh = SSHBase()
-
-
 __all__ = [
     "SharedBase", "ClosureBase", "UtilsBase",
     "TimerBase", "FileReaderBase", "CSVReaderBase",
@@ -3586,6 +3494,3 @@ __all__ = [
     "WebhooksBase", "EPubSubBase", "IPubSubBase",
     "SSHBase"
 ]
-
-
-# 1, 3, 5, (26)

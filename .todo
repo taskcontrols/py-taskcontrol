@@ -17,7 +17,7 @@
 * [T] Check impact of self on closure (Low priority)
 * [T] Logging & Concurrency for logger (Concurrency can be added)
 * [T] Consider adding decorator generator in utils like https://click.palletsprojects.com/en/8.0.x/
- 
+
 ** [W] Add Tests
         Add all variations of tests for 
                 - decorator, args, and kwargs

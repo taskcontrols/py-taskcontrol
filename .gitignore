@@ -147,4 +147,4 @@ make.bat
 node_modules/
 ./ctests.py 
 ctests.py 
-
+documentor/
