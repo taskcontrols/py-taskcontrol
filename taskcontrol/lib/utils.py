@@ -1583,7 +1583,7 @@ class CommandsBase(UtilsBase, CommandsInterface):
         Get input value for the shell \n
         Value Options: [ True, False ] [Default is bool False] \n
         `mode`: type(str) \n
-        Value Options: [ subprocess_call, subprocess_popen, subprocess_run, os_popen ] [Default is str subprocess_call] \n
+        Value Options: [ subprocess_call, subprocess_popen, subprocess_run, os_popen, os_system ] [Default is str subprocess_popen] \n
         `options`: type(dict) \n
         Details of the same in the section `option Object keys details` below. \n
         `options` object that are needed for `subprocess` or `os` functions \n
@@ -1611,6 +1611,9 @@ class CommandsBase(UtilsBase, CommandsInterface):
 
         * for `os_popen` which calls the `os.popen()` function: \n
         { `args` (str): command argument and/or options, `mode` (str), `buffsize` (int) } \n
+
+        * for `os_system` which calls the `os.system()` function: \n
+        { `command` (str), `args` (str): command argument and/or options } \n
 
         """
         # https://www.cyberciti.biz/faq/python-run-external-command-and-get-output/
@@ -1644,13 +1647,15 @@ class CommandsBase(UtilsBase, CommandsInterface):
                     check = options.get("check", False)
                     encoding = options.get("encoding", None)
                     errors = options.get("errors", None)
-                    input = options.get("stdin_input", None)
+                    cargs = options.get("args", [])
+                    stdin_input = options.get("stdin_input", None)
+                    input = options.get("input", None)
+                    result = None
 
                 if mode == "subprocess_call":
                     proc = subprocess.call(
-                        [command, *options.get("args")],
-                        stdin=stdin,
-                        stdout=stdout, stderr=stderr,
+                        [command, *cargs],
+                        stdin=stdin, stdout=stdout, stderr=stderr,
                         bufsize=bufsize, universal_newlines=universal_newlines,
                         executable=executable, shell=shell,
                         cwd=cwd, env=env
@@ -1680,51 +1685,64 @@ class CommandsBase(UtilsBase, CommandsInterface):
                     # list(map(a.__delitem__, filter(a.__contains__, l)))
 
                     proc = subprocess.Popen(
-                        [command, *options.get("args")],
+                        [command, *cargs],
                         stdin=stdin, stdout=stdout, stderr=stderr,
                         universal_newlines=universal_newlines, bufsize=bufsize,
                         executable=executable, close_fds=close_fds, shell=shell,
                         cwd=cwd, env=env, start_new_session=start_new_session, text=text
                     )
                     if stdin_mode:
-                        # proc.stdin.write(input)
-                        c = proc.communicate(input=input)[0]
+                        result = proc.communicate(input=stdin_input)[0]
                         proc.stdin.close()
+                    if options.get("wait"):
+                        proc.wait()
                 elif mode == "subprocess_run":
-                    # a = {
-                    #     "stdin": stdin, "stdout": stdout, "stderr": stderr,
-                    #     "universal_newlines": universal_newlines,
-                    #     "input": input, "bufsize": bufsize, "executable": executable,
-                    #     "preexec_fn": preexec_fn, "close_fds": close_fds, "shell": shell,
-                    #     "cwd": cwd, "env": env, "startupinfo": startupinfo,
-                    #     "creationflags": creationflags, "restore_signals": restore_signals,
-                    #     "start_new_session": start_new_session, "pass_fds": pass_fds,
-                    #     "capture_output": capture_output, "check": check, "encoding": encoding,
-                    #     "errors": errors, "text": text, "timeout": timeout
-                    # }
-                    if not input:
-                        proc = subprocess.run(
-                            [command, *options.get("args")],
-                            stdin=stdin, stdout=stdout, stderr=stderr,
-                            universal_newlines=universal_newlines,
-                            bufsize=bufsize, timeout=timeout
-                        )
+                    a = {
+                        "stdin": stdin, "stdout": stdout, "stderr": stderr,
+                        "universal_newlines": universal_newlines,
+                        "input": input, "bufsize": bufsize, "executable": executable,
+                        "preexec_fn": preexec_fn, "close_fds": close_fds, "shell": shell,
+                        "cwd": cwd, "env": env, "startupinfo": startupinfo,
+                        "creationflags": creationflags, "restore_signals": restore_signals,
+                        "start_new_session": start_new_session, "pass_fds": pass_fds,
+                        "capture_output": capture_output, "check": check, "encoding": encoding,
+                        "errors": errors, "text": text, "timeout": timeout
+                    }
+                    if not input and stdin_input:
+                        rm = ["input", "executable", "preexec_fn", "close_fds", "shell", "cwd", "env", "startupinfo",
+                              "creationflags", "restore_signals", "start_new_session", "pass_fds",
+                              "capture_output", "check", "encoding", "errors", "text"]
+                        {a.pop(r) for r in rm}
+                        proc = subprocess.run([command, *cargs], **a)
+                        # # Following has Error in implementation
+                        # # TODO: Following does not send input from the PIPE - .communicate and stdin.write does not work
+                        # # # # - Following does not capture the Output from the PIPE
+                        # # # # - Have to use input instead of std_input to send and get the stdin and stdout
+                        # # # #
                         if stdin_mode:
+                            # result = proc.communicate(input=stdin_input)
+                            # proc.stdin.write(stdin_input)
+                            # proc.stdin.close()
                             pass
+                    elif input and not stdin_input:
+                        rm = ["stdin", "executable", "preexec_fn", "close_fds", "shell", "cwd", "env", "startupinfo",
+                              "creationflags", "restore_signals", "start_new_session", "pass_fds",
+                              "capture_output", "check", "encoding", "errors", "text", "timeout"]
+                        {a.pop(r) for r in rm}
+                        proc = subprocess.run([command, *cargs], **a)
                     else:
-                        proc = subprocess.run(
-                            [command, *options.get("args")],
-                            stdout=stdout, stderr=stderr,
-                            universal_newlines=universal_newlines,
-                            input=input, bufsize=bufsize, timeout=timeout
-                        )
+                        raise Exception("input and stdin_input not provided")
                 elif mode == "os_popen":
                     proc = os.popen([command, *options.get("args", [])], mode=options.get(
                         "mode", "r"), buffsize=options.get("buffsize", 0))
+                elif mode == "os_system":
+                    proc = os.system(
+                        "".join([command, *options.get("args", [])]))
                 else:
-                    raise Exception
-                return proc
-        except Exception:
+                    raise Exception("Raising Exception due to wrong option")
+                return proc, result
+        except Exception as e:
+            print("Raising Exception due to error ", e)
             return False
 
     def shell(self, file, target="", options={}):
@@ -1732,9 +1750,23 @@ class CommandsBase(UtilsBase, CommandsInterface):
         file: bash shell `.sh`, powershell `.ps1` `.psm` `.ps1xml`, bat `.bat` file
         `target`: local, remote
         `options`: { dir, remote { ip, port, protocol } }
+
         """
         # https://docs.microsoft.com/en-us/powershell/scripting/windows-powershell/ise/how-to-write-and-run-scripts-in-the-windows-powershell-ise?view=powershell-7.2
-        pass
+        try:
+            if target == "local":
+                return self.execute(
+                    file,
+                    mode="subprocess_call",
+                    stdin_mode=options.get("stdin_mode", False),
+                    options=options.get("options")
+                )
+            elif target == "remote":
+                pass
+            else:
+                raise Exception
+        except Exception as E:
+            return False
 
 
 class QueuesBase(UtilsBase, QueuesInterface):
