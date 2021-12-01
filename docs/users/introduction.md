@@ -1,13 +1,12 @@
 # taskcontrol
 
-#### Workflow Automation Library with support for Concurrent or Event based processes or activities in Local/Network Automation Tasks, including CI/CD activities.
+Workflow Automation Library with support for Concurrent or Event based processes or activities in Local/Network Automation Tasks, including CI/CD activities.
 
 
 # Minimal Usage Demo
 
 * Import `Workflow` and `task` object from `lib` module in taskcontrol package
-* Create a Task instance using the `Workflow` class
-* Create a task definition using `@task` decorator
+* Create a Task instance using the `Workflow` class and a task definition using `@task` decorator
     - Usage: 
         - `@task(name, task_order, task_instance, args, kwargs, before, after, shared, log)`
         - `def function(...){...}`
