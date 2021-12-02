@@ -509,7 +509,3 @@ class SSHInterface(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def execute(self, options):
         raise NotImplementedError
-
-    @abc.abstractmethod
-    def close(self, options):
-        raise NotImplementedError
