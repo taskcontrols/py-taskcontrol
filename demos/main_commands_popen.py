@@ -15,7 +15,7 @@ if cmd:
 
     result_popen = c.execute(command, mode="subprocess_popen", stdin_mode=True, options={
                              "args": cmd, "stdin_input": "touch tests_popen"})
-    print("RUNNING RESULT FOR POPEN subprocess_popen:\n")
+    print("RUNNING POPEN subprocess_popen:\n")
 
     for l in result_popen[0].__dict__.get("_stdout_buff"):
         for i in l.split("\n"):
@@ -25,7 +25,17 @@ if cmd:
 
     result_popen = c.execute(command, mode="subprocess_popen", stdin_mode=True, options={
                              "args": cmd, "stdin_input": "rm -f tests_popen_passed"})
-    print("RUNNING RESULT FOR POPEN subprocess_popen:\n")
+    print("RUNNING POPEN subprocess_popen:\n")
+
+    for l in result_popen[0].__dict__.get("_stdout_buff"):
+        for i in l.split("\n"):
+            print(i)
+
+    print("Result: ", result_popen[1])
+
+    result_popen = c.execute(command, mode="subprocess_popen", stdin_mode=True, options={
+                             "args": cmd, "stdin_input": "echo '\n\nECHO_SSH_RAN_WELL'"})
+    print("RUNNING POPEN subprocess_popen:\n")
 
     for l in result_popen[0].__dict__.get("_stdout_buff"):
         for i in l.split("\n"):
