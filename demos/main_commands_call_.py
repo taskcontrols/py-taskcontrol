@@ -14,11 +14,11 @@ if cmd:
 
     # # TODO: Locks up in Windows(x64)
     result = c.execute(command, mode="subprocess_call", stdin_mode=True, options={"args": cmd, "stdin_input": "touch tests"})
-    print("RUNNING RESULT FOR CALL:\n", result)
+    print("RUNNING CALL:\n", result)
 
-    result = c.execute("./testsh.sh", mode="subprocess_call", stdin_mode=False)
-    print("RUNNING RESULT FOR CALL BASH:\n", result)
+    # result = c.execute("./testsh.sh", mode="subprocess_call", stdin_mode=False)
+    # print("RUNNING CALL BASH:\n", result)
 
     result = c.execute(command, mode="subprocess_call", stdin_mode=True, options={"args": cmd, "stdin_input": "touch tests"})
-    print("RUNNING RESULT FOR CALL:\n", result)
+    print("RUNNING CALL:\n", result)
 

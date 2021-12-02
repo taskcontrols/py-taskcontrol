@@ -14,6 +14,11 @@ if cmd:
     # # Will have STDOUT or STDERR
 
     # os_popen
-    result_run = c.execute("mkdir nwdir", mode="os_system", stdin_mode=True, options={ "args": "" })
-    print("RUNNING RESULT FOR RUN os_system: \n")
-    print(result_run)
+    result_os_popen = c.execute(command, mode="os_system", stdin_mode=True, options={ "args": cmd })
+    print("RUNNING RUN os_open: \n")
+    print(result_os_popen)
+
+    # os_popen
+    result_os_popen = c.execute("mkdir", mode="os_popen", stdin_mode=True, options={ "args": ["pythonscriptrun_ospopen"] })
+    print("RUNNING RUN os_open: \n")
+    print(result_os_popen)

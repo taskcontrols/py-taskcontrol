@@ -1583,7 +1583,7 @@ class CommandsBase(UtilsBase, CommandsInterface):
         Get input value for the shell \n
         Value Options: [ True, False ] [Default is bool False] \n
         `mode`: type(str) \n
-        Value Options: [ subprocess_call, subprocess_popen, subprocess_run, os_popen, os_system ] [Default is str subprocess_popen] \n
+        Value Options: [ subprocess_call [TODO - Unfunctional], subprocess_popen, subprocess_run, os_popen, os_system ] [Default is str subprocess_popen] \n
         `options`: type(dict) \n
         Details of the same in the section `option Object keys details` below. \n
         `options` object that are needed for `subprocess` or `os` functions \n
@@ -1591,7 +1591,7 @@ class CommandsBase(UtilsBase, CommandsInterface):
 
         #### `option` object keys Details: \n
 
-        for `subprocess_call` which calls the `subprocess.call()` function: \n
+        for `subprocess_call` [TODO - Unfunctional] which calls the `subprocess.call()` function: \n
         { `args`:command argument and/or options, `stdin, stdout, stderr, bufsize, universal_newlines, executable, shell, cwd, env,
         preexec_fn, close_fds, startupinfo, creationflags, restore_signals, start_new_session, pass_fds, timeout`
         } \n
@@ -1733,11 +1733,11 @@ class CommandsBase(UtilsBase, CommandsInterface):
                     else:
                         raise Exception("input and stdin_input not provided")
                 elif mode == "os_popen":
-                    proc = os.popen([command, *options.get("args", [])], mode=options.get(
-                        "mode", "r"), buffsize=options.get("buffsize", 0))
+                    proc = os.popen(" ".join([command, *options.get("args", [])]), mode=options.get(
+                        "mode", "r"), buffering=options.get("buffsize", 1))
                 elif mode == "os_system":
                     proc = os.system(
-                        "".join([command, *options.get("args", [])]))
+                        " ".join([command, *options.get("args", [])]))
                 else:
                     raise Exception("Raising Exception due to wrong option")
                 return proc, result
