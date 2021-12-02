@@ -3478,12 +3478,6 @@ class SSHBase(CommandsBase, SSHInterface):
         """
         pass
 
-    def close(self, options):
-        """
-
-        """
-        pass
-
 
 __all__ = [
     "SharedBase", "ClosureBase", "UtilsBase",
