@@ -28,13 +28,15 @@ class PluginBase(UtilsBase, PluginsInterface):
         Name of the plugin to create \n
         `definition`: type(dict) \n
         Definition of the plugin object \n
-        { `config` (dict), `ctx` (dict), `plugins` (dict), `shared` (dict),  `tasks` (dict),  `workflows` (dict) } \n
+        { `config` (dict), `ctx` (dict), `plugins` (dict), `shared` (dict),  `tasks` (dict),  `workflows` (dict), menu_command (dict) (bool) (None) } \n
             `config`: type(dict)
             `ctx`: type(dict)
             `plugins`: type(dict)
             `shared`: type(dict)
             `tasks`: type(dict)
             `workflows`: type(dict)
+            `menu_command`: type(dict) or type(None) or type(bool)
+            { title (str), command (dict), required (bool), nargs (int) (str), help (str) }
         """
 
         # TODO: Apply multiple instances (Allow seperate and merged instances)
@@ -55,17 +57,23 @@ class PluginBase(UtilsBase, PluginsInterface):
                 raise ValueError("tasks definition has an issue")
             if not definition.get("workflows"):
                 raise ValueError("workflows definition has an issue")
+            if not definition.get("menu_command"):
+                definition["menu_command"] = False
 
         if type(name) == str:
             return {
-                name: {
-                    "config": definition.get("config"),
-                    "ctx": definition.get("ctx"),
-                    "plugins": definition.get("plugins"),
-                    "shared": definition.get("shared"),
-                    "tasks": definition.get("tasks"),
-                    "workflows": definition.get("workflows")
-                }
+                "plugin": dict([
+                    [
+                        name, {
+                            "config": definition.get("config"), "ctx": definition.get("ctx"),
+                            "plugins": definition.get("plugins"), "shared": definition.get("shared"),
+                            "tasks": definition.get("tasks"), "workflows": definition.get("workflows")
+                        }
+                    ],
+                    [
+                        "menu_command", definition.get("menu_command")
+                    ]
+                ])
             }
 
 
@@ -231,6 +239,7 @@ class Workflow(WorkflowBase):
     @`start` \n
 
     """
+
     def __init__(self):
         super().__init__()
 
