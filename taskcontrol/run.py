@@ -10,14 +10,8 @@ class CLI(UtilsBase):
         super().__init__("taskcontrolcli", {}, **kwargs)
         self.create({"name": "a", "action": lambda x: print(x)})
 
-    def run(self, commands):
-        # cmd_list = commands.strip(" ").split(",")
-        # r = {}
-        # for cmd in cmd_list:
-        #     r[cmd] = self.fetch(str(cmd))  # ["action"]()
-        #     print(r[cmd])
-        #     print("Menu Option ", str(cmd), "has been processed. \n")
-        pass
+    def run(self, args):
+        print("Args from the command line: ", args)
 
 
 def run():
@@ -29,9 +23,6 @@ def run():
             "title": "CHOICES",
             "dest": "CHOICES",
             "add_parser": {
-                # "sshsrvd": ["B", "b", "c", "D", "E", "e", "F", "I", "i", "J", "L",
-                #             "l", "m", "O", "o", "p", "Q", "R", "S", "W", "w", "destination"],
-                # "sshd": ["bashfile", "bf", "serversfile", "sf", "cmds", "commands", "server"],
                 "a": {
                     "help": "Run a Taskcontrol Agent (Client-Server Arch). Alternatively, use option `agent`",
                     "aliases": ["agent"],
