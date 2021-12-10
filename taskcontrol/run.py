@@ -10,8 +10,8 @@ class CLI(UtilsBase):
         super().__init__("taskcontrolcli", {}, **kwargs)
         self.create({"name": "a", "action": lambda x: print(x)})
 
-    def run(self, args):
-        print("Args from the command line: ", args)
+    def run(self, arg):
+        print("Args from the command line: ", arg)
 
 
 def run():
