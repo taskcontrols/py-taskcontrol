@@ -179,10 +179,5 @@ def run():
     subparser = cmd_config.get("add_subparsers")
     result = generate_parse_object(subparser, parser)
 
-    # # # Commands in Plugin
-    # cmd61_parser = commands.add_parser(
-    #     name='p', aliases=["plugin"], help='Run the Plugin creation tasks. Alternatively, use option `plugin`')
-    # cmd61_parser.add_argument('--create', "-c")
-
     cargs = parser.parse_args()
     c.run(cargs)
