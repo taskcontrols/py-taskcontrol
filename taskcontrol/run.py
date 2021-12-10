@@ -155,7 +155,7 @@ def run():
                 config_object["subparsers"]["parsers"][pkey]["add_argument"] = {}
                 for akey in add_argument:
                     nargs = add_argument.get(
-                        akey, {"nargs": "*"}).get("nargs", "*")
+                        akey, {"nargs": "*"}).get("nargs")
                     alias = add_argument.get(akey).get("alias")
                     if alias:
                         config_object["subparsers"]["parsers"][pkey]["add_argument"][akey] = config_object["subparsers"]["parsers"][pkey]["parser"].add_argument(
