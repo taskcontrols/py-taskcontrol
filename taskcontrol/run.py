@@ -169,8 +169,7 @@ def run():
                             nargs=nargs
                         )
                 config_object["subparsers"]["parsers"][pkey]["add_subparsers"] = {}
-                config_object["subparsers"]["parsers"][pkey]["parser"] = argparse.ArgumentParser(
-                )
+                config_object["subparsers"]["parsers"][pkey]["parser"] = argparse.ArgumentParser()
                 config_object["subparsers"]["parsers"][pkey]["add_subparsers"] = generate_parse_object(
                     add_subparsers, config_object["subparsers"]["parsers"][pkey]["parser"], config_object["subparsers"]["parsers"][pkey]["add_subparsers"])
         return config_object
