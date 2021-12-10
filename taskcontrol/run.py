@@ -135,10 +135,10 @@ def run():
             dest = subparser.get("dest")
             add_parser = subparser.get("add_parser")
 
-            config_object["subparsers"] = {}
-            config_object["subparsers"][title] = parser.add_subparsers(
+            config_object["add_subparsers"] = {}
+            config_object["add_subparsers"][title] = parser.add_subparsers(
                 title=title, dest=dest)
-            config_object["subparsers"]["parsers"] = {}
+            config_object["add_subparsers"]["parsers"] = {}
 
             for pkey in add_parser:
                 add_parser_help = add_parser.get(pkey).get("help", "")
@@ -146,32 +146,34 @@ def run():
                 add_argument = add_parser.get(pkey).get("add_argument", {})
                 add_subparsers = add_parser.get(pkey).get("add_subparsers", {})
 
-                config_object["subparsers"]["parsers"][pkey] = {}
-                config_object["subparsers"]["parsers"][pkey]["parser"] = config_object["subparsers"][title].add_parser(
+                config_object["add_subparsers"]["parsers"][pkey] = {}
+                config_object["add_subparsers"]["parsers"][pkey]["parser"] = config_object["add_subparsers"][title].add_parser(
                     name=pkey,
                     aliases=aliases,
                     help=add_parser_help
                 )
-                config_object["subparsers"]["parsers"][pkey]["add_argument"] = {}
+                config_object["add_subparsers"]["parsers"][pkey]["add_argument"] = {}
                 for akey in add_argument:
                     nargs = add_argument.get(
                         akey, {"nargs": "*"}).get("nargs")
                     alias = add_argument.get(akey).get("alias")
                     if alias:
-                        config_object["subparsers"]["parsers"][pkey]["add_argument"][akey] = config_object["subparsers"]["parsers"][pkey]["parser"].add_argument(
+                        config_object["add_subparsers"]["parsers"][pkey]["add_argument"][akey] = config_object["add_subparsers"]["parsers"][pkey]["parser"].add_argument(
                             akey,
                             alias,
                             nargs=nargs
                         )
                     else:
-                        config_object["subparsers"]["parsers"][pkey]["add_argument"][akey] = config_object["subparsers"]["parsers"][pkey]["parser"].add_argument(
+                        config_object["add_subparsers"]["parsers"][pkey]["add_argument"][akey] = config_object["add_subparsers"]["parsers"][pkey]["parser"].add_argument(
                             akey,
                             nargs=nargs
                         )
-                config_object["subparsers"]["parsers"][pkey]["add_subparsers"] = {}
-                config_object["subparsers"]["parsers"][pkey]["parser"] = argparse.ArgumentParser()
-                config_object["subparsers"]["parsers"][pkey]["add_subparsers"] = generate_parse_object(
-                    add_subparsers, config_object["subparsers"]["parsers"][pkey]["parser"], config_object["subparsers"]["parsers"][pkey]["add_subparsers"])
+                config_object["add_subparsers"]["parsers"][pkey]["add_subparsers"] = {
+                }
+                config_object["add_subparsers"]["parsers"][pkey]["parser"] = argparse.ArgumentParser(
+                )
+                config_object["add_subparsers"]["parsers"][pkey]["add_subparsers"] = generate_parse_object(
+                    add_subparsers, config_object["add_subparsers"]["parsers"][pkey]["parser"], config_object["add_subparsers"]["parsers"][pkey]["add_subparsers"])
         return config_object
 
     parser = argparse.ArgumentParser()
