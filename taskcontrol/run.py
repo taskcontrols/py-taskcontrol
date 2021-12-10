@@ -76,9 +76,41 @@ def run():
                         "add_parser": {
                                 "srv": {
                                     "add_argument": {
-                                        # "-b": {"alias": "-bf", "nargs": "*"},
+                                        
+    # # # [-B bind_interface] [-b bind_address] [-c cipher_spec] [-D [bind_address:]port]
+    # # # [-E log_file] [-e escape_char] [-F configfile] [-I pkcs11]
+    # # # [-i identity_file] [-J [user@]host[:port]] [-L address]
+    # # # [-l login_name] [-m mac_spec] [-O ctl_cmd] [-o option] [-p port]
+    # # # [-Q query_option] [-R address] [-S ctl_path] [-W host:port]
+    # # # [-w local_tun[:remote_tun]] destination [command]
+
                                         "-B": {"nargs": "*"},
-                                        "-b": {"nargs": "*"}
+                                        "-b": {"nargs": "*"},
+                                        "-c": {"nargs": "*"},
+                                        "-D": {"nargs": "*"},
+                                        "-E": {"nargs": "*"},
+                                        "-e": {"nargs": "*"},
+                                        "-F": {"nargs": "*"},
+                                        "-I": {"nargs": "*"},
+                                        "-i": {"nargs": "*"},
+                                        "-J": {"nargs": "*"},
+                                        "-L": {"nargs": "*"},
+                                        "-l": {"nargs": "*"},
+                                        "-m": {"nargs": "*"},
+                                        "-O": {"nargs": "*"},
+                                        "-o": {"nargs": "*"},
+                                        "-p": {"nargs": "*"},
+                                        "-Q": {"nargs": "*"},
+                                        "-R": {"nargs": "*"},
+                                        "-S": {"nargs": "*"},
+                                        "-W": {"nargs": "*"},
+                                        "-p": {"nargs": "*"},
+                                        "-Q": {"nargs": "*"},
+                                        "-R": {"nargs": "*"},
+                                        "-S": {"nargs": "*"},
+                                        "-W": {"nargs": "*"},
+                                        "-w": {"nargs": "*"},
+                                        "destination": {"nargs": "*"}
                                     }
                                 }
                         }
@@ -157,13 +189,6 @@ def run():
     name = cmd_config.get("name")
     subparser = cmd_config.get("add_subparsers")
     result = generate_parse_object(subparser, parser)
-
-    # # # [-B bind_interface] [-b bind_address] [-c cipher_spec] [-D [bind_address:]port]
-    # # # [-E log_file] [-e escape_char] [-F configfile] [-I pkcs11]
-    # # # [-i identity_file] [-J [user@]host[:port]] [-L address]
-    # # # [-l login_name] [-m mac_spec] [-O ctl_cmd] [-o option] [-p port]
-    # # # [-Q query_option] [-R address] [-S ctl_path] [-W host:port]
-    # # # [-w local_tun[:remote_tun]] destination [command]
 
     # # # Commands in Plugin
     # cmd61_parser = commands.add_parser(
