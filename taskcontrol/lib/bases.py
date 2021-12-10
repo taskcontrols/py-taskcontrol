@@ -35,8 +35,11 @@ class PluginBase(UtilsBase, PluginsInterface):
             `shared`: type(dict)
             `tasks`: type(dict)
             `workflows`: type(dict)
-            `menu_command`: type(dict) or type(None) or type(bool)
-            { title (str), command (dict), required (bool), nargs (int) (str), help (str) }
+            `menu_command`: type(dict) or type(None) or type(bool) \n
+
+            menu_command options: \n
+            { `title` (str), `command` (dict), `required` (bool), `nargs` (int) (str), `help` (str) }
+
         """
 
         # TODO: Apply multiple instances (Allow seperate and merged instances)
