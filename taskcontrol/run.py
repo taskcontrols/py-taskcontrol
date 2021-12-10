@@ -10,8 +10,9 @@ class CLI(UtilsBase):
         super().__init__("taskcontrolcli", {}, **kwargs)
         self.create({"name": "a", "action": lambda x: print(x)})
 
-    def run(self, arg):
+    def run(self, arg, config_object):
         print("Args from the command line: ", arg)
+        print("Config_Object from the command line: ", config_object)
 
 
 def run():
@@ -168,7 +169,8 @@ def run():
                             nargs=nargs
                         )
                 config_object["subparsers"]["parsers"][pkey]["add_subparsers"] = {}
-                config_object["subparsers"]["parsers"][pkey]["parser"] = argparse.ArgumentParser()
+                config_object["subparsers"]["parsers"][pkey]["parser"] = argparse.ArgumentParser(
+                )
                 config_object["subparsers"]["parsers"][pkey]["add_subparsers"] = generate_parse_object(
                     add_subparsers, config_object["subparsers"]["parsers"][pkey]["parser"], config_object["subparsers"]["parsers"][pkey]["add_subparsers"])
         return config_object
@@ -179,4 +181,4 @@ def run():
     result = generate_parse_object(subparser, parser)
 
     cargs = parser.parse_args()
-    c.run(cargs)
+    c.run(cargs, result)
