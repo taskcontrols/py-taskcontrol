@@ -12,7 +12,8 @@ class CLI(UtilsBase):
 
     def run(self, arg, config_object):
         print("Args from the command line: ", arg)
-        print("Config_Object from the command line: ", config_object)
+        print("Config_Object from the command line: ",
+              config_object["add_subparsers"]["CHOICES"])
 
 
 def run():
