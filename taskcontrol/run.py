@@ -106,19 +106,28 @@ def run():
                         }
                     }
                 },
+                "p": {
+                    "help": "Run the Plugin creation tasks. Alternatively, use option `plugin`",
+                    "aliases": ["plugin"],
+                    "add_argument": {
+                        "--create": {"alias": "-c", "nargs": "*"},
+                        "--register": {"alias": "-r", "nargs": "*"},
+                        "--install": {"alias": "-i", "nargs": "*"}
+                    }
+                }
             }
         }
     }
 
     plugin_config = {
         "add_parser": {
-            "p": {
-                "help": "Run the Plugin creation tasks. Alternatively, use option `plugin`",
-                "aliases": ["plugin"],
+            "ep": {
+                "help": "Run the Plugin creation tasks. Alternatively, use option `someexternalcommand`",
+                "aliases": ["someexternalcommand"],
                 "add_argument": {
-                    "--create": {"alias": "-c", "nargs": "*"},
-                    "--register": {"alias": "-r", "nargs": "*"},
-                    "--install": {"alias": "-i", "nargs": "*"}
+                    "--some": {"alias": "-c", "nargs": "*"},
+                    "--external": {"alias": "-r", "nargs": "*"},
+                    "--command": {"alias": "-i", "nargs": "*"}
                 }
             }
         }
