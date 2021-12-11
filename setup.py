@@ -77,6 +77,9 @@ setup(
         "License :: Free For Educational Use",
         "License :: Freely Distributable",
         "Operating System :: OS Independent"
+        # 'Operating System :: POSIX :: Linux',
+        # 'Operating System :: Microsoft :: Windows',
+        # 'Operating System :: MacOS'
     ],
 )
 
