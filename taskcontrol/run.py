@@ -10,14 +10,33 @@ class CLI(UtilsBase):
         super().__init__("taskcontrolcli", {}, **kwargs)
         self.create({"name": "a", "action": lambda x: print(x)})
 
-    def run(self, arg, config_object):
+    def run(self, arg, config_object, plugin_config):
         print("Args from the command line: ", arg)
-        print("Config_Object from the command line: ",
-              config_object["add_subparsers"]["CHOICES"])
+        # print("Config_Object from the command line: ",
+        #       config_object["add_subparsers"]["CHOICES"].__dict__)
+        result = None
+        choices = arg.__dict__.get("CHOICES")
+        if choices in ["a", "agent"]:
+            print(choices, arg)
+        elif choices in ["s", "server"]:
+            print(choices, arg)
+        elif choices in ["w", "webhook"]:
+            print(choices, arg)
+        elif choices in ["ssh"]:
+            print(choices, arg)
+        elif choices in ["sshshell"]:
+            print(choices, arg)
+        elif choices in ["pb", "pubsub"]:
+            print(choices, arg)
+        elif choices in ["sh", "shell"]:
+            print(choices, arg)
+        elif choices in ["p", "plugin"]:
+            print(choices, arg)
+        
+        return result
 
 
 def run():
-    # print("CLI MENU [TODO]: \n")
     c = CLI()
     cmd_config = {
         "name": "parser",
@@ -186,10 +205,10 @@ def run():
                     add_subparsers, config_object["add_subparsers"]["parsers"][pkey]["parser"], config_object["add_subparsers"]["parsers"][pkey]["add_subparsers"])
         return config_object
 
-    parser = argparse.ArgumentParser(description="Taskcontrols CLI Menu")
+    parser = argparse.ArgumentParser(description="Taskcontrols CLI Menu:")
     name = cmd_config.get("name")
     subparser = cmd_config.get("add_subparsers")
-    result = generate_parse_object(subparser, parser)
+    config_object = generate_parse_object(subparser, parser)
 
     cargs = parser.parse_args()
-    c.run(cargs, result)
+    return c.run(cargs, config_object, plugin_config)
