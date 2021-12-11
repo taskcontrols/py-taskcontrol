@@ -17,7 +17,7 @@ class CLI(UtilsBase):
 
 
 def run():
-    print("CLI MENU [TODO]: \n")
+    # print("CLI MENU [TODO]: \n")
     c = CLI()
     cmd_config = {
         "name": "parser",
@@ -122,9 +122,9 @@ def run():
 
     plugin_config = {
         "add_parser": {
-            "ep": {
-                "help": "Run the Plugin creation tasks. Alternatively, use option `someexternalcommand`",
-                "aliases": ["someexternalcommand"],
+            "epc": {
+                "help": "Run the Plugin creation tasks. Alternatively, use option `someexternalcommand`. This is yours to add using a plugin.",
+                "aliases": ["someexternalplugincommand"],
                 "add_argument": {
                     "--some": {"alias": "-c", "nargs": "*"},
                     "--external": {"alias": "-r", "nargs": "*"},
@@ -186,7 +186,7 @@ def run():
                     add_subparsers, config_object["add_subparsers"]["parsers"][pkey]["parser"], config_object["add_subparsers"]["parsers"][pkey]["add_subparsers"])
         return config_object
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description="Taskcontrols CLI Menu")
     name = cmd_config.get("name")
     subparser = cmd_config.get("add_subparsers")
     result = generate_parse_object(subparser, parser)
