@@ -5,15 +5,18 @@ import copy
 from taskcontrol.lib.utils import ClosureBase, SharedBase, UtilsBase, ConcurencyBase, TimerBase, LogBase, CommandsBase
 from taskcontrol.lib.utils import EventsBase, QueuesBase, SocketsBase, HooksBase, ActionsBase
 from taskcontrol.lib.utils import EPubSubBase, IPubSubBase, WebhooksBase, SSHBase
-from taskcontrol.lib.authentication import AuthenticationBase
-from taskcontrol.lib.orm import SQLORMBase
+from taskcontrol.lib.orm import SQLORMBase, AuthenticationBase
 from taskcontrol.lib.interfaces import PluginsInterface
 
 
 class PluginBase(UtilsBase, PluginsInterface):
     """
-    Plugins Base class to create a plugin. Retuns a verified plugins object \n
-    TODO: Allow invocation of workflow or task from within plugin \n
+    `PluginsBase` class to create a plugin. Retuns a verified plugins object \n
+    Allow invocation of workflow [todo] or task from within plugin \n
+
+    ##### Instance Methods
+    @`plugin_create` \n
+
     """
 
     # return plugin instance/module (plugin_instance)
@@ -25,13 +28,18 @@ class PluginBase(UtilsBase, PluginsInterface):
         Name of the plugin to create \n
         `definition`: type(dict) \n
         Definition of the plugin object \n
-        { `config` (dict), `ctx` (dict), `plugins` (dict), `shared` (dict),  `tasks` (dict),  `workflows` (dict) } \n
+        { `config` (dict), `ctx` (dict), `plugins` (dict), `shared` (dict),  `tasks` (dict),  `workflows` (dict), menu_command (dict) (bool) (None) } \n
             `config`: type(dict)
             `ctx`: type(dict)
             `plugins`: type(dict)
             `shared`: type(dict)
             `tasks`: type(dict)
             `workflows`: type(dict)
+            `menu_command`: type(dict) or type(None) or type(bool) \n
+
+            menu_command options: \n
+            { `title` (str), `command` (dict), `required` (bool), `nargs` (int) (str), `help` (str) }
+
         """
 
         # TODO: Apply multiple instances (Allow seperate and merged instances)
@@ -52,24 +60,36 @@ class PluginBase(UtilsBase, PluginsInterface):
                 raise ValueError("tasks definition has an issue")
             if not definition.get("workflows"):
                 raise ValueError("workflows definition has an issue")
+            if not definition.get("menu_command"):
+                definition["menu_command"] = False
 
         if type(name) == str:
             return {
-                name: {
-                    "config": definition.get("config"),
-                    "ctx": definition.get("ctx"),
-                    "plugins": definition.get("plugins"),
-                    "shared": definition.get("shared"),
-                    "tasks": definition.get("tasks"),
-                    "workflows": definition.get("workflows")
-                }
+                "plugin": dict([
+                    [
+                        name, {
+                            "config": definition.get("config"), "ctx": definition.get("ctx"),
+                            "plugins": definition.get("plugins"), "shared": definition.get("shared"),
+                            "tasks": definition.get("tasks"), "workflows": definition.get("workflows")
+                        }
+                    ],
+                    [
+                        "menu_command", definition.get("menu_command")
+                    ]
+                ])
             }
 
 
 class WorkflowBase(ClosureBase, ConcurencyBase, PluginBase, UtilsBase):
     """
-    WorkflowBase to run the defined workflow. \n
+    `WorkflowBase` to run the defined workflow. \n
     Use the Workflow Class to work with your class. This is intended to be the library logic file. \n
+
+    ##### Instance Methods
+    @`merge_tasks` \n
+    @`reducer` \n
+    @`run_task` \n
+
     """
 
     def __init__(self):
@@ -213,7 +233,16 @@ class WorkflowBase(ClosureBase, ConcurencyBase, PluginBase, UtilsBase):
 class Workflow(WorkflowBase):
     """
     `Workflow` class to define a workflow
+
+    ##### Instance Methods
+    @`plugin_register` \n
+    @`merge` \n
+    @`create_workflow` \n
+    @`get_all_tasks` \n
+    @`start` \n
+
     """
+
     def __init__(self):
         super().__init__()
 
@@ -358,10 +387,6 @@ def task(*work_args, **work_kwargs):
 
         return add_tasks()
     return get_decorator
-
-
-if __name__ == "__main__":
-    plugin = PluginBase()
 
 
 __all__ = [

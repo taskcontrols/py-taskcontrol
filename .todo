@@ -5,6 +5,7 @@
 * [D] Add merging two workflow instances 
 * [W] Add ordered workflow runs 
 * [W] Add workflow name clashes inside an instance
+* [W] Add allowing of repetitive tasks using schedular
 * [W] Add plugin system (No config addition)
 * [W] Add pre-created workflow script list/array
 * [W] Add cleaner logging system for monitoring with 
@@ -15,7 +16,8 @@
 * [T] Run PreCreated Tasks
 * [T] Check impact of self on closure (Low priority)
 * [T] Logging & Concurrency for logger (Concurrency can be added)
- 
+* [T] Consider adding decorator generator in utils like https://click.palletsprojects.com/en/8.0.x/
+
 ** [W] Add Tests
         Add all variations of tests for 
                 - decorator, args, and kwargs

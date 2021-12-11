@@ -39,8 +39,8 @@ class ClosureBase():
     LIBRARY CORE: Do not modify \n
     Use for creating closures, if need for your app or use case. \n
 
-    ##### Methods
-    @class_closure() -> (@getter, @setter, @deleter)
+    ##### Instance Methods
+    @`class_closure()` -> `(@getter, @setter, @deleter)`
     """
 
     def class_closure(self, **kwargs):
@@ -177,9 +177,9 @@ class SharedBase(ClosureBase):
     SharedBase class is used to share a common instance across different objects across module. Follows a singleton pattern \n
 
     ##### Static Methods
-    @getInstance \n
+    @`getInstance` \n
     Usage: \n
-    SharedBase.getInstance()
+    `SharedBase.getInstance()`
     """
     __instance = None
 
@@ -219,6 +219,10 @@ class SharedBase(ClosureBase):
 
 
 class RThreadBase(threading.Thread):
+    """
+    `RThreadBase`
+    """
+
     def __init__(self, group=None, target=None, name=None,
                  args=(), kwargs={}, daemon=False, Verbose=None):
         threading.Thread.__init__(self, group=group, target=target,
@@ -226,16 +230,27 @@ class RThreadBase(threading.Thread):
         self._return = None
 
     def run(self):
+        """
+        .run() function is used to store returns to fetch from a join implementation
+        """
         if self._target is not None:
             self._return = self._target(*self._args, **self._kwargs)
 
     def join(self, *args):
+        """
+        .join() function can be used to get returns from a join implementation
+
+        """
         threading.Thread.join(self, *args, timeout=-1)
         return self._return
 
 
 class RProcessBase(multiprocessing.Process):
+    """
+    `RProcessBase`
+    """
     # https://analyticsindiamag.com/run-python-code-in-parallel-using-multiprocessing/
+
     def __init__(self, group=None, target=None, name=None,
                  args=(), kwargs={}, daemon=False, Verbose=None):
         multiprocessing.Process.__init__(self, group=group, target=target,
@@ -243,10 +258,16 @@ class RProcessBase(multiprocessing.Process):
         self._return = None
 
     def run(self):
+        """
+        .run() function is used to store returns to fetch from a join implementation
+        """
         if self._target is not None:
             self._return = self._target(*self._args, **self._kwargs)
 
     def join(self, *args):
+        """
+        .join() function can be used to get returns from a join implementation
+        """
         multiprocessing.Process.join(self, *args, timeout=-1)
         return self._return
 
@@ -254,8 +275,8 @@ class RProcessBase(multiprocessing.Process):
 class ConcurencyBase():
     """
     `ConcurencyBase` allows working with different ways of working with concurrency \n
-    
-    ##### Methods
+
+    ##### Instance Methods
     @staticmethod Futures: `ConcurencyBase.futures` [todo]
     @staticmethod Asyncio: `ConcurencyBase.asyncio` [todo]
     @staticmethod Thread: `ConcurencyBase.thread`
@@ -426,7 +447,7 @@ class ConcurencyBase():
         { `args` (list), `kwargs` (dict), `options` (dict) } \n
 
         ##### process_pool args and kwargs 
-        
+
         `args`: type(list) \n
         [Default is empty tuple ()] \n
         `kwargs`: type(dict) \n
@@ -496,23 +517,24 @@ class ConcurencyBase():
 
 class UtilsBase(ObjectModificationInterface):
     """
-    UtilsBase class is used for extending most common logics around the taskcontrols library. \n
+    `UtilsBase` class is used for extending most common logics around the taskcontrols library. \n
 
-    ##### Methods
+    ##### Instance Methods
     Provides a `validate_object` to validate an dictionary object to verify a specific list of keys
-    @validate_object
-    @append_update_dict \n
+    @`validate_object` \n
+    @`append_update_dict` \n
     Provides a `create`, `fetch`, `update`, and `delete` functions to modify private stored objects (implementation of ClosureBase) in the instance \n
-    @create
-    @fetch
-    @update
-    @delete
+    @`create` \n
+    @`fetch` \n
+    @`update` \n
+    @`delete` \n
 
     ClosureBase Implemented (Not Inherited) Available Methods: \n
-    Provides a `getter`, `setter`, and `delete` functions inheritence due to the ClosureBase implementation within \n
-    @getter
-    @setter
-    @deleter
+    Provides a `getter`, `setter`, and `delete` functions not due to inheritence due to the ClosureBase implementation within \n
+    @`getter` \n
+    @`setter` \n
+    @`deleter` \n
+
     """
 
     object_name = None
@@ -526,312 +548,6 @@ class UtilsBase(ObjectModificationInterface):
         self.validate_delete = validations.get("delete", ["name"])
         self.getter, self.setter, self.deleter = ClosureBase().class_closure(
             **kwargs)
-
-    def string_to_json(self, string):
-        return json.loads(string)
-
-    def json_to_string(self, json):
-        return str(json)
-
-    def append_update_dict(self, main_object, update_object):
-        """
-
-        """
-        for k in update_object:
-            if k in main_object:
-                main_object.update(dict([[k, update_object.get(k)]]))
-            else:
-                main_object.append(dict([[k, update_object.get(k)]]))
-        return main_object
-
-    def validate_object(self, val_object, values=[]):
-        """
-
-        """
-        keys = val_object.keys()
-        if len(keys) == len(values):
-            if type(values) == list:
-                for k in values:
-                    if k in keys:
-                        continue
-                    else:
-                        return False
-                return True
-            elif type(values) == dict:
-                v_keys = values.keys()
-                for v in v_keys:
-                    if v in keys:
-                        for k in keys:
-                            if type(values.get(v)) == type(val_object.get(k)):
-                                continue
-                            else:
-                                return False
-                    else:
-                        return False
-                return True
-        return False
-
-    def list_search(self, list_object, params):
-        """
-
-        """
-        arr = []
-        for idx, l in enumerate(list_object):
-            for w in params:
-                if w.type == "exact":
-                    if l == w.param:
-                        arr.append({"row": idx, "item": l})
-                if w.type == "reg-match":
-                    p = re.compile(w.get("pattern"))
-                    if re.match(p, w.get("param")):
-                        arr.append({"row": idx, "item": l})
-                elif w.type == "reg-search" or w.type == "contains":
-                    p = re.compile(w.get("pattern"))
-                    if re.search(p, w.get("param")):
-                        arr.append({"row": idx, "item": l})
-        return arr
-
-    def list_modify(self, list_object, fnc, params=None):
-        """
-
-        """
-        if not params:
-            return map(fnc, list_object)
-        arr = []
-        for idx, l in enumerate(list_object):
-            for w in params:
-                if w.type == "exact":
-                    if l == w.param:
-                        arr.append({"row": idx, "item": fnc(l)})
-                if w.type == "reg-match":
-                    p = re.compile(w.get("pattern"))
-                    if re.match(p, w.get("param")):
-                        arr.append({"row": idx, "item": fnc(l)})
-                elif w.type == "reg-search" or w.type == "contains":
-                    p = re.compile(w.get("pattern"))
-                    if re.search(p, w.get("param")):
-                        arr.append({"row": idx, "item": fnc(l)})
-        return arr
-
-    def create(self, config):
-        """
-        `.create` function helps create a key stored in the list of all objects \n
-        { `config` (dict) }
-        
-        `config`: type(dict) \n
-        { `name` (str), `workflow_kwargs` (dict), ...your object structure... }
-        ##### config structure details below
-        `name`: type(str) \n
-        `workflow_kwargs`: type(dict) is optional key \n
-        -- `shared`: type(bool) \n
-        """
-        config["workflow_kwargs"] = config.get("workflow_kwargs", {})
-        config["workflow_kwargs"]["shared"] = config.get(
-            "workflow_kwargs").get("shared", False)
-        try:
-            if self.validate_object(config, self.validate_add):
-                return self.setter(self.object_name, config, self)
-            return False
-        except Exception as e:
-            print("Fetch error ", e)
-            return False
-
-    def fetch(self, name):
-        """
-        `.fetch` function helps fetch a key stored in the list of all objects \n
-        { `name` (str) } \n
-        `name`: type(str) \n
-        Name of the key to be fetched from the all the stored objects 
-        """
-        try:
-            return self.getter(self.object_name, name)[0]
-        except Exception as e:
-            print("Fetch error ", e)
-            return False
-
-    def update(self, config):
-        """
-        `.update` function helps update a key stored in the list of all objects \n
-        { `config` (dict) } \n
-
-        `config`: type(dict) \n
-        { `name` (str), `workflow_kwargs` (dict), ...your object structure... }
-        ##### config structure details below
-        `name`: type(str) \n
-        
-        """
-        try:
-            o = self.getter(self.object_name, config.get("name"))[0]
-            for k in config:
-                if o.get(k) and (not k == "name"):
-                    o[k] = o.get(k)
-            return self.setter(self.object_name, o, self)
-        except Exception as e:
-            print("Fetch error ", e)
-            return False
-
-    def delete(self, name):
-        """
-        `.delete` function helps deleting a key stored in the list of all objects \n
-        { `name` (str) } \n
-        `name`: type(str) \n
-        Name of the key to be deleted from the all the stored objects 
-        """
-        try:
-            return self.deleter(self.object_name, name)
-        except Exception as e:
-            print("Fetch error ", e)
-            return False
-
-
-class TimerBase(UtilsBase, TimeInterface):
-    """
-    TimerBase class is used to time execution of specific programing logic you need \n
-
-    ##### Methods
-    @timer_create
-    @time
-    @elapsed_time
-    @curent_elapsed_time
-    @reset
-    @start
-    @stop
-    """
-    
-    def __init__(self, timers={}):
-        """
-
-        """
-        self.v = ["name", "_start_time", "_elapsed_time",
-                  "_accumulated", "workflow_kwargs"]
-        super().__init__("timers",
-                         validations={"add": self.v, "fetch": self.v, "create": self.v,
-                                      "update": self.v, "delete": ["name"]},
-                         timers=timers)
-
-    def timer_create(self, config):
-        """
-
-        """
-        config.update({
-            "_start_time": 0.0,
-            "_elapsed_time": 0.0,
-            "_accumulated": 0.0
-        })
-        print(config)
-        u = self.create(config)
-        if u:
-            return True
-        return False
-
-    def time(self):
-        """
-
-        """
-        return time.perf_counter()
-
-    def elapsed_time(self, name):
-        """
-
-        """
-        t = self.fetch(name)
-        if not t:
-            raise TypeError("Timer not present")
-        else:
-            return t.get("_elapsed_time")
-
-    def curent_elapsed_time(self, name):
-        """
-
-        """
-        t = self.fetch(name)
-        if not t:
-            raise ValueError("Timer not started")
-        return time.perf_counter() - t.get("_start_time", 0.0)
-
-    def reset(self, name):
-        """
-
-        """
-        t = self.fetch(name)
-        if t:
-            t.update({
-                "_start_time": 0.0,
-                "_elapsed_time": 0.0,
-                "_accumulated": 0.0
-            })
-            return True
-        return False
-
-    def start(self, name):
-        """
-
-        """
-        # options object : {"name":"name", "timer": None}
-        t = self.fetch(name)
-        if not t:
-            raise ValueError("Timer not present")
-        t.update({
-            "_start_time": self.time(),
-            "_elapsed_time": 0.0
-        })
-        u = self.update(t)
-        if u:
-            return t["_start_time"]
-        return False
-
-    def stop(self, name):
-        """
-
-        """
-        # options object : {"name":"name", "timer": None}
-        t = self.fetch(name)
-        if not t or not t.get("_start_time"):
-            raise ValueError("Timer not present")
-        elapsed_time = time.perf_counter() - t.get("_start_time")
-        t.update({
-            "_start_time": 0.0,
-            "_elapsed_time": elapsed_time,
-            "_accumulated": t["_accumulated"] + elapsed_time
-        })
-        u = self.update(t)
-        if u:
-            return elapsed_time
-        raise Exception("Couldnot stop")
-
-
-class FileReaderBase(UtilsBase, FileReaderInterface):
-
-    def __init__(self, validations={}, fileobjects={}):
-        """
-
-        """
-        if len(validations):
-            self.v = validations
-        else:
-            # self.v = ["name", "file", "mode", "encoding", "workflow_kwargs"]
-            self.v = ["name", "file", "mode", "workflow_kwargs"]
-
-        super().__init__("fileobjects", validations={
-            "add": self.v,
-            "fetch": self.v,
-            "create": self.v,
-            "update": self.v,
-            "delete": ["name"]
-        }, fileobjects=fileobjects)
-
-    def exists(self, file_path):
-        """
-
-        """
-        return os.path.exists(file_path)
-
-    def is_file(self, file_path):
-        """
-
-        """
-        path = Path(file_path)
-        return path.is_file()
 
     @staticmethod
     def csv_to_dict(csvfile):
@@ -927,17 +643,20 @@ class FileReaderBase(UtilsBase, FileReaderInterface):
         _to_etree(body, node)
         return ET.tostring(node)
 
-    # def dictify_xml(r,root=True):
-    #     if root:
-    #         return {r.tag : dictify(r, False)}
-    #     d=copy(r.attrib)
-    #     if r.text:
-    #         d["_text"]=r.text
-    #     for x in r.findall("./*"):
-    #         if x.tag not in d:
-    #             d[x.tag]=[]
-    #         d[x.tag].append(dictify(x,False))
-    #     return d
+    @staticmethod
+    def dictify_xml(r, root=True):
+        """
+        """
+        if root:
+            return {r.tag: dictify(r, False)}
+        d = copy(r.attrib)
+        if r.text:
+            d["_text"] = r.text
+        for x in r.findall("./*"):
+            if x.tag not in d:
+                d[x.tag] = []
+            d[x.tag].append(dictify(x, False))
+        return d
 
     @staticmethod
     def dict_to_csv(csv_filename, headers=[], diction_list=[]):
@@ -962,67 +681,485 @@ class FileReaderBase(UtilsBase, FileReaderInterface):
         """
         pass
 
-    def file_open(self, name):
+    @staticmethod
+    def csv_to_json():
+        """
+
+        """
+        # https://dzone.com/articles/full-stack-development-tutorial-sending-pandas-dat
+        pass
+
+    @staticmethod
+    def csv_to_xml():
+        """
+
+        """
+        # https://dzone.com/articles/using-python-pandas-for-log-analysis
+        # https://pbpython.com/pdf-reports.html
+        pass
+
+    @staticmethod
+    def string_to_json(string):
+        """
+        """
+        return json.loads(string)
+
+    @staticmethod
+    def json_to_string(json):
+        """
+        """
+        return str(json)
+
+    @staticmethod
+    def iterate(function, iterations):
+        """
+        `.iterate()` function can be used to iterate the same function n (`iterations`) number of times \n
+        { `function` (function) or (str), `count` (int) } \n
+
+        ##### Arguments
+        `function`: type(function) \n
+        The function name that is stored in the instance or the function that needs to be run \n
+
+        `iterations`: type(str) \n
+        Counts or iterations or frequency of repetition of a task
+
+        """
+        if not hasattr(function, '__call__'):
+            raise TypeError
+        try:
+            r = []
+            for i in range(iterations):
+                r.append(function())
+            return r
+        except Exception as e:
+            return False
+
+    def append_update_dict(self, main_object, update_object):
+        """
+
+        """
+        for k in update_object:
+            if k in main_object:
+                main_object.update(dict([[k, update_object.get(k)]]))
+            else:
+                main_object.append(dict([[k, update_object.get(k)]]))
+        return main_object
+
+    def validate_object(self, val_object, values=[]):
+        """
+
+        """
+        keys = val_object.keys()
+        if len(keys) == len(values):
+            if type(values) == list:
+                for k in values:
+                    if k in keys:
+                        continue
+                    else:
+                        return False
+                return True
+            elif type(values) == dict:
+                v_keys = values.keys()
+                for v in v_keys:
+                    if v in keys:
+                        for k in keys:
+                            if type(values.get(v)) == type(val_object.get(k)):
+                                continue
+                            else:
+                                return False
+                    else:
+                        return False
+                return True
+        return False
+
+    def list_search(self, list_object, params):
+        """
+
+        """
+        arr = []
+        for idx, l in enumerate(list_object):
+            for w in params:
+                if w.type == "exact":
+                    if l == w.param:
+                        arr.append({"row": idx, "item": l})
+                if w.type == "reg-match":
+                    p = re.compile(w.get("pattern"))
+                    if re.match(p, w.get("param")):
+                        arr.append({"row": idx, "item": l})
+                elif w.type == "reg-search" or w.type == "contains":
+                    p = re.compile(w.get("pattern"))
+                    if re.search(p, w.get("param")):
+                        arr.append({"row": idx, "item": l})
+        return arr
+
+    def list_modify(self, list_object, fnc, params=None):
+        """
+
+        """
+        if not params:
+            return map(fnc, list_object)
+        arr = []
+        for idx, l in enumerate(list_object):
+            for w in params:
+                if w.type == "exact":
+                    if l == w.param:
+                        arr.append({"row": idx, "item": fnc(l)})
+                if w.type == "reg-match":
+                    p = re.compile(w.get("pattern"))
+                    if re.match(p, w.get("param")):
+                        arr.append({"row": idx, "item": fnc(l)})
+                elif w.type == "reg-search" or w.type == "contains":
+                    p = re.compile(w.get("pattern"))
+                    if re.search(p, w.get("param")):
+                        arr.append({"row": idx, "item": fnc(l)})
+        return arr
+
+    def create(self, config):
+        """
+        `.create` function helps create a key stored in the list of all objects \n
+        { `config` (dict) }
+
+        `config`: type(dict) \n
+        { `name` (str), `workflow_kwargs` (dict), ...your object structure... }
+        ##### config structure details below
+        `name`: type(str) \n
+        `workflow_kwargs`: type(dict) is optional key \n
+        -- `shared`: type(bool) \n
+        `any-other-keys-you-need-to-specify-and-store`: any other keys you need to specify and store \n
+
+        """
+        config["workflow_kwargs"] = config.get("workflow_kwargs", {})
+        config["workflow_kwargs"]["shared"] = config.get(
+            "workflow_kwargs").get("shared", False)
+        try:
+            if self.validate_object(config, self.validate_add):
+                return self.setter(self.object_name, config, self)
+            return False
+        except Exception as e:
+            print("Fetch error ", e)
+            return False
+
+    def fetch(self, name):
+        """
+        `.fetch` function helps fetch a key stored in the list of all objects \n
+        { `name` (str) } \n
+        `name`: type(str) \n
+        Name of the key to be fetched from the all the stored objects 
+        """
+        try:
+            return self.getter(self.object_name, name)[0]
+        except Exception as e:
+            print("Fetch error ", e)
+            return False
+
+    def update(self, config):
+        """
+        `.update` function helps update a key stored in the list of all objects \n
+        { `config` (dict) } \n
+
+        `config`: type(dict) \n
+        { `name` (str), `workflow_kwargs` (dict), ...your object structure... }
+        ##### config structure details below
+        `name`: type(str) \n
+
+        """
+        try:
+            o = self.getter(self.object_name, config.get("name"))[0]
+            for k in config:
+                if o.get(k) and (not k == "name"):
+                    o[k] = o.get(k)
+            return self.setter(self.object_name, o, self)
+        except Exception as e:
+            print("Fetch error ", e)
+            return False
+
+    def delete(self, name):
+        """
+        `.delete` function helps deleting a key stored in the list of all objects \n
+        { `name` (str) } \n
+        `name`: type(str) \n
+        Name of the key to be deleted from the all the stored objects 
+        """
+        try:
+            return self.deleter(self.object_name, name)
+        except Exception as e:
+            print("Fetch error ", e)
+            return False
+
+
+class TimerBase(UtilsBase, TimeInterface):
+    """
+    `TimerBase` class is used for time execution captures of specific programing logic you need \n
+
+    ##### Instance Methods
+    @`timer_create`
+    @`time`
+    @`elapsed_time`
+    @`curent_elapsed_time`
+    @`reset`
+    @`start`
+    @`stop`
+    """
+
+    def __init__(self, timers={}):
+        """
+        Instantiation for timers in the instance \n
+        `timers` objects in keys \n
+        single timer object: { `name`, `_start_time`, `_elapsed_time`, `_accumulated` } \n
+
+        """
+        self.v = ["name", "_start_time", "_elapsed_time",
+                  "_accumulated", "workflow_kwargs"]
+        super().__init__("timers",
+                         validations={"add": self.v, "fetch": self.v, "create": self.v,
+                                      "update": self.v, "delete": ["name"]},
+                         timers=timers)
+
+    def timer_create(self, config):
+        """
+        `.timer_create()` function creates and stores an timer config into the `TimerBase` instance \n
+        { `config` (dict) }
+        { `name` (str), `_start_time` (float), `_elapsed_time` (float), `_accumulated` (float), `workflow_kwargs` (dict): { `shared` (bool) } }
+
+        ##### Argument details
+        `name`: type(str) \n
+        `_start_time`: type(int) optional \n
+        `_elapsed_time`: type(int) optional \n
+        `_accumulated`: type(int) optional \n
+
+        """
+        if not config.get("name"):
+            raise TypeError("Name argument has to be provided")
+
+        config.update({
+            "_start_time": config.get("_start_time", 0.0),
+            "_elapsed_time": config.get("_elapsed_time", 0.0),
+            "_accumulated": config.get("_accumulated", 0.0)
+        })
+        u = self.create(config)
+        if u:
+            return True
+        return False
+
+    def time(self):
+        """
+        `.time()` function returns an pure python timer `time.perf_counter` instance \n
+        """
+        return time.perf_counter()
+
+    def elapsed_time(self, name):
+        """
+        `.elapsed_time()` function returns the stored elapsed time of the timer name instance requested \n
+
+        { `name` (str) }
+        `name`: type(str) \n
+        Name of the timer instance's last elapsed time to return stored after a stop method last used for the name of the instance stored. \n
+        Will return 0 if the timer instance has been started and has not been stopped atleast once. \n
+        """
+        t = self.fetch(name)
+        if not t:
+            raise TypeError("Timer not present")
+        else:
+            return t.get("_elapsed_time")
+
+    def curent_elapsed_time(self, name):
+        """
+        `.curent_elapsed_time()` function returns the elapsed time of the timer name requested \n
+
+        { `name` (str) }
+        `name`: type(str) \n
+        Name of the timer instance's current elapsed time to return from the instance stored in the instance \n
+        """
+        t = self.fetch(name)
+        if not t:
+            raise ValueError("Timer not started")
+        return time.perf_counter() - t.get("_start_time", 0.0)
+
+    def reset(self, name):
+        """
+        `.reset()` function resets the timer \n
+
+        { `name` (str) }
+        `name`: type(str) \n
+        Name of the timer instance to reset that is stored in the instance \n
+        """
+        t = self.fetch(name)
+        if t:
+            t.update({
+                "_start_time": 0.0,
+                "_elapsed_time": 0.0,
+                "_accumulated": 0.0
+            })
+            return True
+        return False
+
+    def start(self, name):
+        """
+        `.start()` function starts the timer \n
+
+        { `name` (str) }
+        `name`: type(str) \n
+        Name of the timer instance to start that is stored in the instance \n
+        """
+        # options object : {"name":"name", "timer": None}
+        t = self.fetch(name)
+        if not t:
+            raise ValueError("Timer not present")
+        t.update({
+            "_start_time": self.time(),
+            "_elapsed_time": 0.0
+        })
+        u = self.update(t)
+        if u:
+            return t["_start_time"]
+        return False
+
+    def stop(self, name):
+        """
+        `.stop()` function stops the timer \n
+
+        { `name` (str) }
+        `name`: type(str) \n
+        Name of the timer instance to stop that is stored in the instance \n
+        """
+        # options object : {"name":"name", "timer": None}
+        t = self.fetch(name)
+        if not t or not t.get("_start_time"):
+            raise ValueError("Timer not present")
+        elapsed_time = time.perf_counter() - t.get("_start_time")
+        t.update({
+            "_start_time": 0.0,
+            "_elapsed_time": elapsed_time,
+            "_accumulated": t["_accumulated"] + elapsed_time
+        })
+        u = self.update(t)
+        if u:
+            return elapsed_time
+        raise Exception("Couldnot stop")
+
+
+class FileReaderBase(UtilsBase, FileReaderInterface):
+    """
+    `FileReaderBase` class can be used to read, write, append to a file. \n
+    FileReaderBase class can also be used to insert, update, append, delete rows in a file and to search rows in a file that match a regex pattern. \n
+    [todo] row methods to be modified \n
+
+    ##### Instance Methods
+    @`exists` \n
+    @`is_file` \n
+    @`file_store` \n
+    @`file_read` \n
+    @`file_write` \n
+    @`file_append` \n
+    @`row_insert` \n
+    @`row_append` \n
+    @`row_update` \n
+    @`row_delete` \n
+    @`row_search` \n
+
+    """
+
+    def __init__(self, validations={}, fileobjects={}):
+        """
+
+        """
+        if len(validations):
+            self.v = validations
+        else:
+            # self.v = ["name", "file", "mode", "encoding", "workflow_kwargs"]
+            self.v = ["name", "file", "mode", "workflow_kwargs"]
+
+        super().__init__("fileobjects", validations={
+            "add": self.v,
+            "fetch": self.v,
+            "create": self.v,
+            "update": self.v,
+            "delete": ["name"]
+        }, fileobjects=fileobjects)
+
+    def exists(self, file_path):
+        """
+
+        """
+        return os.path.exists(file_path)
+
+    def is_file(self, file_path):
+        """
+
+        """
+        path = Path(file_path)
+        return path.is_file()
+
+    def file_store(self, config):
+        try:
+            return self.create(config)
+        except:
+            return False
+
+    def file_read(self, name, way, index=None):
         """
 
         """
         config = self.fetch(name)
-        try:
-            # return open(config.get("file"), config.get("mode"), config.get("encoding"))
-            return open(config.get("file"), config.get("mode"))
-        except Exception as e:
-            return False
+        with open(config.get("file"), mode="r", encoding=config.get("encoding")) as obj:
+            try:
+                if way == "read":
+                    if index:
+                        return obj.read(index)
+                    else:
+                        return obj.read()
+                elif way == "readline":
+                    if index:
+                        return obj.readline(index)
+                    else:
+                        return obj.readline()
+                elif way == "readlines":
+                    return obj.readlines()
+                elif way == "file":
+                    a = []
+                    for i in obj:
+                        a.append(i)
+                    return a
+                obj.close()
+                return False
+            except Exception as e:
+                return False
 
-    def file_read(self, obj, way, index=None):
+    def file_write(self, name, items, way):
         """
 
         """
-        try:
-            if way == "read":
-                if index:
-                    return obj.read(index)
-                else:
-                    return obj.read()
-            elif way == "readline":
-                if index:
-                    return obj.readline(index)
-                else:
-                    return obj.readline()
-            elif way == "readlines":
-                return obj.readlines()
-            elif way == "file":
-                a = []
-                for i in obj:
-                    a.append(i)
-                return a
-            return False
-        except Exception as e:
-            return False
+        config = self.fetch(name)
+        with open(config.get("file"), mode="w+", encoding=config.get("encoding")) as obj:
+            try:
+                if way == "write":
+                    obj.write(items)
+                elif way == "writeline":
+                    obj.writeline(items)
+                elif way == "writelines":
+                    obj.writelines(items)
+                obj.close()
+                return True
+            except Exception as e:
+                return False
 
-    def file_write(self, obj, items, way):
+    def file_append(self, name, items, way):
         """
 
         """
-        try:
-            if way == "write":
-                obj.write(items)
-            elif way == "writeline":
-                obj.writeline(items)
-            elif way == "writelines":
-                obj.writelines(items)
-            return True
-        except Exception as e:
-            return False
-
-    def file_close(self, obj):
-        """
-
-        """
-        try:
-            obj.close()
-            return True
-        except Exception as e:
-            return False
+        config = self.fetch(name)
+        with open(config.get("file"), mode="a", encoding=config.get("encoding")) as obj:
+            try:
+                if way == "write":
+                    obj.write(items)
+                elif way == "writeline":
+                    obj.writeline(items)
+                elif way == "writelines":
+                    obj.writelines(items)
+                obj.close()
+                return True
+            except Exception as e:
+                return False
 
     def row_insert(self, name, item, row=None):
         """
@@ -1130,6 +1267,25 @@ class FileReaderBase(UtilsBase, FileReaderInterface):
 
 
 class CSVReaderBase(FileReaderBase, CSVReaderInterface):
+    """
+    `CSVReaderBase` class can be used to read, write, append to a file. \n
+    CSVReaderBase class can also be used to insert, update, append, delete rows in a file and to search rows in a file that match a regex pattern. \n
+    [todo] row methods to be modified \n
+
+    ##### Instance Methods
+    @`exists` \n
+    @`is_file` \n
+    @`file_store` \n
+    @`file_read` \n
+    @`file_write` \n
+    @`file_append` \n
+    @`row_insert` \n
+    @`row_append` \n
+    @`row_update` \n
+    @`row_delete` \n
+    @`row_search` \n
+
+    """
 
     def __init__(self, csvs={}):
         """
@@ -1145,21 +1301,6 @@ class CSVReaderBase(FileReaderBase, CSVReaderInterface):
             "delete": self.v
         }
         super().__init__(validations=self.vd, fileobjects=csvs)
-
-    def csv_to_json():
-        """
-
-        """
-        # https://dzone.com/articles/full-stack-development-tutorial-sending-pandas-dat
-        pass
-
-    def csv_to_xml():
-        """
-
-        """
-        # https://dzone.com/articles/using-python-pandas-for-log-analysis
-        # https://pbpython.com/pdf-reports.html
-        pass
 
     def row_insert(self, name, head, params):
         """
@@ -1188,11 +1329,11 @@ class CSVReaderBase(FileReaderBase, CSVReaderInterface):
 
 class LogBase(UtilsBase, LogsInterface):
     """
-    LogBase class is used to store loggers and log data using predefined loggers \n
+    `LogBase` class is used to store logger instances and log data to file using predefined loggers \n
 
-    ##### Methods:
-    @logger_create
-    @log
+    ##### Instance Methods:
+    @`logger_create`
+    @`log`
     """
 
     def __init__(self, loggers={}):
@@ -1228,14 +1369,13 @@ class LogBase(UtilsBase, LogsInterface):
     def logger_create(self, config):
         """
         `.logger_create` is use to create and store a logger instance in the LogBase instance \n
-        
+
         `config`: type(dict) \n
         `{ "name":"name",
            "handlers": {"handler": {"type": "file", "file": "filename.log"}, "format": "", "level": logging.INFO},
            "handlers": [{"handler": {"type": "file", "file": "filename.log"}, "format": "", "level": logging.DEBUG}]
         }`
         """
-        
 
         # Use config here. config contains network info if logging needed to network
         try:
@@ -1330,11 +1470,18 @@ class LogBase(UtilsBase, LogsInterface):
 
 class PicklesBase(UtilsBase, PicklesInterface):
     """
+    `PicklesBase` class is used for managing and working with Pickle files \n
 
-    ##### Methods:
-
+    ##### Instance Methods:
+    @`row_insert`
+    @`row_append`
+    @`row_update`
+    @`row_delete`
+    @`search`
+    @`connection`
     """
     # Consider PickleBase class for ORM and Authentication
+
     def __init__(self, pickles={}):
         """
 
@@ -1384,13 +1531,17 @@ class PicklesBase(UtilsBase, PicklesInterface):
 
 class CommandsBase(UtilsBase, CommandsInterface):
     """
-    CommandsBase class allows for running commands you specify programmatically. \n
-    All ways of subprocess.call, subprocess.popen, subprocess.run, os.popen [TODO] are intended to be supported. \n
+    `CommandsBase` class allows for running commands you specify programmatically. \n
+    All ways of `subprocess.call`, `subprocess.popen`, `subprocess.run`, `os.popen` [todo] are intended to be supported. \n
 
-    ##### Methods:
-    @exists
-    @path
-    @execute
+    ##### Instance Methods:
+    @`exists`
+    @`path`
+    @`execute`
+
+    ##### Static Instance Methods (UtilsBase Inherited)
+    @`iterate` \n
+
     """
 
     def __init__(self, object_name="commands", validations={}, commands={}):
@@ -1425,21 +1576,22 @@ class CommandsBase(UtilsBase, CommandsInterface):
     def execute(self, command, mode="subprocess_popen", stdin_mode=False, options={}):
         """
         `TODO`: ReWrite for inclusion of all arguments \n
-        #### COMMON:  ARGUMENTS \n
+        #### `.execute` ARGUMENTS \n
         `command`: type(str) or type(list) \n
         Any command or command with arguments and options as a list \n
         `stdin_mode`: type(bool) \n
         Get input value for the shell \n
         Value Options: [ True, False ] [Default is bool False] \n
         `mode`: type(str) \n
-        Value Options: [ subprocess_call, subprocess_popen, subprocess_run, os_popen ] [Default is str subprocess_call] \n
+        Value Options: [ subprocess_call [TODO - Unfunctional], subprocess_popen, subprocess_run, os_popen, os_system ] [Default is str subprocess_popen] \n
         `options`: type(dict) \n
-        `options` object that will be requested for `subprocess` or `os` functions \n
-        Details of the same in the section below. \n
+        Details of the same in the section `option Object keys details` below. \n
+        `options` object that are needed for `subprocess` or `os` functions \n
 
-        #### SPECIFIC `option` Object Keys for: \n
 
-        for `subprocess_call` which calls the `subprocess.call()` function: \n
+        #### `option` object keys Details: \n
+
+        for `subprocess_call` [TODO - Unfunctional] which calls the `subprocess.call()` function: \n
         { `args`:command argument and/or options, `stdin, stdout, stderr, bufsize, universal_newlines, executable, shell, cwd, env,
         preexec_fn, close_fds, startupinfo, creationflags, restore_signals, start_new_session, pass_fds, timeout`
         } \n
@@ -1458,8 +1610,11 @@ class CommandsBase(UtilsBase, CommandsInterface):
         } \n\n
 
         * for `os_popen` which calls the `os.popen()` function: \n
-        { `args`:command argument and/or options
-        }
+        { `args` (str): command argument and/or options, `mode` (str), `buffsize` (int) } \n
+
+        * for `os_system` which calls the `os.system()` function: \n
+        { `command` (str), `args` (str): command argument and/or options } \n
+
         """
         # https://www.cyberciti.biz/faq/python-run-external-command-and-get-output/
         try:
@@ -1492,13 +1647,15 @@ class CommandsBase(UtilsBase, CommandsInterface):
                     check = options.get("check", False)
                     encoding = options.get("encoding", None)
                     errors = options.get("errors", None)
-                    input = options.get("stdin_input", None)
+                    cargs = options.get("args", [])
+                    stdin_input = options.get("stdin_input", None)
+                    input = options.get("input", None)
+                    result = None
 
                 if mode == "subprocess_call":
                     proc = subprocess.call(
-                        [command, *options.get("args")],
-                        stdin=stdin,
-                        stdout=stdout, stderr=stderr,
+                        [command, *cargs],
+                        stdin=stdin, stdout=stdout, stderr=stderr,
                         bufsize=bufsize, universal_newlines=universal_newlines,
                         executable=executable, shell=shell,
                         cwd=cwd, env=env
@@ -1528,64 +1685,99 @@ class CommandsBase(UtilsBase, CommandsInterface):
                     # list(map(a.__delitem__, filter(a.__contains__, l)))
 
                     proc = subprocess.Popen(
-                        [command, *options.get("args")],
+                        [command, *cargs],
                         stdin=stdin, stdout=stdout, stderr=stderr,
                         universal_newlines=universal_newlines, bufsize=bufsize,
                         executable=executable, close_fds=close_fds, shell=shell,
                         cwd=cwd, env=env, start_new_session=start_new_session, text=text
                     )
                     if stdin_mode:
-                        # proc.stdin.write(input)
-                        c = proc.communicate(input=input)[0]
+                        result = proc.communicate(input=stdin_input)[0]
                         proc.stdin.close()
+                    if options.get("wait"):
+                        proc.wait()
                 elif mode == "subprocess_run":
-                    # a = {
-                    #     "stdin": stdin, "stdout": stdout, "stderr": stderr,
-                    #     "universal_newlines": universal_newlines,
-                    #     "input": input, "bufsize": bufsize, "executable": executable,
-                    #     "preexec_fn": preexec_fn, "close_fds": close_fds, "shell": shell,
-                    #     "cwd": cwd, "env": env, "startupinfo": startupinfo,
-                    #     "creationflags": creationflags, "restore_signals": restore_signals,
-                    #     "start_new_session": start_new_session, "pass_fds": pass_fds,
-                    #     "capture_output": capture_output, "check": check, "encoding": encoding,
-                    #     "errors": errors, "text": text, "timeout": timeout
-                    # }
-                    if not input:
-                        proc = subprocess.run(
-                            [command, *options.get("args")],
-                            stdin=stdin, stdout=stdout, stderr=stderr,
-                            universal_newlines=universal_newlines,
-                            bufsize=bufsize, timeout=timeout
-                        )
+                    a = {
+                        "stdin": stdin, "stdout": stdout, "stderr": stderr,
+                        "universal_newlines": universal_newlines,
+                        "input": input, "bufsize": bufsize, "executable": executable,
+                        "preexec_fn": preexec_fn, "close_fds": close_fds, "shell": shell,
+                        "cwd": cwd, "env": env, "startupinfo": startupinfo,
+                        "creationflags": creationflags, "restore_signals": restore_signals,
+                        "start_new_session": start_new_session, "pass_fds": pass_fds,
+                        "capture_output": capture_output, "check": check, "encoding": encoding,
+                        "errors": errors, "text": text, "timeout": timeout
+                    }
+                    if not input and stdin_input:
+                        rm = ["input", "executable", "preexec_fn", "close_fds", "shell", "cwd", "env", "startupinfo",
+                              "creationflags", "restore_signals", "start_new_session", "pass_fds",
+                              "capture_output", "check", "encoding", "errors", "text"]
+                        {a.pop(r) for r in rm}
+                        proc = subprocess.run([command, *cargs], **a)
+                        # # Following has Error in implementation
+                        # # TODO: Following does not send input from the PIPE - .communicate and stdin.write does not work
+                        # # # # - Following does not capture the Output from the PIPE
+                        # # # # - Have to use input instead of std_input to send and get the stdin and stdout
+                        # # # #
                         if stdin_mode:
+                            # result = proc.communicate(input=stdin_input)
+                            # proc.stdin.write(stdin_input)
+                            # proc.stdin.close()
                             pass
+                    elif input and not stdin_input:
+                        rm = ["stdin", "executable", "preexec_fn", "close_fds", "shell", "cwd", "env", "startupinfo",
+                              "creationflags", "restore_signals", "start_new_session", "pass_fds",
+                              "capture_output", "check", "encoding", "errors", "text", "timeout"]
+                        {a.pop(r) for r in rm}
+                        proc = subprocess.run([command, *cargs], **a)
                     else:
-                        proc = subprocess.run(
-                            [command, *options.get("args")],
-                            stdout=stdout, stderr=stderr,
-                            universal_newlines=universal_newlines,
-                            input=input, bufsize=bufsize, timeout=timeout
-                        )
+                        raise Exception("input and stdin_input not provided")
                 elif mode == "os_popen":
-                    proc = os.popen([command, *options.get("args")])
-                elif mode == "os_popen":
-                    proc = os.popen([command, *options.get("args")])
-                    # r = proc.read()
-                return proc
-            raise Exception
-        except Exception:
+                    proc = os.popen(" ".join([command, *options.get("args", [])]), mode=options.get(
+                        "mode", "r"), buffering=options.get("buffsize", 1))
+                elif mode == "os_system":
+                    proc = os.system(
+                        " ".join([command, *options.get("args", [])]))
+                else:
+                    raise Exception("Raising Exception due to wrong option")
+                return proc, result
+        except Exception as e:
+            print("Raising Exception due to error ", e)
+            return False
+
+    def shell(self, file, target="", options={}):
+        """
+        file: bash shell `.sh`, powershell `.ps1` `.psm` `.ps1xml`, bat `.bat` file
+        `target`: local, remote
+        `options`: { dir, remote { ip, port, protocol } }
+
+        """
+        # https://docs.microsoft.com/en-us/powershell/scripting/windows-powershell/ise/how-to-write-and-run-scripts-in-the-windows-powershell-ise?view=powershell-7.2
+        try:
+            if target == "local":
+                return self.execute(
+                    file,
+                    mode="subprocess_call",
+                    stdin_mode=options.get("stdin_mode", False),
+                    options=options.get("options")
+                )
+            elif target == "remote":
+                pass
+            else:
+                raise Exception
+        except Exception as E:
             return False
 
 
 class QueuesBase(UtilsBase, QueuesInterface):
     """
-    QueuesBase allows you to create a list of queues to work with \n
-    All ways of List, Queue, LifoQueue, PriorityQueue, SimpleQueue are supported \n
+    `QueuesBase` allows you to create a list of queues to work with \n
+    All ways of `list`, `Queue`, `LifoQueue`, `PriorityQueue`, `SimpleQueue` are supported \n
 
-    ##### Methods:
-    @new
-    @add
-    @get
+    ##### Instance Methods:
+    @`new`
+    @`add`
+    @`get`
     """
     tmp = {}
 
@@ -1684,6 +1876,24 @@ class QueuesBase(UtilsBase, QueuesInterface):
 
 
 class EventsBase(UtilsBase, EventsInterface):
+    """
+    `EventsBase` class can be used to work with events \n
+    [TODO] Implementation of Asynchronous behaviour using concurrency class \n
+
+    ##### Instance Methods:
+    @`event_register`
+    @`event_unregister`
+    @`listener_register`
+    @`on`
+    @`listener_unregister`
+    @`get_state`
+    @`set_state`
+    @`listen`
+    @`stop`
+    @`send`
+    @`emit`
+
+    """
 
     def __init__(self, event={}):
         """
@@ -1700,9 +1910,13 @@ class EventsBase(UtilsBase, EventsInterface):
         `event_object`: type(dict) \n
         { `name` (str), `event` (function), `listening` (bool), `listeners` (dict) } \n
 
-            `event` (func): function to execute when event is invoked \n
-            `listening` (bool): if function needs to be listening to events \n
-            `listeners` (dict): dictionary of listener objects \n
+        ##### event_object Keyword Arguments Details
+        `event`: type(func) \n
+        Function to execute when event is invoked \n
+        `listening`: type(bool) \n
+        If function needs to be listening to events \n
+        `listeners`: type(dict) \n
+        Dictionary of listener objects \n
         TODO: This is blocking event object. Needs to allow non-blocking and non-blocking multithreaded / multiprocess
         """
         # Change this to different ways of using events/actions
@@ -1738,6 +1952,9 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Create or define an event using `.event_unregister` \n
         { `event_name` (str) } \n
+
+        ##### Arguments Details
+        `event_name`: type(str) \n
         """
         print("Deleting event: ", event_name)
         return self.delete(event_name)
@@ -1746,6 +1963,15 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Create or define an event using `.listener_register` \n
         { `listener_object` (dict) } \n
+
+        ##### Arguments Details
+        `listener_object`: type(dict) \n
+        { `name` (str), `event_name` (str), `listener` (bool) } \n
+
+        ##### listener_object Keyword Arguments
+        `name`: type(str) \n
+        `event_name`: type(str) \n
+        `listener`: type(bool) \n
         """
         try:
             if self.validate_object(listener_object, ["name", "event_name", "listener"]):
@@ -1761,6 +1987,12 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Create or define an event using `.on` \n
         { `event_name` (str), `name` (str), `handler` (function) } \n
+
+        ##### Arguments Details
+        `event_name`: type(str) \n
+        `name`: type(str) \n
+        `handler`: type(function) \n
+
         """
         return self.listener_register({"name": name, "event_name": event_name, "listener": handler})
 
@@ -1768,6 +2000,14 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Listen to an event using `.listener_unregister` \n
         { `listener_object` (dict) } \n
+
+        ##### Arguments Details
+        `listener_object`: type(dict) \n
+        { `name` (str), `event_name` (str) } \n
+
+        ##### listener_object Keyword Argument Details
+        `name`: type(str) \n
+        `event_name`: type(str) \n 
         """
         event_name = listener_object.get("event_name")
         a_name = listener_object.get("name")
@@ -1785,6 +2025,10 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Get an event state using `.get_state` \n
         { `event_name` (str) } \n
+
+        ##### Arguments Details
+        `event_name`: type(str) \n
+
         """
         try:
             e = self.fetch(event_name)
@@ -1798,6 +2042,10 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Set an event state using `.set_state` \n
         { `event_name` (str), `state` (bool) } \n
+
+        ##### Arguments Details
+        `event_name` type(str): \n
+        `state` type(bool): \n
         """
         try:
             event = self.fetch(event_name)
@@ -1811,6 +2059,9 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Listen an event using `.listen` \n
         { `event_name` (str) } \n
+
+        ##### Arguments Details
+        `event_name` type(str): \n
         """
         return self.set_state(event_name, True)
 
@@ -1818,6 +2069,9 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Stop Listening to an event using `.stop` \n
         { `event_name` (str) } \n
+
+        ##### Arguments Details
+        `event_name` type(str): \n
         """
         return self.set_state(event_name, False)
 
@@ -1825,6 +2079,15 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Send an event using `.send` \n
         { `message_object` (dict) } \n
+
+        ##### Arguments Details
+        `message_object` type(dict): \n
+        { `event_name` (str), `message` (any object) } \n
+
+        ##### `message_object` Keyword Arguments Details
+        `event_name`: type(str) \n
+        `message`: type(any object) \n
+
         """
         try:
             action = self.fetch(message_object.get("event_name"))
@@ -1839,13 +2102,32 @@ class EventsBase(UtilsBase, EventsInterface):
         """
         Emit an event using `.emit` \n
         { `event_name` (str), `message` (any object) } \n
+
+        ##### Arguments Details
+        `event_name`: type(str): \n
+
+        `message` type(any object): \n
+
         """
         return self.send({"event_name": event_name, "message": message})
 
 
 class SchedularBase(UtilsBase):
     """
-    SchedularBase
+    `SchedularBase` class can be used to work with schedulars
+
+    ##### Private Instance Methods
+    @`__runschedular` \n
+    @`__schedular` \n
+
+    ##### Instance Methods
+    @`manual` \n
+    @`start` \n
+    @`stop` \n
+
+    ##### Static Instance Methods (UtilsBase Inherited)
+    @`iterate` \n
+
     """
     #  EventsBase Send events for running schedular at a specific interval or time or day or manually
 
@@ -1863,11 +2145,17 @@ class SchedularBase(UtilsBase):
                                       "update": self.v, "delete": ["name"]},
                          schedulars=schedulars)
 
-    def __runschedular(self, name, func, interval):
+    def __runschedular(self, name, func, interval, *args, **kwargs):
         """
-        name:
-        func:
-        interval:
+        `__runschedular` function \n
+        { `name` (str), `func` (function), `interval` (int) }
+
+        `name`: type(str) \n
+
+        `func`: type(function) \n
+
+        `interval`: type(int) \n
+
         """
         try:
             o = self.fetch(name)
@@ -1895,20 +2183,35 @@ class SchedularBase(UtilsBase):
 
     def __schedular(self, sch):
         """
-        sch
+        `__schedular` function \n
+        { `sch` (dict) } \n
+
         """
         if sch.get("interval") == "repeated" and sch.get("active") == True:
             sobj = self.__runschedular(
-                sch.get("name"), sch.get("function"), sch.get("time"))
+                sch.get("name"), sch.get("function"), sch.get("time"),
+                args=[*sch.get("args", [])],
+                kwargs={**sch.get("kwargs", {})}
+            )
+        if sch.get("interval") == "iterate" and sch.get("active") == True:
+            sobj = self.iterate(
+                sch.get("function"), sch.get("time"),
+                args=[*sch.get("args", [])],
+                kwargs={**sch.get("kwargs", {})}
+            )
         elif sch.get("interval") == "single" and sch.get("active") == True:
-            sobj = sch.get("function")()
+            sobj = sch.get("function")(
+                args=[*sch.get("args", [])],
+                kwargs={**sch.get("kwargs", {})}
+            )
         if sobj:
             return sobj
         return False
 
     def manual(self, name):
         """
-
+        `.manual` function \n
+        { `name` (str) } \n
         """
         try:
             o = self.fetch(name)
@@ -1927,6 +2230,8 @@ class SchedularBase(UtilsBase):
 
     def start(self, name):
         """
+        `.start` function \n
+        { `name` (str) } \n
 
         """
         sch = self.fetch(name)
@@ -1941,6 +2246,8 @@ class SchedularBase(UtilsBase):
 
     def stop(self, name):
         """
+        `.stop` function \n
+        { `name` (str) } \n
 
         """
         sc = self.fetch(name)
@@ -1953,6 +2260,22 @@ class SchedularBase(UtilsBase):
 
 
 class SocketsBase(UtilsBase, SocketsInterface):
+    """
+    `SocketsBase` class is used to work with sockets \n
+    SocketsBase works with any type of protocol supported by Python sockets \n
+
+    ##### Instance Methods
+    @`socket_create`
+    @`socket_listen`
+    @`socket_accept`
+    @`socket_multi_server_connect`
+    @`socket_connect`
+    @`socket_close`
+    @`socket_delete`
+    @`send`
+    @`receive`
+
+    """
 
     def __init__(self, socket={}):
         """
@@ -2229,7 +2552,32 @@ class SocketsBase(UtilsBase, SocketsInterface):
 
 class EPubSubBase(UtilsBase, PubSubsInterface):
     """
-    EPubSubBase
+    `EPubSubBase` class to work with a socket/ network based `Publish-Server-Subscriber` event architecture within an application \n
+    EPubSubBase runs a queue in all `Publisher`, `Server`, and `Subscriber` event object instances \n
+
+    ##### Private Instance Methods
+    @`__process`
+    @`__schedular`
+    @`__handler`
+    @`__publish_handler`
+    @`__receive_handler`
+
+    ##### Instance Methods
+    @`pubsub_create`
+    @`pubsub_delete`
+    @`queue_create`
+    @`queue_delete`
+    @`register_publisher`
+    @`unregister_publisher`
+    @`register_subscriber`
+    @`unregister_subscriber`
+    @`register_event`
+    @`unregister_event`
+    @`listen`
+    @`stop`
+    @`send`
+    @`receive`
+
     """
     type = "epubsub"
     # agent options: application, publisher, server, subscriber
@@ -2546,7 +2894,37 @@ class EPubSubBase(UtilsBase, PubSubsInterface):
 
 
 class IPubSubBase(EPubSubBase):
+    """
+    `IPubSubBase` class to work with a socket/ network based `Publish-Server-Subscriber` server architecture across servers \n
+    IPubSubBase runs a queue in all `Publisher`, `Server`, and `Subscriber` sockets \n
 
+    ##### Private Instance Methods
+    @`__process`
+    @`__schedular`
+    @`__handler`
+    @`__publish_handler`
+    @`__receive_handler`
+
+    ##### Instance Methods
+    @`pubsub_create`
+    @`pubsub_delete`
+    @`queue_create`
+    @`queue_delete`
+    @`register_publisher`
+    @`unregister_publisher`
+    @`register_subscriber`
+    @`unregister_subscriber`
+    @`register_event`
+    @`unregister_event`
+    @`listen`
+    @`stop`
+    @`send`
+    @`receive`
+    @`publisher_socket`
+    @`subscriber_socket`
+    @`server_socket`
+
+    """
     type = "ipubsub"
     # agent options: application, publisher, server, subscriber
     # TODO: Implement threading/processing
@@ -2942,6 +3320,12 @@ class IPubSubBase(EPubSubBase):
 
 
 class ActionsBase(UtilsBase):
+    """
+    `ActionsBase` class to work with actions within the application \n
+
+    ##### Instance Methods
+
+    """
 
     def __init__(self, action={}):
         """
@@ -2951,7 +3335,11 @@ class ActionsBase(UtilsBase):
 
 
 class HooksBase(UtilsBase, HooksInterface):
+    """
+    `HooksBase` class [TODO] to work with hooks \n
+    ##### Instance Methods
 
+    """
     server = None
 
     def __init__(self, validations={}, hooks={}, socketsbase=SocketsBase):
@@ -3041,6 +3429,12 @@ class HooksBase(UtilsBase, HooksInterface):
 
 
 class WebhooksBase(UtilsBase):
+    """
+    `WebhooksBase` class [todo] for working with a webhooks server \n
+
+    ##### Instance Methods
+
+    """
 
     def __init__(self, action={}):
         """
@@ -3050,7 +3444,18 @@ class WebhooksBase(UtilsBase):
 
 
 class SSHBase(CommandsBase, SSHInterface):
+    """
+    `SSHBase` class is used to work with `ssh`, `scp`. Needs `OpenSSH` installed \n
 
+    ##### Instance Methods
+    @`connect`
+    @`execute`
+    @`close`
+
+    ##### Static Instance Methods (UtilsBase Inherited)
+    @`iterate` \n
+
+    """
     server = None
 
     def __init__(self, validations={}, pubsub={}, socketsbase=SocketsBase):
@@ -3073,165 +3478,6 @@ class SSHBase(CommandsBase, SSHInterface):
         """
         pass
 
-    def close(self, options):
-        """
-
-        """
-        pass
-
-
-if __name__ == "__main__":
-    c = ClosureBase("Test", {})
-
-
-if __name__ == "__main__":
-    concurrency = ConcurencyBase()
-
-
-if __name__ == "__main__":
-    s = SharedBase("Test", {})
-
-
-if __name__ == "__main__":
-    t = TimerBase({}, {})
-
-
-if __name__ == "__main__":
-    l = LogBase({}, {})
-
-
-if __name__ == "__main__":
-    c = CommandsBase({}, {})
-
-
-if __name__ == "__main__":
-    Socket = SocketsBase()
-
-
-if __name__ == "__main__":
-
-    config = {"name": "test", "maxsize": 10,
-              "queue_type": "queue", "queue": None}
-    queue = QueuesBase()
-    q = queue.new(config)
-    config["queue"] = q
-    # print(config)
-    c = queue.create(config)
-    print(c, queue.validate_add)
-    print(queue.add("test", "test1"))
-    print(queue.add("test", "test2"))
-    print(queue.add("test", "test3"))
-    print(queue.add("test", "test4"))
-    print(queue.add("test", "test5"))
-    print(queue.add("test", "test6"))
-    print(queue.add("test", "test7"))
-    print(queue.add("test", "test8"))
-    print(queue.add("test", "test9"))
-    print(queue.add("test", "test10"))
-    print(queue.add("test", "test11"))
-    print(queue.add("test", "test10"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-    print(queue.get("test"))
-
-
-if __name__ == "__main__":
-
-    print("\nActions:\nDemonstrating Action and Action Listeners")
-    event = EventsBase()
-
-    def run(data):
-        print("Run Action Handler ->", data)
-
-    c = event.event_register({"name": "new", "event": run})
-    if c:
-        event.listener_register(
-            {"name": "run", "event_name": "new", "listener": run})
-        event.on("new", "runner", lambda data: print(
-            "Second Listener running -> ", data))
-        event.listen("new")
-        print("'new' event state is", event.get_state("new"))
-        event.set_state("new", False)
-        print("'new' event state is", event.get_state("new"))
-        event.set_state("new", True)
-        print("'new' event state is", event.get_state("new"))
-        event.send({"event_name": "new", "message": "Testing message"})
-        event.emit("new", "Testing message")
-        event.listener_register({"event_name": "new", "name": "run"})
-        event.stop("new")
-        event.event_unregister("new")
-
-
-if __name__ == "__main__":
-
-    def run(data):
-        print("Running Pubsub ", data)
-
-    def publisher(data):
-        print("Running publisher ", data)
-
-    def subscriber(data):
-        print("Running subscriber ", data)
-
-    config = {"name": "new", "handler": run, "queue": None, "maxsize": 10,
-              "queue_type": "queue", "processing_flag": False,  "batch_interval": 5, "events": {}}
-    name = config.get("name")
-
-    pb = EPubSubBase()
-    p = pb.pubsub_create(config)
-
-    if p:
-        print("Event register ", pb.register_event(
-            name, {"name": "testevent", "event": run}))
-        print("Event listen ", pb.listen(name, "testevent"))
-        print("Publish register ", pb.register_publisher(
-            name, {"name": "pubone", "event_name": "testevent", "publisher": publisher}))
-        print("Subscribers register ", pb.register_subscriber(
-            name, {"name": "subone", "event_name": "testevent", "subscriber": subscriber}))
-        print("Subscribers register ", pb.register_subscriber(
-            name, {"name": "subtwo", "event_name": "testevent", "subscriber": subscriber}))
-        print("Event sending ", pb.send(
-            {"event_name": "testevent", "queue_name": "new", "message": "Testing event testevent", "publisher": "pubone"}))
-        print("Publisher unregister ", pb.unregister_publisher(
-            name, {"name": "pubone", "event_name": "testevent"}))
-        print("Subscriber unregister ", pb.unregister_subscriber(
-            name, {"name": "subone", "event_name": "testevent"}))
-        print("Subscriber unregister ", pb.unregister_subscriber(
-            name, {"name": "subtwo", "event_name": "testevent"}))
-        print("Pubsub Object PRINT FROM SCRIPT: ", pb.fetch(name))
-        print("Event unlisten ", pb.stop(name, "testevent"))
-        print("Pubsub Object Deleted ", pb.pubsub_delete(name))
-        print("Pubsub Object ", pb.fetch(name))
-
-
-if __name__ == "__main__":
-
-    action = ActionsBase()
-
-
-if __name__ == "__main__":
-
-    hook = HooksBase(socketsbase=SocketsBase)
-
-
-if __name__ == "__main__":
-
-    webhook = WebhooksBase(socketsbase=SocketsBase)
-
-
-if __name__ == "__main__":
-
-    ssh = SSHBase()
-
 
 __all__ = [
     "SharedBase", "ClosureBase", "UtilsBase",
@@ -3242,6 +3488,3 @@ __all__ = [
     "WebhooksBase", "EPubSubBase", "IPubSubBase",
     "SSHBase"
 ]
-
-
-# 1, 3, 5, (26)

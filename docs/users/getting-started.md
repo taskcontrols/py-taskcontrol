@@ -1,9 +1,11 @@
 # taskcontrol
 
-    Create named shared / isolated Workflow task controls, and run them with respective before/after middlewares. taskcontrols also supports plugins, concurrency, and authentication  
+Workflow Automation Library with support for Concurrent or Event based processes or activities in Local/Network Automation Tasks, including CI/CD activities.
 
 
 # Features Details
+
+Create named shared / isolated Workflow task controls, and run them with respective before/after middlewares. taskcontrols also supports plugins, concurrency, and authentication 
 
 * Create Named task controls (tasks) - instance and isolated
 * Allows before / after middlewares for each task

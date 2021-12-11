@@ -39,15 +39,15 @@ class FileReaderInterface(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def file_open(self, name):
-        raise NotImplementedError
-
-    @abc.abstractmethod
     def file_read(self, obj, way, index):
         raise NotImplementedError
 
     @abc.abstractmethod
     def file_write(self, obj, items, way):
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def file_append(self, obj, items, way):
         raise NotImplementedError
 
     @abc.abstractmethod
@@ -508,8 +508,4 @@ class SSHInterface(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def execute(self, options):
-        raise NotImplementedError
-
-    @abc.abstractmethod
-    def close(self, options):
         raise NotImplementedError
