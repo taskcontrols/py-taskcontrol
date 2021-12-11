@@ -51,8 +51,9 @@
 
 ##### Version:
 
-    In Development Version: 1.3.0b1 (functional - production ready with plugin and concurrency support, with demos)
-    Current Version: 1.3.0b0 (functional - production ready with most planned features with MVP, with demos)
+    In Development Version: 1.3.0b2 (functional - production ready with plugin and concurrency support, with demos)
+    Current Version: 1.3.0b1 (functional - production ready with plugin and concurrency support, with demos)
+    Previous Version: 1.3.0b0 (functional - production ready with most planned features with MVP, with demos)
     Previous Version: 1.2.5 (functional - production ready with most planned features with MVP, with demos)
     Previous Version: 1.1.2 (functional - production ready minor issues)
     Previous Version: 1.1.0/1.1.1 (functional - not production ready - minor bug. Please upgrade to v1.1.2)
