@@ -73,7 +73,9 @@ setup(
     classifiers=[
         "Programming Language :: Python :: 3",
         # "License :: OSI Approved :: MIT License",
-        "License :: Proprietary"
+        "License :: Free To Use But Restricted",
+        "License :: Free For Educational Use",
+        "License :: Freely Distributable",
         "Operating System :: OS Independent"
     ],
 )
