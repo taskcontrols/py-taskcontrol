@@ -7,17 +7,16 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name='taskcontrol',
-    version='1.2.1',
+    version='1.3.0-beta',
     scripts=[],
     author="taskcontrols",
     author_email="taskcontrols@gmail.com",
-    description="Create named isolated/shared workflow task controls and run the tasks with respective before and after middlewares in ordered manner",
+    description="Workflow Automation Library with support for Concurrent or Event based processes or activities in Local or Network Automation Tasks, including CI CD activities",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/taskcontrols/taskcontrol",
     packages=setuptools.find_packages(),
     install_requires=[
-        'pytest=5.4.2'
     ],
     entry_points={
         'console_scripts': [
