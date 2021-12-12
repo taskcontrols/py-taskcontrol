@@ -79,6 +79,9 @@ class PluginBase(UtilsBase, PluginsInterface):
                 ])
             }
 
+    def plugin_register(self, package_name):
+        pass
+
 
 class WorkflowBase(ClosureBase, ConcurencyBase, PluginBase, UtilsBase):
     """

@@ -449,6 +449,10 @@ class PluginsInterface(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def plugin_create(self, name, task_instance):
         raise NotImplementedError
+    
+    @abc.abstractmethod
+    def plugin_register(self, plugin_name):
+        raise NotImplementedError
 
 
 @dataclass(frozen=True)
