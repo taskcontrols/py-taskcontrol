@@ -18,8 +18,7 @@
 # Features
 
 * Create Named task controls (tasks) - instance isolated and shared
-* Allows before / after middlewares for each task
-* Access read-only contexts and results of middlewares/tasks
+* Allows creation of before / after middlewares for each task with access read-only contexts and results of middlewares/tasks
 * Allows merging two instances of taskcontrols with namespace clash handling
 * Run instance, shared, and mix of tasks (individual or all groups)
 * Allows working with Logging, Sockets, Events, Queues, etc
