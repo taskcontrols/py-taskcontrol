@@ -32,7 +32,6 @@ class CLI(UtilsBase):
             print(choices, arg)
         elif choices in ["p", "plugin"]:
             print(choices, arg)
-        
         return result
 
 
@@ -139,6 +138,8 @@ def run():
         }
     }
 
+    # # Get the plugin config from a config in
+    # # the taskcontrols plugin package
     plugin_config = {
         "add_parser": {
             "epc": {
