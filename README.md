@@ -32,7 +32,7 @@
     * Planned Integrations with Subversioning, Build Tools, Deployment
     * Planned Integrations with Data Transformation / Analytics Tooling
     * Planned Integrations with Testing, and Infrastructure Automation toolings
-    * Monitoring Support
+    * Monitoring Support (T)
     * Allows working with best practices like Dependency Injection (T) within the library (including Tasks, Workflow)
     * Hooks support after dependency-injection package integration
     * Provided in and Allows plugins support for Python, Javascript languages
