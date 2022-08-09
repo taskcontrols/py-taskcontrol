@@ -24,7 +24,7 @@
 * Allows working with Logging, Sockets, Events, Queues, etc
 * Allows working with Publisher-Subscriber (Message Queue) Architecture, Client-Agent Architecture, Agent-less Architecture, and Webhooks
 * In-Development:
-    * Allows support for / working with Concurrency
+    * Allows support for / working with Concurrency (Threads/ Processes)
     * Allows working with Commands & Scripts (T), SSH (T), etc
     * Allows working with Scheduling (T), Files (T - normal, yaml, ini, and csv), etc
     * Allows working with ORMs/Databases (with in-memory support) (T), Authentication (T)
