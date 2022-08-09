@@ -20,14 +20,14 @@
 * Create Named task controls (tasks) - instance isolated and shared
 * Allows creation of before / after middlewares for each task with access read-only contexts and results of middlewares/tasks
 * Allows merging two instances of taskcontrols with namespace clash handling
-* Run instance, shared, and mix of tasks (individual or all groups)
+* Run a private instance, shared instance, and mix (private and shared) of instances (individual or all groups)
 * Allows working with Logging, Sockets, Events, Queues, etc
-* Allows working with Publisher-Subscriber Architectures, Client-Agent Architectures, Webhooks
+* Allows working with Publisher-Subscriber (Message Queue) Architectures, Client-Agent Architectures, Agent-less Architecture, and Webhooks
 * In-Development:
     * Allows support for / working with Concurrency
     * Allows working with Commands & Scripts (T), SSH (T), etc
     * Allows working with Scheduling (T), Files (T - normal, yaml, ini, and csv), etc
-    * Allows working with ORMs/Databases (T), Authentication (T)
+    * Allows working with ORMs/Databases (with in-memory support) (T), Authentication (T)
     * Allows creating, registering, and using tasks / workflows as a plugin
     * Planned Integrations with Subversioning, Build Tools, Deployment
     * Planned Integrations with Data Transformation / Analytics Tooling
