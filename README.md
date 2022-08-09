@@ -22,7 +22,7 @@
 * Allows merging two instances of taskcontrols with namespace clash handling
 * Run a private instance, shared instance, and mix (private and shared) of instances (individual or all groups)
 * Allows working with Logging, Sockets, Events, Queues, etc
-* Allows working with Publisher-Subscriber (Message Queue) Architectures, Client-Agent Architectures, Agent-less Architecture, and Webhooks
+* Allows working with Publisher-Subscriber (Message Queue) Architecture, Client-Agent Architecture, Agent-less Architecture, and Webhooks
 * In-Development:
     * Allows support for / working with Concurrency
     * Allows working with Commands & Scripts (T), SSH (T), etc
