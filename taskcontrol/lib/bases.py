@@ -302,6 +302,7 @@ class Workflow(WorkflowBase):
                 tsk = self.get_all_tasks(t, tsk)
         return tsk
 
+
     def start(self, tasks=["1"]):
         """
         Start the workflow tasks initantiation using `.start` \n
@@ -311,11 +312,13 @@ class Workflow(WorkflowBase):
         """
         result = []
 
+        print(tasks)
         tsk = self.get_all_tasks(tasks, [])
 
         if len(tsk) > 0:
             for tk in tsk:
                 if type(tsk) == dict:
+                    print(tsk)
                     return result.append(self.run_task(tk))
                 elif type(tsk) == list:
                     for task in tsk:
