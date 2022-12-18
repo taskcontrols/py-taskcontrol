@@ -300,6 +300,8 @@ class Workflow(WorkflowBase):
         elif type(tasks) == list:
             for t in tasks:
                 tsk = self.get_all_tasks(t, tsk)
+        # elif type(tasks) == dict:
+        #     tsk = self.get_all_tasks(t, tsk)
         return tsk
 
 
