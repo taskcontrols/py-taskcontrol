@@ -38,6 +38,31 @@
     * Provided in and Allows plugins support for Python, Javascript languages
 
 
+# Architectures Included
+
+
+### Workflow Architecture
+
+
+### Publisher Subscriber Architecture
+
+
+### Server - Client Agentless SSH Architecture
+
+
+### Server - Client Agent Architecture
+
+
+### REST API Architecture
+
+
+### Webhooks Architecture
+
+
+### Authentication and Data Persistence Architecture
+
+
+
 # Installation
 
 
