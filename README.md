@@ -38,6 +38,40 @@
     * Provided in and Allows plugins support for Python, Javascript languages
 
 
+# Installation
+
+
+##### Command:
+
+* Python
+
+        pip3 install taskcontrol
+
+
+##### Version:
+
+    In Development Version: 1.3.0b2 (functional - production ready with plugin and concurrency support, with demos)
+    Current Version: 1.3.0b1 (functional - production ready with plugin and concurrency support, with demos)
+    Previous Version: 1.3.0b0 (functional - production ready with most planned features with MVP, with demos)
+    Previous Version: 1.2.5 (functional - production ready with most planned features with MVP, with demos)
+    Previous Version: 1.1.2 (functional - production ready minor issues)
+    Previous Version: 1.1.0/1.1.1 (functional - not production ready - minor bug. Please upgrade to v1.1.2)
+
+
+
+[Releases](https://github.com/taskcontrols/py-taskcontrol/blob/master/docs/users/releases.md) Lists in short the releases of the package
+
+
+##### Package Link:
+    
+    https://github.com/taskcontrols/py-taskcontrol
+    https://pypi.org/project/taskcontrol
+    
+##### Website:
+    
+    https://taskcontrols.github.io/
+
+
 # Supported Architectures within the Libraries
 
 
@@ -80,40 +114,6 @@
 ### Authentication and Data Persistence Architecture
 
 ![Authentication and Data Persistence Architecture](./docs/architecture/PERSISTENT%20DATA%20PLUS%20AUTHENTICATION%20ARCHITECTURE.jpg "Authentication and Data Persistence Architecture")
-
-
-# Installation
-
-
-##### Command:
-
-* Python
-
-        pip3 install taskcontrol
-
-
-##### Version:
-
-    In Development Version: 1.3.0b2 (functional - production ready with plugin and concurrency support, with demos)
-    Current Version: 1.3.0b1 (functional - production ready with plugin and concurrency support, with demos)
-    Previous Version: 1.3.0b0 (functional - production ready with most planned features with MVP, with demos)
-    Previous Version: 1.2.5 (functional - production ready with most planned features with MVP, with demos)
-    Previous Version: 1.1.2 (functional - production ready minor issues)
-    Previous Version: 1.1.0/1.1.1 (functional - not production ready - minor bug. Please upgrade to v1.1.2)
-
-
-
-[Releases](https://github.com/taskcontrols/py-taskcontrol/blob/master/docs/users/releases.md) Lists in short the releases of the package
-
-
-##### Package Link:
-    
-    https://github.com/taskcontrols/py-taskcontrol
-    https://pypi.org/project/taskcontrol
-    
-##### Website:
-    
-    https://taskcontrols.github.io/
 
 
 # Technical Specifications
