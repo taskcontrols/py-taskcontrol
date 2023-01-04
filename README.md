@@ -48,9 +48,11 @@
 
 ### Publisher Subscriber Architecture, Message Queue, and Two Way Socket Events Architecture
 
+![Message Queue Architecture](./docs/architecture/MESSAGE%20QUEUE%20ARCHITECTURE.jpg "Message Queue Architecture")
+
 ![Publisher Subscriber Architecture](./docs/architecture/PUBLISHER%20SUBSCRIBER%20ARCHITECTURE.jpg "Publisher Subscriber Architecture")
 
-![Message Queue and Two Way Socket Events Architecture](./docs/architecture/TWO%20WAY%20EVENTS%20SOCKETS%20SERVER%20ARCHITECTURE.jpg "Message Queue and Two Way Socket Events Architecture")
+![Two Way Socket Events Architecture](./docs/architecture/TWO%20WAY%20EVENTS%20SOCKETS%20SERVER%20ARCHITECTURE.jpg "Two Way Socket Events Architecture")
 
 
 ### Server - Client Agentless SSH Architecture
