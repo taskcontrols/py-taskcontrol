@@ -72,7 +72,7 @@
     https://taskcontrols.github.io/
 
 
-# Supported Architectures within the Libraries
+# Supported Architectures within the Library
 
 
 ### Workflow Task Execution Architecture
