@@ -38,6 +38,9 @@
     * Provided in and Allows plugins support for Python, Javascript languages
 
 
+![Features](./docs/architecture/Taskcontrols%20Features.jpg "Taskcontrols Features")
+
+
 # Installation
 
 
