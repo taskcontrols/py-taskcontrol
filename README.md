@@ -46,9 +46,11 @@
 ![Workflow Task Execution Architecture](./docs/architecture/Workflow%20Task%20Architecture.jpg "Workflow Task Execution Architecture")
 
 
-### Publisher Subscriber Architecture
+### Publisher Subscriber Architecture, Message Queue, and Two Way Socket Events Architecture
 
 ![Publisher Subscriber Architecture](./docs/architecture/PUBLISHER%20SUBSCRIBER%20ARCHITECTURE.jpg "Publisher Subscriber Architecture")
+
+![Message Queue and Two Way Socket Events Architecture](./docs/architecture/TWO%20WAY%20EVENTS%20SOCKETS%20SERVER%20ARCHITECTURE.jpg "Message Queue and Two Way Socket Events Architecture")
 
 
 ### Server - Client Agentless SSH Architecture
@@ -63,17 +65,12 @@
 
 ### REST API Architecture
 
-![REST API Access Architecture](./docs/architecture/SERVER%20AGENT%20-%20CLIENT%20AGENT%20ARCHITECTURE.jpg "REST API Access Architecture")
+![REST API Access Architecture](./docs/architecture/REST%20API%20ARCHITECTURE.jpg "REST API Access Architecture")
 
 
 ### Webhooks Architecture
 
 ![Webhooks Architecture](./docs/architecture/WEBHOOKS%20ARCHITECTURE.jpg "Webhooks Architecture")
-
-
-### Message Queue and Two Way Socket Events Architecture
-
-![Message Queue and Two Way Socket Events Architecture](./docs/architecture/TWO%20WAY%20EVENTS%20SOCKETS%20SERVER%20ARCHITECTURE.jpg "Message Queue and Two Way Socket Events Architecture")
 
 
 ### Authentication and Data Persistence Architecture
