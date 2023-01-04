@@ -43,10 +43,12 @@
 
 ### Workflow Task Execution Architecture
 
+![Workflow Execution Architecture](./docs/architecture/Workflow%20Architecture.jpg "Workflow Execution Architecture")
+
 ![Workflow Task Execution Architecture](./docs/architecture/Workflow%20Task%20Architecture.jpg "Workflow Task Execution Architecture")
 
 
-### Publisher Subscriber Architecture, Message Queue, and Two Way Socket Events Architecture
+### Publisher Subscriber, Message Queue, and Two Way Socket Events Architecture
 
 ![Message Queue Architecture](./docs/architecture/MESSAGE%20QUEUE%20ARCHITECTURE.jpg "Message Queue Architecture")
 
