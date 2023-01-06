@@ -1,7 +1,0 @@
-String,Number,Date,Buffer,Boolean,Mixed,ObjectId,Array,Decimal128,Map
-
-Find Operators - https://www.mongodb.com/docs/manual/reference/operator/query/
-Update Operators - https://www.mongodb.com/docs/manual/reference/operator/update/
-Aggregation Pipeline - https://www.mongodb.com/docs/manual/reference/operator/aggregation-pipeline/
-Aggregation Pipeline Operators  -https://www.mongodb.com/docs/manual/reference/operator/aggregation/
-
