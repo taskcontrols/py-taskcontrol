@@ -54,9 +54,22 @@
 * Add yaml, json config consumption for workflow script list/array
 * Add UI for yaml, json creation and consumption
 
-** [T] Monitoring Workflows
-* [C?] Add Tasks, script list status Monitoring UI
+** [T] Monitoring Workflows - ./admin/monitor.py
+* [C?] Add Tasks, script list status Monitoring UI - 
 * [C?] Add Analytics UI - Consider Third party UIs
 * [C?] Consider Workflow/Tasks tracking system and Dashboard with its own progress and logging
 * [C?] Consider compatibility to Chef/CircleCI/Github/Other Automation tools, atleast as external added plugins
 * [T] Planned Integrations with Subversioning, Build Tools, Deployment, Data Transformation / Analytics Tooling, Testing, and Infrastructure toolings (List generation pending)
+* [T] Check Queue features compare https://github.com/FabrizioBrancati/Queuer and MQ and Rabbit for 
+        the pub-sub queue in ./admin/pubsubpublisher.py after adding the concurrency
+* [T] Agent based Client-Server Plugins ./admin/agentclient.py, ./admin/agentserver.py
+* [T] Agent-less based SSH support Plugins ./admin/ssh.py
+* [T] PubSub Queue Message Queue - ./admin/pubsubpublisher.py
+* [T] PubSub Queue Server Agent - ./admin/pubsubqueueserver.py
+* [T] PubSub Queue Subscriber Agent - ./admin/pubsubsubscriber.py
+* [T] Monitor - ./admin/monitor.py
+* [T] Git - ./admin/git.py
+* [T] Communication plus REST API Server - ./admin/communicationserver.py
+* [T] WebHook Server - ./admin/webhookserver.py
+* [T] WebHook Client - ./admin/webhookclient.py
+* [T] Compatibility to https://www.amqp.org/
