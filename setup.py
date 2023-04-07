@@ -100,6 +100,11 @@ ext_modules=[
 # RUN setup.py with below command
 # python3 setup.py sdist bdist_wheel
 
+
+# Check python distribution
+# check-wheel-contents ./dist
+
+
 # The Pypirc file stores the PyPi repository information
 # https://docs.python.org/2.5/dist/pypirc.html
 # for Windows :  C:\Users\UserName\.pypirc

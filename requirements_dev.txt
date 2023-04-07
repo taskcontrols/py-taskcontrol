@@ -1,5 +1,7 @@
-autopep8==1.5.2
-pytest==5.4.1
 pyinstaller==4.6
 setuptools==49.2.1
-twine==3.6.0
+twine==4.0.1
+wheel==0.40.0
+autopep8==2.0.0
+pytest==5.4.1
+check-wheel-contents==0.4.0
