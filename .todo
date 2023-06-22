@@ -36,6 +36,7 @@
         - test for:
                 - function returns invoked immediately and returning args/ kwargs during execution of task
                 - task returns invoked immediately and returning args/ kwargs before execution of task
+* [T] Delay task and scheduling as an option
 
 ** [W] Add Tests
         Add all variations of tests for 
